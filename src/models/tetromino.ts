@@ -3,7 +3,7 @@ export interface Tetromino {
   rgb_colour: string;
 }
 
-const NoShape: Tetromino = {
+export const NoShape: Tetromino = {
   shape: [[0]],
   rgb_colour: "0, 0, 0",
 };
