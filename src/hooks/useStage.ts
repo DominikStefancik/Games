@@ -4,7 +4,7 @@ import { TetrominoState } from "../models/tetromino";
 import { CellState, EMPTY_CELL } from "../models/cell";
 
 // custom hook for manipulating the stage
-export const useStage = (tetronimoState: TetrominoState, resetTetronimo) => {
+export const useStage = (tetrominoState: TetrominoState, resetTetromino) => {
   const [stage, setStage] = useState(createStage());
 
   useEffect(() => {
@@ -15,12 +15,12 @@ export const useStage = (tetronimoState: TetrominoState, resetTetronimo) => {
       );
 
       // Then draw the tetromino
-      tetronimoState.shape.forEach((row, yIndex) =>
+      tetrominoState.shape.forEach((row, yIndex) =>
         row.forEach((shapeCellValue, xIndex) => {
           if (shapeCellValue !== 0) {
-            newStage[yIndex + tetronimoState.position.y][xIndex + tetronimoState.position.x] = [
+            newStage[yIndex + tetrominoState.position.y][xIndex + tetrominoState.position.x] = [
               shapeCellValue,
-              `${tetronimoState.collided ? CellState.MERGED : CellState.CLEAR}`,
+              `${tetrominoState.collided ? CellState.MERGED : CellState.CLEAR}`,
             ];
           }
         })
@@ -31,10 +31,10 @@ export const useStage = (tetronimoState: TetrominoState, resetTetronimo) => {
 
     setStage((previousStage) => updateStage(previousStage));
   }, [
-    tetronimoState.collided,
-    tetronimoState.position.x,
-    tetronimoState.position.y,
-    tetronimoState.shape,
+    tetrominoState.collided,
+    tetrominoState.position.x,
+    tetrominoState.position.y,
+    tetrominoState.shape,
   ]);
 
   return [stage, setStage];

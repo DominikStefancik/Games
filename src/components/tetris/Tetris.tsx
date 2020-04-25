@@ -10,8 +10,10 @@ import { createStage } from "../../helpers/gameHelpers";
 const Tetris: FC = () => {
   const [isGameOver, setGameOver] = useState(false);
 
-  const [tetrominoState, updateTetronimoPosition, resetTetrominoState] = useTetromino();
+  const [tetrominoState, updateTetrominoPosition, resetTetrominoState] = useTetromino();
   const [stage, setStage] = useStage<>(tetrominoState, resetTetrominoState);
+
+  console.log("Re-render");
 
   const startGame = () => {
     // Reset everything
@@ -19,15 +21,15 @@ const Tetris: FC = () => {
     resetTetrominoState();
   };
 
-  const moveTetronimo = (direction: number) => {
-    updateTetronimoPosition({ x: direction, y: 0 });
+  const moveTetromino = (direction: number) => {
+    updateTetrominoPosition({ x: direction, y: 0 });
   };
 
   const drop = () => {
-    updateTetronimoPosition({ x: 0, y: 1 });
+    updateTetrominoPosition({ x: 0, y: 1, collided: false });
   };
 
-  const dropTetronimo = () => {
+  const dropTetromino = () => {
     drop();
   };
 
@@ -36,15 +38,17 @@ const Tetris: FC = () => {
       switch (event.key) {
         case "Left": // IE/Edge specific value
         case "ArrowLeft":
-          moveTetronimo(-1);
+          moveTetromino(-1);
           break;
         case "Right": // IE/Edge specific value
         case "ArrowRight":
-          moveTetronimo(1);
+          moveTetromino(1);
           break;
         case "Down": // IE/Edge specific value
         case "ArrowDown":
-          dropTetronimo();
+          dropTetromino();
+          break;
+        default:
           break;
       }
     }
@@ -59,7 +63,7 @@ const Tetris: FC = () => {
           <Display isGameOver={isGameOver} text={"Rows"} />
           <Display isGameOver={isGameOver} text={"Level"} />
           {isGameOver && <Display isGameOver={isGameOver} text={"Game Over"} />}
-          <StartButton callback={startGame()} />
+          <StartButton callback={startGame} />
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>

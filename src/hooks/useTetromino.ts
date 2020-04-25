@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { getRandomTetromino, STAGE_WIDTH } from "../helpers/gameHelpers";
 import { NoShape, TetrominoState } from "../models/tetromino";
 
-// custom hook for manipulation a tetronimo
+// custom hook for manipulation the state of a tetromino
 export const useTetromino = () => {
   const [tetrominoState, setTetrominoState] = useState<TetrominoState>({
     position: {
@@ -16,7 +16,7 @@ export const useTetromino = () => {
   const updateTetrominoPosition = ({ x, y, collided }) => {
     setTetrominoState((previous) => ({
       ...previous,
-      position: { x: previous.position.x + x, y: previous.position.y + y },
+      position: { x: previous.position.x += x, y: previous.position.y += y },
       collided,
     }));
   };
