@@ -8,7 +8,7 @@ interface CellProps {
 
 const Cell: FC<CellProps> = ({ type }) => {
   return (
-    <StyledCell type={type} color={type.rgb_colour}>
+    <StyledCell shape={type.shape} color={type.rgb_colour}>
       Cell
     </StyledCell>
   );
