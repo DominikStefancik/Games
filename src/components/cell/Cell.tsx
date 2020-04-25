@@ -1,7 +1,17 @@
 import React, { FC } from "react";
+import { StyledCell } from "./StyledCell";
+import { Tetromino } from "../../models/tetromino";
 
-const Cell: FC = () => {
-  return <div>Cell</div>;
+interface CellProps {
+  type: Tetromino;
+}
+
+const Cell: FC<CellProps> = ({ type }) => {
+  return (
+    <StyledCell type={type} color={type.rgb_colour}>
+      Cell
+    </StyledCell>
+  );
 };
 
 export default Cell;
