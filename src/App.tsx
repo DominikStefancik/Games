@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, { FC } from "react";
 import Tetris from "./components/tetris/Tetris";
 
 const App: FC = () => {
