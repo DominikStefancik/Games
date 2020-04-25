@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import backgroundImage from "../../assets/images/background.png";
 
+// this component covers the whole screen and also listens to key strokes
 export const StyledTetrisWrapper = styled.div`
   width: 100vw;
   height: 100vh;

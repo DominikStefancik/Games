@@ -1,5 +1,7 @@
+export type TetronimoShape = (number | string)[][];
+
 export interface Tetromino {
-  shape: (number | string)[][];
+  shape: TetronimoShape;
   rgb_colour: string;
 }
 
