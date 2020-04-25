@@ -1,7 +1,13 @@
-export type TetronimoShape = (number | string)[][];
+export type TetrominoShape = (number | string)[][];
+
+export interface TetrominoState {
+  position: { x: number; y: number };
+  shape: TetrominoShape;
+  collided: boolean;
+}
 
 export interface Tetromino {
-  shape: TetronimoShape;
+  shape: TetrominoShape;
   rgb_colour: string;
 }
 

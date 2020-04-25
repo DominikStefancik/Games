@@ -3,20 +3,20 @@ import Stage from "../stage/Stage";
 import Display from "../display/Display";
 import { StyledTetris, StyledTetrisWrapper } from "./StyledTetris";
 import StartButton from "../start-button/StartButton";
-import { useTetronimo } from "../../hooks/useTetronimo";
+import { useTetromino } from "../../hooks/useTetromino";
 import { useStage } from "../../hooks/useStage";
 import { createStage } from "../../helpers/gameHelpers";
 
 const Tetris: FC = () => {
   const [isGameOver, setGameOver] = useState(false);
 
-  const [tetronimo, updateTetronimoPosition, resetTetronimo] = useTetronimo();
-  const [stage, setStage] = useStage<>();
+  const [tetrominoState, updateTetronimoPosition, resetTetrominoState] = useTetromino();
+  const [stage, setStage] = useStage<>(tetrominoState, resetTetrominoState);
 
   const startGame = () => {
     // Reset everything
     setStage(createStage());
-    resetTetronimo();
+    resetTetrominoState();
   };
 
   const moveTetronimo = (direction: number) => {
@@ -51,7 +51,7 @@ const Tetris: FC = () => {
   };
 
   return (
-    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(event) => {}}>
+    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={keyDownHandler}>
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
@@ -59,7 +59,7 @@ const Tetris: FC = () => {
           <Display isGameOver={isGameOver} text={"Rows"} />
           <Display isGameOver={isGameOver} text={"Level"} />
           {isGameOver && <Display isGameOver={isGameOver} text={"Game Over"} />}
-          <StartButton callback={() => {}} onClick={startGame()} />
+          <StartButton callback={startGame()} />
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>
