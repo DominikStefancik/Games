@@ -16,7 +16,7 @@ export const useTetromino = () => {
   const updateTetrominoPosition = ({ x, y, collided }) => {
     setTetrominoState((previous) => ({
       ...previous,
-      position: { x: previous.position.x += x, y: previous.position.y += y },
+      position: { x: previous.position.x + x, y: previous.position.y + y },
       collided,
     }));
   };

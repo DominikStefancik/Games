@@ -63,9 +63,9 @@ const S_shape: Tetromino = {
 
 const T_Shape: Tetromino = {
   shape: [
-    [0, 0, 0],
     ["T", "T", "T"],
     [0, "T", 0],
+    [0, 0, 0],
   ],
   rgb_colour: "123, 61, 198",
 };
