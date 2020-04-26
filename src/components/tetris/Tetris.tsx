@@ -16,7 +16,7 @@ const Tetris: FC = () => {
 
   const startGame = () => {
     // Reset everything
-    setGameOver(true);
+    setGameOver(false);
     setStage(createStage());
     resetTetrominoState();
   };
