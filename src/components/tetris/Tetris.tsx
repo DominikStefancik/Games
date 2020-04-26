@@ -5,9 +5,10 @@ import { StyledTetris, StyledTetrisWrapper } from "./StyledTetris";
 import StartButton from "../start-button/StartButton";
 import { useTetromino } from "../../hooks/useTetromino";
 import { useStage } from "../../hooks/useStage";
-import { createStage } from "../../helpers/gameHelpers";
+import { checkCollision, createStage } from "../../helpers/gameHelpers";
 
 const Tetris: FC = () => {
+  const [dropTime, setDropTime] = useState(null);
   const [isGameOver, setGameOver] = useState(false);
 
   const [tetrominoState, updateTetrominoPosition, resetTetrominoState] = useTetromino();
@@ -15,16 +16,28 @@ const Tetris: FC = () => {
 
   const startGame = () => {
     // Reset everything
+    setGameOver(true);
     setStage(createStage());
     resetTetrominoState();
   };
 
-  const moveTetromino = (direction: number) => {
-    updateTetrominoPosition({ x: direction, y: 0 });
+  const moveTetromino = (horizontalDirection: number) => {
+    if (!checkCollision(tetrominoState, stage, horizontalDirection, 0)) {
+      updateTetrominoPosition({ x: horizontalDirection, y: 0, collided: false });
+    }
   };
 
   const drop = () => {
-    updateTetrominoPosition({ x: 0, y: 1, collided: false });
+    if (!checkCollision(tetrominoState, stage, 0, 1)) {
+      updateTetrominoPosition({ x: 0, y: 1, collided: false });
+    } else {
+      // If the stage is full of block and a new tetromino's shape is over the top of the stage, the game is over
+      if (tetrominoState.position.y < 1) {
+        setGameOver(true);
+        setDropTime(null);
+      }
+      updateTetrominoPosition({ x: 0, y: 0, collided: true });
+    }
   };
 
   const dropTetromino = () => {
@@ -60,7 +73,7 @@ const Tetris: FC = () => {
           <Display isGameOver={isGameOver} text={"Score"} />
           <Display isGameOver={isGameOver} text={"Rows"} />
           <Display isGameOver={isGameOver} text={"Level"} />
-          {isGameOver && <Display isGameOver={isGameOver} text={"Game Over"} />}
+          {isGameOver && <Display isGameOver={isGameOver} text={"Game Over!!!"} />}
           <StartButton callback={startGame} />
         </aside>
       </StyledTetris>

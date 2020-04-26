@@ -4,7 +4,7 @@ import { TetrominoState } from "../models/tetromino";
 import { CellState, EMPTY_CELL } from "../models/cell";
 
 // custom hook for manipulating the stage
-export const useStage = (tetrominoState: TetrominoState, resetTetromino) => {
+export const useStage = (tetrominoState: TetrominoState, resetTetrominoState) => {
   const [stage, setStage] = useState(createStage());
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const useStage = (tetrominoState: TetrominoState, resetTetromino) => {
         row.map((cell) => (cell[1] === CellState.CLEAR ? EMPTY_CELL : cell))
       );
 
-      // Then draw the tetromino
+      // Then draw the tetromino's shape
       tetrominoState.shape.forEach((row, yIndex) =>
         row.forEach((shapeCellValue, xIndex) => {
           if (shapeCellValue !== 0) {
@@ -26,16 +26,15 @@ export const useStage = (tetrominoState: TetrominoState, resetTetromino) => {
         })
       );
 
+      if (tetrominoState.collided) {
+        resetTetrominoState();
+      }
+
       return newStage;
     };
 
     setStage((previousStage) => updateStage(previousStage));
-  }, [
-    tetrominoState.collided,
-    tetrominoState.position.x,
-    tetrominoState.position.y,
-    tetrominoState.shape,
-  ]);
+  }, [tetrominoState, resetTetrominoState]);
 
   return [stage, setStage];
 };
