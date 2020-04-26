@@ -1,5 +1,10 @@
 import { useCallback, useState } from "react";
-import { getRandomTetromino, RotationDirection, STAGE_WIDTH } from "../helpers/gameHelpers";
+import {
+  checkCollision,
+  getRandomTetromino,
+  RotationDirection,
+  STAGE_WIDTH,
+} from "../helpers/gameHelpers";
 import { NoShape, TetrominoShape, TetrominoState } from "../models/tetromino";
 
 // custom hook for manipulation the state of a tetromino
@@ -50,6 +55,26 @@ export const useTetromino = () => {
   const rotateTetromino = (stage, direction: RotationDirection) => {
     const clonedState: TetrominoState = JSON.parse(JSON.stringify(tetrominoState));
     clonedState.shape = rotateShape(clonedState.shape, direction);
+
+    // Before setting the new state, we need to check if the rotation is within the boundaries of the stage
+    const position = clonedState.position.x;
+    let offset = 1;
+    while (checkCollision(clonedState, stage, 0, 0)) {
+      clonedState.position.x += offset;
+      offset = -(offset + (offset > 0 ? 1 : -1));
+
+      if (offset > clonedState.shape[0].length) {
+        // if we rotated the shape and it's outside of boundaries, we need to rotate it back
+        const oppositeDirection =
+          direction === RotationDirection.CLOCKWISE
+            ? RotationDirection.ANTICLOCKWISE
+            : RotationDirection.CLOCKWISE;
+        rotateShape(clonedState.shape, oppositeDirection);
+        clonedState.position.x = position; // we set the position to its original value before check
+
+        return; // we cannot rotate, hence we don't set the state
+      }
+    }
 
     setTetrominoState(clonedState);
   };
