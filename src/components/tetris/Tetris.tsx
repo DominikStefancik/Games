@@ -6,6 +6,7 @@ import StartButton from "../start-button/StartButton";
 import { useTetromino } from "../../hooks/useTetromino";
 import { useStage } from "../../hooks/useStage";
 import { checkCollision, createStage, RotationDirection } from "../../helpers/gameHelpers";
+import { useInterval } from "../../hooks/useInterval";
 
 const Tetris: FC = () => {
   const [dropTime, setDropTime] = useState(null);
@@ -17,11 +18,17 @@ const Tetris: FC = () => {
     resetTetrominoState,
     rotateTetromino,
   ] = useTetromino();
+
   const [stage, setStage] = useStage<>(tetrominoState, resetTetrominoState);
+
+  useInterval(() => {
+    drop();
+  }, dropTime);
 
   const startGame = () => {
     // Reset everything
     setGameOver(false);
+    setDropTime(1000);
     setStage(createStage());
     resetTetrominoState();
   };
@@ -46,7 +53,18 @@ const Tetris: FC = () => {
   };
 
   const dropTetromino = () => {
+    // when a user wants to speed up dropping a tetromino by holding a key, deactivate interval time
+    setDropTime(null);
     drop();
+  };
+
+  const keyUpHandler = (event) => {
+    if (!isGameOver) {
+      // when a user wants to stop speeding up dropping a tetromino by holding a key, activate interval time again
+      if (event.key === " " || event.key === "SpaceBar") {
+        setDropTime(1000);
+      }
+    }
   };
 
   const keyDownHandler = (event: KeyboardEvent) => {
@@ -79,7 +97,12 @@ const Tetris: FC = () => {
   };
 
   return (
-    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={keyDownHandler}>
+    <StyledTetrisWrapper
+      role="button"
+      tabIndex="0"
+      onKeyUp={keyUpHandler}
+      onKeyDown={keyDownHandler}
+    >
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
