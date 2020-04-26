@@ -5,13 +5,18 @@ import { StyledTetris, StyledTetrisWrapper } from "./StyledTetris";
 import StartButton from "../start-button/StartButton";
 import { useTetromino } from "../../hooks/useTetromino";
 import { useStage } from "../../hooks/useStage";
-import { checkCollision, createStage } from "../../helpers/gameHelpers";
+import { checkCollision, createStage, RotationDirection } from "../../helpers/gameHelpers";
 
 const Tetris: FC = () => {
   const [dropTime, setDropTime] = useState(null);
   const [isGameOver, setGameOver] = useState(false);
 
-  const [tetrominoState, updateTetrominoPosition, resetTetrominoState] = useTetromino();
+  const [
+    tetrominoState,
+    updateTetrominoPosition,
+    resetTetrominoState,
+    rotateTetromino,
+  ] = useTetromino();
   const [stage, setStage] = useStage<>(tetrominoState, resetTetrominoState);
 
   const startGame = () => {
@@ -55,8 +60,16 @@ const Tetris: FC = () => {
         case "ArrowRight":
           moveTetromino(1);
           break;
+        case "Up": // IE/Edge specific value
+        case "ArrowUp":
+          rotateTetromino(stage, RotationDirection.CLOCKWISE);
+          break;
         case "Down": // IE/Edge specific value
         case "ArrowDown":
+          rotateTetromino(stage, RotationDirection.ANTICLOCKWISE);
+          break;
+        case "SpaceBar": // IE/Edge specific value
+        case " ": // User hit the Space button
           dropTetromino();
           break;
         default:

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { getRandomTetromino, STAGE_WIDTH } from "../helpers/gameHelpers";
-import { NoShape, TetrominoState } from "../models/tetromino";
+import { getRandomTetromino, RotationDirection, STAGE_WIDTH } from "../helpers/gameHelpers";
+import { NoShape, TetrominoShape, TetrominoState } from "../models/tetromino";
 
 // custom hook for manipulation the state of a tetromino
 export const useTetromino = () => {
@@ -32,5 +32,27 @@ export const useTetromino = () => {
     });
   }, []);
 
-  return [tetrominoState, updateTetrominoPosition, resetTetrominoState];
+  // This function rotates the tetromino's shape
+  const rotateShape = (shape: TetrominoShape, direction: RotationDirection) => {
+    // Make rows become columns (transpose)
+    const rotatedShape = shape.map((_, index) => shape.map((column) => column[index]));
+
+    // Reverse each row to get a rotated shape
+    if (direction === RotationDirection.CLOCKWISE) {
+      return rotatedShape.map((row) => row.reverse());
+    }
+
+    // Otherwise reverse the matrix
+    return rotatedShape.reverse();
+  };
+
+  // This function initiates the tetromino's rotation with check for collision
+  const rotateTetromino = (stage, direction: RotationDirection) => {
+    const clonedState: TetrominoState = JSON.parse(JSON.stringify(tetrominoState));
+    clonedState.shape = rotateShape(clonedState.shape, direction);
+
+    setTetrominoState(clonedState);
+  };
+
+  return [tetrominoState, updateTetrominoPosition, resetTetrominoState, rotateTetromino];
 };

@@ -4,6 +4,11 @@ import { CellState, EMPTY_CELL } from "../models/cell";
 export const STAGE_WIDTH = 12;
 export const STAGE_HEIGHT = 20;
 
+export enum RotationDirection {
+  CLOCKWISE,
+  ANTICLOCKWISE,
+}
+
 export const createStage = (): any[] => {
   // a multi-dimensional array which represents stage grid
   return Array.from(Array(STAGE_HEIGHT), () => {
