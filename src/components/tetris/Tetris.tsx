@@ -13,8 +13,6 @@ const Tetris: FC = () => {
   const [tetrominoState, updateTetrominoPosition, resetTetrominoState] = useTetromino();
   const [stage, setStage] = useStage<>(tetrominoState, resetTetrominoState);
 
-  console.log("Re-render");
-
   const startGame = () => {
     // Reset everything
     setStage(createStage());

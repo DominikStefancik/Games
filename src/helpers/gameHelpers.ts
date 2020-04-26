@@ -12,6 +12,9 @@ export const createStage = (): any[] => {
 };
 
 export const getRandomTetromino = (): Tetromino => {
-  const randomIndex = Math.floor(Math.random() * TETROMINOS.length);
-  return TETROMINOS[randomIndex];
+  const tetrominosKeys = "IJLOSTZ";
+  const index = Math.floor(Math.random() * tetrominosKeys.length);
+  const randomKey = tetrominosKeys[index];
+
+  return TETROMINOS[randomKey];
 };

@@ -1,6 +1,6 @@
 export enum CellState {
-  CLEAR,
-  MERGED,
+  CLEAR = "clear",
+  MERGED = "merged",
 }
 
 export const EMPTY_CELL = [0, CellState.CLEAR];

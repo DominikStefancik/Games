@@ -79,4 +79,13 @@ const Z_Shape: Tetromino = {
   rgb_colour: "227, 78, 78",
 };
 
-export const TETROMINOS = [I_Shape, J_Shape, L_Shape, O_Shape, S_shape, T_Shape, Z_Shape];
+export const TETROMINOS = {
+  0: NoShape,
+  I: I_Shape,
+  J: J_Shape,
+  L: L_Shape,
+  O: O_Shape,
+  S: S_shape,
+  T: T_Shape,
+  Z: Z_Shape,
+};

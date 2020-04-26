@@ -1,17 +1,15 @@
 import React, { FC } from "react";
 import { StyledCell } from "./StyledCell";
-import { Tetromino } from "../../models/tetromino";
+import { TETROMINOS } from "../../models/tetromino";
 
 interface CellProps {
-  type: Tetromino;
+  type: number | string;
 }
 
 const Cell: FC<CellProps> = ({ type }) => {
-  return (
-    <StyledCell shape={type.shape} color={type.rgb_colour}>
-      Cell
-    </StyledCell>
-  );
+  const tetromino = TETROMINOS[type];
+
+  return <StyledCell shape={tetromino.shape} color={tetromino.rgb_colour} />;
 };
 
 export default Cell;
