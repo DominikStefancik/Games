@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { calculateWinner } from "../../helpers/gameHelpers";
 import { HistoryType } from "../../models/board.model";
-import { O_SYMBOL, X_SYMBOL } from "../../models/square.model";
+import { O_SYMBOL, SquareType, X_SYMBOL } from "../../models/square.model";
 import Board from "../board/Board";
 
 const styles = {
@@ -12,7 +12,7 @@ const styles = {
 const Game: FC = () => {
   const [history, setHistory] = useState<HistoryType>([new Array(9).fill(null)]);
   const [stepNumber, setStepNumber] = useState(0);
-  const [xIsNext, setXisNext] = useState(true);
+  const [currentSymbol, setCurrentSymbol] = useState<SquareType>(X_SYMBOL);
 
   // on each render we will check if there is a winner already
   // we check it from the last state of the board
@@ -30,17 +30,18 @@ const Game: FC = () => {
     }
 
     // Put "X" or "O" on the clicked square
-    currentStateCopy[index] = xIsNext ? X_SYMBOL : O_SYMBOL;
+    currentStateCopy[index] = currentSymbol;
     // add a new state to the history
     setHistory([...allMovesInHistory, currentStateCopy]);
     setStepNumber(allMovesInHistory.length);
-    setXisNext(!xIsNext);
+    setCurrentSymbol(currentSymbol === X_SYMBOL ? O_SYMBOL : X_SYMBOL);
   };
 
   // we wrap the board into the React fragment, because we don't want to render a div element
   return (
     <>
       <Board squares={history[stepNumber]} onClickHandler={clickHandler} />
+      <div style={styles}>{winner ? "Winner: " + winner : "Next player: " + currentSymbol}</div>
     </>
   );
 };
