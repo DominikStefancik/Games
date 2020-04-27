@@ -1,0 +1,24 @@
+import React, { FC } from "react";
+import { SquareType } from "../../models/square";
+
+interface SquareProps {
+  value: SquareType;
+  onClickHandler: (event: MouseEvent) => void;
+}
+
+const styles = {
+  background: "lightblue",
+  border: "5px solid darkblue",
+  fontSize: "50px",
+  fontWeight: 800,
+  cursor: "pointer",
+  outline: "none",
+};
+
+const Square: FC<SquareProps> = ({ value, onClickHandler }: SquareProps) => (
+  <button style={styles} onClick={onClickHandler}>
+    {value}
+  </button>
+);
+
+export default Square;
