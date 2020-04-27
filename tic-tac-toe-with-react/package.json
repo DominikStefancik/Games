@@ -4,6 +4,13 @@
   "description": "Implementation of classical game of Tic Tac Toe with React, React hooks and Typescript",
   "author": "Dominik Stefancik",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "pretty": "prettier --config ./.prettierrc --write src/**/*.ts src/**/*.tsx"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -17,11 +24,8 @@
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "prettier": "^2.0.5"
   },
   "eslintConfig": {
     "extends": "react-app"
