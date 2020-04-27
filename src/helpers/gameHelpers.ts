@@ -9,6 +9,8 @@ export enum RotationDirection {
   ANTICLOCKWISE,
 }
 
+export const GAME_LEVEL_INCREASE = 10;
+
 export const createStage = (): any[] => {
   // a multi-dimensional array which represents stage grid
   return Array.from(Array(STAGE_HEIGHT), () => {
@@ -46,4 +48,8 @@ export const checkCollision = (tetrominoState: TetrominoState, stage, moveX, mov
   }
 
   return false;
+};
+
+export const setDropTimeSpeed = (level: number): number => {
+  return 1000 / (level + 1) + 200;
 };

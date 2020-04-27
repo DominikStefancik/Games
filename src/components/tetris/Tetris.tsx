@@ -5,11 +5,18 @@ import { StyledTetris, StyledTetrisWrapper } from "./StyledTetris";
 import StartButton from "../start-button/StartButton";
 import { useTetromino } from "../../hooks/useTetromino";
 import { useStage } from "../../hooks/useStage";
-import { checkCollision, createStage, RotationDirection } from "../../helpers/gameHelpers";
+import {
+  checkCollision,
+  createStage,
+  GAME_LEVEL_INCREASE,
+  RotationDirection,
+  setDropTimeSpeed,
+} from "../../helpers/gameHelpers";
 import { useInterval } from "../../hooks/useInterval";
+import { useGameStatus } from "../../hooks/useGameStatus";
 
 const Tetris: FC = () => {
-  const [dropTime, setDropTime] = useState(null);
+  const [dropTime, setDropTime] = useState<>(null);
   const [isGameOver, setGameOver] = useState(false);
 
   const [
@@ -19,7 +26,11 @@ const Tetris: FC = () => {
     rotateTetromino,
   ] = useTetromino();
 
-  const [stage, setStage] = useStage<>(tetrominoState, resetTetrominoState);
+  const [stage, setStage, numberOfRowsCleared] = useStage<>(tetrominoState, resetTetrominoState);
+
+  const [score, setScore, rowsCount, setRowsCount, level, setLevel] = useGameStatus<>(
+    numberOfRowsCleared
+  );
 
   useInterval(() => {
     drop();
@@ -27,10 +38,13 @@ const Tetris: FC = () => {
 
   const startGame = () => {
     // Reset everything
-    setGameOver(false);
-    setDropTime(1000);
     setStage(createStage());
     resetTetrominoState();
+    setGameOver(false);
+    setDropTime(1000);
+    setScore(0);
+    setRowsCount(0);
+    setLevel(1);
   };
 
   const moveTetromino = (horizontalDirection: number) => {
@@ -50,6 +64,14 @@ const Tetris: FC = () => {
       }
       updateTetrominoPosition({ x: 0, y: 0, collided: true });
     }
+
+    // Increase the game level when player has cleared given number of rows
+    if (rowsCount / level === GAME_LEVEL_INCREASE) {
+      setLevel((previousLevel) => previousLevel + 1);
+
+      // Also increase the speed
+      setDropTime(setDropTimeSpeed(level));
+    }
   };
 
   const dropTetromino = () => {
@@ -62,7 +84,7 @@ const Tetris: FC = () => {
     if (!isGameOver) {
       // when a user wants to stop speeding up dropping a tetromino by holding a key, activate interval time again
       if (event.key === " " || event.key === "SpaceBar") {
-        setDropTime(1000);
+        setDropTime(setDropTimeSpeed(level));
       }
     }
   };
@@ -106,9 +128,9 @@ const Tetris: FC = () => {
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
-          <Display isGameOver={isGameOver} text={"Score"} />
-          <Display isGameOver={isGameOver} text={"Rows"} />
-          <Display isGameOver={isGameOver} text={"Level"} />
+          <Display isGameOver={isGameOver} text={`Score: ${score}`} />
+          <Display isGameOver={isGameOver} text={`Rows: ${rowsCount}`} />
+          <Display isGameOver={isGameOver} text={`Level: ${level}`} />
           {isGameOver && <Display isGameOver={isGameOver} text={"Game Over!!!"} />}
           <StartButton callback={startGame} />
         </aside>
