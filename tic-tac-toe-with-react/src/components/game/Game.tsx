@@ -37,11 +37,31 @@ const Game: FC = () => {
     setCurrentSymbol(currentSymbol === X_SYMBOL ? O_SYMBOL : X_SYMBOL);
   };
 
+  const jumpToStep = (stepNumber: number) => {
+    setStepNumber(stepNumber);
+    setCurrentSymbol(stepNumber % 2 === 0 ? X_SYMBOL : O_SYMBOL);
+  };
+
+  const renderSteps = () => {
+    return history.map((_step, stepIndex) => {
+      const destination = stepIndex > 0 ? `Go to move #${stepIndex}` : "Go to start";
+
+      return (
+        <li key={stepIndex}>
+          <button onClick={() => jumpToStep(stepIndex)}>{destination}</button>
+        </li>
+      );
+    });
+  };
+
   // we wrap the board into the React fragment, because we don't want to render a div element
   return (
     <>
       <Board squares={history[stepNumber]} onClickHandler={clickHandler} />
-      <div style={styles}>{winner ? "Winner: " + winner : "Next player: " + currentSymbol}</div>
+      <div style={styles}>
+        {winner ? "Winner: " + winner : "Next player: " + currentSymbol}
+        <ul>{renderSteps()}</ul>
+      </div>
     </>
   );
 };
