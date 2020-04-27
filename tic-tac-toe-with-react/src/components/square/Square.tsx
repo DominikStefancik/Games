@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { SquareType } from "../../models/square";
+import { SquareType } from "../../models/square.model";
 
 interface SquareProps {
   value: SquareType;

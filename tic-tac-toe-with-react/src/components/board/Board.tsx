@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import Square from "../square/Square";
-import { SquareType } from "../../models/square";
+import { SquareType } from "../../models/square.model";
 
 interface BoardProps {
   squares: SquareType[];
