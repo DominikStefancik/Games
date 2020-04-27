@@ -9,6 +9,7 @@ export enum RotationDirection {
   ANTICLOCKWISE,
 }
 
+export const STARTING_DROP_TIME_SPEED = 1000;
 export const GAME_LEVEL_INCREASE = 10;
 
 export const createStage = (): any[] => {
@@ -51,5 +52,5 @@ export const checkCollision = (tetrominoState: TetrominoState, stage, moveX, mov
 };
 
 export const setDropTimeSpeed = (level: number): number => {
-  return 1000 / (level + 1) + 200;
+  return STARTING_DROP_TIME_SPEED / (level + 1) + 200;
 };

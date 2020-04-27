@@ -11,6 +11,7 @@ import {
   GAME_LEVEL_INCREASE,
   RotationDirection,
   setDropTimeSpeed,
+  STARTING_DROP_TIME_SPEED,
 } from "../../helpers/gameHelpers";
 import { useInterval } from "../../hooks/useInterval";
 import { useGameStatus } from "../../hooks/useGameStatus";
@@ -41,7 +42,7 @@ const Tetris: FC = () => {
     setStage(createStage());
     resetTetrominoState();
     setGameOver(false);
-    setDropTime(1000);
+    setDropTime(STARTING_DROP_TIME_SPEED);
     setScore(0);
     setRowsCount(0);
     setLevel(0);

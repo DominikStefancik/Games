@@ -1,6 +1,8 @@
 {
   "name": "tetris-with-react",
   "version": "0.1.0",
+  "description": "Classical game of Tetris implemented with React and React hooks",
+  "author": "Dominik Stefancik",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
