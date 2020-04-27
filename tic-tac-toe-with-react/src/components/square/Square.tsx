@@ -3,7 +3,7 @@ import { SquareType } from "../../models/square.model";
 
 interface SquareProps {
   value: SquareType;
-  onClickHandler: (event: MouseEvent) => void;
+  onClickHandler: () => void;
 }
 
 const styles = {

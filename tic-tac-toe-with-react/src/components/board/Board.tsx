@@ -4,7 +4,7 @@ import { SquareType } from "../../models/square.model";
 
 interface BoardProps {
   squares: SquareType[];
-  onClickHandler: (event: MouseEvent) => void;
+  onClickHandler: (index: number) => void;
 }
 
 const styles = {
@@ -20,7 +20,7 @@ const styles = {
 const Board: FC<BoardProps> = ({ squares, onClickHandler }: BoardProps) => (
   <div style={styles}>
     {squares.map((square, index) => (
-      <Square key={index} value={square} onClick={onClickHandler} />
+      <Square key={index} value={square} onClickHandler={() => onClickHandler(index)} />
     ))}
   </div>
 );
