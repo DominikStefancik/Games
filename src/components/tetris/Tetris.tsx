@@ -44,7 +44,7 @@ const Tetris: FC = () => {
     setDropTime(1000);
     setScore(0);
     setRowsCount(0);
-    setLevel(1);
+    setLevel(0);
   };
 
   const moveTetromino = (horizontalDirection: number) => {
@@ -83,7 +83,7 @@ const Tetris: FC = () => {
   const keyUpHandler = (event) => {
     if (!isGameOver) {
       // when a user wants to stop speeding up dropping a tetromino by holding a key, activate interval time again
-      if (event.key === " " || event.key === "SpaceBar") {
+      if (event.key === "c" || event.key === "SpaceBar") {
         setDropTime(setDropTimeSpeed(level));
       }
     }
@@ -109,7 +109,7 @@ const Tetris: FC = () => {
           rotateTetromino(stage, RotationDirection.ANTICLOCKWISE);
           break;
         case "SpaceBar": // IE/Edge specific value
-        case " ": // User hit the Space button
+        case "c": // User hit the Space button
           dropTetromino();
           break;
         default:

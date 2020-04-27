@@ -12,4 +12,6 @@ const Cell: FC<CellProps> = ({ type }) => {
   return <StyledCell shape={tetromino.shape} color={tetromino.rgb_colour} />;
 };
 
-export default Cell;
+// "Remember" the component and re-render it only when it changed
+// This serves for the optimalisation purposes
+export default React.memo(Cell);
