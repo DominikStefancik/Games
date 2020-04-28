@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -48,12 +50,19 @@ public class App extends Application {
         canvas.setOnMouseClicked((event) -> hasGameStarted = true);
 
         Scene scene = new Scene(new StackPane(canvas));
+        stage.setScene(scene);
         stage.show();
         timeline.play();
     }
 
     private void run(GraphicsContext graphicsContext) {
+        // set background colour
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 
+        // set text colour
+        graphicsContext.setFill(Color.YELLOW);
+        graphicsContext.setFont(Font.font(25));
     }
 
     public static void main(String[] args) {
