@@ -9,10 +9,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
+import static com.nortoncommander.util.Constants.BALL_RADIUS;
+import static com.nortoncommander.util.Constants.PLAYER_HEIGHT;
 import static com.nortoncommander.util.Constants.STAGE_HEIGHT;
 import static com.nortoncommander.util.Constants.STAGE_WIDTH;
 
@@ -63,6 +66,31 @@ public class App extends Application {
         // set text colour
         graphicsContext.setFill(Color.YELLOW);
         graphicsContext.setFont(Font.font(25));
+
+        if (hasGameStarted) {
+            // set ball movement
+            ballPositionX += ballSpeedX;
+            ballPositionY += ballSpeedY;
+
+            // create a simple computer opponent which is following the ball
+            if (ballPositionX < STAGE_WIDTH - STAGE_WIDTH / 4) {
+                playerTwoPositionY = ballPositionY - PLAYER_HEIGHT / 2;
+            } else {
+                if (ballPositionY > playerTwoPositionY + PLAYER_HEIGHT / 2) {
+                    playerTwoPositionY += 1;
+                } else {
+                    playerTwoPositionY -= 1;
+                }
+            }
+
+            // draw the ball
+            graphicsContext.fillOval(ballPositionX, ballPositionY, BALL_RADIUS, BALL_RADIUS);
+        } else {
+            // if game hasn't started yet, show the start text
+            graphicsContext.setStroke(Color.YELLOW);
+            graphicsContext.setTextAlign(TextAlignment.CENTER);
+            graphicsContext.strokeText("Click to start the game", STAGE_WIDTH / 2, STAGE_HEIGHT / 2);
+        }
     }
 
     public static void main(String[] args) {
