@@ -1,7 +1,15 @@
 package com.nortoncommander;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 
 import static com.nortoncommander.util.Constants.STAGE_HEIGHT;
 import static com.nortoncommander.util.Constants.STAGE_WIDTH;
@@ -28,8 +36,24 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        stage.setTitle("P O N G");
+        final Canvas canvas = new Canvas(STAGE_WIDTH, STAGE_HEIGHT);
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), (event) -> run(graphicsContext)));
+        // define the cycles of our animations
+        timeline.setCycleCount(Timeline.INDEFINITE);
 
+        // mouse controls
+        canvas.setOnMouseMoved((event) -> playerOnePositionY = event.getY());
+        canvas.setOnMouseClicked((event) -> hasGameStarted = true);
+
+        Scene scene = new Scene(new StackPane(canvas));
         stage.show();
+        timeline.play();
+    }
+
+    private void run(GraphicsContext graphicsContext) {
+
     }
 
     public static void main(String[] args) {
