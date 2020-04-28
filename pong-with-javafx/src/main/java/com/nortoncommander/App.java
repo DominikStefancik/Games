@@ -93,6 +93,9 @@ public class App extends Application {
         }
 
         checkIfGameFinished();
+
+        increaseSpeed();
+
     }
 
     private void resetGame(GraphicsContext graphicsContext) {
@@ -108,6 +111,28 @@ public class App extends Application {
         // reset the speed and direction of the ball
         ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
         ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
+    }
+
+    /**
+     * This method is called every time a player hits the ball
+     */
+    private void increaseSpeed() {
+        final boolean ballHitPlayerOne =
+          ballPositionX < playerOnePositionX + PLAYER_WIDTH &&
+            ballPositionY >= playerOnePositionY &&
+            ballPositionY <= playerOnePositionY + PLAYER_HEIGHT;
+
+        final boolean ballHitPlayerTwo =
+          ballPositionX + BALL_RADIUS > playerTwoPositionX &&
+          ballPositionY >= playerTwoPositionY &&
+          ballPositionY <= playerTwoPositionY + PLAYER_HEIGHT;
+
+        if (ballHitPlayerOne || ballHitPlayerTwo) {
+            ballSpeedX += 1 * Math.signum(ballSpeedX);
+            ballSpeedX *= -1;
+            ballSpeedY += 1 * Math.signum(ballSpeedY);
+            ballSpeedY *= -1;
+        }
     }
 
     private void checkIfGameFinished() {
