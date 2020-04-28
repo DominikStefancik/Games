@@ -15,10 +15,7 @@ import javafx.util.Duration;
 
 import java.util.Random;
 
-import static com.nortoncommander.util.Constants.BALL_RADIUS;
-import static com.nortoncommander.util.Constants.PLAYER_HEIGHT;
-import static com.nortoncommander.util.Constants.STAGE_HEIGHT;
-import static com.nortoncommander.util.Constants.STAGE_WIDTH;
+import static com.nortoncommander.util.Constants.*;
 
 /**
  * JavaFX App
@@ -94,6 +91,8 @@ public class App extends Application {
         if (ballPositionY >= STAGE_HEIGHT || ballPositionY <= 0) {
             ballSpeedY *= -1;
         }
+
+        checkIfGameFinished();
     }
 
     private void resetGame(GraphicsContext graphicsContext) {
@@ -109,6 +108,20 @@ public class App extends Application {
         // reset the speed and direction of the ball
         ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
         ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
+    }
+
+    private void checkIfGameFinished() {
+        // computer wins
+        if (ballPositionX < playerOnePositionX - PLAYER_WIDTH) {
+            playerTwoScore++;
+            hasGameStarted = false;
+        }
+
+        // user wins
+        if (ballPositionX > playerOnePositionX + PLAYER_WIDTH) {
+            playerOneScore++;
+            hasGameStarted = false;
+        }
     }
 
     public static void main(String[] args) {
