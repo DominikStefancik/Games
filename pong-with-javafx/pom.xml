@@ -31,7 +31,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.1</version>
                 <configuration>
-                    <mainClass>com.nortoncommander.App</mainClass>
+                    <mainClass>com.nortoncommander.Pong</mainClass>
                 </configuration>
             </plugin>
         </plugins>
