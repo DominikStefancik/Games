@@ -89,6 +89,11 @@ public class App extends Application {
         } else {
             resetGame(graphicsContext);
         }
+
+        // make sure that the ball stays on the canvas
+        if (ballPositionY >= STAGE_HEIGHT || ballPositionY <= 0) {
+            ballSpeedY *= -1;
+        }
     }
 
     private void resetGame(GraphicsContext graphicsContext) {
