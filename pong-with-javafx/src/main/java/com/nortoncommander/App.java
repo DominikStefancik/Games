@@ -13,6 +13,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Random;
 
 import static com.nortoncommander.util.Constants.BALL_RADIUS;
 import static com.nortoncommander.util.Constants.PLAYER_HEIGHT;
@@ -86,11 +87,23 @@ public class App extends Application {
             // draw the ball
             graphicsContext.fillOval(ballPositionX, ballPositionY, BALL_RADIUS, BALL_RADIUS);
         } else {
-            // if game hasn't started yet, show the start text
-            graphicsContext.setStroke(Color.YELLOW);
-            graphicsContext.setTextAlign(TextAlignment.CENTER);
-            graphicsContext.strokeText("Click to start the game", STAGE_WIDTH / 2, STAGE_HEIGHT / 2);
+            resetGame(graphicsContext);
         }
+    }
+
+    private void resetGame(GraphicsContext graphicsContext) {
+        // if game hasn't started yet, show the start text
+        graphicsContext.setStroke(Color.YELLOW);
+        graphicsContext.setTextAlign(TextAlignment.CENTER);
+        graphicsContext.strokeText("Click to start the game", STAGE_WIDTH / 2, STAGE_HEIGHT / 2);
+
+        // reset the ball starting position
+        ballPositionY = STAGE_WIDTH / 2;
+        ballPositionY = STAGE_HEIGHT / 2;
+
+        // reset the speed and direction of the ball
+        ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
+        ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
     }
 
     public static void main(String[] args) {
