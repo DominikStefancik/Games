@@ -32,7 +32,7 @@ public class App extends Application {
 
     private double playerOnePositionX = 0;
     private double playerOnePositionY = STAGE_HEIGHT / 2;
-    private double playerTwoPositionX = 0;
+    private double playerTwoPositionX = STAGE_WIDTH - PLAYER_WIDTH;
     private double playerTwoPositionY = STAGE_HEIGHT / 2;
 
     private boolean hasGameStarted = false;
@@ -96,6 +96,13 @@ public class App extends Application {
 
         increaseSpeed();
 
+        // draw the score
+        graphicsContext.fillText(playerOneScore + "\t\t\t\t\t\t\t\t\t\t\t\t" + playerTwoScore,
+          STAGE_WIDTH / 2, 100);
+
+        // draw the players
+        graphicsContext.fillRect(playerOnePositionX, playerOnePositionY, PLAYER_WIDTH, PLAYER_HEIGHT);
+        graphicsContext.fillRect(playerTwoPositionX, playerTwoPositionY, PLAYER_WIDTH, PLAYER_HEIGHT);
     }
 
     private void resetGame(GraphicsContext graphicsContext) {
@@ -143,7 +150,7 @@ public class App extends Application {
         }
 
         // user wins
-        if (ballPositionX > playerOnePositionX + PLAYER_WIDTH) {
+        if (ballPositionX > playerTwoPositionX + PLAYER_WIDTH) {
             playerOneScore++;
             hasGameStarted = false;
         }
