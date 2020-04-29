@@ -128,12 +128,12 @@ public class Game {
     this.graphicsContext.strokeText("Click to start the game", STAGE_WIDTH / 2, STAGE_HEIGHT / 2);
 
     // reset the ball starting position
-    ballPositionY = STAGE_WIDTH / 2;
-    ballPositionY = STAGE_HEIGHT / 2;
+    ballPositionX = STAGE_WIDTH / 2;
+    ballPositionY = new Random().nextInt(STAGE_HEIGHT);
 
     // reset the speed and direction of the ball
     ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
-    ballSpeedX = new Random().nextInt(2) == 0 ? 1 : -1;
+    ballSpeedY = new Random().nextInt(2) == 0 ? 1 : -1;
   }
 
   /**
