@@ -24,8 +24,6 @@ const paddle = {
 const drawPaddle = () => {
   const { x, y, width, height } = paddle;
 
-  console.log(x, y, width, height);
-
   context.fillStyle = "#2e3548";
   context.fillRect(x, y, width, height);
 
@@ -34,4 +32,15 @@ const drawPaddle = () => {
   context.strokeRect(x, y, width, height);
 };
 
-drawPaddle();
+// Draws the content if the canvas
+const drawCanvasContent = () => {
+  drawPaddle();
+};
+
+const gameLoop = () => {
+  drawCanvasContent();
+
+  window.requestAnimationFrame(gameLoop);
+};
+
+gameLoop();
