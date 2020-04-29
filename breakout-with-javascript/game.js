@@ -38,6 +38,8 @@ const drawCanvasContent = () => {
 };
 
 const gameLoop = () => {
+  context.drawImage(BACKGROUND_IMAGE, 0, 0);
+
   drawCanvasContent();
 
   window.requestAnimationFrame(gameLoop);
