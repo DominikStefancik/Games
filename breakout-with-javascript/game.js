@@ -2,6 +2,7 @@
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 const PADDLE_MARGIN_BOTTOM = 50;
+const BALL_RADIUS = 8;
 
 let leftArrowPressed = false;
 let rightArrowPressed = false;
@@ -14,6 +15,8 @@ const context = canvas.getContext("2d");
 canvas.style.border = "1px solid #0ff";
 // Make lines stronger when drawing to the canvas
 context.lineWidth = 3;
+
+/////// CREATING OBJECTS ///////
 
 // Paddle object
 const paddle = {
@@ -48,6 +51,18 @@ const keyUpHandler = (event) => {
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
 
+// Ball object
+const ball = {
+  x: canvas.width / 2,
+  y: paddle.y - BALL_RADIUS,
+  radius: BALL_RADIUS,
+  speed: 4,
+  deltaX: 3,
+  deltaY: -3,
+};
+
+/////// DRAWING OBJECTS ///////
+
 const drawPaddle = () => {
   const { x, y, width, height } = paddle;
 
@@ -57,6 +72,20 @@ const drawPaddle = () => {
   // draw the border of the paddle
   context.strokeStyle = "#ffcd05";
   context.strokeRect(x, y, width, height);
+};
+
+const drawBall = () => {
+  context.beginPath();
+
+  context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+  context.fillStyle = "#ffcd05";
+  context.fill();
+
+  // draw the border of the ball
+  context.strokeStyle = "#2e3548";
+  context.stroke();
+
+  context.closePath();
 };
 
 const movePaddle = () => {
@@ -69,13 +98,32 @@ const movePaddle = () => {
   }
 };
 
+const moveBall = () => {
+  ball.x += ball.deltaX;
+  ball.y += ball.deltaY;
+
+  if (ball.x - BALL_RADIUS === 0 || ball.x + BALL_RADIUS === canvas.width) {
+    ball.deltaX *= -1;
+  }
+
+  if (
+    ball.y - BALL_RADIUS === 0 ||
+    ball.y + BALL_RADIUS ===
+      canvas.height - PADDLE_MARGIN_BOTTOM - PADDLE_HEIGHT
+  ) {
+    ball.deltaY *= -1;
+  }
+};
+
 // Draws the content if the canvas
 const drawCanvasContent = () => {
   drawPaddle();
+  drawBall();
 };
 
 const updateCanvas = () => {
   movePaddle();
+  moveBall();
 };
 
 const gameLoop = () => {
