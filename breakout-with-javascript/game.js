@@ -3,6 +3,9 @@ const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 const PADDLE_MARGIN_BOTTOM = 50;
 
+let leftArrowPressed = false;
+let rightArrowPressed = false;
+
 const canvas = document.querySelector("#gameCanvas");
 // context of the canvas
 const context = canvas.getContext("2d");
@@ -21,6 +24,30 @@ const paddle = {
   deltaX: 5,
 };
 
+const keyDownHandler = (event) => {
+  if (event.key === "ArrowLeft") {
+    // user pressed left arrow
+    leftArrowPressed = true;
+  } else if (event.key === "ArrowRight") {
+    // user pressed right arrow
+    rightArrowPressed = true;
+  }
+};
+
+const keyUpHandler = (event) => {
+  if (event.key === "ArrowLeft") {
+    // user released left arrow
+    leftArrowPressed = false;
+  } else if (event.key === "ArrowRight") {
+    // user released right arrow
+    rightArrowPressed = false;
+  }
+};
+
+// Register listeners for key presses
+document.addEventListener("keydown", keyDownHandler);
+document.addEventListener("keyup", keyUpHandler);
+
 const drawPaddle = () => {
   const { x, y, width, height } = paddle;
 
@@ -32,15 +59,30 @@ const drawPaddle = () => {
   context.strokeRect(x, y, width, height);
 };
 
+const movePaddle = () => {
+  if (leftArrowPressed && paddle.x > 0) {
+    paddle.x -= paddle.deltaX;
+  }
+
+  if (rightArrowPressed && paddle.x + paddle.width < canvas.width) {
+    paddle.x += paddle.deltaX;
+  }
+};
+
 // Draws the content if the canvas
 const drawCanvasContent = () => {
   drawPaddle();
+};
+
+const updateCanvas = () => {
+  movePaddle();
 };
 
 const gameLoop = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
 
   drawCanvasContent();
+  updateCanvas();
 
   window.requestAnimationFrame(gameLoop);
 };
