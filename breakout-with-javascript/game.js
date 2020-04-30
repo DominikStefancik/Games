@@ -104,15 +104,39 @@ const moveBall = () => {
   ball.x += ball.deltaX;
   ball.y += ball.deltaY;
 
+  checkBallCollisionWithWall();
+  checkBallCollisionWithPaddle();
+};
+
+const checkBallCollisionWithWall = () => {
   if (ball.x - BALL_RADIUS < 0 || ball.x + BALL_RADIUS > canvas.width) {
     ball.deltaX *= -1;
   }
 
-  if (ball.y - BALL_RADIUS === 0) {
+  if (ball.y - BALL_RADIUS < 0) {
     ball.deltaY *= -1;
   } else if (ball.y + BALL_RADIUS === canvas.height) {
     lives--;
     resetBall();
+  }
+};
+
+const checkBallCollisionWithPaddle = () => {
+  const ballIsOnPaddleHorizontally =
+    ball.x > paddle.x && ball.x < paddle.x + PADDLE_WIDTH;
+  const ballIsOnPaddleVertically = ball.y > paddle.y;
+
+  if (ballIsOnPaddleHorizontally && ballIsOnPaddleVertically) {
+    let collidePoint = ball.x - paddle.x - PADDLE_WIDTH / 2;
+
+    // Normalise the values
+    collidePoint = collidePoint / (PADDLE_WIDTH - 2);
+
+    // Calculate the angle of the ball
+    const angle = (collidePoint * Math.PI) / 3;
+
+    ball.deltaX = ball.speed * Math.sin(angle);
+    ball.deltaY = -ball.speed * Math.cos(angle);
   }
 };
 
