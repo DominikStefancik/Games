@@ -5,10 +5,13 @@ const PADDLE_MARGIN_BOTTOM = 50;
 const BALL_RADIUS = 8;
 const NUMBER_OF_BRICK_ROWS = 3;
 const NUMBER_OF_BRICK_COLUMNS = 5;
+const STATISTICS_OFFSET_TOP = 25;
 
 let leftArrowPressed = false;
 let rightArrowPressed = false;
 
+let score = 0;
+let level = 1;
 let lives = 3;
 
 const canvas = document.querySelector("#gameCanvas");
@@ -19,6 +22,19 @@ const context = canvas.getContext("2d");
 canvas.style.border = "1px solid #0ff";
 // Make lines stronger when drawing to the canvas
 context.lineWidth = 3;
+
+const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
+  context.fillStyle = "#FFF";
+  context.font = "25px Germania One";
+  context.fillText(text, textX, textY);
+  context.drawImage(
+    image,
+    imageX,
+    imageY,
+    STATISTICS_OFFSET_TOP,
+    STATISTICS_OFFSET_TOP
+  );
+};
 
 /////// CREATING OBJECTS ///////
 
@@ -247,6 +263,23 @@ const updateCanvas = () => {
 
 const gameLoop = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
+  showGameStatistics(score, 35, STATISTICS_OFFSET_TOP, SCORE_IMAGE, 5, 5);
+  showGameStatistics(
+    level,
+    canvas.width / 2,
+    STATISTICS_OFFSET_TOP,
+    LEVEL_IMAGE,
+    canvas.width / 2 - 30,
+    5
+  );
+  showGameStatistics(
+    lives,
+    canvas.width - 25,
+    STATISTICS_OFFSET_TOP,
+    LIFE_IMAGE,
+    canvas.width - 55,
+    5
+  );
 
   drawCanvasContent();
   updateCanvas();
