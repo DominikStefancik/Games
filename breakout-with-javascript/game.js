@@ -3,6 +3,8 @@ const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 const PADDLE_MARGIN_BOTTOM = 50;
 const BALL_RADIUS = 8;
+const NUMBER_OF_BRICK_ROWS = 3;
+const NUMBER_OF_BRICK_COLUMNS = 5;
 
 let leftArrowPressed = false;
 let rightArrowPressed = false;
@@ -61,6 +63,40 @@ const ball = {
   speed: 4,
   deltaX: 3 * (Math.random() * 2 - 1),
   deltaY: -3,
+};
+
+const brick = {
+  width: 55,
+  height: 20,
+  offsetLeft: 20,
+  offsetTop: 20,
+  marginTop: 40,
+  fillColor: "#2e3548",
+  strokeColor: "#FFF",
+};
+
+// variable bricksData is an array of arryas of bricks "metadata"
+let bricksData;
+
+const setupBricksData = (numberOfRows) => {
+  bricksData = [];
+  for (let row = 0; row < numberOfRows; row++) {
+    const bricksRow = [];
+    for (let column = 0; column < NUMBER_OF_BRICK_COLUMNS; column++) {
+      const brickSetup = {
+        x: column * (brick.offsetLeft + brick.width) + brick.offsetLeft,
+        y:
+          row * (brick.offsetTop + brick.height) +
+          brick.marginTop +
+          brick.offsetTop,
+        isBroken: false,
+      };
+
+      bricksRow.push(brickSetup);
+    }
+
+    bricksData.push(bricksRow);
+  }
 };
 
 /////// DRAWING OBJECTS ///////
@@ -148,10 +184,32 @@ const resetBall = () => {
   ball.deltaY = -3;
 };
 
+const drawBrick = (x, y) => {
+  context.fillStyle = brick.fillColor;
+  context.fillRect(x, y, brick.width, brick.height);
+
+  // draw the border of the brick
+  context.strokeStyle = brick.strokeColor;
+  context.strokeRect(x, y, brick.width, brick.height);
+};
+
+const drawBricks = () => {
+  for (let row = 0; row < bricksData.length; row++) {
+    const bricksRow = bricksData[row];
+    for (let column = 0; column < bricksRow.length; column++) {
+      const data = bricksRow[column];
+      if (!data.isBroken) {
+        drawBrick(data.x, data.y);
+      }
+    }
+  }
+};
+
 // Draws the content if the canvas
 const drawCanvasContent = () => {
   drawPaddle();
   drawBall();
+  drawBricks();
 };
 
 const updateCanvas = () => {
@@ -161,6 +219,7 @@ const updateCanvas = () => {
 
 const gameLoop = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
+  setupBricksData(NUMBER_OF_BRICK_ROWS);
 
   drawCanvasContent();
   updateCanvas();
