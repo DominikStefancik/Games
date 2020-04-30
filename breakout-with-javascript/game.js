@@ -6,6 +6,7 @@ const BALL_RADIUS = 8;
 const NUMBER_OF_BRICK_ROWS = 3;
 const NUMBER_OF_BRICK_COLUMNS = 5;
 const STATISTICS_OFFSET_TOP = 25;
+const BRICK_SCORE = 10;
 
 let leftArrowPressed = false;
 let rightArrowPressed = false;
@@ -13,6 +14,8 @@ let rightArrowPressed = false;
 let score = 0;
 let level = 1;
 let lives = 3;
+
+let isGameOver = false;
 
 const canvas = document.querySelector("#gameCanvas");
 // context of the canvas
@@ -170,7 +173,12 @@ const checkBallCollisionWithWall = () => {
     ball.deltaY *= -1;
   } else if (ball.y + BALL_RADIUS > canvas.height) {
     lives--;
-    resetBall();
+
+    if (lives === 0) {
+      isGameOver = true;
+    } else {
+      resetBall();
+    }
   }
 };
 
@@ -196,7 +204,6 @@ const checkBallCollisionWithPaddle = () => {
 const checkBallCollisionWithBrick = () => {
   for (let row = 0; row < bricksData.length; row++) {
     const bricksRow = bricksData[row];
-    let isBrickHit = false;
     for (let column = 0; column < bricksRow.length; column++) {
       const brickMetadata = bricksRow[column];
       // the brick is still visible on the canvas
@@ -211,8 +218,8 @@ const checkBallCollisionWithBrick = () => {
 
         if ((ballHitBrickOnBottom || ballHitBrickOnTop) && ballHitBrickLength) {
           brickMetadata.isBroken = true;
+          score += BRICK_SCORE;
           ball.deltaY *= -1;
-          isBrickHit = true;
           break;
         }
       }
@@ -251,17 +258,6 @@ const drawBricks = () => {
 
 // Draws the content if the canvas
 const drawCanvasContent = () => {
-  drawPaddle();
-  drawBall();
-  drawBricks();
-};
-
-const updateCanvas = () => {
-  movePaddle();
-  moveBall();
-};
-
-const gameLoop = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
   showGameStatistics(score, 35, STATISTICS_OFFSET_TOP, SCORE_IMAGE, 5, 5);
   showGameStatistics(
@@ -281,10 +277,23 @@ const gameLoop = () => {
     5
   );
 
+  drawPaddle();
+  drawBall();
+  drawBricks();
+};
+
+const updateCanvas = () => {
+  movePaddle();
+  moveBall();
+};
+
+const gameLoop = () => {
   drawCanvasContent();
   updateCanvas();
 
-  window.requestAnimationFrame(gameLoop);
+  if (!isGameOver) {
+    window.requestAnimationFrame(gameLoop);
+  }
 };
 
 // before we start the game loop, we initialise bricks
