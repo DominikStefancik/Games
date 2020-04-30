@@ -115,7 +115,7 @@ const checkBallCollisionWithWall = () => {
 
   if (ball.y - BALL_RADIUS < 0) {
     ball.deltaY *= -1;
-  } else if (ball.y + BALL_RADIUS === canvas.height) {
+  } else if (ball.y + BALL_RADIUS > canvas.height) {
     lives--;
     resetBall();
   }
@@ -124,7 +124,7 @@ const checkBallCollisionWithWall = () => {
 const checkBallCollisionWithPaddle = () => {
   const ballIsOnPaddleHorizontally =
     ball.x > paddle.x && ball.x < paddle.x + PADDLE_WIDTH;
-  const ballIsOnPaddleVertically = ball.y > paddle.y;
+  const ballIsOnPaddleVertically = ball.y + BALL_RADIUS > paddle.y;
 
   if (ballIsOnPaddleHorizontally && ballIsOnPaddleVertically) {
     let collidePoint = ball.x - paddle.x - PADDLE_WIDTH / 2;
