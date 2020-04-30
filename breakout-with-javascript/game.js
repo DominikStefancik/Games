@@ -40,6 +40,10 @@ const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
   );
 };
 
+const playSound = (sound) => {
+  sound.play();
+};
+
 /////// CREATING OBJECTS ///////
 
 // Paddle object
@@ -186,12 +190,15 @@ const moveBall = () => {
 
 const checkBallCollisionWithWall = () => {
   if (ball.x - BALL_RADIUS < 0 || ball.x + BALL_RADIUS > canvas.width) {
+    playSound(WALL_HIT_AUDIO);
     ball.deltaX *= -1;
   }
 
   if (ball.y - BALL_RADIUS < 0) {
+    playSound(WALL_HIT_AUDIO);
     ball.deltaY *= -1;
   } else if (ball.y + BALL_RADIUS > canvas.height) {
+    playSound(LIFE_LOST_AUDIO);
     lives--;
 
     if (lives === 0) {
@@ -208,6 +215,7 @@ const checkBallCollisionWithPaddle = () => {
   const ballIsOnPaddleVertically = ball.y + BALL_RADIUS > paddle.y;
 
   if (ballIsOnPaddleHorizontally && ballIsOnPaddleVertically) {
+    playSound(PADDLE_HIT_AUDIO);
     let collidePoint = ball.x - paddle.x - PADDLE_WIDTH / 2;
 
     // Normalise the values
@@ -237,6 +245,7 @@ const checkBallCollisionWithBrick = () => {
           ball.x > brickMetadata.x && ball.x < brickMetadata.x + brick.width;
 
         if ((ballHitBrickOnBottom || ballHitBrickOnTop) && ballHitBrickLength) {
+          playSound(BRICK_HIT_AUDIO);
           brickMetadata.isBroken = true;
           score += BRICK_SCORE;
           if (areAllBricksBroken()) {
