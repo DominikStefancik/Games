@@ -7,6 +7,8 @@ const BALL_RADIUS = 8;
 let leftArrowPressed = false;
 let rightArrowPressed = false;
 
+let lives = 3;
+
 const canvas = document.querySelector("#gameCanvas");
 // context of the canvas
 const context = canvas.getContext("2d");
@@ -57,7 +59,7 @@ const ball = {
   y: paddle.y - BALL_RADIUS,
   radius: BALL_RADIUS,
   speed: 4,
-  deltaX: 3,
+  deltaX: 3 * (Math.random() * 2 - 1),
   deltaY: -3,
 };
 
@@ -102,17 +104,24 @@ const moveBall = () => {
   ball.x += ball.deltaX;
   ball.y += ball.deltaY;
 
-  if (ball.x - BALL_RADIUS === 0 || ball.x + BALL_RADIUS === canvas.width) {
+  if (ball.x - BALL_RADIUS < 0 || ball.x + BALL_RADIUS > canvas.width) {
     ball.deltaX *= -1;
   }
 
-  if (
-    ball.y - BALL_RADIUS === 0 ||
-    ball.y + BALL_RADIUS ===
-      canvas.height - PADDLE_MARGIN_BOTTOM - PADDLE_HEIGHT
-  ) {
+  if (ball.y - BALL_RADIUS === 0) {
     ball.deltaY *= -1;
+  } else if (ball.y + BALL_RADIUS === canvas.height) {
+    lives--;
+    resetBall();
   }
+};
+
+const resetBall = () => {
+  ball.x = canvas.width / 2;
+  ball.y = paddle.y - BALL_RADIUS;
+  ball.speed = 4;
+  ball.deltaX = 3 * (Math.random() * 2 - 1);
+  ball.deltaY = -3;
 };
 
 // Draws the content if the canvas
