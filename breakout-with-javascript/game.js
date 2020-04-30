@@ -16,6 +16,7 @@ let level = 1;
 let lives = 3;
 
 let isGameOver = false;
+let isNextLevel = false;
 
 const canvas = document.querySelector("#gameCanvas");
 // context of the canvas
@@ -97,9 +98,10 @@ const brick = {
 // variable bricksData is an array of arryas of bricks "metadata"
 let bricksData;
 
-const setupBricksData = (numberOfRows) => {
+// the number of rows changes each level
+const setupBricksData = () => {
   bricksData = [];
-  for (let row = 0; row < numberOfRows; row++) {
+  for (let row = 0; row < NUMBER_OF_BRICK_ROWS + level - 1; row++) {
     const bricksRow = [];
     for (let column = 0; column < NUMBER_OF_BRICK_COLUMNS; column++) {
       const brickSetup = {
@@ -116,6 +118,20 @@ const setupBricksData = (numberOfRows) => {
 
     bricksData.push(bricksRow);
   }
+};
+
+const areAllBricksBroken = () => {
+  for (let row = 0; row < bricksData.length; row++) {
+    const bricksRow = bricksData[row];
+    for (let column = 0; column < bricksRow.length; column++) {
+      const brickMetadata = bricksRow[column];
+      if (!brickMetadata.isBroken) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 };
 
 /////// DRAWING OBJECTS ///////
@@ -153,6 +169,10 @@ const movePaddle = () => {
   if (rightArrowPressed && paddle.x + paddle.width < canvas.width) {
     paddle.x += paddle.deltaX;
   }
+};
+
+const resetPaddle = () => {
+  paddle.x = canvas.width / 2 - PADDLE_WIDTH / 2;
 };
 
 const moveBall = () => {
@@ -219,7 +239,13 @@ const checkBallCollisionWithBrick = () => {
         if ((ballHitBrickOnBottom || ballHitBrickOnTop) && ballHitBrickLength) {
           brickMetadata.isBroken = true;
           score += BRICK_SCORE;
-          ball.deltaY *= -1;
+          if (areAllBricksBroken()) {
+            level++;
+            isNextLevel = true;
+          } else {
+            ball.deltaY *= -1;
+          }
+
           break;
         }
       }
@@ -285,6 +311,17 @@ const drawCanvasContent = () => {
 const updateCanvas = () => {
   movePaddle();
   moveBall();
+
+  if (isNextLevel) {
+    resetCanvas();
+    isNextLevel = false;
+  }
+};
+
+const resetCanvas = () => {
+  setupBricksData();
+  resetPaddle();
+  resetBall();
 };
 
 const gameLoop = () => {
@@ -297,5 +334,5 @@ const gameLoop = () => {
 };
 
 // before we start the game loop, we initialise bricks
-setupBricksData(NUMBER_OF_BRICK_ROWS);
+setupBricksData();
 gameLoop();
