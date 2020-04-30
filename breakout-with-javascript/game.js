@@ -142,6 +142,7 @@ const moveBall = () => {
 
   checkBallCollisionWithWall();
   checkBallCollisionWithPaddle();
+  checkBallCollisionWithBrick();
 };
 
 const checkBallCollisionWithWall = () => {
@@ -173,6 +174,33 @@ const checkBallCollisionWithPaddle = () => {
 
     ball.deltaX = ball.speed * Math.sin(angle);
     ball.deltaY = -ball.speed * Math.cos(angle);
+  }
+};
+
+const checkBallCollisionWithBrick = () => {
+  for (let row = 0; row < bricksData.length; row++) {
+    const bricksRow = bricksData[row];
+    let isBrickHit = false;
+    for (let column = 0; column < bricksRow.length; column++) {
+      const brickMetadata = bricksRow[column];
+      // the brick is still visible on the canvas
+      if (!brickMetadata.isBroken) {
+        const ballHitBrickOnBottom =
+          ball.y - BALL_RADIUS < brickMetadata.y + brick.height;
+        const ballHitBrickOnTop =
+          ball.y - BALL_RADIUS < brickMetadata.y &&
+          ball.y + BALL_RADIUS > brickMetadata.y;
+        const ballHitBrickLength =
+          ball.x > brickMetadata.x && ball.x < brickMetadata.x + brick.width;
+
+        if ((ballHitBrickOnBottom || ballHitBrickOnTop) && ballHitBrickLength) {
+          brickMetadata.isBroken = true;
+          ball.deltaY *= -1;
+          isBrickHit = true;
+          break;
+        }
+      }
+    }
   }
 };
 
@@ -219,7 +247,6 @@ const updateCanvas = () => {
 
 const gameLoop = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
-  setupBricksData(NUMBER_OF_BRICK_ROWS);
 
   drawCanvasContent();
   updateCanvas();
@@ -227,4 +254,6 @@ const gameLoop = () => {
   window.requestAnimationFrame(gameLoop);
 };
 
+// before we start the game loop, we initialise bricks
+setupBricksData(NUMBER_OF_BRICK_ROWS);
 gameLoop();
