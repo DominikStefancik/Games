@@ -307,17 +307,20 @@ const drawBricks = () => {
   }
 };
 
-const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
+const showGameStatistics = (
+  text,
+  textX,
+  textY,
+  image,
+  imageX,
+  imageY,
+  imageWidth,
+  imageHeight
+) => {
   context.fillStyle = "#FFF";
   context.font = "25px Germania One";
   context.fillText(text, textX, textY);
-  context.drawImage(
-    image,
-    imageX,
-    imageY,
-    STATISTICS_OFFSET,
-    STATISTICS_OFFSET
-  );
+  context.drawImage(image, imageX, imageY, imageWidth, imageHeight);
 };
 
 const showGameOverImage = () => {
@@ -343,22 +346,35 @@ const showGameOverImage = () => {
 // Draws the content if the canvas
 const drawCanvasContent = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
-  showGameStatistics(score, 35, STATISTICS_OFFSET, SCORE_IMAGE, 5, 5);
+  showGameStatistics(
+    score,
+    35,
+    STATISTICS_OFFSET,
+    SCORE_IMAGE,
+    5,
+    5,
+    STATISTICS_OFFSET,
+    STATISTICS_OFFSET
+  );
   showGameStatistics(
     level,
     canvas.width / 2,
     STATISTICS_OFFSET,
     LEVEL_IMAGE,
     canvas.width / 2 - 30,
-    5
+    5,
+    STATISTICS_OFFSET,
+    STATISTICS_OFFSET
   );
   showGameStatistics(
     lives,
     canvas.width - 25,
     STATISTICS_OFFSET,
     LIFE_IMAGE,
-    canvas.width - 55,
-    5
+    canvas.width - 65,
+    -5,
+    45,
+    45
   );
 
   drawPaddle();
