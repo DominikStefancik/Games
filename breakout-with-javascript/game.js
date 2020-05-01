@@ -5,7 +5,7 @@ const PADDLE_MARGIN_BOTTOM = 50;
 const BALL_RADIUS = 8;
 const NUMBER_OF_BRICK_ROWS = 3;
 const NUMBER_OF_BRICK_COLUMNS = 5;
-const STATISTICS_OFFSET_TOP = 25;
+const STATISTICS_OFFSET = 25;
 const BRICK_SCORE = 10;
 
 let leftArrowPressed = false;
@@ -17,6 +17,7 @@ let lives = 3;
 
 let isGameOver = false;
 let isNextLevel = false;
+let isSoundMuted = false;
 
 const canvas = document.querySelector("#gameCanvas");
 // context of the canvas
@@ -35,16 +36,34 @@ const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
     image,
     imageX,
     imageY,
-    STATISTICS_OFFSET_TOP,
-    STATISTICS_OFFSET_TOP
+    STATISTICS_OFFSET,
+    STATISTICS_OFFSET
   );
 };
 
 const playSound = (sound) => {
-  sound.play();
+  if (!isSoundMuted) {
+    sound.play();
+  }
 };
 
+const toggleSound = (event) => {
+  if (event.key === "m" || event.key === "M") {
+    isSoundMuted = !isSoundMuted;
+  }
+};
+
+// add a listener for muting/unmuting sound effects
+document.addEventListener("keypress", toggleSound);
+
 /////// CREATING OBJECTS ///////
+
+const soundImage = {
+  width: 30,
+  height: 30,
+  top: 460,
+  left: 10,
+};
 
 // Paddle object
 const paddle = {
@@ -249,6 +268,7 @@ const checkBallCollisionWithBrick = () => {
           brickMetadata.isBroken = true;
           score += BRICK_SCORE;
           if (areAllBricksBroken()) {
+            playSound(WIN_AUDIO);
             level++;
             isNextLevel = true;
           } else {
@@ -294,11 +314,11 @@ const drawBricks = () => {
 // Draws the content if the canvas
 const drawCanvasContent = () => {
   context.drawImage(BACKGROUND_IMAGE, 0, 0);
-  showGameStatistics(score, 35, STATISTICS_OFFSET_TOP, SCORE_IMAGE, 5, 5);
+  showGameStatistics(score, 35, STATISTICS_OFFSET, SCORE_IMAGE, 5, 5);
   showGameStatistics(
     level,
     canvas.width / 2,
-    STATISTICS_OFFSET_TOP,
+    STATISTICS_OFFSET,
     LEVEL_IMAGE,
     canvas.width / 2 - 30,
     5
@@ -306,7 +326,7 @@ const drawCanvasContent = () => {
   showGameStatistics(
     lives,
     canvas.width - 25,
-    STATISTICS_OFFSET_TOP,
+    STATISTICS_OFFSET,
     LIFE_IMAGE,
     canvas.width - 55,
     5
@@ -315,6 +335,14 @@ const drawCanvasContent = () => {
   drawPaddle();
   drawBall();
   drawBricks();
+
+  context.drawImage(
+    isSoundMuted ? SOUND_OFF_IMAGE : SOUND_ON_IMAGE,
+    soundImage.left,
+    soundImage.top,
+    soundImage.width,
+    soundImage.height
+  );
 };
 
 const updateCanvas = () => {

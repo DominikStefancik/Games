@@ -11,6 +11,12 @@ LEVEL_IMAGE.src = "./assets/images/level.png";
 const LIFE_IMAGE = new Image();
 LIFE_IMAGE.src = "./assets/images/life.png";
 
+const SOUND_ON_IMAGE = new Image();
+SOUND_ON_IMAGE.src = "./assets/images/sound_on.png";
+
+const SOUND_OFF_IMAGE = new Image();
+SOUND_OFF_IMAGE.src = "./assets/images/sound_off.png";
+
 // Load Sounds
 const PADDLE_HIT_AUDIO = new Audio();
 PADDLE_HIT_AUDIO.src = "./assets/sounds/paddle_hit.mp3";
