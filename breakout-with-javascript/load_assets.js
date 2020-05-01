@@ -1,4 +1,4 @@
-// Load Images
+/////// Load Images
 const BACKGROUND_IMAGE = new Image();
 BACKGROUND_IMAGE.src = "./assets/images/background.jpg";
 
@@ -17,7 +17,13 @@ SOUND_ON_IMAGE.src = "./assets/images/sound_on.png";
 const SOUND_OFF_IMAGE = new Image();
 SOUND_OFF_IMAGE.src = "./assets/images/sound_off.png";
 
-// Load Sounds
+const GAME_WON_IMAGE = new Image();
+GAME_WON_IMAGE.src = "./assets/images/game_won.png";
+
+const GAME_LOST_IMAGE = new Image();
+GAME_LOST_IMAGE.src = "./assets/images/game_lost.png";
+
+/////// Load Sounds
 const PADDLE_HIT_AUDIO = new Audio();
 PADDLE_HIT_AUDIO.src = "./assets/sounds/paddle_hit.mp3";
 

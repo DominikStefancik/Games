@@ -16,6 +16,7 @@ let level = 1;
 let lives = 3;
 
 let isGameOver = false;
+let isGameWon = false;
 let isNextLevel = false;
 let isSoundMuted = false;
 
@@ -39,6 +40,26 @@ const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
     STATISTICS_OFFSET,
     STATISTICS_OFFSET
   );
+};
+
+const showGameOverImage = () => {
+  if (isGameWon) {
+    context.drawImage(
+      GAME_WON_IMAGE,
+      100,
+      canvas.height / 2 - 50,
+      canvas.width - 200,
+      150
+    );
+  } else {
+    context.drawImage(
+      GAME_LOST_IMAGE,
+      0,
+      canvas.height / 2 - 150,
+      canvas.width,
+      300
+    );
+  }
 };
 
 const playSound = (sound) => {
@@ -367,6 +388,8 @@ const gameLoop = () => {
 
   if (!isGameOver) {
     window.requestAnimationFrame(gameLoop);
+  } else {
+    showGameOverImage();
   }
 };
 
