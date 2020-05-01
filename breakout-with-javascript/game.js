@@ -7,6 +7,7 @@ const NUMBER_OF_BRICK_ROWS = 3;
 const NUMBER_OF_BRICK_COLUMNS = 5;
 const STATISTICS_OFFSET = 25;
 const BRICK_SCORE = 10;
+const MAX_LEVEL = 6;
 
 let leftArrowPressed = false;
 let rightArrowPressed = false;
@@ -29,37 +30,12 @@ canvas.style.border = "1px solid #0ff";
 // Make lines stronger when drawing to the canvas
 context.lineWidth = 3;
 
-const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
-  context.fillStyle = "#FFF";
-  context.font = "25px Germania One";
-  context.fillText(text, textX, textY);
-  context.drawImage(
-    image,
-    imageX,
-    imageY,
-    STATISTICS_OFFSET,
-    STATISTICS_OFFSET
-  );
-};
-
-const showGameOverImage = () => {
-  if (isGameWon) {
-    context.drawImage(
-      GAME_WON_IMAGE,
-      100,
-      canvas.height / 2 - 50,
-      canvas.width - 200,
-      150
-    );
-  } else {
-    context.drawImage(
-      GAME_LOST_IMAGE,
-      0,
-      canvas.height / 2 - 150,
-      canvas.width,
-      300
-    );
-  }
+const levelUpTheGame = () => {
+  playSound(WIN_AUDIO);
+  level++;
+  isGameWon = isGameOver = level > MAX_LEVEL;
+  isNextLevel = !isGameWon; // the game is not won yet, we can go to the next level
+  ball.speed *= 0.5;
 };
 
 const playSound = (sound) => {
@@ -243,6 +219,7 @@ const checkBallCollisionWithWall = () => {
 
     if (lives === 0) {
       isGameOver = true;
+      isGameWon = false;
     } else {
       resetBall();
     }
@@ -289,9 +266,7 @@ const checkBallCollisionWithBrick = () => {
           brickMetadata.isBroken = true;
           score += BRICK_SCORE;
           if (areAllBricksBroken()) {
-            playSound(WIN_AUDIO);
-            level++;
-            isNextLevel = true;
+            levelUpTheGame();
           } else {
             ball.deltaY *= -1;
           }
@@ -329,6 +304,39 @@ const drawBricks = () => {
         drawBrick(data.x, data.y);
       }
     }
+  }
+};
+
+const showGameStatistics = (text, textX, textY, image, imageX, imageY) => {
+  context.fillStyle = "#FFF";
+  context.font = "25px Germania One";
+  context.fillText(text, textX, textY);
+  context.drawImage(
+    image,
+    imageX,
+    imageY,
+    STATISTICS_OFFSET,
+    STATISTICS_OFFSET
+  );
+};
+
+const showGameOverImage = () => {
+  if (isGameWon) {
+    context.drawImage(
+      GAME_WON_IMAGE,
+      100,
+      canvas.height / 2 - 70,
+      canvas.width - 200,
+      150
+    );
+  } else {
+    context.drawImage(
+      GAME_LOST_IMAGE,
+      0,
+      canvas.height / 2 - 150,
+      canvas.width,
+      300
+    );
   }
 };
 
