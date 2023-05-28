@@ -15,8 +15,12 @@
     "prettify": "prettier --write \"./src/**/*.{js,ts,jsx,tsx,json}\""
   },
   "dependencies": {
+    "chess.js": "^1.0.0-beta.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",

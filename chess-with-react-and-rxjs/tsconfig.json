@@ -16,6 +16,9 @@
     "baseUrl": "./src",
     "paths": {
       "@local/root/*": ["./*"],
+      "@local/assets/*": ["assets/*"],
+      "@local/components/ui/*": ["components/ui/*"],
+      "@local/components/non-ui/*": ["components/non-ui/*"]
     },
 
     /* Linting */

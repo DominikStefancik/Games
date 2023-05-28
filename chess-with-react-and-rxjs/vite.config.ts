@@ -1,6 +1,6 @@
 import * as path from 'path';
-import {defineConfig, loadEnv} from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -19,7 +19,10 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         '@local/root': path.join(__dirname, 'src'),
+        '@local/assets': path.join(__dirname, 'src', 'assets'),
+        '@local/components/ui': path.join(__dirname, 'src', 'components', 'ui'),
+        '@local/components/non-ui': path.join(__dirname, 'src', 'components', 'non-ui'),
       },
     },
-  }
-})
+  };
+});
