@@ -1,18 +1,5 @@
 import { PieceSymbol, Color } from 'chess.js/src/chess';
-
-const PIECE_NAMES = {
-  k: 'king',
-  q: 'queen',
-  b: 'bishop',
-  n: 'knight',
-  r: 'rook',
-  p: 'pawn',
-};
-const COLOR_NAMES = {
-  w: 'white',
-  b: 'black',
-};
-const SQUARE_LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+import { COLOR_NAMES, PIECE_NAMES, SQUARE_LETTERS } from '@local/components/ui/board/models';
 
 const getCoordinates = (index: number): { x: number; y: number } => {
   return {
