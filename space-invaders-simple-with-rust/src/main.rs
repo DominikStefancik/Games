@@ -1,10 +1,14 @@
 use crossterm::{cursor, event, terminal, ExecutableCommand};
 use rusty_audio::Audio;
+use std::time::Instant;
 use std::{error::Error, io, sync::mpsc, thread, time::Duration};
 
-use space_invaders_simple_with_rust::frame::Drawable;
-use space_invaders_simple_with_rust::player::Player;
-use space_invaders_simple_with_rust::{audio_sound::AudioSound, frame::create_frame, render};
+use space_invaders_simple_with_rust::{
+    audio_sound::AudioSound,
+    frame::{create_frame, Drawable},
+    player::Player,
+    render,
+};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let mut audio = initialise_audio();
@@ -35,8 +39,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     let mut player = Player::new();
+    let mut instant = Instant::now();
     // we name the loop, because we want to reference it so we can exit it anywhere from inside the loop
     'gameloop: loop {
+        // Per frame initialisation
+        let delta = instant.elapsed();
+        instant = Instant::now();
         let mut current_frame = create_frame();
 
         // we are polling from input events
@@ -52,10 +60,18 @@ fn main() -> Result<(), Box<dyn Error>> {
                     }
                     event::KeyCode::Left => player.move_left(),
                     event::KeyCode::Right => player.move_right(),
+                    event::KeyCode::Char(' ') | event::KeyCode::Enter => {
+                        if player.shoot() {
+                            audio.play(AudioSound::Pew);
+                        }
+                    }
                     _ => {}
                 }
             }
         }
+
+        // Timer updates
+        player.update_shots_timer(delta);
 
         // Draw and render the frame
         player.draw(&mut current_frame);
