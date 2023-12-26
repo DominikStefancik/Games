@@ -4,7 +4,7 @@ pub enum AudioSound {
     Move,
     Pew,
     Startup,
-    Win
+    Win,
 }
 
 impl AsRef<str> for AudioSound {

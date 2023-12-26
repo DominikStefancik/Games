@@ -1,13 +1,8 @@
-mod audio_sound;
-
-use std::error::Error;
-use std::io;
-use std::io::Stdout;
-use crossterm::{ExecutableCommand, terminal};
-use crossterm::cursor::{Hide, Show};
-use crossterm::terminal::{EnterAlternateScreen, LeaveAlternateScreen};
+use crossterm::{cursor, event, terminal, ExecutableCommand};
 use rusty_audio::Audio;
-use audio_sound::AudioSound;
+use std::{error::Error, io, sync::mpsc, thread, time::Duration};
+
+use space_invaders_simple_with_rust::{audio_sound::AudioSound, frame::create_frame, render};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let mut audio = initialise_audio();
@@ -15,6 +10,58 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // the sound is played in a separate thread
     audio.play(AudioSound::Startup);
+
+    // render a frame in a separate thread
+    let (render_transmitter, render_receiver) = mpsc::channel();
+    let render_handler = thread::spawn(move || {
+        let mut last_frame = create_frame();
+        // we are in a different thread than main, so we need a separate reference to Stdout
+        let mut stdout = io::stdout();
+
+        render::render_frame(&mut stdout, &last_frame, &last_frame, true);
+
+        // incremental updates
+        loop {
+            // the method "recv()" either receives a current frame or if the channel was closed, it returns an error
+            let current_frame = match render_receiver.recv() {
+                Ok(frame) => frame,
+                Err(_) => break, // breaking out of the render loop will shutdown our channel thread
+            };
+            render::render_frame(&mut stdout, &last_frame, &current_frame, false);
+            last_frame = current_frame;
+        }
+    });
+
+    // we name the loop, because we want to reference it so we can exit it anywhere from inside the loop
+    'gameloop: loop {
+        let current_frame = create_frame();
+
+        // we are polling from input events
+        // poll() function takes a duration time we want to wait after an event happened
+        while event::poll(Duration::default())? {
+            // we are only interested in KeyEvents
+            if let event::Event::Key(key_event) = event::read()? {
+                match key_event.code {
+                    event::KeyCode::Esc | event::KeyCode::Char('q') => {
+                        // we break out of the game before it finishes, so we lose
+                        audio.play(AudioSound::Lose);
+                        break 'gameloop;
+                    }
+                    _ => {}
+                }
+            }
+        }
+
+        // Draw and render the frame
+        let _ = render_transmitter.send(current_frame); // whatever result, including an error, will silently be ignored
+                                                        // since the "gameloop" is much faster than rendering the frame, we artificially include sleep
+        thread::sleep(Duration::from_millis(1));
+    }
+
+    // shutdown the sending channel which will trigger an exit of the thread in which the rendering is happening
+    drop(render_transmitter);
+    // we wait until the thread actually joins
+    render_handler.join().unwrap();
 
     clean_up_resources(audio, &mut stdout)?;
 
@@ -34,24 +81,25 @@ fn initialise_audio() -> Audio {
     audio
 }
 
-fn initialise_terminal() -> Result<Stdout, io::Error> {
+fn initialise_terminal() -> Result<io::Stdout, io::Error> {
     let mut stdout = io::stdout();
     // enable raw mode so we can get a keyboard input as it occurs
     terminal::enable_raw_mode()?;
     // let's enter our alternate screen
     // crossterm package extends the stdout with "execute" method
-    stdout.execute(EnterAlternateScreen)?;
+    stdout.execute(terminal::EnterAlternateScreen)?;
     // hide the cursor
-    stdout.execute(Hide)?;
+    stdout.execute(cursor::Hide)?;
 
     Ok(stdout)
 }
 
-fn clean_up_resources(audio: Audio, stdout: &mut Stdout) -> Result<(), io::Error> {
-    audio.wait(); // wait until all audio is done playing
+fn clean_up_resources(audio: Audio, stdout: &mut io::Stdout) -> Result<(), io::Error> {
+    // wait until all audio is done playing
+    audio.wait();
     // show the terminal screen
-    stdout.execute(Show)?;
-    stdout.execute(LeaveAlternateScreen)?;
+    stdout.execute(cursor::Show)?;
+    stdout.execute(terminal::LeaveAlternateScreen)?;
     terminal::disable_raw_mode()?;
 
     Ok(())
