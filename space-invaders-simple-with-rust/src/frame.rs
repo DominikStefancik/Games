@@ -1,5 +1,5 @@
-pub const ROWS_COUNT: usize = 60;
-pub const COLUMNS_COUNT: usize = 120;
+pub const ROWS_COUNT: usize = 30;
+pub const COLUMNS_COUNT: usize = 60;
 
 // Vector of vectors of static string slices
 pub type Frame = Vec<Vec<&'static str>>;

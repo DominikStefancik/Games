@@ -2,6 +2,8 @@ use crossterm::{cursor, event, terminal, ExecutableCommand};
 use rusty_audio::Audio;
 use std::{error::Error, io, sync::mpsc, thread, time::Duration};
 
+use space_invaders_simple_with_rust::frame::Drawable;
+use space_invaders_simple_with_rust::player::Player;
 use space_invaders_simple_with_rust::{audio_sound::AudioSound, frame::create_frame, render};
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -32,9 +34,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     });
 
+    let mut player = Player::new();
     // we name the loop, because we want to reference it so we can exit it anywhere from inside the loop
     'gameloop: loop {
-        let current_frame = create_frame();
+        let mut current_frame = create_frame();
 
         // we are polling from input events
         // poll() function takes a duration time we want to wait after an event happened
@@ -47,12 +50,15 @@ fn main() -> Result<(), Box<dyn Error>> {
                         audio.play(AudioSound::Lose);
                         break 'gameloop;
                     }
+                    event::KeyCode::Left => player.move_left(),
+                    event::KeyCode::Right => player.move_right(),
                     _ => {}
                 }
             }
         }
 
         // Draw and render the frame
+        player.draw(&mut current_frame);
         let _ = render_transmitter.send(current_frame); // whatever result, including an error, will silently be ignored
                                                         // since the "gameloop" is much faster than rendering the frame, we artificially include sleep
         thread::sleep(Duration::from_millis(1));
