@@ -1,4 +1,5 @@
 use crate::frame::{Drawable, Frame, COLUMNS_COUNT, ROWS_COUNT};
+use crate::invaders::InvadersArmy;
 use crate::shooting::Shot;
 use std::time::Duration;
 
@@ -52,6 +53,21 @@ impl Player {
 
         // the method "retain" keeps or removes items in/from a vector depending on the return value from a closure
         self.shots.retain(|shot| !shot.is_dead())
+    }
+
+    pub fn invader_was_hit(&mut self, invaders_army: &mut InvadersArmy) -> bool {
+        let mut invader_was_hit = false;
+
+        for shot in self.shots.iter_mut() {
+            if !shot.is_exploding {
+                if invaders_army.kill_invader_at(shot.x_position, shot.y_position) {
+                    invader_was_hit = true;
+                    shot.explode(); // if we hit an invader, the shot has to explode
+                }
+            }
+        }
+
+        invader_was_hit
     }
 }
 

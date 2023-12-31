@@ -4,9 +4,9 @@ use std::time::Duration;
 
 // represents a single shot at an invader made by a player
 pub struct Shot {
-    x_position: usize,
-    y_position: usize,
-    is_exploding: bool,
+    pub x_position: usize,
+    pub y_position: usize,
+    pub is_exploding: bool,
     move_timer: Timer, // an internal timer to keep track of a shot's movement
 }
 

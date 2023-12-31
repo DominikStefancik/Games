@@ -79,6 +79,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             audio.play(AudioSound::Move);
         }
 
+        if player.invader_was_hit(&mut invaders) {
+            audio.play(AudioSound::Explode)
+        }
+
         // Draw and render everything which needs to be drawn
         let drawables: Vec<&dyn Drawable> = vec![&player, &invaders];
 
@@ -90,6 +94,17 @@ fn main() -> Result<(), Box<dyn Error>> {
         let _ = render_transmitter.send(current_frame);
         // since the "gameloop" is much faster than rendering the frame, we artificially include sleep
         thread::sleep(Duration::from_millis(1));
+
+        // Decide whether we won or lost
+        if invaders.are_all_killed() {
+            audio.play(AudioSound::Win);
+            break 'gameloop;
+        }
+
+        if invaders.reached_bottom() {
+            audio.play(AudioSound::Lose);
+            break 'gameloop;
+        }
     }
 
     // shutdown the sending channel which will trigger an exit of the thread in which the rendering is happening

@@ -112,6 +112,32 @@ impl InvadersArmy {
 
         false
     }
+
+    pub fn are_all_killed(&self) -> bool {
+        self.army.is_empty()
+    }
+
+    pub fn reached_bottom(&self) -> bool {
+        self.army
+            .iter()
+            .map(|invader| invader.y_position)
+            .max()
+            .unwrap_or(0)
+            >= ROWS_COUNT - 1
+    }
+
+    pub fn kill_invader_at(&mut self, x: usize, y: usize) -> bool {
+        if let Some(index) = self
+            .army
+            .iter()
+            .position(|invader| invader.x_position == x && invader.y_position == y)
+        {
+            self.army.remove(index);
+            true
+        } else {
+            false
+        }
+    }
 }
 
 impl Drawable for InvadersArmy {
