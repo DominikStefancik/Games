@@ -3,6 +3,10 @@ use rusty_time::Timer;
 use std::cmp::max;
 use std::time::Duration;
 
+const TIMER_INITIAL_VALUE: u64 = 2000; // 2 seconds
+const TIMER_REDUCTION_VALUE: u128 = 250;
+const TIMER_MAX_LOWER_VALUE: u128 = 250;
+
 pub struct Invader {
     x_position: usize,
     y_position: usize,
@@ -48,7 +52,7 @@ impl InvadersArmy {
 
         Self {
             army,
-            move_timer: Timer::new(Duration::from_millis(2000)), // 2 seconds
+            move_timer: Timer::new(Duration::from_millis(TIMER_INITIAL_VALUE)), // 2 seconds
             direction: InvadersDirection::RIGHT,
         }
     }
@@ -90,7 +94,10 @@ impl InvadersArmy {
 
             if move_downwards {
                 // whenever we move downwards, we are gonna increase the speed if the movement
-                let new_duration = max(self.move_timer.duration().as_millis() - 250, 250);
+                let new_duration = max(
+                    self.move_timer.duration().as_millis() - TIMER_REDUCTION_VALUE,
+                    TIMER_MAX_LOWER_VALUE,
+                );
                 self.move_timer = Timer::new(Duration::from_millis(new_duration as u64));
 
                 // move all invaders downwards
