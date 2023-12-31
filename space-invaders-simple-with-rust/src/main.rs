@@ -6,6 +6,7 @@ use std::{error::Error, io, sync::mpsc, thread, time::Duration};
 use space_invaders_simple_with_rust::{
     audio_sound::AudioSound,
     frame::{create_frame, Drawable},
+    invaders::InvadersArmy,
     player::Player,
     render,
 };
@@ -28,7 +29,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // incremental updates
         loop {
-            // the method "recv()" either receives a current frame or if the channel was closed, it returns an error
+            // the method "recv()" either returns a current frame or if the channel was closed, it returns an error
             let current_frame = match render_receiver.recv() {
                 Ok(frame) => frame,
                 Err(_) => break, // breaking out of the render loop will shutdown our channel thread
@@ -40,6 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut player = Player::new();
     let mut instant = Instant::now();
+    let mut invaders = InvadersArmy::new();
     // we name the loop, because we want to reference it so we can exit it anywhere from inside the loop
     'gameloop: loop {
         // Per frame initialisation
@@ -73,10 +75,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Timer updates
         player.update_shots_timer(delta);
 
-        // Draw and render the frame
-        player.draw(&mut current_frame);
-        let _ = render_transmitter.send(current_frame); // whatever result, including an error, will silently be ignored
-                                                        // since the "gameloop" is much faster than rendering the frame, we artificially include sleep
+        if invaders.update_timer(delta) {
+            audio.play(AudioSound::Move);
+        }
+
+        // Draw and render everything which needs to be drawn
+        let drawables: Vec<&dyn Drawable> = vec![&player, &invaders];
+
+        for drawable in drawables {
+            drawable.draw(&mut current_frame);
+        }
+
+        // whatever result, including an error, will silently be ignored
+        let _ = render_transmitter.send(current_frame);
+        // since the "gameloop" is much faster than rendering the frame, we artificially include sleep
         thread::sleep(Duration::from_millis(1));
     }
 

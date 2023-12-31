@@ -7,7 +7,7 @@ pub struct Shot {
     x_position: usize,
     y_position: usize,
     is_exploding: bool,
-    timer: Timer, // an internal timer to keep track of our movement
+    move_timer: Timer, // an internal timer to keep track of a shot's movement
 }
 
 impl Shot {
@@ -16,31 +16,31 @@ impl Shot {
             x_position: x,
             y_position: y,
             is_exploding: false,
-            timer: Timer::new(Duration::from_millis(50)),
+            move_timer: Timer::new(Duration::from_millis(50)),
         }
     }
 
     pub fn update_timer(&mut self, delta: Duration) {
-        self.timer.tick(delta);
+        self.move_timer.tick(delta);
 
-        if self.timer.just_finished() && !self.is_exploding {
+        if self.move_timer.just_finished() && !self.is_exploding {
             if self.y_position > 0 {
                 // if we haven't reach a top of the screen, we can move upwards
                 self.y_position -= 1;
             }
 
-            self.timer.reset();
+            self.move_timer.reset();
         }
     }
 
     pub fn explode(&mut self) {
         self.is_exploding = true;
-        self.timer = Timer::new(Duration::from_millis(250))
+        self.move_timer = Timer::new(Duration::from_millis(250))
     }
 
     pub fn is_dead(&self) -> bool {
         // if the shot either exploded or it reached to top position, we need to clean it out
-        (self.is_exploding && self.timer.just_finished()) || (self.y_position == 0)
+        (self.is_exploding && self.move_timer.just_finished()) || (self.y_position == 0)
     }
 }
 
