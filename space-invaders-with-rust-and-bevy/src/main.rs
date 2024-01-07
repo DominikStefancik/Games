@@ -2,10 +2,12 @@
 
 use bevy::prelude::{
     App, AssetServer, Camera2dBundle, ClearColor, Color, Commands, IVec2, PluginGroup, Query, Res,
-    SpriteBundle, Startup, Transform, Vec3, Window, WindowPlugin, WindowPosition,
+    Startup, Window, WindowPlugin, WindowPosition,
 };
 use bevy::DefaultPlugins;
-use space_invaders_with_rust_and_bevy::assets::{PLAYER_SIZE, PLAYER_SPRITE};
+use space_invaders_with_rust_and_bevy::assets::PLAYER_SPRITE;
+use space_invaders_with_rust_and_bevy::player::PlayerPlugin;
+use space_invaders_with_rust_and_bevy::resources::{GameTextures, WindowSize};
 
 // Bevy has 4 main constructs:  Entity, Component, System, Resource
 fn main() {
@@ -21,6 +23,7 @@ fn main() {
             }),
             ..Default::default()
         }))
+        .add_plugins(PlayerPlugin)
         .add_systems(Startup, setup_system)
         .run();
 }
@@ -36,7 +39,7 @@ fn setup_system(
     asset_server: Res<AssetServer>,
     // we are gonna update the position of the game window, that's why the argument has to be mutable
     mut windows: Query<&mut Window>,
-) -> () {
+) {
     // Add camera into the scene
     // spawn_batch() allows to spawn an entity with a set of properties
     commands.spawn(Camera2dBundle::default());
@@ -45,16 +48,14 @@ fn setup_system(
     let mut window = windows.single_mut();
     window.position = WindowPosition::new(IVec2::new(1980, 0));
 
-    // position the player at the bottom
-    let bottom = -window.resolution.height() / 2.;
+    let window_size = WindowSize {
+        width: window.resolution.width(),
+        height: window.resolution.height(),
+    };
+    commands.insert_resource(window_size);
 
-    // Add the player
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load(PLAYER_SPRITE),
-        transform: Transform {
-            translation: Vec3::new(0_f32, bottom + PLAYER_SIZE.1 / 2_f32 + 5_f32, 10_f32),
-            ..Default::default()
-        },
-        ..Default::default()
-    });
+    let game_textures = GameTextures {
+        player: asset_server.load(PLAYER_SPRITE),
+    };
+    commands.insert_resource(game_textures);
 }
