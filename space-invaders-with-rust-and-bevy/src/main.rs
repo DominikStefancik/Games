@@ -1,9 +1,11 @@
 // use bevy::prelude::*;
 
+use bevy::prelude::{
+    App, AssetServer, Camera2dBundle, ClearColor, Color, Commands, IVec2, PluginGroup, Query, Res,
+    SpriteBundle, Startup, Transform, Vec3, Window, WindowPlugin, WindowPosition,
+};
 use bevy::DefaultPlugins;
-use bevy::prelude::{App, ClearColor, Color, PluginGroup, Window, WindowPlugin};
-
-const PLAYER_SPRITE: &str = "player_a.png";
+use space_invaders_with_rust_and_bevy::assets::{PLAYER_SIZE, PLAYER_SPRITE};
 
 // Bevy has 4 main constructs:  Entity, Component, System, Resource
 fn main() {
@@ -19,5 +21,40 @@ fn main() {
             }),
             ..Default::default()
         }))
+        .add_systems(Startup, setup_system)
         .run();
+}
+
+// Bevy Systems
+
+// Bevy systems are just a function
+// Bevy will inject the required arguments for system functions for us
+// Commands allow to put or remove things into/from the game scene
+// Res as a generic type represents a resource. Bevy will look at the types, find a right resource and inject is as an argument
+fn setup_system(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    // we are gonna update the position of the game window, that's why the argument has to be mutable
+    mut windows: Query<&mut Window>,
+) -> () {
+    // Add camera into the scene
+    // spawn_batch() allows to spawn an entity with a set of properties
+    commands.spawn(Camera2dBundle::default());
+
+    // position the game window
+    let mut window = windows.single_mut();
+    window.position = WindowPosition::new(IVec2::new(1980, 0));
+
+    // position the player at the bottom
+    let bottom = -window.resolution.height() / 2.;
+
+    // Add the player
+    commands.spawn(SpriteBundle {
+        texture: asset_server.load(PLAYER_SPRITE),
+        transform: Transform {
+            translation: Vec3::new(0_f32, bottom + PLAYER_SIZE.1 / 2_f32 + 5_f32, 10_f32),
+            ..Default::default()
+        },
+        ..Default::default()
+    });
 }
