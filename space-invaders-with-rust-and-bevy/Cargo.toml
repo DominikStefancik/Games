@@ -9,3 +9,6 @@ authors = ["Dominik Stefancik <dstefancik@gmail.com>"]
 [dependencies]
 bevy = "0.12.1"
 rand = "0.8.5"
+
+[workspace]
+resolver = "2" # Important! wgpu/Bevy needs this!
