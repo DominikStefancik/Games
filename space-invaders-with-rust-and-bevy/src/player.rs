@@ -1,5 +1,5 @@
 use crate::assets::{PLAYER_SIZE, SPRITE_SCALE};
-use crate::components::{Player, Velocity};
+use crate::components::{Movable, Player, Velocity};
 use crate::resources::{GameTextures, WindowSize};
 use bevy::prelude::{
     App, Commands, Input, KeyCode, Plugin, PostStartup, Query, Res, SpriteBundle, Transform,
@@ -13,8 +13,8 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(PostStartup, player_spawn_system)
-            .add_systems(Update, player_movement_system)
-            .add_systems(Update, player_keyboard_system);
+            .add_systems(Update, player_keyboard_system)
+            .add_systems(Update, player_fire_system);
     }
 }
 
@@ -42,33 +42,55 @@ fn player_spawn_system(
             ..Default::default()
         })
         .insert(Player) // add custom component Player
+        .insert(Movable { auto_despawn: true })
         .insert(Velocity { x: 1., y: 0. }); // y-position will be the same for the player
-}
-
-// system which is changing position/movement of the player depending on the input velocity
-// the first part of the Query says which we just want to read and which we want to mutate
-// the second part (With<>) says that we want to apply read and write only on the Player component
-fn player_movement_system(mut query: Query<(&Velocity, &mut Transform), With<Player>>) {
-    for (velocity, mut transform) in query.iter_mut() {
-        let translation = &mut transform.translation;
-        translation.x += velocity.x;
-        translation.y += velocity.y;
-    }
 }
 
 // system which is changing the velocity of the player
 fn player_keyboard_system(
-    keyboard: Res<Input<KeyCode>>,
+    keyboard_input: Res<Input<KeyCode>>,
     // here the query only needs movement of a player which we are gonna change
     mut query: Query<&mut Velocity, With<Player>>,
 ) {
-    // we know the query has only one entity, so we can access it with "single_mut" method
-    let mut velocity = query.single_mut();
-    velocity.x = if keyboard.pressed(KeyCode::Left) {
-        -1. // -1. is the same as -1_f32
-    } else if keyboard.pressed(KeyCode::Right) {
-        1.
-    } else {
-        0.
+    // we know the query has only one entity, so we can access it with "get_single_mut" method
+    if let Ok(mut velocity) = query.get_single_mut() {
+        velocity.x = if keyboard_input.pressed(KeyCode::Left) {
+            -1. // -1. is the same as -1_f32
+        } else if keyboard_input.pressed(KeyCode::Right) {
+            1.
+        } else {
+            0.
+        }
+    };
+}
+
+fn player_fire_system(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    game_textures: Res<GameTextures>,
+    query: Query<&Transform, With<Player>>,
+) {
+    if let Ok(player_transform) = query.get_single() {
+        let (x, y) = (
+            player_transform.translation.x,
+            player_transform.translation.y,
+        );
+
+        if keyboard_input.just_pressed(KeyCode::Space) {
+            commands
+                .spawn(SpriteBundle {
+                    texture: game_textures.player_laser.clone(),
+                    transform: Transform {
+                        translation: Vec3::new(x, y, 0.),
+                        scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                })
+                .insert(Movable { auto_despawn: true })
+                // insert a custom component for the laser which will be its velocity
+                // the laser will go up, so only y-position will change;
+                .insert(Velocity { x: 0., y: 1. });
+        };
     };
 }

@@ -2,12 +2,15 @@
 
 use bevy::prelude::{
     App, AssetServer, Camera2dBundle, ClearColor, Color, Commands, IVec2, PluginGroup, Query, Res,
-    Startup, Window, WindowPlugin, WindowPosition,
+    Startup, Update, Window, WindowPlugin, WindowPosition,
 };
 use bevy::DefaultPlugins;
-use space_invaders_with_rust_and_bevy::assets::PLAYER_SPRITE;
-use space_invaders_with_rust_and_bevy::player::PlayerPlugin;
-use space_invaders_with_rust_and_bevy::resources::{GameTextures, WindowSize};
+use space_invaders_with_rust_and_bevy::{
+    assets::{PLAYER_LASER_SPRITE, PLAYER_SPRITE},
+    player::PlayerPlugin,
+    resources::{GameTextures, WindowSize},
+    systems::movable_system,
+};
 
 // Bevy has 4 main constructs:  Entity, Component, System, Resource
 fn main() {
@@ -25,13 +28,12 @@ fn main() {
         }))
         .add_plugins(PlayerPlugin)
         .add_systems(Startup, setup_system)
+        .add_systems(Update, movable_system)
         .run();
 }
 
 // Bevy Systems
 
-// Bevy systems are just a function
-// Bevy will inject the required arguments for system functions for us
 // Commands allow to put or remove things into/from the game scene
 // Res as a generic type represents a resource. Bevy will look at the types, find a right resource and inject is as an argument
 fn setup_system(
@@ -56,6 +58,7 @@ fn setup_system(
 
     let game_textures = GameTextures {
         player: asset_server.load(PLAYER_SPRITE),
+        player_laser: asset_server.load(PLAYER_LASER_SPRITE),
     };
     commands.insert_resource(game_textures);
 }
