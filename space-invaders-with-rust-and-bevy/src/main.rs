@@ -5,8 +5,9 @@ use bevy::prelude::{
     Startup, Update, Window, WindowPlugin, WindowPosition,
 };
 use bevy::DefaultPlugins;
+use space_invaders_with_rust_and_bevy::enemy::EnemyPlugin;
 use space_invaders_with_rust_and_bevy::{
-    assets::{PLAYER_LASER_SPRITE, PLAYER_SPRITE},
+    assets::{ENEMY_LASER_SPRITE, ENEMY_SPRITE, PLAYER_LASER_SPRITE, PLAYER_SPRITE},
     player::PlayerPlugin,
     resources::{GameTextures, WindowSize},
     systems::movable_system,
@@ -27,6 +28,7 @@ fn main() {
             ..Default::default()
         }))
         .add_plugins(PlayerPlugin)
+        .add_plugins(EnemyPlugin)
         .add_systems(Startup, setup_system)
         .add_systems(Update, movable_system)
         .run();
@@ -59,6 +61,8 @@ fn setup_system(
     let game_textures = GameTextures {
         player: asset_server.load(PLAYER_SPRITE),
         player_laser: asset_server.load(PLAYER_LASER_SPRITE),
+        enemy: asset_server.load(ENEMY_SPRITE),
+        enemy_laser: asset_server.load(ENEMY_LASER_SPRITE),
     };
     commands.insert_resource(game_textures);
 }

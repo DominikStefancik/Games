@@ -4,6 +4,11 @@ pub const PLAYER_SIZE: (f32, f32) = (144_f32, 75_f32);
 pub const PLAYER_LASER_SPRITE: &str = "laser_a.png";
 pub const PLAYER_LASER_SIZE: (f32, f32) = (9., 54.);
 
+pub const ENEMY_SPRITE: &str = "enemy_a.png";
+pub const ENEMY_SIZE: (f32, f32) = (144_f32, 75_f32);
+pub const ENEMY_LASER_SPRITE: &str = "laser_b.png";
+pub const ENEMY_LASER_SIZE: (f32, f32) = (17., 55.);
+
 pub const SPRITE_SCALE: f32 = 0.5;
 
 pub const TIME_STEP: f32 = 2.0;
