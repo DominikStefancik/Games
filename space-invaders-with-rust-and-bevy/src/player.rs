@@ -75,22 +75,33 @@ fn player_fire_system(
             player_transform.translation.x,
             player_transform.translation.y,
         );
+        // we want to get the position of the edge of the player sprite
+        // from the edged the laser will be fired (otherwise it would be from the middle)
+        let x_offset = PLAYER_SIZE.0 / 2. * SPRITE_SCALE - 5.;
+        let y_offset = 15_f32;
 
         if keyboard_input.just_pressed(KeyCode::Space) {
-            commands
-                .spawn(SpriteBundle {
-                    texture: game_textures.player_laser.clone(),
-                    transform: Transform {
-                        translation: Vec3::new(x, y, 0.),
-                        scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+            // we want fire two lasers on one key press, the command for rendering both of them
+            // will be the same, but just parametrised -> we will use closure for that
+            let mut spawn_laser = |x_offset, y_offset| {
+                commands
+                    .spawn(SpriteBundle {
+                        texture: game_textures.player_laser.clone(),
+                        transform: Transform {
+                            translation: Vec3::new(x + x_offset, y + y_offset, 0.),
+                            scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+                            ..Default::default()
+                        },
                         ..Default::default()
-                    },
-                    ..Default::default()
-                })
-                .insert(Movable { auto_despawn: true })
-                // insert a custom component for the laser which will be its velocity
-                // the laser will go up, so only y-position will change;
-                .insert(Velocity { x: 0., y: 1. });
+                    })
+                    .insert(Movable { auto_despawn: true })
+                    // insert a custom component for the laser which will be its velocity
+                    // the laser will go up, so only y-position will change;
+                    .insert(Velocity { x: 0., y: 1. });
+            };
+
+            spawn_laser(x_offset, y_offset);
+            spawn_laser(-x_offset, y_offset);
         };
     };
 }
