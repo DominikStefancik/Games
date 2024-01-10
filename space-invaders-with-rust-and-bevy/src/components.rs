@@ -1,4 +1,4 @@
-use bevy::prelude::{Component, Vec2};
+use bevy::prelude::{Component, Timer, TimerMode, Vec2, Vec3};
 
 #[derive(Component)]
 pub struct Velocity {
@@ -35,3 +35,21 @@ pub struct Enemy;
 
 #[derive(Component)]
 pub struct LaserFromEnemy;
+
+#[derive(Component)]
+pub struct Explosion;
+
+// Represents data about the explosion which is going to be spawned
+// the argument represents a position where the explosion needs to be spawned
+#[derive(Component)]
+pub struct ExplosionToSpawn(pub Vec3);
+
+#[derive(Component)]
+pub struct ExplosionTimer(pub Timer);
+
+impl Default for ExplosionTimer {
+    fn default() -> Self {
+        // the timer will be reset every 50 milliseconds
+        Self(Timer::from_seconds(0.05, TimerMode::Repeating))
+    }
+}

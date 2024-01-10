@@ -1,6 +1,8 @@
-use crate::assets::{PLAYER_SIZE, SPRITE_SCALE};
-use crate::components::{Laser, LaserFromPlayer, Movable, Player, SpriteSize, Velocity};
-use crate::resources::{GameTextures, WindowSize};
+use crate::{
+    assets::{PLAYER_SIZE, SPRITE_SCALE},
+    components::{Laser, LaserFromPlayer, Movable, Player, SpriteSize, Velocity},
+    resources::{GameTextures, WindowSize},
+};
 use bevy::prelude::{
     App, Commands, Input, KeyCode, Plugin, PostStartup, Query, Res, SpriteBundle, Transform,
     Update, Vec3, With,

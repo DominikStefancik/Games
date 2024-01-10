@@ -9,6 +9,11 @@ pub const ENEMY_SIZE: (f32, f32) = (144_f32, 75_f32);
 pub const ENEMY_LASER_SPRITE: &str = "laser_b.png";
 pub const ENEMY_LASER_SIZE: (f32, f32) = (17., 55.);
 
+pub const EXPLOSION_SHEET: &str = "explosions_a_sheet.png";
+pub const EXPLOSION_SHEET_CELL_SIZE: f32 = 64.;
+pub const EXPLOSION_SHEET_SIZE: usize = 4;
+pub const EXPLOSION_LENGTH: usize = 16;
+
 pub const SPRITE_SCALE: f32 = 0.5;
 
 pub const TIME_STEP: f32 = 2.0;

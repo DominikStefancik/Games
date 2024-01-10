@@ -1,7 +1,15 @@
-use crate::assets::{BASE_SPEED, TIME_STEP};
-use crate::components::{Enemy, Laser, LaserFromPlayer, Movable, SpriteSize, Velocity};
-use crate::resources::WindowSize;
-use bevy::prelude::{Commands, Entity, Query, Res, Transform, Vec2, With};
+use crate::{
+    assets::{BASE_SPEED, EXPLOSION_LENGTH, TIME_STEP},
+    components::{
+        Enemy, Explosion, ExplosionTimer, ExplosionToSpawn, Laser, LaserFromPlayer, Movable,
+        SpriteSize, Velocity,
+    },
+    resources::{GameTextures, WindowSize},
+};
+use bevy::prelude::{
+    Commands, Entity, Query, Res, SpriteSheetBundle, TextureAtlasSprite, Time, Transform, Vec2,
+    With,
+};
 use bevy::sprite::collide_aabb::collide;
 
 // Bevy systems are just a function
@@ -66,6 +74,53 @@ pub fn laser_from_player_hit_enemy_system(
                 commands.entity(enemy_entity).despawn();
                 // remove laser from the scene
                 commands.entity(laser_entity).despawn();
+                // spawn the ExplosionToSpawn
+                // spawn the explosion at the same place where the enemy was
+                commands.spawn(ExplosionToSpawn(enemy_transform.translation.clone()));
+            }
+        }
+    }
+}
+
+pub fn explosion_to_spawn_system(
+    mut commands: Commands,
+    game_textures: Res<GameTextures>,
+    // here we don't need With<> part in the Query, because we will get the data which only has the ExplosionToSpawn
+    query: Query<(Entity, &ExplosionToSpawn)>,
+) {
+    for (explosion_to_spawn_entity, explosion_to_spawn) in query.iter() {
+        // spawn the explosion sprite
+        commands
+            .spawn(SpriteSheetBundle {
+                texture_atlas: game_textures.explosion.clone(),
+                transform: Transform {
+                    translation: explosion_to_spawn.0, // no clone() is needed, because Vec3 is a copy
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+            .insert(Explosion)
+            // we add a time for an explosion, so we can animate it
+            .insert(ExplosionTimer::default());
+
+        // at the end we need to clean up and and despawn the ExplosionToSpawn entity
+        commands.entity(explosion_to_spawn_entity).despawn();
+    }
+}
+
+pub fn explosion_animation_system(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut query: Query<(Entity, &mut ExplosionTimer, &mut TextureAtlasSprite), With<Explosion>>,
+) {
+    for (entity, mut timer, mut sprite) in query.iter_mut() {
+        timer.0.tick(time.delta());
+
+        if timer.0.finished() {
+            // when the timer cycle finished
+            sprite.index += 1; // move to the next sprite cell in the explosions sheet
+            if sprite.index >= EXPLOSION_LENGTH {
+                commands.entity(entity).despawn();
             }
         }
     }

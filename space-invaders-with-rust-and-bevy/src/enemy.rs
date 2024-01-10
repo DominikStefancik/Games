@@ -1,6 +1,8 @@
-use crate::assets::{ENEMY_SIZE, SPRITE_SCALE};
-use crate::components::{Enemy, SpriteSize};
-use crate::resources::{GameTextures, WindowSize};
+use crate::{
+    assets::{ENEMY_SIZE, SPRITE_SCALE},
+    components::{Enemy, SpriteSize},
+    resources::{GameTextures, WindowSize},
+};
 use bevy::prelude::{App, Commands, Plugin, PostStartup, Res, SpriteBundle, Transform, Vec3};
 use rand::{thread_rng, Rng};
 

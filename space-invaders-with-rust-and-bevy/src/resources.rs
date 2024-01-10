@@ -1,4 +1,4 @@
-use bevy::prelude::{Handle, Image, Resource};
+use bevy::prelude::{Handle, Image, Resource, TextureAtlas};
 
 #[derive(Resource)]
 pub struct WindowSize {
@@ -12,4 +12,6 @@ pub struct GameTextures {
     pub player_laser: Handle<Image>,
     pub enemy: Handle<Image>,
     pub enemy_laser: Handle<Image>,
+    // TextureAtlas allows us to navigate through a sheet of pictures
+    pub explosion: Handle<TextureAtlas>,
 }
