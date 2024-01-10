@@ -4,11 +4,11 @@ use crate::{
         Enemy, Explosion, ExplosionTimer, ExplosionToSpawn, Laser, LaserFromPlayer, Movable,
         SpriteSize, Velocity,
     },
-    resources::{GameTextures, WindowSize},
+    resources::{EnemyCount, GameTextures, WindowSize},
 };
 use bevy::prelude::{
-    Commands, Entity, Query, Res, SpriteSheetBundle, TextureAtlasSprite, Time, Transform, Vec2,
-    With,
+    Commands, Entity, Query, Res, ResMut, SpriteSheetBundle, TextureAtlasSprite, Time, Transform,
+    Vec2, With,
 };
 use bevy::sprite::collide_aabb::collide;
 use std::collections::HashSet;
@@ -47,6 +47,7 @@ pub fn movable_system(
 
 pub fn laser_from_player_hit_enemy_system(
     mut commands: Commands,
+    mut enemy_count: ResMut<EnemyCount>,
     laser_query: Query<(Entity, &Transform, &SpriteSize), (With<Laser>, With<LaserFromPlayer>)>,
     enemy_query: Query<(Entity, &Transform, &SpriteSize), With<Enemy>>,
 ) {
@@ -87,6 +88,7 @@ pub fn laser_from_player_hit_enemy_system(
                 // remove entity from the scene
                 commands.entity(enemy_entity).despawn();
                 despawned_entities.insert(enemy_entity);
+                enemy_count.0 -= 1;
 
                 // remove laser from the scene
                 commands.entity(laser_entity).despawn();

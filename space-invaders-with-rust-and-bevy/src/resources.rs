@@ -15,3 +15,8 @@ pub struct GameTextures {
     // TextureAtlas allows us to navigate through a sheet of pictures
     pub explosion: Handle<TextureAtlas>,
 }
+
+pub const ENEMY_COUNT_MAX: u8 = 3;
+
+#[derive(Resource)]
+pub struct EnemyCount(pub u8);

@@ -10,7 +10,7 @@ use space_invaders_with_rust_and_bevy::{
     },
     enemy::EnemyPlugin,
     player::PlayerPlugin,
-    resources::{GameTextures, WindowSize},
+    resources::{EnemyCount, GameTextures, WindowSize},
     systems::{
         explosion_animation_system, explosion_to_spawn_system, laser_from_player_hit_enemy_system,
         movable_system,
@@ -34,10 +34,15 @@ fn main() {
         .add_plugins(PlayerPlugin)
         .add_plugins(EnemyPlugin)
         .add_systems(Startup, setup_system)
-        .add_systems(Update, movable_system)
-        .add_systems(Update, laser_from_player_hit_enemy_system)
-        .add_systems(Update, explosion_to_spawn_system)
-        .add_systems(Update, explosion_animation_system)
+        .add_systems(
+            Update,
+            (
+                movable_system,
+                laser_from_player_hit_enemy_system,
+                explosion_to_spawn_system,
+                explosion_animation_system,
+            ),
+        )
         .run();
 }
 
@@ -86,4 +91,7 @@ fn setup_system(
         explosion,
     };
     commands.insert_resource(game_textures);
+
+    // when we are setting up the scene, there won't be any enemies
+    commands.insert_resource(EnemyCount(0))
 }
