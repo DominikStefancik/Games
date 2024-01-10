@@ -6,6 +6,7 @@ use bevy::prelude::{
 };
 use bevy::DefaultPlugins;
 use space_invaders_with_rust_and_bevy::enemy::EnemyPlugin;
+use space_invaders_with_rust_and_bevy::systems::laser_from_player_hit_enemy_system;
 use space_invaders_with_rust_and_bevy::{
     assets::{ENEMY_LASER_SPRITE, ENEMY_SPRITE, PLAYER_LASER_SPRITE, PLAYER_SPRITE},
     player::PlayerPlugin,
@@ -31,6 +32,7 @@ fn main() {
         .add_plugins(EnemyPlugin)
         .add_systems(Startup, setup_system)
         .add_systems(Update, movable_system)
+        .add_systems(Update, laser_from_player_hit_enemy_system)
         .run();
 }
 

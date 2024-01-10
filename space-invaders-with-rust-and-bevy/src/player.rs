@@ -1,5 +1,5 @@
 use crate::assets::{PLAYER_SIZE, SPRITE_SCALE};
-use crate::components::{Movable, Player, Velocity};
+use crate::components::{Laser, LaserFromPlayer, Movable, Player, SpriteSize, Velocity};
 use crate::resources::{GameTextures, WindowSize};
 use bevy::prelude::{
     App, Commands, Input, KeyCode, Plugin, PostStartup, Query, Res, SpriteBundle, Transform,
@@ -42,6 +42,7 @@ fn player_spawn_system(
             ..Default::default()
         })
         .insert(Player) // add custom component Player
+        .insert(SpriteSize::from(PLAYER_SIZE))
         .insert(Movable { auto_despawn: true })
         .insert(Velocity { x: 1., y: 0. }); // y-position will be the same for the player
 }
@@ -97,7 +98,10 @@ fn player_fire_system(
                     .insert(Movable { auto_despawn: true })
                     // insert a custom component for the laser which will be its velocity
                     // the laser will go up, so only y-position will change;
-                    .insert(Velocity { x: 0., y: 1. });
+                    .insert(Velocity { x: 0., y: 1. })
+                    .insert(Laser)
+                    .insert(LaserFromPlayer)
+                    .insert(SpriteSize::from(PLAYER_SIZE));
             };
 
             spawn_laser(x_offset, y_offset);

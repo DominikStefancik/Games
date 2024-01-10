@@ -1,7 +1,8 @@
 use crate::assets::{BASE_SPEED, TIME_STEP};
-use crate::components::{Movable, Velocity};
+use crate::components::{Enemy, Laser, LaserFromPlayer, Movable, SpriteSize, Velocity};
 use crate::resources::WindowSize;
-use bevy::prelude::{Commands, Entity, Query, Res, Transform};
+use bevy::prelude::{Commands, Entity, Query, Res, Transform, Vec2, With};
+use bevy::sprite::collide_aabb::collide;
 
 // Bevy systems are just a function
 // Bevy will inject the required arguments for system functions for us
@@ -30,6 +31,41 @@ pub fn movable_system(
                 || translation.y < -window_size.height / 2. - MARGIN
             {
                 commands.entity(entity).despawn();
+            }
+        }
+    }
+}
+
+pub fn laser_from_player_hit_enemy_system(
+    mut commands: Commands,
+    laser_query: Query<(Entity, &Transform, &SpriteSize), (With<Laser>, With<LaserFromPlayer>)>,
+    enemy_query: Query<(Entity, &Transform, &SpriteSize), With<Enemy>>,
+) {
+    // iterate through the lasers
+    // for each laser shot from the player check if it hit any of the enemies
+    for (laser_entity, laser_transform, laser_size) in laser_query.iter() {
+        let laser_scale = Vec2::from(laser_transform.scale.truncate());
+        let laser_position = laser_transform.translation;
+
+        for (enemy_entity, enemy_transform, enemy_size) in enemy_query.iter() {
+            let enemy_scale = Vec2::from(enemy_transform.scale.truncate());
+            let enemy_position = enemy_transform.translation;
+
+            // determine if the enemy has a collision with a laser
+            let collision = collide(
+                laser_position,
+                laser_size.0 * laser_scale,
+                enemy_position,
+                enemy_size.0 * enemy_scale,
+            );
+
+            // perform logic when a collision happened
+            if let Some(_) = collision {
+                // we don't care what the collision returns
+                // remove entity from the scene
+                commands.entity(enemy_entity).despawn();
+                // remove laser from the scene
+                commands.entity(laser_entity).despawn();
             }
         }
     }
