@@ -11,6 +11,7 @@ use bevy::prelude::{
     With,
 };
 use bevy::sprite::collide_aabb::collide;
+use std::collections::HashSet;
 
 // Bevy systems are just a function
 // Bevy will inject the required arguments for system functions for us
@@ -49,13 +50,26 @@ pub fn laser_from_player_hit_enemy_system(
     laser_query: Query<(Entity, &Transform, &SpriteSize), (With<Laser>, With<LaserFromPlayer>)>,
     enemy_query: Query<(Entity, &Transform, &SpriteSize), With<Enemy>>,
 ) {
+    // every entity is global in the the Bevy "world"
+    let mut despawned_entities: HashSet<Entity> = HashSet::new();
+
     // iterate through the lasers
     // for each laser shot from the player check if it hit any of the enemies
     for (laser_entity, laser_transform, laser_size) in laser_query.iter() {
+        if despawned_entities.contains(&laser_entity) {
+            continue;
+        }
+
         let laser_scale = Vec2::from(laser_transform.scale.truncate());
         let laser_position = laser_transform.translation;
 
         for (enemy_entity, enemy_transform, enemy_size) in enemy_query.iter() {
+            if despawned_entities.contains(&enemy_entity)
+                || despawned_entities.contains(&laser_entity)
+            {
+                continue;
+            }
+
             let enemy_scale = Vec2::from(enemy_transform.scale.truncate());
             let enemy_position = enemy_transform.translation;
 
@@ -68,12 +82,16 @@ pub fn laser_from_player_hit_enemy_system(
             );
 
             // perform logic when a collision happened
+            // we don't care what the collision returns
             if let Some(_) = collision {
-                // we don't care what the collision returns
                 // remove entity from the scene
                 commands.entity(enemy_entity).despawn();
+                despawned_entities.insert(enemy_entity);
+
                 // remove laser from the scene
                 commands.entity(laser_entity).despawn();
+                despawned_entities.insert(laser_entity);
+
                 // spawn the ExplosionToSpawn
                 // spawn the explosion at the same place where the enemy was
                 commands.spawn(ExplosionToSpawn(enemy_transform.translation.clone()));
