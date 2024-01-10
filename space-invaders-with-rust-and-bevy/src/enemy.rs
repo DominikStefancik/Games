@@ -4,9 +4,12 @@ use crate::{
     resources::{EnemyCount, GameTextures, WindowSize, ENEMY_COUNT_MAX},
 };
 use bevy::prelude::{
-    App, Commands, Plugin, PostStartup, Res, ResMut, SpriteBundle, Transform, Update, Vec3,
+    App, Commands, IntoSystemConfigs, Plugin, PostStartup, Res, ResMut, SpriteBundle, Transform,
+    Update, Vec3,
 };
+use bevy::time::common_conditions::on_timer;
 use rand::{thread_rng, Rng};
+use std::time::Duration;
 
 // Use enemy functionality as a plugin
 pub struct EnemyPlugin;
@@ -14,7 +17,10 @@ pub struct EnemyPlugin;
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(PostStartup, enemy_spawn_system)
-            .add_systems(Update, enemy_spawn_system);
+            .add_systems(
+                Update,
+                enemy_spawn_system.run_if(on_timer(Duration::from_secs(1))),
+            );
     }
 }
 
