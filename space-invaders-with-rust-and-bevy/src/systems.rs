@@ -1,8 +1,8 @@
 use crate::{
     assets::{BASE_SPEED, EXPLOSION_LENGTH, TIME_STEP},
     components::{
-        Enemy, Explosion, ExplosionTimer, ExplosionToSpawn, Laser, LaserFromPlayer, Movable,
-        SpriteSize, Velocity,
+        Enemy, Explosion, ExplosionTimer, ExplosionToSpawn, Laser, LaserFromEnemy, LaserFromPlayer,
+        Movable, Player, SpriteSize, Velocity,
     },
     resources::{EnemyCount, GameTextures, WindowSize},
 };
@@ -141,6 +141,46 @@ pub fn explosion_animation_system(
             sprite.index += 1; // move to the next sprite cell in the explosions sheet
             if sprite.index >= EXPLOSION_LENGTH {
                 commands.entity(entity).despawn();
+            }
+        }
+    }
+}
+
+pub fn laser_from_enemy_hit_player_system(
+    mut commands: Commands,
+    laser_query: Query<(Entity, &Transform, &SpriteSize), (With<Laser>, With<LaserFromEnemy>)>,
+    player_query: Query<(Entity, &Transform, &SpriteSize), With<Player>>,
+) {
+    // we know we have only one player at the time
+    if let Ok((player_entity, player_transform, player_size)) = player_query.get_single() {
+        let player_scale = Vec2::from(player_transform.scale.truncate());
+
+        // we have to iterate through the all lasers
+        for (laser_entity, laser_transform, laser_size) in laser_query.iter() {
+            let laser_scale = Vec2::from(laser_transform.scale.truncate());
+
+            // check if a collision happened
+            let collision = collide(
+                laser_transform.translation,
+                laser_size.0 * laser_scale,
+                player_transform.translation,
+                player_size.0 * player_scale,
+            );
+
+            // perform logic when a collision happened
+            // we don't care what the collision returns
+            if let Some(_) = collision {
+                // remove the player
+                commands.entity(player_entity).despawn();
+
+                // remove the laser
+                commands.entity(laser_entity).despawn();
+
+                // spawn the ExplosionToSpawn
+                commands.spawn(ExplosionToSpawn(player_transform.translation.clone()));
+
+                // when the player is hit, break the whole game loop
+                break;
             }
         }
     }
