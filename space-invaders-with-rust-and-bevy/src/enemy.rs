@@ -1,14 +1,15 @@
 use crate::{
-    assets::{ENEMY_SIZE, SPRITE_SCALE},
-    components::{Enemy, SpriteSize},
+    assets::{ENEMY_LASER_SIZE, ENEMY_SIZE, SPRITE_SCALE},
+    components::{Enemy, Laser, LaserFromEnemy, Movable, SpriteSize, Velocity},
     resources::{EnemyCount, GameTextures, WindowSize, ENEMY_COUNT_MAX},
 };
 use bevy::prelude::{
-    App, Commands, IntoSystemConfigs, Plugin, PostStartup, Res, ResMut, SpriteBundle, Transform,
-    Update, Vec3,
+    App, Commands, IntoSystemConfigs, Plugin, PostStartup, Quat, Query, Res, ResMut, SpriteBundle,
+    Transform, Update, Vec3, With,
 };
 use bevy::time::common_conditions::on_timer;
 use rand::{thread_rng, Rng};
+use std::f32::consts::PI;
 use std::time::Duration;
 
 // Use enemy functionality as a plugin
@@ -20,6 +21,10 @@ impl Plugin for EnemyPlugin {
             .add_systems(
                 Update,
                 enemy_spawn_system.run_if(on_timer(Duration::from_secs(1))),
+            )
+            .add_systems(
+                Update,
+                enemy_fire_system.run_if(on_timer(Duration::from_secs(1))),
             );
     }
 }
@@ -52,5 +57,33 @@ fn enemy_spawn_system(
             .insert(SpriteSize::from(ENEMY_SIZE));
 
         enemy_count.0 += 1;
+    }
+}
+
+fn enemy_fire_system(
+    mut commands: Commands,
+    game_textures: Res<GameTextures>,
+    // position of the enemy so we know where the position of its laser will be
+    enemy_query: Query<&Transform, With<Enemy>>,
+) {
+    for &transform in enemy_query.iter() {
+        let (x, y) = (transform.translation.x, transform.translation.y);
+        // spawn enemy laser sprite
+        commands
+            .spawn(SpriteBundle {
+                texture: game_textures.enemy_laser.clone(),
+                transform: Transform {
+                    translation: Vec3::new(x, y - 20., 0.),
+                    rotation: Quat::from_rotation_x(PI),
+                    scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+            .insert(Laser)
+            .insert(SpriteSize::from(ENEMY_LASER_SIZE))
+            .insert(LaserFromEnemy)
+            .insert(Movable { auto_despawn: true })
+            .insert(Velocity { x: 0., y: -1. });
     }
 }
