@@ -1,11 +1,11 @@
 use crate::{
-    assets::{ENEMY_LASER_SIZE, ENEMY_SIZE, SPRITE_SCALE},
+    assets::{BASE_SPEED, ENEMY_LASER_SIZE, ENEMY_SIZE, SPRITE_SCALE, TIME_STEP},
     components::{Enemy, Laser, LaserFromEnemy, Movable, SpriteSize, Velocity},
     resources::{EnemyCount, GameTextures, WindowSize, ENEMY_COUNT_MAX},
 };
 use bevy::prelude::{
     App, Commands, IntoSystemConfigs, Plugin, PostStartup, Quat, Query, Res, ResMut, SpriteBundle,
-    Transform, Update, Vec3, With,
+    Time, Transform, Update, Vec3, With,
 };
 use bevy::time::common_conditions::on_timer;
 use rand::{thread_rng, Rng};
@@ -23,6 +23,7 @@ impl Plugin for EnemyPlugin {
                 (
                     enemy_spawn_system.run_if(on_timer(Duration::from_secs(1))),
                     enemy_fire_system.run_if(on_timer(Duration::from_secs(1))),
+                    enemy_movement_system,
                 ),
             );
     }
@@ -84,5 +85,57 @@ fn enemy_fire_system(
             .insert(LaserFromEnemy)
             .insert(Movable { auto_despawn: true })
             .insert(Velocity { x: 0., y: -1. });
+    }
+}
+
+fn enemy_movement_system(time: Res<Time>, mut query: Query<&mut Transform, With<Enemy>>) {
+    let now = time.elapsed_seconds();
+
+    for mut enemy_transform in query.iter_mut() {
+        // get current position of the enemy
+        let (current_position_x, current_position_y) =
+            (enemy_transform.translation.x, enemy_transform.translation.y);
+
+        // compute maximum distance of the movement
+        let max_distance = TIME_STEP * BASE_SPEED;
+
+        // fixtures
+        let direction: f32 = -1.; // 1 is clockwise, -1 is counter clockwise
+        let (ellipse_center_x, ellipse_center_y) = (0., 0.);
+        let (ellipse_radius_x, ellipse_radius_y) = (200., 130.);
+
+        // compute next angle
+        let angle = direction * BASE_SPEED * TIME_STEP * now % 360. / PI;
+
+        // compute target coordinates
+        let destination_x = ellipse_radius_x * angle.cos() + ellipse_center_x;
+        let destination_y = ellipse_radius_y * angle.sin() + ellipse_center_y;
+
+        // compute distance
+        let delta_x = current_position_x - destination_x;
+        let delta_y = current_position_y - destination_y;
+        let distance = (delta_x * delta_x + delta_y * delta_y).sqrt();
+        let distance_ratio = if distance != 0. {
+            max_distance / distance
+        } else {
+            0.
+        };
+
+        // compute final coordinates
+        let x = current_position_x - delta_x * distance_ratio;
+        let x = if delta_x > 0. {
+            x.max(destination_x)
+        } else {
+            x.min(destination_x)
+        };
+        let y = current_position_y - delta_y * distance_ratio;
+        let y = if delta_y > 0. {
+            y.max(destination_y)
+        } else {
+            y.min(destination_y)
+        };
+
+        let translation = &mut enemy_transform.translation;
+        (translation.x, translation.y) = (x, y);
     }
 }
