@@ -4,7 +4,7 @@ use crate::{
         Enemy, Explosion, ExplosionTimer, ExplosionToSpawn, Laser, LaserFromEnemy, LaserFromPlayer,
         Movable, Player, SpriteSize, Velocity,
     },
-    resources::{EnemyCount, GameTextures, WindowSize},
+    resources::{EnemyCount, GameTextures, PlayerState, WindowSize},
 };
 use bevy::prelude::{
     Commands, Entity, Query, Res, ResMut, SpriteSheetBundle, TextureAtlasSprite, Time, Transform,
@@ -148,6 +148,8 @@ pub fn explosion_animation_system(
 
 pub fn laser_from_enemy_hit_player_system(
     mut commands: Commands,
+    mut player_state: ResMut<PlayerState>,
+    time: Res<Time>,
     laser_query: Query<(Entity, &Transform, &SpriteSize), (With<Laser>, With<LaserFromEnemy>)>,
     player_query: Query<(Entity, &Transform, &SpriteSize), With<Player>>,
 ) {
@@ -172,6 +174,8 @@ pub fn laser_from_enemy_hit_player_system(
             if let Some(_) = collision {
                 // remove the player
                 commands.entity(player_entity).despawn();
+                // update the player state
+                player_state.player_shot(time.elapsed_seconds_f64());
 
                 // remove the laser
                 commands.entity(laser_entity).despawn();

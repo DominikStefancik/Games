@@ -20,11 +20,10 @@ impl Plugin for EnemyPlugin {
         app.add_systems(PostStartup, enemy_spawn_system)
             .add_systems(
                 Update,
-                enemy_spawn_system.run_if(on_timer(Duration::from_secs(1))),
-            )
-            .add_systems(
-                Update,
-                enemy_fire_system.run_if(on_timer(Duration::from_secs(1))),
+                (
+                    enemy_spawn_system.run_if(on_timer(Duration::from_secs(1))),
+                    enemy_fire_system.run_if(on_timer(Duration::from_secs(1))),
+                ),
             );
     }
 }

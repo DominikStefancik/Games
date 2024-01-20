@@ -1,12 +1,14 @@
 use crate::{
-    assets::{PLAYER_SIZE, SPRITE_SCALE},
+    assets::{PLAYER_RESPAWN_DELAY, PLAYER_SIZE, SPRITE_SCALE},
     components::{Laser, LaserFromPlayer, Movable, Player, SpriteSize, Velocity},
-    resources::{GameTextures, WindowSize},
+    resources::{GameTextures, PlayerState, WindowSize},
 };
 use bevy::prelude::{
-    App, Commands, Input, KeyCode, Plugin, PostStartup, Query, Res, SpriteBundle, Transform,
-    Update, Vec3, With,
+    App, Commands, Input, IntoSystemConfigs, KeyCode, Plugin, PostStartup, Query, Res, ResMut,
+    SpriteBundle, Time, Transform, Update, Vec3, With,
 };
+use bevy::time::common_conditions::on_timer;
+use std::time::Duration;
 
 // Use player functionality as a plugin
 pub struct PlayerPlugin;
@@ -14,39 +16,55 @@ pub struct PlayerPlugin;
 // Custom plugin in Bevy has to implement the trait "Plugin" in order to be able to be used
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PostStartup, player_spawn_system)
-            .add_systems(Update, player_keyboard_system)
-            .add_systems(Update, player_fire_system);
+        app.insert_resource(PlayerState::default())
+            .add_systems(PostStartup, player_spawn_system)
+            .add_systems(
+                Update,
+                (
+                    player_spawn_system.run_if(on_timer(Duration::from_secs_f32(0.5))),
+                    player_keyboard_system,
+                    player_fire_system,
+                ),
+            );
     }
 }
 
 fn player_spawn_system(
     mut commands: Commands,
+    mut player_state: ResMut<PlayerState>,
+    time: Res<Time>,
     game_textures: Res<GameTextures>,
     window_size: Res<WindowSize>,
 ) {
-    // position the player at the bottom
-    let bottom = -window_size.height / 2.;
+    let now = time.elapsed_seconds_f64();
+    let last_shot = player_state.last_shot;
 
-    // Add the player
-    commands
-        .spawn(SpriteBundle {
-            texture: game_textures.player.clone(),
-            transform: Transform {
-                translation: Vec3::new(
-                    0_f32,
-                    bottom + PLAYER_SIZE.1 / 2_f32 * SPRITE_SCALE + 5_f32,
-                    10_f32,
-                ),
-                scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+    if !player_state.is_on_stage && (last_shot == -1. || now > last_shot + PLAYER_RESPAWN_DELAY) {
+        // position the player at the bottom
+        let bottom = -window_size.height / 2.;
+
+        // Add the player
+        commands
+            .spawn(SpriteBundle {
+                texture: game_textures.player.clone(),
+                transform: Transform {
+                    translation: Vec3::new(
+                        0_f32,
+                        bottom + PLAYER_SIZE.1 / 2_f32 * SPRITE_SCALE + 5_f32,
+                        10_f32,
+                    ),
+                    scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+                    ..Default::default()
+                },
                 ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(Player) // add custom component Player
-        .insert(SpriteSize::from(PLAYER_SIZE))
-        .insert(Movable { auto_despawn: true })
-        .insert(Velocity { x: 1., y: 0. }); // y-position will be the same for the player
+            })
+            .insert(Player) // add custom component Player
+            .insert(SpriteSize::from(PLAYER_SIZE))
+            .insert(Movable { auto_despawn: true })
+            .insert(Velocity { x: 1., y: 0. }); // y-position will be the same for the player
+
+        player_state.player_spawned();
+    }
 }
 
 // system which is changing the velocity of the player

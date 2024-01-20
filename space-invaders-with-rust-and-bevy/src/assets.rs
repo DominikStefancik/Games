@@ -3,6 +3,8 @@ pub const PLAYER_SPRITE: &str = "player_a.png";
 pub const PLAYER_SIZE: (f32, f32) = (144_f32, 75_f32);
 pub const PLAYER_LASER_SPRITE: &str = "laser_a.png";
 pub const PLAYER_LASER_SIZE: (f32, f32) = (9., 54.);
+// defines a delay after the player will be again respawned
+pub const PLAYER_RESPAWN_DELAY: f64 = 2.;
 
 pub const ENEMY_SPRITE: &str = "enemy_a.png";
 pub const ENEMY_SIZE: (f32, f32) = (144_f32, 75_f32);
