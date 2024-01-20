@@ -1,14 +1,16 @@
+mod formation;
+
 use crate::{
-    assets::{BASE_SPEED, ENEMY_LASER_SIZE, ENEMY_SIZE, SPRITE_SCALE, TIME_STEP},
+    assets::{ENEMY_LASER_SIZE, ENEMY_SIZE, SPRITE_SCALE, TIME_STEP},
     components::{Enemy, Laser, LaserFromEnemy, Movable, SpriteSize, Velocity},
+    enemy::formation::{Formation, FormationFactory},
     resources::{EnemyCount, GameTextures, WindowSize, ENEMY_COUNT_MAX},
 };
 use bevy::prelude::{
     App, Commands, IntoSystemConfigs, Plugin, PostStartup, Quat, Query, Res, ResMut, SpriteBundle,
-    Time, Transform, Update, Vec3, With,
+    Transform, Update, Vec3, With,
 };
 use bevy::time::common_conditions::on_timer;
-use rand::{thread_rng, Rng};
 use std::f32::consts::PI;
 use std::time::Duration;
 
@@ -17,7 +19,8 @@ pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PostStartup, enemy_spawn_system)
+        app.insert_resource(FormationFactory::default())
+            .add_systems(PostStartup, enemy_spawn_system)
             .add_systems(
                 Update,
                 (
@@ -33,15 +36,13 @@ fn enemy_spawn_system(
     mut commands: Commands,
     game_textures: Res<GameTextures>,
     mut enemy_count: ResMut<EnemyCount>,
+    mut formation_factory: ResMut<FormationFactory>,
     window_size: Res<WindowSize>,
 ) {
     if enemy_count.0 < ENEMY_COUNT_MAX {
-        // compute random X and Y coordinates
-        let mut random_generator = thread_rng();
-        let width_span = window_size.width / 2. - 100.;
-        let height_span = window_size.height / 2. - 100.;
-        let x = random_generator.gen_range(-width_span..width_span);
-        let y = random_generator.gen_range(-height_span..height_span);
+        // get formation and start point
+        let formation = formation_factory.create_formation(&window_size);
+        let (x, y) = formation.start_coordinate;
 
         commands
             .spawn(SpriteBundle {
@@ -54,6 +55,7 @@ fn enemy_spawn_system(
                 ..Default::default()
             })
             .insert(Enemy)
+            .insert(formation)
             .insert(SpriteSize::from(ENEMY_SIZE));
 
         enemy_count.0 += 1;
@@ -88,24 +90,30 @@ fn enemy_fire_system(
     }
 }
 
-fn enemy_movement_system(time: Res<Time>, mut query: Query<&mut Transform, With<Enemy>>) {
-    let now = time.elapsed_seconds();
-
-    for mut enemy_transform in query.iter_mut() {
+fn enemy_movement_system(mut query: Query<(&mut Transform, &mut Formation), With<Enemy>>) {
+    for (mut enemy_transform, mut formation) in query.iter_mut() {
         // get current position of the enemy
         let (current_position_x, current_position_y) =
             (enemy_transform.translation.x, enemy_transform.translation.y);
 
         // compute maximum distance of the movement
-        let max_distance = TIME_STEP * BASE_SPEED;
+        let max_distance = TIME_STEP * formation.speed;
 
         // fixtures
-        let direction: f32 = -1.; // 1 is clockwise, -1 is counter clockwise
-        let (ellipse_center_x, ellipse_center_y) = (0., 0.);
-        let (ellipse_radius_x, ellipse_radius_y) = (200., 130.);
+
+        // 1 is clockwise, -1 is counter clockwise
+        let direction: f32 = if formation.start_coordinate.0 < 0. {
+            1.
+        } else {
+            -1.
+        };
+        let (ellipse_center_x, ellipse_center_y) = formation.pivot;
+        let (ellipse_radius_x, ellipse_radius_y) = formation.radius;
 
         // compute next angle
-        let angle = direction * BASE_SPEED * TIME_STEP * now % 360. / PI;
+        let angle = formation.angle
+            + direction * formation.speed * TIME_STEP
+                / (ellipse_radius_x.min(ellipse_radius_y) * PI / 2.);
 
         // compute target coordinates
         let destination_x = ellipse_radius_x * angle.cos() + ellipse_center_x;
@@ -134,6 +142,11 @@ fn enemy_movement_system(time: Res<Time>, mut query: Query<&mut Transform, With<
         } else {
             y.min(destination_y)
         };
+
+        // start rotating the formation angle only when the sprite is on or close to the ellipse
+        if distance < max_distance * formation.speed / 20. {
+            formation.angle = angle;
+        }
 
         let translation = &mut enemy_transform.translation;
         (translation.x, translation.y) = (x, y);

@@ -11,6 +11,8 @@ pub const ENEMY_SIZE: (f32, f32) = (144_f32, 75_f32);
 pub const ENEMY_LASER_SPRITE: &str = "laser_b.png";
 pub const ENEMY_LASER_SIZE: (f32, f32) = (17., 55.);
 
+pub const ENEMY_FORMATION_MEMBERS_MAX: u8 = 2;
+
 pub const EXPLOSION_SHEET: &str = "explosions_a_sheet.png";
 pub const EXPLOSION_SHEET_CELL_SIZE: f32 = 64.;
 pub const EXPLOSION_SHEET_SIZE: usize = 4;
