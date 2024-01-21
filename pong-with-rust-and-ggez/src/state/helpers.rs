@@ -44,7 +44,7 @@ pub fn move_racket(
 }
 
 // function used to keep drawn objects inside of the screen
-pub fn clamp(value: &mut f32, low: f32, high: f32) {
+fn clamp(value: &mut f32, low: f32, high: f32) {
     if *value < low {
         *value = low;
     } else if *value > high {

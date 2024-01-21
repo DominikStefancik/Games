@@ -1,6 +1,6 @@
 mod helpers;
 
-use crate::constants::{RACKET_WIDTH, RACKET_WIDTH_HALF};
+use crate::constants::{BALL_SIZE_HALF, RACKET_HEIGHT_HALF, RACKET_WIDTH, RACKET_WIDTH_HALF};
 use crate::state::helpers::{create_ball_square_mesh, create_racket_rectangle_mesh, move_racket};
 use ggez::{event, graphics, input::keyboard::KeyCode, mint::Point2, Context, GameResult};
 
@@ -24,15 +24,15 @@ impl GameState {
             screen_height,
             player_1_position: Point2 {
                 x: RACKET_WIDTH_HALF,
-                y: screen_height_half,
+                y: screen_height_half - RACKET_HEIGHT_HALF,
             },
             player_2_position: Point2 {
                 x: screen_width - RACKET_WIDTH - RACKET_WIDTH_HALF,
-                y: screen_height_half,
+                y: screen_height_half - RACKET_HEIGHT_HALF,
             },
             ball_position: Point2 {
-                x: screen_width_half,
-                y: screen_height_half,
+                x: screen_width_half - BALL_SIZE_HALF,
+                y: screen_height_half - BALL_SIZE_HALF,
             },
         }
     }
