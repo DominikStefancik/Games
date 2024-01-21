@@ -1,3 +1,38 @@
-fn main() {
-    println!("Hello, world!");
+use ggez::{event, event::EventHandler, Context, ContextBuilder, GameResult};
+
+// struct to handle the game loop
+struct GameState {}
+
+impl GameState {
+    fn new(_ctx: &mut Context) -> Self {
+        // Load/create resources such as images here.
+        GameState {}
+    }
+}
+
+impl EventHandler for GameState {
+    fn update(&mut self, _ctx: &mut Context) -> GameResult {
+        Ok(())
+    }
+
+    fn draw(&mut self, _ctx: &mut Context) -> GameResult {
+        Ok(())
+    }
+}
+
+// GameResult is what ggez uses to handle failures or errors
+// GameResult<T = ()> = Result<T, GameError>
+fn main() -> GameResult {
+    // first we need a context to create the screen
+    let context_builder = ContextBuilder::new("Rusty Pong", "Dominik");
+    let (mut context, event_loop) = context_builder.build().expect("Build a context failed.");
+    context.gfx.set_window_title("Rust Pong");
+
+    // Create an instance of your event handler.
+    // Usually, you should provide it with the Context object to
+    // use when setting your game up.
+    let game_state = GameState::new(&mut context);
+
+    // start the game loop
+    event::run(context, event_loop, game_state);
 }
