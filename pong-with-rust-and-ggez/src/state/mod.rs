@@ -21,6 +21,8 @@ pub struct GameState {
     player_2_position: Point2<f32>,
     ball_position: Point2<f32>,
     ball_velocity: Vector2<f32>,
+    player_1_score: u16,
+    player_2_score: u16,
 }
 
 impl GameState {
@@ -47,6 +49,8 @@ impl GameState {
                 y: screen_height_half - BALL_SIZE_HALF,
             },
             ball_velocity,
+            player_1_score: 0,
+            player_2_score: 0,
         }
     }
 }
@@ -86,6 +90,21 @@ impl event::EventHandler for GameState {
         self.ball_position.x += self.ball_velocity.x * delta_time;
         self.ball_position.y += self.ball_velocity.y * delta_time;
 
+        // check if one of the player lost
+        if self.ball_position.x < 0. {
+            // reset the ball in the middle of the screen
+            self.ball_position.x = self.screen_width / 2.;
+            self.ball_position.y = self.screen_height / 2.;
+            randomize_velocity(&mut self.ball_velocity, BALL_SPEED, BALL_SPEED);
+            self.player_2_score += 1;
+        } else if self.ball_position.x > self.screen_width {
+            // reset the ball in the middle of the screen
+            self.ball_position.x = self.screen_width / 2.;
+            self.ball_position.y = self.screen_height / 2.;
+            randomize_velocity(&mut self.ball_velocity, BALL_SPEED, BALL_SPEED);
+            self.player_1_score += 1;
+        }
+
         Ok(())
     }
 
@@ -110,6 +129,19 @@ impl event::EventHandler for GameState {
         canvas.draw(
             &ball_rectangle_mesh,
             graphics::DrawParam::new().dest(self.ball_position),
+        );
+
+        let score_text = graphics::Text::new(format!(
+            "{}            {}",
+            self.player_1_score, self.player_2_score
+        ));
+        let score_text_position = Point2 {
+            x: self.screen_width / 2. - 70.,
+            y: 30.,
+        };
+        canvas.draw(
+            &score_text,
+            graphics::DrawParam::new().dest(score_text_position),
         );
 
         canvas.finish(context)?;
