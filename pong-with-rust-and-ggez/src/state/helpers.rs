@@ -1,5 +1,11 @@
 use crate::constants::{BALL_SIZE, RACKET_HEIGHT, RACKET_SPEED, RACKET_WIDTH};
-use ggez::{graphics, input::keyboard::KeyCode, mint::Point2, Context};
+use ggez::{
+    graphics,
+    input::keyboard::KeyCode,
+    mint::{Point2, Vector2},
+    Context,
+};
+use rand::Rng;
 
 pub fn create_racket_rectangle_mesh(context: &Context) -> graphics::Mesh {
     // define a rectangle boundaries
@@ -49,5 +55,17 @@ fn clamp(value: &mut f32, low: f32, high: f32) {
         *value = low;
     } else if *value > high {
         *value = high;
+    }
+}
+
+pub fn randomize_velocity(vector: &mut Vector2<f32>, x: f32, y: f32) {
+    let mut random_generator = rand::thread_rng();
+    vector.x = match random_generator.gen_bool(0.5) {
+        true => x,
+        false => -x,
+    };
+    vector.y = match random_generator.gen_bool(0.5) {
+        true => y,
+        false => -y,
     }
 }

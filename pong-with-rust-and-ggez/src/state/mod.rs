@@ -1,8 +1,17 @@
 mod helpers;
 
-use crate::constants::{BALL_SIZE_HALF, RACKET_HEIGHT_HALF, RACKET_WIDTH, RACKET_WIDTH_HALF};
-use crate::state::helpers::{create_ball_square_mesh, create_racket_rectangle_mesh, move_racket};
-use ggez::{event, graphics, input::keyboard::KeyCode, mint::Point2, Context, GameResult};
+use crate::constants::{
+    BALL_SIZE_HALF, BALL_SPEED, RACKET_HEIGHT_HALF, RACKET_WIDTH, RACKET_WIDTH_HALF,
+};
+use crate::state::helpers::{
+    create_ball_square_mesh, create_racket_rectangle_mesh, move_racket, randomize_velocity,
+};
+use ggez::{
+    event, graphics,
+    input::keyboard::KeyCode,
+    mint::{Point2, Vector2},
+    Context, GameResult,
+};
 
 // struct to handle the game loop
 pub struct GameState {
@@ -11,6 +20,7 @@ pub struct GameState {
     player_1_position: Point2<f32>,
     player_2_position: Point2<f32>,
     ball_position: Point2<f32>,
+    ball_velocity: Vector2<f32>,
 }
 
 impl GameState {
@@ -18,6 +28,8 @@ impl GameState {
     pub fn new(context: &mut Context) -> Self {
         let (screen_width, screen_height) = context.gfx.drawable_size();
         let (screen_width_half, screen_height_half) = (screen_width / 2., screen_height / 2.);
+        let mut ball_velocity = Vector2::from([0., 0.]);
+        randomize_velocity(&mut ball_velocity, BALL_SPEED, BALL_SPEED);
 
         GameState {
             screen_width,
@@ -34,6 +46,7 @@ impl GameState {
                 x: screen_width_half - BALL_SIZE_HALF,
                 y: screen_height_half - BALL_SIZE_HALF,
             },
+            ball_velocity,
         }
     }
 }
@@ -68,6 +81,10 @@ impl event::EventHandler for GameState {
             KeyCode::Down,
             1.,
         );
+
+        let delta_time = context.time.delta().as_secs_f32();
+        self.ball_position.x += self.ball_velocity.x * delta_time;
+        self.ball_position.y += self.ball_velocity.y * delta_time;
 
         Ok(())
     }
