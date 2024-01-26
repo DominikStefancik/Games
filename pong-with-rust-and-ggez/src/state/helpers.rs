@@ -1,4 +1,4 @@
-use crate::constants::{BALL_SIZE, RACKET_HEIGHT, RACKET_SPEED, RACKET_WIDTH};
+use crate::constants::{BALL_SIZE, MIDDLE_LINE_WIDTH, RACKET_HEIGHT, RACKET_SPEED, RACKET_WIDTH};
 use ggez::{
     graphics,
     input::keyboard::KeyCode,
@@ -17,10 +17,18 @@ pub fn create_racket_rectangle_mesh(context: &Context) -> graphics::Mesh {
 
 pub fn create_ball_square_mesh(context: &Context) -> graphics::Mesh {
     // define a rectangle boundaries
-    let ball_squqre = graphics::Rect::new(0., 0., BALL_SIZE, BALL_SIZE);
+    let ball_square = graphics::Rect::new(0., 0., BALL_SIZE, BALL_SIZE);
 
     // to draw a rectangle on the screen, we need to generate a mesh
-    create_rectangle_mesh(context, ball_squqre)
+    create_rectangle_mesh(context, ball_square)
+}
+
+pub fn create_middle_line_mesh(context: &Context, height: f32) -> graphics::Mesh {
+    // define a rectangle boundaries
+    let middle_line = graphics::Rect::new(0., 0., MIDDLE_LINE_WIDTH, height);
+
+    // to draw a rectangle on the screen, we need to generate a mesh
+    create_rectangle_mesh(context, middle_line)
 }
 
 fn create_rectangle_mesh(context: &Context, rectangle: graphics::Rect) -> graphics::Mesh {

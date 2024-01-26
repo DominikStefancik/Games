@@ -1,11 +1,12 @@
 mod helpers;
 
 use crate::constants::{
-    BALL_SIZE, BALL_SIZE_HALF, BALL_SPEED, RACKET_HEIGHT, RACKET_HEIGHT_HALF, RACKET_PADDING,
-    RACKET_WIDTH,
+    BALL_SIZE, BALL_SIZE_HALF, BALL_SPEED, MIDDLE_LINE_WIDTH, RACKET_HEIGHT, RACKET_HEIGHT_HALF,
+    RACKET_PADDING, RACKET_WIDTH,
 };
 use crate::state::helpers::{
-    create_ball_square_mesh, create_racket_rectangle_mesh, move_racket, randomize_velocity,
+    create_ball_square_mesh, create_middle_line_mesh, create_racket_rectangle_mesh, move_racket,
+    randomize_velocity,
 };
 use ggez::{
     event, graphics,
@@ -131,6 +132,7 @@ impl event::EventHandler for GameState {
     }
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
+        let screen_width_half = self.screen_width / 2.;
         let mut canvas = graphics::Canvas::from_frame(context, graphics::Color::BLACK);
 
         // create Pong rackets on the screen
@@ -153,12 +155,22 @@ impl event::EventHandler for GameState {
             graphics::DrawParam::new().dest(self.ball_position),
         );
 
-        let score_text = graphics::Text::new(format!(
-            "{}            {}",
+        let middle_line_mesh = create_middle_line_mesh(&context, self.screen_height);
+        canvas.draw(
+            &middle_line_mesh,
+            graphics::DrawParam::new().dest(Point2 {
+                x: screen_width_half - MIDDLE_LINE_WIDTH / 2.,
+                y: 0.,
+            }),
+        );
+
+        let mut score_text = graphics::Text::new(format!(
+            "{}    {}",
             self.player_1_score, self.player_2_score
         ));
+        score_text.set_scale(45.);
         let score_text_position = Point2 {
-            x: self.screen_width / 2. - 70.,
+            x: screen_width_half - 70.,
             y: 30.,
         };
         canvas.draw(
