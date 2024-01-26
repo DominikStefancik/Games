@@ -19,6 +19,10 @@ use ggez::{
 pub struct GameState {
     screen_width: f32,
     screen_height: f32,
+    player_1: graphics::Mesh,
+    player_2: graphics::Mesh,
+    ball: graphics::Mesh,
+    middle_line: graphics::Mesh,
     player_1_position: Point2<f32>,
     player_2_position: Point2<f32>,
     ball_position: Point2<f32>,
@@ -32,24 +36,35 @@ impl GameState {
     pub fn new(context: &mut Context) -> Self {
         let (screen_width, screen_height) = context.gfx.drawable_size();
         let (screen_width_half, screen_height_half) = (screen_width / 2., screen_height / 2.);
+        let player_1 = create_racket_rectangle_mesh(context);
+        let player_2 = create_racket_rectangle_mesh(context);
+        let ball = create_ball_square_mesh(context);
+        let middle_line = create_middle_line_mesh(&context, screen_height);
+        let player_1_position = Point2 {
+            x: RACKET_PADDING,
+            y: screen_height_half - RACKET_HEIGHT_HALF,
+        };
+        let player_2_position = Point2 {
+            x: screen_width - RACKET_WIDTH - RACKET_PADDING,
+            y: screen_height_half - RACKET_HEIGHT_HALF,
+        };
+        let ball_position = Point2 {
+            x: screen_width_half - BALL_SIZE_HALF,
+            y: screen_height_half - BALL_SIZE_HALF,
+        };
         let mut ball_velocity = Vector2::from([0., 0.]);
         randomize_velocity(&mut ball_velocity, BALL_SPEED, BALL_SPEED);
 
         GameState {
             screen_width,
             screen_height,
-            player_1_position: Point2 {
-                x: RACKET_PADDING,
-                y: screen_height_half - RACKET_HEIGHT_HALF,
-            },
-            player_2_position: Point2 {
-                x: screen_width - RACKET_WIDTH - RACKET_PADDING,
-                y: screen_height_half - RACKET_HEIGHT_HALF,
-            },
-            ball_position: Point2 {
-                x: screen_width_half - BALL_SIZE_HALF,
-                y: screen_height_half - BALL_SIZE_HALF,
-            },
+            player_1,
+            player_2,
+            ball,
+            middle_line,
+            player_1_position,
+            player_2_position,
+            ball_position,
             ball_velocity,
             player_1_score: 0,
             player_2_score: 0,
@@ -136,28 +151,24 @@ impl event::EventHandler for GameState {
         let mut canvas = graphics::Canvas::from_frame(context, graphics::Color::BLACK);
 
         // create Pong rackets on the screen
-        let racket_rectangle_mesh = create_racket_rectangle_mesh(context);
         canvas.draw(
-            &racket_rectangle_mesh,
+            &self.player_1,
             graphics::DrawParam::new().dest(self.player_1_position),
         );
 
-        let racket_rectangle_mesh = create_racket_rectangle_mesh(context);
         canvas.draw(
-            &racket_rectangle_mesh,
+            &self.player_2,
             graphics::DrawParam::new().dest(self.player_2_position),
         );
 
         // create ball on the screen
-        let ball_rectangle_mesh = create_ball_square_mesh(context);
         canvas.draw(
-            &ball_rectangle_mesh,
+            &self.ball,
             graphics::DrawParam::new().dest(self.ball_position),
         );
 
-        let middle_line_mesh = create_middle_line_mesh(&context, self.screen_height);
         canvas.draw(
-            &middle_line_mesh,
+            &self.middle_line,
             graphics::DrawParam::new().dest(Point2 {
                 x: screen_width_half - MIDDLE_LINE_WIDTH / 2.,
                 y: 0.,
