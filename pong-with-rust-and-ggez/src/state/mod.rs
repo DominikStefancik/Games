@@ -1,7 +1,7 @@
 mod helpers;
 
 use crate::constants::{
-    BALL_SIZE_HALF, BALL_SPEED, RACKET_HEIGHT_HALF, RACKET_WIDTH, RACKET_WIDTH_HALF,
+    BALL_SIZE, BALL_SIZE_HALF, BALL_SPEED, RACKET_HEIGHT_HALF, RACKET_WIDTH, RACKET_WIDTH_HALF,
 };
 use crate::state::helpers::{
     create_ball_square_mesh, create_racket_rectangle_mesh, move_racket, randomize_velocity,
@@ -89,6 +89,13 @@ impl event::EventHandler for GameState {
         let delta_time = context.time.delta().as_secs_f32();
         self.ball_position.x += self.ball_velocity.x * delta_time;
         self.ball_position.y += self.ball_velocity.y * delta_time;
+
+        // check if ball didn't reach upper or lower boundary
+        if self.ball_position.y < 0. {
+            self.ball_velocity.y = self.ball_velocity.y.abs();
+        } else if self.ball_position.y > self.screen_height - BALL_SIZE {
+            self.ball_velocity.y = -self.ball_velocity.y.abs();
+        }
 
         // check if one of the player lost
         if self.ball_position.x < 0. {
