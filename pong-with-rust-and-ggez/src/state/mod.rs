@@ -1,7 +1,8 @@
 mod helpers;
 
 use crate::constants::{
-    BALL_SIZE, BALL_SIZE_HALF, BALL_SPEED, RACKET_HEIGHT_HALF, RACKET_WIDTH, RACKET_WIDTH_HALF,
+    BALL_SIZE, BALL_SIZE_HALF, BALL_SPEED, RACKET_HEIGHT, RACKET_HEIGHT_HALF, RACKET_PADDING,
+    RACKET_WIDTH,
 };
 use crate::state::helpers::{
     create_ball_square_mesh, create_racket_rectangle_mesh, move_racket, randomize_velocity,
@@ -37,11 +38,11 @@ impl GameState {
             screen_width,
             screen_height,
             player_1_position: Point2 {
-                x: RACKET_WIDTH_HALF,
+                x: RACKET_PADDING,
                 y: screen_height_half - RACKET_HEIGHT_HALF,
             },
             player_2_position: Point2 {
-                x: screen_width - RACKET_WIDTH - RACKET_WIDTH_HALF,
+                x: screen_width - RACKET_WIDTH - RACKET_PADDING,
                 y: screen_height_half - RACKET_HEIGHT_HALF,
             },
             ball_position: Point2 {
@@ -95,6 +96,20 @@ impl event::EventHandler for GameState {
             self.ball_velocity.y = self.ball_velocity.y.abs();
         } else if self.ball_position.y > self.screen_height - BALL_SIZE {
             self.ball_velocity.y = -self.ball_velocity.y.abs();
+        }
+
+        // check if the ball touched one of the rackets
+        let ball_touches_player_1 = self.ball_position.x < self.player_1_position.x + RACKET_WIDTH
+            && self.ball_position.y + BALL_SIZE > self.player_1_position.y
+            && self.ball_position.y < self.player_1_position.y + RACKET_HEIGHT;
+        let ball_touches_player_2 = self.ball_position.x > self.player_2_position.x - RACKET_WIDTH
+            && self.ball_position.y + BALL_SIZE > self.player_2_position.y
+            && self.ball_position.y < self.player_2_position.y + RACKET_HEIGHT;
+
+        if ball_touches_player_1 {
+            self.ball_velocity.x = self.ball_velocity.x.abs();
+        } else if ball_touches_player_2 {
+            self.ball_velocity.x = -self.ball_velocity.x.abs();
         }
 
         // check if one of the player lost
