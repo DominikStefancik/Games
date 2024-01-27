@@ -1,7 +1,10 @@
 mod components;
 mod constants;
+mod systems;
 
+use crate::components::Paddle;
 use crate::constants::{PADDLE_COLOR, PADDLE_SIZE, PADDLE_START_Y};
+use crate::systems::move_paddle_system;
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
@@ -17,6 +20,8 @@ fn main() {
         .insert_resource(ClearColor(Color::rgb(0.9, 0.9, 0.9)))
         .add_systems(Startup, setup_system)
         .add_systems(Update, bevy::window::close_on_esc)
+        // FixedUpdate always runs on a fixed rate; by default it is 60 frames per second
+        .add_systems(FixedUpdate, move_paddle_system)
         .run();
 }
 
@@ -28,16 +33,19 @@ fn setup_system(mut commands: Commands) {
     // Note: Bundles are used for adding multiple components at once
     commands.spawn(Camera2dBundle::default());
 
-    commands.spawn(SpriteBundle {
-        transform: Transform {
-            translation: Vec3::new(0., PADDLE_START_Y, 0.),
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform {
+                translation: Vec3::new(0., PADDLE_START_Y, 0.),
+                ..Default::default()
+            },
+            sprite: Sprite {
+                color: PADDLE_COLOR,
+                custom_size: Some(PADDLE_SIZE),
+                ..Default::default()
+            },
             ..Default::default()
         },
-        sprite: Sprite {
-            color: PADDLE_COLOR,
-            custom_size: Some(PADDLE_SIZE),
-            ..Default::default()
-        },
-        ..Default::default()
-    });
+        Paddle,
+    ));
 }
