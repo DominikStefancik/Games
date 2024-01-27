@@ -2,10 +2,14 @@ mod components;
 mod constants;
 mod systems;
 
-use crate::components::Paddle;
-use crate::constants::{PADDLE_COLOR, PADDLE_SIZE, PADDLE_START_Y};
-use crate::systems::move_paddle_system;
+use crate::components::{Ball, BallVelocity, Paddle};
+use crate::constants::{
+    BALL_COLOR, BALL_INITIAL_DIRECTION, BALL_RADIUS, BALL_SPEED, BALL_STARTING_POSITION,
+    PADDLE_COLOR, PADDLE_SIZE, PADDLE_START_Y,
+};
+use crate::systems::{ball_velocity_system, move_paddle_system};
 use bevy::prelude::*;
+use bevy::sprite::MaterialMesh2dBundle;
 use bevy::DefaultPlugins;
 
 /*
@@ -21,18 +25,23 @@ fn main() {
         .add_systems(Startup, setup_system)
         .add_systems(Update, bevy::window::close_on_esc)
         // FixedUpdate always runs on a fixed rate; by default it is 60 frames per second
-        .add_systems(FixedUpdate, move_paddle_system)
+        .add_systems(FixedUpdate, (move_paddle_system, ball_velocity_system))
         .run();
 }
 
 // Bevy systems are just functions which receive special parameters
 // Bevy will inject the required parameters for system functions for us
-fn setup_system(mut commands: Commands) {
+fn setup_system(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
     // we have to spawn a camera first so we can see our player
     // if we didn't do that, the game screen will just be black
     // Note: Bundles are used for adding multiple components at once
     commands.spawn(Camera2dBundle::default());
 
+    // spawn the player
     commands.spawn((
         SpriteBundle {
             transform: Transform {
@@ -47,5 +56,20 @@ fn setup_system(mut commands: Commands) {
             ..Default::default()
         },
         Paddle,
+    ));
+
+    // spawn the ball
+    commands.spawn((
+        MaterialMesh2dBundle {
+            mesh: meshes.add(shape::Circle::new(BALL_RADIUS).into()).into(),
+            material: materials.add(ColorMaterial::from(BALL_COLOR)),
+            transform: Transform {
+                translation: BALL_STARTING_POSITION,
+                ..Default::default()
+            },
+            ..default()
+        },
+        Ball,
+        BallVelocity(BALL_SPEED * BALL_INITIAL_DIRECTION),
     ));
 }

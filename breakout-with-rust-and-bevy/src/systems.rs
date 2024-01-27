@@ -1,4 +1,4 @@
-use crate::components::Paddle;
+use crate::components::{BallVelocity, Paddle};
 use crate::constants::PADDLE_SPEED;
 use bevy::prelude::*;
 
@@ -31,4 +31,17 @@ pub fn move_paddle_system(
         paddle_transform.translation.x + direction * PADDLE_SPEED * time_step.delta().as_secs_f32();
 
     paddle_transform.translation.x = new_x;
+}
+
+pub fn ball_velocity_system(
+    time_step: Res<Time<Fixed>>,
+    // in this case we are looking for any entity that matches Transform and BallVelocity components
+    mut query: Query<(&mut Transform, &BallVelocity)>,
+) {
+    let delta = time_step.delta().as_secs_f32();
+    // we know we have only one entity with the BallVelocity component, that's why we can use ".single_mut()"
+    let (mut transform, ball_velocity) = query.single_mut();
+
+    transform.translation.x += ball_velocity.x * delta;
+    transform.translation.y += ball_velocity.y * delta;
 }
