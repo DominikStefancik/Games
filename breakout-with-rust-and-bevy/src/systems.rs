@@ -1,4 +1,4 @@
-use crate::components::{Ball, BallVelocity, Collider, Paddle};
+use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle};
 use crate::constants::{LEFT_WALL, PADDLE_SPEED, PADDLE_WIDTH_HALF, RIGHT_WALL, WALL_THICKNESS};
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::{collide, Collision};
@@ -52,13 +52,17 @@ pub fn ball_velocity_system(
 
 // Checks if a ball collided with (touched) ant other object (e.g. wall, paddle, brick)
 pub fn check_ball_collisions_system(
+    mut commands: Commands,
     // this query will return any entity that matches BallVelocity, Transform and Ball components
     mut ball_query: Query<(&mut BallVelocity, &Transform, &Ball)>,
-    // this query will return any entity that matches Transform and Collider components
-    collider_query: Query<(&Transform, &Collider)>,
+    // this query will return any entity that matches Transform and Collider components,
+    // and optionally it could or couldn't have a Brick component
+    collider_query: Query<(Entity, &Transform, &Collider, Option<&Brick>)>,
 ) {
     for (mut ball_velocity, ball_transform, ball) in ball_query.iter_mut() {
-        for (collider_object_transform, collider_object) in collider_query.iter() {
+        for (collider_object_entity, collider_object_transform, collider_object, optional_brick) in
+            collider_query.iter()
+        {
             /*
              * Important:
              *  The resulting "Collision" enum will depend on the order of the entities passed to
@@ -77,6 +81,11 @@ pub fn check_ball_collisions_system(
                     Collision::Left | Collision::Right => ball_velocity.x *= -1.,
                     Collision::Top | Collision::Bottom => ball_velocity.y *= -1.,
                     Collision::Inside => { /* Do nothing */ }
+                }
+
+                // if the object we hit with the ball is a brick, remove it
+                if optional_brick.is_some() {
+                    commands.entity(collider_object_entity).despawn();
                 }
             }
         }
