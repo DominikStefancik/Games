@@ -4,7 +4,7 @@ mod helpers;
 mod systems;
 
 use crate::constants::BACKGROUND_COLOR;
-use crate::helpers::{spawn_ball, spawn_player, spawn_wall};
+use crate::helpers::{spawn_ball, spawn_bricks, spawn_player, spawn_wall};
 use crate::systems::{ball_velocity_system, check_ball_collisions_system, move_paddle_system};
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
@@ -47,6 +47,7 @@ fn setup_system(
     commands.spawn(Camera2dBundle::default());
 
     spawn_wall(&mut commands);
+    spawn_bricks(&mut commands);
     spawn_player(&mut commands);
     spawn_ball(&mut commands, meshes, materials);
 }

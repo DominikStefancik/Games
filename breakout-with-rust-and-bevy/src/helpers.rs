@@ -1,8 +1,10 @@
-use crate::components::{Ball, BallVelocity, Collider, Paddle, WallBundle};
+use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle, WallBundle};
 use crate::constants::{
     BALL_COLOR, BALL_INITIAL_DIRECTION, BALL_RADIUS, BALL_SPEED, BALL_STARTING_POSITION,
-    BOTTOM_WALL, LEFT_WALL, PADDLE_COLOR, PADDLE_SIZE, PADDLE_START_Y, RIGHT_WALL, TOP_WALL,
-    WALL_BLOCK_HEIGHT, WALL_BLOCK_WIDTH, WALL_COLOR, WALL_THICKNESS,
+    BOTTOM_WALL, BRICK_COLOR, BRICK_SIZE, GAP_BETWEEN_BRICKS, GAP_BETWEEN_BRICKS_AND_CEILING,
+    GAP_BETWEEN_BRICKS_AND_SIDES, GAP_BETWEEN_PADDLE_AND_BRICKS, LEFT_WALL, PADDLE_COLOR,
+    PADDLE_SIZE, PADDLE_START_Y, RIGHT_WALL, TOP_WALL, WALL_BLOCK_HEIGHT, WALL_BLOCK_WIDTH,
+    WALL_COLOR, WALL_THICKNESS,
 };
 use bevy::asset::Assets;
 use bevy::math::{vec2, vec3};
@@ -81,5 +83,44 @@ fn create_wall_bundle(x: f32, y: f32, wall_size: Vec2) -> WallBundle {
             ..Default::default()
         },
         collider: Collider { size: wall_size },
+    }
+}
+
+pub fn spawn_bricks(commands: &mut Commands) {
+    let offset_x = LEFT_WALL + GAP_BETWEEN_BRICKS_AND_SIDES + BRICK_SIZE.x / 2.;
+    let offset_y = BOTTOM_WALL + GAP_BETWEEN_PADDLE_AND_BRICKS + BRICK_SIZE.y / 2.;
+
+    let bricks_total_width = (RIGHT_WALL - LEFT_WALL) - GAP_BETWEEN_BRICKS_AND_SIDES * 2.;
+    let bricks_total_height =
+        (TOP_WALL - BOTTOM_WALL) - GAP_BETWEEN_BRICKS_AND_CEILING - GAP_BETWEEN_PADDLE_AND_BRICKS;
+
+    let rows = (bricks_total_height / (BRICK_SIZE.y + GAP_BETWEEN_BRICKS)).floor() as u32;
+    let columns = (bricks_total_width / (BRICK_SIZE.x + GAP_BETWEEN_BRICKS)).floor() as u32;
+
+    for row in 0..rows {
+        for column in 0..columns {
+            let brick_position = vec2(
+                offset_x + column as f32 * (BRICK_SIZE.x + GAP_BETWEEN_BRICKS),
+                offset_y + row as f32 * (BRICK_SIZE.y + GAP_BETWEEN_BRICKS),
+            );
+
+            commands.spawn((
+                SpriteBundle {
+                    transform: Transform {
+                        translation: brick_position.extend(0.0),
+                        ..Default::default()
+                    },
+                    sprite: Sprite {
+                        color: BRICK_COLOR,
+                        custom_size: Some(BRICK_SIZE),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+                Brick,
+                // the Collider component is necessary if we want the ball to collide with a brick
+                Collider { size: BRICK_SIZE },
+            ));
+        }
     }
 }

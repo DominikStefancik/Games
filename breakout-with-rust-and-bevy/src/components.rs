@@ -29,3 +29,8 @@ pub struct WallBundle {
     pub sprite_bundle: SpriteBundle,
     pub collider: Collider,
 }
+
+// represents a single brick
+// it is called Stack component because it's a component which doesn't contain any data
+#[derive(Component)]
+pub struct Brick;
