@@ -1,4 +1,4 @@
-use bevy::prelude::{Component, Deref, DerefMut, Vec2};
+use bevy::prelude::*;
 
 // represents the player
 // it is called Stack component because it's a component which doesn't contain any data
@@ -12,3 +12,14 @@ pub struct Ball;
 // represents the ball's velocity
 #[derive(Component, Deref, DerefMut)]
 pub struct BallVelocity(pub Vec2);
+
+#[derive(Component)]
+pub struct Collider {
+    pub size: Vec2,
+}
+
+#[derive(Bundle)]
+pub struct WallBundle {
+    pub sprite_bundle: SpriteBundle,
+    pub collider: Collider,
+}
