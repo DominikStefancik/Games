@@ -5,7 +5,7 @@ mod systems;
 
 use crate::constants::BACKGROUND_COLOR;
 use crate::helpers::{spawn_ball, spawn_player, spawn_wall};
-use crate::systems::{ball_velocity_system, move_paddle_system};
+use crate::systems::{ball_velocity_system, check_ball_collisions_system, move_paddle_system};
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
@@ -22,7 +22,15 @@ fn main() {
         .add_systems(Startup, setup_system)
         .add_systems(Update, bevy::window::close_on_esc)
         // FixedUpdate always runs on a fixed rate; by default it is 60 frames per second
-        .add_systems(FixedUpdate, (move_paddle_system, ball_velocity_system))
+        .add_systems(
+            FixedUpdate,
+            (
+                move_paddle_system,
+                ball_velocity_system,
+                // we want the "check_ball_collisions_system" to run after the "ball_velocity_system" runs
+                check_ball_collisions_system.after(ball_velocity_system),
+            ),
+        )
         .run();
 }
 

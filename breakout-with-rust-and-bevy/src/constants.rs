@@ -4,6 +4,7 @@ pub const BACKGROUND_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 
 pub const PADDLE_START_Y: f32 = 0.;
 pub const PADDLE_SIZE: Vec2 = Vec2::new(120., 20.);
+pub const PADDLE_WIDTH_HALF: f32 = PADDLE_SIZE.x / 2.;
 pub const PADDLE_COLOR: Color = Color::rgb(0.3, 0.3, 0.7);
 pub const PADDLE_SPEED: f32 = 500.;
 

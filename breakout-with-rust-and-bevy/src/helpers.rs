@@ -24,6 +24,8 @@ pub fn spawn_player(commands: &mut Commands) {
             ..Default::default()
         },
         Paddle,
+        // the Collider component is necessary if we want the ball to collide with the paddle
+        Collider { size: PADDLE_SIZE },
     ));
 }
 
@@ -42,7 +44,10 @@ pub fn spawn_ball(
             },
             ..default()
         },
-        Ball,
+        Ball {
+            // add a small offset number to make collisions a bit nicer
+            size: vec2(BALL_RADIUS + 5., BALL_RADIUS + 5.),
+        },
         BallVelocity(BALL_SPEED * BALL_INITIAL_DIRECTION),
     ));
 }
