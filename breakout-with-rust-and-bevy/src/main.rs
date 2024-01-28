@@ -1,11 +1,16 @@
 mod components;
 mod constants;
 mod helpers;
+mod resources;
 mod systems;
 
 use crate::constants::BACKGROUND_COLOR;
-use crate::helpers::{spawn_ball, spawn_bricks, spawn_player, spawn_wall};
-use crate::systems::{ball_velocity_system, check_ball_collisions_system, move_paddle_system};
+use crate::helpers::{spawn_ball, spawn_bricks, spawn_player, spawn_scoreboard, spawn_wall};
+use crate::resources::Scoreboard;
+use crate::systems::{
+    ball_velocity_system, check_ball_collisions_system, move_paddle_system,
+    update_scoreboard_system,
+};
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
@@ -19,6 +24,8 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .insert_resource(ClearColor(BACKGROUND_COLOR))
+        // we have to add a resource into the Bevy "world" if later we want to access it in a system function
+        .insert_resource(Scoreboard { score: 0 })
         .add_systems(Startup, setup_system)
         .add_systems(Update, bevy::window::close_on_esc)
         // FixedUpdate always runs on a fixed rate; by default it is 60 frames per second
@@ -29,6 +36,7 @@ fn main() {
                 ball_velocity_system,
                 // we want the "check_ball_collisions_system" to run after the "ball_velocity_system" runs
                 check_ball_collisions_system.after(ball_velocity_system),
+                update_scoreboard_system,
             ),
         )
         .run();
@@ -50,4 +58,5 @@ fn setup_system(
     spawn_bricks(&mut commands);
     spawn_player(&mut commands);
     spawn_ball(&mut commands, meshes, materials);
+    spawn_scoreboard(&mut commands);
 }

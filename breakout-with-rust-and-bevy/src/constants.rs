@@ -1,4 +1,4 @@
-use bevy::prelude::{Color, Vec2, Vec3};
+use bevy::prelude::{Color, Val, Vec2, Vec3};
 
 pub const BACKGROUND_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 
@@ -33,3 +33,9 @@ pub const GAP_BETWEEN_PADDLE_AND_BRICKS: f32 = 270.;
 pub const GAP_BETWEEN_BRICKS: f32 = 5.;
 pub const GAP_BETWEEN_BRICKS_AND_CEILING: f32 = 20.;
 pub const GAP_BETWEEN_BRICKS_AND_SIDES: f32 = 20.;
+
+// Scoreboard constants
+pub const SCOREBOARD_FONT_SIZE: f32 = 40.;
+pub const SCOREBOARD_TEXT_PADDING: Val = Val::Px(5.);
+pub const SCOREBOARD_TEXT_COLOR: Color = Color::rgb(0.5, 0.5, 1.);
+pub const SCOREBOARD_SCORE_COLOR: Color = Color::rgb(1., 0.5, 0.5);

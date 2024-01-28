@@ -3,7 +3,8 @@ use crate::constants::{
     BALL_COLOR, BALL_INITIAL_DIRECTION, BALL_RADIUS, BALL_SPEED, BALL_STARTING_POSITION,
     BOTTOM_WALL, BRICK_COLOR, BRICK_SIZE, GAP_BETWEEN_BRICKS, GAP_BETWEEN_BRICKS_AND_CEILING,
     GAP_BETWEEN_BRICKS_AND_SIDES, GAP_BETWEEN_PADDLE_AND_BRICKS, LEFT_WALL, PADDLE_COLOR,
-    PADDLE_SIZE, PADDLE_START_Y, RIGHT_WALL, TOP_WALL, WALL_BLOCK_HEIGHT, WALL_BLOCK_WIDTH,
+    PADDLE_SIZE, PADDLE_START_Y, RIGHT_WALL, SCOREBOARD_FONT_SIZE, SCOREBOARD_SCORE_COLOR,
+    SCOREBOARD_TEXT_COLOR, SCOREBOARD_TEXT_PADDING, TOP_WALL, WALL_BLOCK_HEIGHT, WALL_BLOCK_WIDTH,
     WALL_COLOR, WALL_THICKNESS,
 };
 use bevy::asset::Assets;
@@ -123,4 +124,32 @@ pub fn spawn_bricks(commands: &mut Commands) {
             ));
         }
     }
+}
+
+pub fn spawn_scoreboard(commands: &mut Commands) {
+    commands.spawn(
+        TextBundle::from_sections([
+            // this text section will always stay the same
+            TextSection::new(
+                "Score: ",
+                TextStyle {
+                    font_size: SCOREBOARD_FONT_SIZE,
+                    color: SCOREBOARD_TEXT_COLOR,
+                    ..Default::default()
+                },
+            ),
+            TextSection::from_style(TextStyle {
+                font_size: SCOREBOARD_FONT_SIZE,
+                color: SCOREBOARD_SCORE_COLOR,
+                ..Default::default()
+            }),
+        ])
+        // the Style tells Bevy how to position a text
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            top: SCOREBOARD_TEXT_PADDING,
+            left: SCOREBOARD_TEXT_PADDING,
+            ..Default::default()
+        }),
+    );
 }

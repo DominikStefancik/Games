@@ -1,5 +1,6 @@
 use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle};
 use crate::constants::{LEFT_WALL, PADDLE_SPEED, PADDLE_WIDTH_HALF, RIGHT_WALL, WALL_THICKNESS};
+use crate::resources::Scoreboard;
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::{collide, Collision};
 
@@ -53,6 +54,7 @@ pub fn ball_velocity_system(
 // Checks if a ball collided with (touched) ant other object (e.g. wall, paddle, brick)
 pub fn check_ball_collisions_system(
     mut commands: Commands,
+    mut scoreboard: ResMut<Scoreboard>,
     // this query will return any entity that matches BallVelocity, Transform and Ball components
     mut ball_query: Query<(&mut BallVelocity, &Transform, &Ball)>,
     // this query will return any entity that matches Transform and Collider components,
@@ -86,8 +88,15 @@ pub fn check_ball_collisions_system(
                 // if the object we hit with the ball is a brick, remove it
                 if optional_brick.is_some() {
                     commands.entity(collider_object_entity).despawn();
+                    scoreboard.score += 1;
                 }
             }
         }
     }
+}
+
+pub fn update_scoreboard_system(scoreboard: Res<Scoreboard>, mut query: Query<&mut Text>) {
+    // we know we have only one entity with the Text component in our game, that's why we can use ".single_mut()"
+    let mut text = query.single_mut();
+    text.sections[1].value = scoreboard.score.to_string();
 }
