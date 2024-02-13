@@ -1,6 +1,6 @@
 use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle};
 use crate::constants::{LEFT_WALL, PADDLE_SPEED, PADDLE_WIDTH_HALF, RIGHT_WALL, WALL_THICKNESS};
-use crate::resources::Scoreboard;
+use crate::resources::{CollisionSound, Scoreboard};
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::{collide, Collision};
 
@@ -51,10 +51,11 @@ pub fn ball_velocity_system(
     }
 }
 
-// Checks if a ball collided with (touched) ant other object (e.g. wall, paddle, brick)
+// Checks if a ball collided with (touched) any other object (e.g. wall, paddle, brick)
 pub fn check_ball_collisions_system(
     mut commands: Commands,
     mut scoreboard: ResMut<Scoreboard>,
+    collision_sound: Res<CollisionSound>,
     // this query will return any entity that matches BallVelocity, Transform and Ball components
     mut ball_query: Query<(&mut BallVelocity, &Transform, &Ball)>,
     // this query will return any entity that matches Transform and Collider components,
@@ -90,6 +91,13 @@ pub fn check_ball_collisions_system(
                     commands.entity(collider_object_entity).despawn();
                     scoreboard.score += 1;
                 }
+
+                // we can play a sound by spawning an entity with the AudioBundle
+                commands.spawn(AudioBundle {
+                    source: collision_sound.clone(),
+                    // entity is automatically cleaned up after the audio is played
+                    settings: PlaybackSettings::DESPAWN,
+                });
             }
         }
     }

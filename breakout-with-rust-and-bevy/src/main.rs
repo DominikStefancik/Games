@@ -6,7 +6,7 @@ mod systems;
 
 use crate::constants::BACKGROUND_COLOR;
 use crate::helpers::{spawn_ball, spawn_bricks, spawn_player, spawn_scoreboard, spawn_wall};
-use crate::resources::Scoreboard;
+use crate::resources::{CollisionSound, Scoreboard};
 use crate::systems::{
     ball_velocity_system, check_ball_collisions_system, move_paddle_system,
     update_scoreboard_system,
@@ -16,7 +16,8 @@ use bevy::DefaultPlugins;
 
 /*
  * Bevy uses Entity-Component-System (ECS) architecture:
- *  Entity - represents any object in the system (game), identified by its ID
+ *  Entity - represents any object in the system (game),
+ *           identified by its ID and is tied to a group of components
  *  Component - data related to a particular entity (position, rotation, scale, ...)
  *  System - code (functions) which operates on components
  */
@@ -48,11 +49,17 @@ fn setup_system(
     mut commands: Commands,
     meshes: ResMut<Assets<Mesh>>,
     materials: ResMut<Assets<ColorMaterial>>,
+    asset_server: Res<AssetServer>,
 ) {
-    // we have to spawn a camera first so we can see our player
+    // we have to spawn a camera first, so we can see our player
     // if we didn't do that, the game screen will just be black
     // Note: Bundles are used for adding multiple components at once
     commands.spawn(Camera2dBundle::default());
+
+    // we have to insert a sound as a resource in order to be able to reference it
+    // in the "check_ball_collisions_system"
+    let ball_collision_sound = asset_server.load("sounds/breakout_collision.ogg");
+    commands.insert_resource(CollisionSound(ball_collision_sound));
 
     spawn_wall(&mut commands);
     spawn_bricks(&mut commands);

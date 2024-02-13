@@ -1,4 +1,4 @@
-use bevy::prelude::Resource;
+use bevy::prelude::{AudioSource, Deref, DerefMut, Handle, Resource};
 
 // A Resource in Bevy is some data that is unique and is globally accessible
 
@@ -7,3 +7,6 @@ use bevy::prelude::Resource;
 pub struct Scoreboard {
     pub score: usize,
 }
+
+#[derive(Resource, Default, Deref, DerefMut)]
+pub struct CollisionSound(pub Handle<AudioSource>);
