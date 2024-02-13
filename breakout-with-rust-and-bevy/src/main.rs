@@ -23,7 +23,13 @@ use bevy::DefaultPlugins;
  */
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Rust Breakout".to_string(),
+                ..Default::default()
+            }),
+            ..Default::default()
+        }))
         .insert_resource(ClearColor(BACKGROUND_COLOR))
         // we have to add a resource into the Bevy "world" if later we want to access it in a system function
         .insert_resource(Scoreboard { score: 0 })
