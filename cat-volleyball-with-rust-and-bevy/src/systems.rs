@@ -1,6 +1,6 @@
 use crate::components::Player;
 use crate::constants::PLAYER_SPEED;
-use bevy::prelude::{Input, KeyCode, Query, Res, Time, Transform};
+use bevy::prelude::{ButtonInput, KeyCode, Query, Res, Time, Transform};
 
 /*
  * Generally, all Bevy system functions work in this way; various arguments to retrieve resources,
@@ -10,7 +10,7 @@ use bevy::prelude::{Input, KeyCode, Query, Res, Time, Transform};
  */
 
 pub fn move_player_system(
-    keyboard_input: Res<Input<KeyCode>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
     /*
      * Provides a reference to the time resource. Since our player system function can be called
      * with different amounts of time between steps, we’ll use this resource to determine the time
@@ -34,7 +34,7 @@ pub fn move_player_system(
         // apply movement deltas
         transform.translation.x += offset;
 
-        // we need to make sure that the cats don't moe outside of the window
+        // we need to make sure that the cats don't moe outside the window
         // and to the opponent's area
         let (left_limit, right_limit) = player.side.cat_movement_range();
         transform.translation.x = transform.translation.x.clamp(left_limit, right_limit);

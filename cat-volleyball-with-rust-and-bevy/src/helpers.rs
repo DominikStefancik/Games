@@ -1,22 +1,27 @@
 use crate::components::{Ball, Player, Side};
 use crate::constants::{ARENA_HEIGHT, ARENA_WIDTH, BALL_RADIUS, BALL_VELOCITY};
 use bevy::prelude::{
-    Commands, Handle, SpriteSheetBundle, TextureAtlas, TextureAtlasSprite, Transform,
+    Commands, Handle, Image, SpriteSheetBundle, TextureAtlas, TextureAtlasLayout, Transform,
 };
 
 pub fn spawn_player(
     commands: &mut Commands,
-    // The TextureAtlas is a single location where we can store all texture atlases in the whole program
-    atlas: Handle<TextureAtlas>,
+    texture_atlas_layout_handle: Handle<TextureAtlasLayout>,
+    sprite_sheet_handle: Handle<Image>,
     cat_sprite_index: usize,
     side: Side,
     x: f32,
     y: f32,
 ) {
     commands.spawn((
+        // the "sprite" field initialization is covered by the `..default()` expression
         SpriteSheetBundle {
-            sprite: TextureAtlasSprite::new(cat_sprite_index),
-            texture_atlas: atlas,
+            // The TextureAtlas is a single location where we can store all texture atlases in the whole program
+            atlas: TextureAtlas {
+                layout: texture_atlas_layout_handle,
+                index: cat_sprite_index,
+            },
+            texture: sprite_sheet_handle,
             transform: Transform::from_xyz(x, y, 0.),
             ..Default::default()
         },
@@ -26,14 +31,19 @@ pub fn spawn_player(
 
 pub fn spawn_ball(
     commands: &mut Commands,
-    // The TextureAtlas is a single location where we can store all texture atlases in the whole program
-    atlas: Handle<TextureAtlas>,
+    texture_atlas_layout_handle: Handle<TextureAtlasLayout>,
+    sprite_sheet_handle: Handle<Image>,
     ball_sprite_index: usize,
 ) {
     commands.spawn((
+        // the "sprite" field initialization is covered by the `..default()` expression
         SpriteSheetBundle {
-            sprite: TextureAtlasSprite::new(ball_sprite_index),
-            texture_atlas: atlas,
+            // The TextureAtlas is a single location where we can store all texture atlases in the whole program
+            atlas: TextureAtlas {
+                layout: texture_atlas_layout_handle,
+                index: ball_sprite_index,
+            },
+            texture: sprite_sheet_handle,
             transform: Transform::from_xyz(ARENA_WIDTH / 2., ARENA_HEIGHT / 2., 0.),
             ..Default::default()
         },

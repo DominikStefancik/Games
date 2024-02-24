@@ -11,16 +11,16 @@ impl Side {
     // determines which keyboard keys move the left/right cat to the left
     pub fn move_cat_left_key(&self) -> KeyCode {
         match self {
-            Side::LEFT => KeyCode::A,
-            Side::RIGHT => KeyCode::Left,
+            Side::LEFT => KeyCode::KeyA,
+            Side::RIGHT => KeyCode::ArrowLeft,
         }
     }
 
     // determines which keyboard keys move the left/right cat to the right
     pub fn move_cat_right_key(&self) -> KeyCode {
         match self {
-            Side::LEFT => KeyCode::D,
-            Side::RIGHT => KeyCode::Right,
+            Side::LEFT => KeyCode::KeyD,
+            Side::RIGHT => KeyCode::ArrowRight,
         }
     }
 

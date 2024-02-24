@@ -6,7 +6,7 @@ mod systems;
 use crate::components::Side;
 use crate::constants::{
     ARENA_HEIGHT, ARENA_WIDTH, BALL_SIZE, BALL_TEXTURE_CORNER, CAT_SIZE, LEFT_CAT_TEXTURE_CORNER,
-    PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SPRITE_SHEET_SIZE,
+    PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SPRITES_SHEET_PATH, SPRITES_SHEET_SIZE,
 };
 use crate::helpers::{spawn_ball, spawn_player};
 use crate::systems::move_player_system;
@@ -39,7 +39,7 @@ fn main() {
 fn setup_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut texture_atlas: ResMut<Assets<TextureAtlas>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     commands.spawn(Camera2dBundle {
         // The camera itself is centered at the middle of the arena at unit height (z-parameter) above the canvas
@@ -55,8 +55,8 @@ fn setup_system(
      * for each item. This way, we reduce the overall loading time and allow the GPU to handle
      * the images more efficiently.
      */
-    let spritesheet = asset_server.load("textures/spritesheet.png");
-    let mut sprite_atlas = TextureAtlas::new_empty(spritesheet, SPRITE_SHEET_SIZE);
+    let sprite_sheet_handle = asset_server.load(SPRITES_SHEET_PATH);
+    let mut sprite_layout = TextureAtlasLayout::new_empty(SPRITES_SHEET_SIZE);
 
     /*
      * To get individual sprites from the atlas we generate the coordinates of rectangles
@@ -65,29 +65,30 @@ fn setup_system(
      *
      * For images the (0,0) coordinate is in the top left.
      */
-    let left_cat_index = sprite_atlas.add_texture(Rect::from_corners(
+    let left_cat_index = sprite_layout.add_texture(Rect::from_corners(
         LEFT_CAT_TEXTURE_CORNER,
         LEFT_CAT_TEXTURE_CORNER + CAT_SIZE,
     ));
-    let right_cat_index = sprite_atlas.add_texture(Rect::from_corners(
+    let right_cat_index = sprite_layout.add_texture(Rect::from_corners(
         RIGHT_CAT_TEXTURE_CORNER,
         RIGHT_CAT_TEXTURE_CORNER + CAT_SIZE,
     ));
-    let ball_index = sprite_atlas.add_texture(Rect::from_corners(
+    let ball_index = sprite_layout.add_texture(Rect::from_corners(
         BALL_TEXTURE_CORNER,
         BALL_TEXTURE_CORNER + BALL_SIZE,
     ));
 
     /*
-     * After we’ve added the textures and received the indices for these textures in the atlas,
-     * we add the new atlas to our larger atlas collection and are left with a handle to the asset
-     * that can be passed to the player initializers.
+     * After we’ve added the textures and received the indices for these textures from
+     * the atlas layout, we add the new atlas layout into our larger atlas collection and
+     * are left with a handle to the asset that can be passed to the player and ball initializers.
      */
-    let texture_atlas_handle = texture_atlas.add(sprite_atlas);
+    let texture_atlas_layout_handle = texture_atlases.add(sprite_layout);
 
     spawn_player(
         &mut commands,
-        texture_atlas_handle.clone(),
+        texture_atlas_layout_handle.clone(),
+        sprite_sheet_handle.clone(),
         left_cat_index,
         Side::LEFT,
         PLAYER_WIDTH / 2.,
@@ -95,11 +96,17 @@ fn setup_system(
     );
     spawn_player(
         &mut commands,
-        texture_atlas_handle.clone(),
+        texture_atlas_layout_handle.clone(),
+        sprite_sheet_handle.clone(),
         right_cat_index,
         Side::RIGHT,
         ARENA_WIDTH - PLAYER_WIDTH / 2.,
         PLAYER_HEIGHT / 2.,
     );
-    spawn_ball(&mut commands, texture_atlas_handle.clone(), ball_index);
+    spawn_ball(
+        &mut commands,
+        texture_atlas_layout_handle.clone(),
+        sprite_sheet_handle.clone(),
+        ball_index,
+    );
 }
