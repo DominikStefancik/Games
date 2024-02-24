@@ -9,6 +9,7 @@ use crate::constants::{
     RIGHT_CAT_CORNER, SPRITE_SHEET_SIZE,
 };
 use crate::helpers::spawn_player;
+use crate::systems::move_player_system;
 use bevy::prelude::*;
 
 fn main() {
@@ -23,7 +24,7 @@ fn main() {
         }))
         .insert_resource(ClearColor(Color::rgb(0., 0., 0.)))
         .add_systems(Startup, setup_system)
-        .add_systems(Update, bevy::window::close_on_esc)
+        .add_systems(Update, (bevy::window::close_on_esc, move_player_system))
         .run()
 }
 
