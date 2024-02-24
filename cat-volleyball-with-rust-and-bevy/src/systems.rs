@@ -1,5 +1,5 @@
-use crate::components::Player;
-use crate::constants::PLAYER_SPEED;
+use crate::components::{Ball, Player};
+use crate::constants::{GRAVITY_ACCELERATION, PLAYER_SPEED};
 use bevy::prelude::{ButtonInput, KeyCode, Query, Res, Time, Transform};
 
 /*
@@ -38,5 +38,18 @@ pub fn move_player_system(
         // and to the opponent's area
         let (left_limit, right_limit) = player.side.cat_movement_range();
         transform.translation.x = transform.translation.x.clamp(left_limit, right_limit);
+    }
+}
+
+pub fn move_ball_system(time: Res<Time>, mut query: Query<(&mut Ball, &mut Transform)>) {
+    for (mut ball, mut transform) in query.iter_mut() {
+        // Apply movement deltas
+        // For the accurate simulation of a falling ball we use
+        // algorithm called Velocity Verlet integration
+        transform.translation.x += ball.velocity.x * time.delta_seconds();
+        transform.translation.y += (ball.velocity.y
+            + time.delta_seconds() * GRAVITY_ACCELERATION / 2.)
+            * time.delta_seconds();
+        ball.velocity.y += time.delta_seconds() * GRAVITY_ACCELERATION;
     }
 }

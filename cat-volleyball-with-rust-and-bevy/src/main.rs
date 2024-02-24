@@ -9,7 +9,7 @@ use crate::constants::{
     PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SPRITES_SHEET_PATH, SPRITES_SHEET_SIZE,
 };
 use crate::helpers::{spawn_ball, spawn_player};
-use crate::systems::move_player_system;
+use crate::systems::{move_ball_system, move_player_system};
 use bevy::prelude::*;
 
 fn main() {
@@ -24,7 +24,14 @@ fn main() {
         }))
         .insert_resource(ClearColor(Color::rgb(0., 0., 0.)))
         .add_systems(Startup, setup_system)
-        .add_systems(Update, (bevy::window::close_on_esc, move_player_system))
+        .add_systems(
+            Update,
+            (
+                bevy::window::close_on_esc,
+                move_player_system,
+                move_ball_system,
+            ),
+        )
         .run()
 }
 

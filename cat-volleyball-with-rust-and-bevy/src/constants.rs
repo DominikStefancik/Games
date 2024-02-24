@@ -17,3 +17,5 @@ pub const RIGHT_CAT_TEXTURE_CORNER: Vec2 = Vec2::new(35., 1.);
 pub const CAT_SIZE: Vec2 = Vec2::new(PLAYER_WIDTH, PLAYER_HEIGHT);
 pub const BALL_TEXTURE_CORNER: Vec2 = Vec2::new(1., 1.);
 pub const BALL_SIZE: Vec2 = Vec2::new(8., 8.);
+
+pub const GRAVITY_ACCELERATION: f32 = -40.;
