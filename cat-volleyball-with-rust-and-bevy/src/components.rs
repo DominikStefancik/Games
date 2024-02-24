@@ -1,5 +1,5 @@
 use crate::constants::{ARENA_WIDTH, PLAYER_WIDTH};
-use bevy::prelude::{Component, KeyCode};
+use bevy::prelude::{Component, KeyCode, Vec2};
 
 #[derive(Clone, Copy)]
 pub enum Side {
@@ -39,4 +39,10 @@ impl Side {
 #[derive(Component)]
 pub struct Player {
     pub side: Side,
+}
+
+#[derive(Component)]
+pub struct Ball {
+    pub radius: f32,
+    pub velocity: Vec2,
 }

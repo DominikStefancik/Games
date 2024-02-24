@@ -5,10 +5,10 @@ mod systems;
 
 use crate::components::Side;
 use crate::constants::{
-    ARENA_HEIGHT, ARENA_WIDTH, CAT_SIZE, LEFT_CAT_CORNER, PLAYER_HEIGHT, PLAYER_WIDTH,
-    RIGHT_CAT_CORNER, SPRITE_SHEET_SIZE,
+    ARENA_HEIGHT, ARENA_WIDTH, BALL_SIZE, BALL_TEXTURE_CORNER, CAT_SIZE, LEFT_CAT_TEXTURE_CORNER,
+    PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SPRITE_SHEET_SIZE,
 };
-use crate::helpers::spawn_player;
+use crate::helpers::{spawn_ball, spawn_player};
 use crate::systems::move_player_system;
 use bevy::prelude::*;
 
@@ -66,12 +66,16 @@ fn setup_system(
      * For images the (0,0) coordinate is in the top left.
      */
     let left_cat_index = sprite_atlas.add_texture(Rect::from_corners(
-        LEFT_CAT_CORNER,
-        LEFT_CAT_CORNER + CAT_SIZE,
+        LEFT_CAT_TEXTURE_CORNER,
+        LEFT_CAT_TEXTURE_CORNER + CAT_SIZE,
     ));
     let right_cat_index = sprite_atlas.add_texture(Rect::from_corners(
-        RIGHT_CAT_CORNER,
-        RIGHT_CAT_CORNER + CAT_SIZE,
+        RIGHT_CAT_TEXTURE_CORNER,
+        RIGHT_CAT_TEXTURE_CORNER + CAT_SIZE,
+    ));
+    let ball_index = sprite_atlas.add_texture(Rect::from_corners(
+        BALL_TEXTURE_CORNER,
+        BALL_TEXTURE_CORNER + BALL_SIZE,
     ));
 
     /*
@@ -97,4 +101,5 @@ fn setup_system(
         ARENA_WIDTH - PLAYER_WIDTH / 2.,
         PLAYER_HEIGHT / 2.,
     );
+    spawn_ball(&mut commands, texture_atlas_handle.clone(), ball_index);
 }
