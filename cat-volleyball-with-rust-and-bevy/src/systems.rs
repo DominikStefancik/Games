@@ -1,6 +1,9 @@
-use crate::components::{Ball, Player};
-use crate::constants::{GRAVITY_ACCELERATION, PLAYER_SPEED};
+use crate::components::{Ball, Player, Side};
+use crate::constants::{
+    ARENA_HEIGHT, ARENA_WIDTH, GRAVITY_ACCELERATION, PLAYER_HEIGHT, PLAYER_SPEED, PLAYER_WIDTH,
+};
 use bevy::prelude::{ButtonInput, KeyCode, Query, Res, Time, Transform};
+use rand::Rng;
 
 /*
  * Generally, all Bevy system functions work in this way; various arguments to retrieve resources,
@@ -51,5 +54,72 @@ pub fn move_ball_system(time: Res<Time>, mut query: Query<(&mut Ball, &mut Trans
             + time.delta_seconds() * GRAVITY_ACCELERATION / 2.)
             * time.delta_seconds();
         ball.velocity.y += time.delta_seconds() * GRAVITY_ACCELERATION;
+    }
+}
+
+fn is_point_in_rectangle(
+    ball_x: f32,
+    ball_y: f32,
+    player_box_boundary_left: f32,
+    player_box_boundary_bottom: f32,
+    player_box_boundary_right: f32,
+    player_box_boundary_top: f32,
+) -> bool {
+    ball_x >= player_box_boundary_left
+        && ball_x <= player_box_boundary_right
+        && ball_y >= player_box_boundary_bottom
+        && ball_y <= player_box_boundary_top
+}
+
+pub fn bounce_ball_system(
+    mut ball_query: Query<(&mut Ball, &Transform)>,
+    player_query: Query<(&Player, &Transform)>,
+) {
+    for (mut ball, ball_transform) in ball_query.iter_mut() {
+        let ball_x = ball_transform.translation.x;
+        let ball_y = ball_transform.translation.y;
+
+        if ball_y <= ball.radius && ball.velocity.y < 0. {
+            ball.velocity.y *= -1.;
+        } else if ball_y >= ARENA_HEIGHT - ball.radius && ball.velocity.y > 0. {
+            ball.velocity.y *= -1.;
+        } else if ball_x <= ball.radius && ball.velocity.x < 0. {
+            ball.velocity.x *= -1.;
+        } else if ball_x >= ARENA_WIDTH - ball.radius && ball.velocity.x > 0. {
+            ball.velocity.x *= -1.;
+        }
+
+        for (player, player_transform) in player_query.iter() {
+            let player_x = player_transform.translation.x;
+            let player_y = player_transform.translation.y;
+
+            if is_point_in_rectangle(
+                ball_x,
+                ball_y,
+                player_x - PLAYER_WIDTH / 2.0 - ball.radius,
+                player_y - PLAYER_HEIGHT / 2.0 - ball.radius,
+                player_x + PLAYER_WIDTH / 2.0 + ball.radius,
+                player_y + PLAYER_HEIGHT / 2.0 + ball.radius,
+            ) {
+                if ball.velocity.y < 0. {
+                    // Only bounce when a ball is falling
+                    ball.velocity.y *= -1.;
+
+                    let mut rng = rand::thread_rng();
+                    /*
+                     * To give the game some playability, we randomly speed up or slow down
+                     * the ball in the x-axis on collision,so the ball’s trajectory is unpredictable
+                     */
+                    match player.side {
+                        Side::LEFT => {
+                            ball.velocity.x = ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
+                        }
+                        Side::RIGHT => {
+                            ball.velocity.x = -1. * ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
