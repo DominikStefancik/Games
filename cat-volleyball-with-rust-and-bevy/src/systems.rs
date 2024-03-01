@@ -1,8 +1,9 @@
-use crate::components::{Ball, Player, Side};
+use crate::components::{Ball, Player, ScoreBoard, Side};
 use crate::constants::{
     ARENA_HEIGHT, ARENA_WIDTH, GRAVITY_ACCELERATION, PLAYER_HEIGHT, PLAYER_SPEED, PLAYER_WIDTH,
 };
-use bevy::prelude::{ButtonInput, KeyCode, Query, Res, Time, Transform};
+use crate::resources::Score;
+use bevy::prelude::{ButtonInput, KeyCode, Query, Res, ResMut, Text, Time, Transform};
 use rand::Rng;
 
 /*
@@ -118,6 +119,41 @@ pub fn bounce_ball_system(
                             ball.velocity.x = -1. * ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+pub fn update_score_system(
+    mut score: ResMut<Score>,
+    mut ball_query: Query<(&mut Ball, &mut Transform)>,
+    mut score_board_query: Query<(&ScoreBoard, &mut Text)>,
+) {
+    for (mut ball, mut transform) in ball_query.iter_mut() {
+        let ball_x = transform.translation.x;
+        let ball_y = transform.translation.y;
+
+        if ball_y < ball.radius {
+            if ball_x <= ARENA_WIDTH / 2. {
+                score.right += 1;
+                // change direction of the ball toward the right player
+                ball.velocity.x = ball.velocity.x.abs();
+            } else {
+                score.left += 1;
+                // change direction of the ball toward the left player
+                ball.velocity.x = -ball.velocity.x.abs();
+            }
+
+            transform.translation.x = ARENA_WIDTH / 2.;
+            transform.translation.y = ARENA_HEIGHT / 2.;
+            ball.velocity.y = 0.; // reset to free drop
+
+            // update score board
+            for (score_board, mut text) in score_board_query.iter_mut() {
+                text.sections[0].value = match score_board.side {
+                    Side::LEFT => score.left.to_string(),
+                    Side::RIGHT => score.right.to_string(),
                 }
             }
         }

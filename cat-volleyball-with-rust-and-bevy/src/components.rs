@@ -46,3 +46,8 @@ pub struct Ball {
     pub radius: f32,
     pub velocity: Vec2,
 }
+
+#[derive(Component)]
+pub struct ScoreBoard {
+    pub side: Side,
+}

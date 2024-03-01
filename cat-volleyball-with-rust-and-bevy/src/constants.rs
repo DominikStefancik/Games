@@ -18,4 +18,9 @@ pub const CAT_SIZE: Vec2 = Vec2::new(PLAYER_WIDTH, PLAYER_HEIGHT);
 pub const BALL_TEXTURE_CORNER: Vec2 = Vec2::new(1., 1.);
 pub const BALL_SIZE: Vec2 = Vec2::new(8., 8.);
 
+pub const SCORE_FONT_SIZE: f32 = 20.;
+pub const SCORE_FONT_PATH: &str = "fonts/square.ttf";
+pub const SCORE_BOARD_LEFT_X: f32 = 100.;
+pub const SCORE_BOARD_RIGHT_X: f32 = ARENA_WIDTH - 100.;
+
 pub const GRAVITY_ACCELERATION: f32 = -40.;

@@ -1,8 +1,10 @@
-use crate::components::{Ball, Player, Side};
-use crate::constants::{ARENA_HEIGHT, ARENA_WIDTH, BALL_RADIUS, BALL_VELOCITY};
+use crate::components::{Ball, Player, ScoreBoard, Side};
+use crate::constants::{ARENA_HEIGHT, ARENA_WIDTH, BALL_RADIUS, BALL_VELOCITY, SCORE_FONT_SIZE};
 use bevy::prelude::{
-    Commands, Handle, Image, SpriteSheetBundle, TextureAtlas, TextureAtlasLayout, Transform,
+    Color, Commands, Handle, Image, SpriteSheetBundle, Style, Text, TextBundle, TextStyle,
+    TextureAtlas, TextureAtlasLayout, Transform, Val,
 };
+use bevy::text::Font;
 
 pub fn spawn_player(
     commands: &mut Commands,
@@ -51,5 +53,32 @@ pub fn spawn_ball(
             radius: BALL_RADIUS,
             velocity: BALL_VELOCITY,
         },
+    ));
+}
+
+pub fn spawn_scoreboard(
+    commands: &mut Commands,
+    score_font_handle: Handle<Font>,
+    side: Side,
+    x: f32,
+) {
+    commands.spawn((
+        TextBundle {
+            text: Text::from_section(
+                "0",
+                TextStyle {
+                    font: score_font_handle,
+                    font_size: SCORE_FONT_SIZE,
+                    color: Color::WHITE,
+                },
+            ),
+            style: Style {
+                left: Val::Px(x),
+                top: Val::Px(25.),
+                ..Default::default()
+            },
+            ..Default::default()
+        },
+        ScoreBoard { side },
     ));
 }

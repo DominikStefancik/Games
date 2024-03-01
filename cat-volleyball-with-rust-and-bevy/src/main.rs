@@ -1,15 +1,20 @@
 mod components;
 mod constants;
 mod helpers;
+mod resources;
 mod systems;
 
 use crate::components::Side;
 use crate::constants::{
     ARENA_HEIGHT, ARENA_WIDTH, BALL_SIZE, BALL_TEXTURE_CORNER, CAT_SIZE, LEFT_CAT_TEXTURE_CORNER,
-    PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SPRITES_SHEET_PATH, SPRITES_SHEET_SIZE,
+    PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SCORE_BOARD_LEFT_X, SCORE_BOARD_RIGHT_X,
+    SCORE_FONT_PATH, SPRITES_SHEET_PATH, SPRITES_SHEET_SIZE,
 };
-use crate::helpers::{spawn_ball, spawn_player};
-use crate::systems::{bounce_ball_system, move_ball_system, move_player_system};
+use crate::helpers::{spawn_ball, spawn_player, spawn_scoreboard};
+use crate::resources::Score;
+use crate::systems::{
+    bounce_ball_system, move_ball_system, move_player_system, update_score_system,
+};
 use bevy::prelude::*;
 
 fn main() {
@@ -23,6 +28,7 @@ fn main() {
             ..Default::default()
         }))
         .insert_resource(ClearColor(Color::rgb(0., 0., 0.)))
+        .insert_resource(Score { left: 0, right: 0 })
         .add_systems(Startup, setup_system)
         .add_systems(
             Update,
@@ -31,6 +37,7 @@ fn main() {
                 move_player_system,
                 move_ball_system,
                 bounce_ball_system,
+                update_score_system,
             ),
         )
         .run()
@@ -116,5 +123,19 @@ fn setup_system(
         texture_atlas_layout_handle.clone(),
         sprite_sheet_handle.clone(),
         ball_index,
+    );
+
+    let score_font_handle = asset_server.load(SCORE_FONT_PATH);
+    spawn_scoreboard(
+        &mut commands,
+        score_font_handle.clone(),
+        Side::LEFT,
+        SCORE_BOARD_LEFT_X,
+    );
+    spawn_scoreboard(
+        &mut commands,
+        score_font_handle.clone(),
+        Side::RIGHT,
+        SCORE_BOARD_RIGHT_X,
     );
 }
