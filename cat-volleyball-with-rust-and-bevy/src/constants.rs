@@ -23,4 +23,8 @@ pub const SCORE_FONT_PATH: &str = "fonts/square.ttf";
 pub const SCORE_BOARD_LEFT_X: f32 = 100.;
 pub const SCORE_BOARD_RIGHT_X: f32 = ARENA_WIDTH - 100.;
 
+pub const BACKGROUND_AUDIO_PATH: &str = "audio/background.ogg";
+pub const BOUNCE_AUDIO_PATH: &str = "audio/bounce.ogg";
+pub const SCORE_AUDIO_PATH: &str = "audio/score.ogg";
+
 pub const GRAVITY_ACCELERATION: f32 = -40.;

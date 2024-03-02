@@ -1,8 +1,9 @@
-use crate::components::{Ball, Player, ScoreBoard, Side};
+use crate::components::{Ball, Player, ScoreBoard, Side, Sound};
 use crate::constants::{ARENA_HEIGHT, ARENA_WIDTH, BALL_RADIUS, BALL_VELOCITY, SCORE_FONT_SIZE};
+use bevy::audio::Volume;
 use bevy::prelude::{
-    Color, Commands, Handle, Image, SpriteSheetBundle, Style, Text, TextBundle, TextStyle,
-    TextureAtlas, TextureAtlasLayout, Transform, Val,
+    AudioBundle, AudioSource, Color, Commands, Handle, Image, PlaybackSettings, SpriteSheetBundle,
+    Style, Text, TextBundle, TextStyle, TextureAtlas, TextureAtlasLayout, Transform, Val,
 };
 use bevy::text::Font;
 
@@ -36,6 +37,8 @@ pub fn spawn_ball(
     texture_atlas_layout_handle: Handle<TextureAtlasLayout>,
     sprite_sheet_handle: Handle<Image>,
     ball_sprite_index: usize,
+    bounce_sound: Handle<AudioSource>,
+    score_sound: Handle<AudioSource>,
 ) {
     commands.spawn((
         // the "sprite" field initialization is covered by the `..default()` expression
@@ -52,6 +55,8 @@ pub fn spawn_ball(
         Ball {
             radius: BALL_RADIUS,
             velocity: BALL_VELOCITY,
+            bounce_sound,
+            score_sound,
         },
     ));
 }
@@ -80,5 +85,15 @@ pub fn spawn_scoreboard(
             ..Default::default()
         },
         ScoreBoard { side },
+    ));
+}
+
+pub fn spawn_sound(commands: &mut Commands, sound: Handle<AudioSource>) {
+    commands.spawn((
+        AudioBundle {
+            source: sound,
+            settings: PlaybackSettings::DESPAWN.with_volume(Volume::new(0.5)),
+        },
+        Sound,
     ));
 }

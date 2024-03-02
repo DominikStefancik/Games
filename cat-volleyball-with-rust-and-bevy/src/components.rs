@@ -1,5 +1,5 @@
 use crate::constants::{ARENA_WIDTH, PLAYER_WIDTH};
-use bevy::prelude::{Component, KeyCode, Vec2};
+use bevy::prelude::{AudioSource, Component, Handle, KeyCode, Vec2};
 
 #[derive(Clone, Copy)]
 pub enum Side {
@@ -45,9 +45,19 @@ pub struct Player {
 pub struct Ball {
     pub radius: f32,
     pub velocity: Vec2,
+    pub bounce_sound: Handle<AudioSource>,
+    pub score_sound: Handle<AudioSource>,
 }
 
 #[derive(Component)]
 pub struct ScoreBoard {
     pub side: Side,
 }
+
+// Marker component for our BackgroundMusic entity
+#[derive(Component)]
+pub struct BackgroundMusic;
+
+// Marker component for our Sound entity
+#[derive(Component)]
+pub struct Sound;

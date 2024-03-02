@@ -1,9 +1,13 @@
-use crate::components::{Ball, Player, ScoreBoard, Side};
+use crate::components::{BackgroundMusic, Ball, Player, ScoreBoard, Side};
 use crate::constants::{
     ARENA_HEIGHT, ARENA_WIDTH, GRAVITY_ACCELERATION, PLAYER_HEIGHT, PLAYER_SPEED, PLAYER_WIDTH,
 };
+use crate::helpers::spawn_sound;
 use crate::resources::Score;
-use bevy::prelude::{ButtonInput, KeyCode, Query, Res, ResMut, Text, Time, Transform};
+use bevy::prelude::{
+    AudioSink, AudioSinkPlayback, ButtonInput, Commands, KeyCode, Query, Res, ResMut, Text, Time,
+    Transform, With,
+};
 use rand::Rng;
 
 /*
@@ -73,6 +77,7 @@ fn is_point_in_rectangle(
 }
 
 pub fn bounce_ball_system(
+    mut commands: Commands,
     mut ball_query: Query<(&mut Ball, &Transform)>,
     player_query: Query<(&Player, &Transform)>,
 ) {
@@ -81,12 +86,16 @@ pub fn bounce_ball_system(
         let ball_y = ball_transform.translation.y;
 
         if ball_y <= ball.radius && ball.velocity.y < 0. {
+            spawn_sound(&mut commands, ball.bounce_sound.clone());
             ball.velocity.y *= -1.;
         } else if ball_y >= ARENA_HEIGHT - ball.radius && ball.velocity.y > 0. {
+            spawn_sound(&mut commands, ball.bounce_sound.clone());
             ball.velocity.y *= -1.;
         } else if ball_x <= ball.radius && ball.velocity.x < 0. {
+            spawn_sound(&mut commands, ball.bounce_sound.clone());
             ball.velocity.x *= -1.;
         } else if ball_x >= ARENA_WIDTH - ball.radius && ball.velocity.x > 0. {
+            spawn_sound(&mut commands, ball.bounce_sound.clone());
             ball.velocity.x *= -1.;
         }
 
@@ -103,6 +112,7 @@ pub fn bounce_ball_system(
                 player_y + PLAYER_HEIGHT / 2.0 + ball.radius,
             ) {
                 if ball.velocity.y < 0. {
+                    spawn_sound(&mut commands, ball.bounce_sound.clone());
                     // Only bounce when a ball is falling
                     ball.velocity.y *= -1.;
 
@@ -126,6 +136,7 @@ pub fn bounce_ball_system(
 }
 
 pub fn update_score_system(
+    mut commands: Commands,
     mut score: ResMut<Score>,
     mut ball_query: Query<(&mut Ball, &mut Transform)>,
     mut score_board_query: Query<(&ScoreBoard, &mut Text)>,
@@ -135,6 +146,7 @@ pub fn update_score_system(
         let ball_y = transform.translation.y;
 
         if ball_y < ball.radius {
+            spawn_sound(&mut commands, ball.score_sound.clone());
             if ball_x <= ARENA_WIDTH / 2. {
                 score.right += 1;
                 // change direction of the ball toward the right player
@@ -156,6 +168,17 @@ pub fn update_score_system(
                     Side::RIGHT => score.right.to_string(),
                 }
             }
+        }
+    }
+}
+
+pub fn pause_background_music_system(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    music_query: Query<&AudioSink, With<BackgroundMusic>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        if let Ok(sink) = music_query.get_single() {
+            sink.toggle();
         }
     }
 }

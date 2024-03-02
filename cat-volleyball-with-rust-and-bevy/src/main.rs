@@ -4,17 +4,20 @@ mod helpers;
 mod resources;
 mod systems;
 
-use crate::components::Side;
+use crate::components::{BackgroundMusic, Side};
 use crate::constants::{
-    ARENA_HEIGHT, ARENA_WIDTH, BALL_SIZE, BALL_TEXTURE_CORNER, CAT_SIZE, LEFT_CAT_TEXTURE_CORNER,
-    PLAYER_HEIGHT, PLAYER_WIDTH, RIGHT_CAT_TEXTURE_CORNER, SCORE_BOARD_LEFT_X, SCORE_BOARD_RIGHT_X,
+    ARENA_HEIGHT, ARENA_WIDTH, BACKGROUND_AUDIO_PATH, BALL_SIZE, BALL_TEXTURE_CORNER,
+    BOUNCE_AUDIO_PATH, CAT_SIZE, LEFT_CAT_TEXTURE_CORNER, PLAYER_HEIGHT, PLAYER_WIDTH,
+    RIGHT_CAT_TEXTURE_CORNER, SCORE_AUDIO_PATH, SCORE_BOARD_LEFT_X, SCORE_BOARD_RIGHT_X,
     SCORE_FONT_PATH, SPRITES_SHEET_PATH, SPRITES_SHEET_SIZE,
 };
 use crate::helpers::{spawn_ball, spawn_player, spawn_scoreboard};
 use crate::resources::Score;
 use crate::systems::{
-    bounce_ball_system, move_ball_system, move_player_system, update_score_system,
+    bounce_ball_system, move_ball_system, move_player_system, pause_background_music_system,
+    update_score_system,
 };
+use bevy::audio::Volume;
 use bevy::prelude::*;
 
 fn main() {
@@ -38,6 +41,7 @@ fn main() {
                 move_ball_system,
                 bounce_ball_system,
                 update_score_system,
+                pause_background_music_system,
             ),
         )
         .run()
@@ -61,6 +65,15 @@ fn setup_system(
         transform: Transform::from_xyz(ARENA_WIDTH / 2., ARENA_HEIGHT / 2., 1.),
         ..Default::default()
     });
+
+    // spawn background music
+    commands.spawn((
+        AudioBundle {
+            source: asset_server.load(BACKGROUND_AUDIO_PATH),
+            settings: PlaybackSettings::LOOP.with_volume(Volume::new(0.25)),
+        },
+        BackgroundMusic,
+    ));
 
     /*
      * Usually, using an individual image for each thing on the screen is too inefficient for a game
@@ -118,11 +131,16 @@ fn setup_system(
         ARENA_WIDTH - PLAYER_WIDTH / 2.,
         PLAYER_HEIGHT / 2.,
     );
+
+    let bounce_sound = asset_server.load(BOUNCE_AUDIO_PATH);
+    let score_sound = asset_server.load(SCORE_AUDIO_PATH);
     spawn_ball(
         &mut commands,
         texture_atlas_layout_handle.clone(),
         sprite_sheet_handle.clone(),
         ball_index,
+        bounce_sound,
+        score_sound,
     );
 
     let score_font_handle = asset_server.load(SCORE_FONT_PATH);
