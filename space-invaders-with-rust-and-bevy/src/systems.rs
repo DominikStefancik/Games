@@ -8,7 +8,7 @@ use crate::{
 };
 use bevy::prelude::{
     Commands, Entity, Query, Res, ResMut, SpriteSheetBundle, TextureAtlasSprite, Time, Transform,
-    Vec2, With,
+    With,
 };
 use bevy::sprite::collide_aabb::collide;
 use std::collections::HashSet;
@@ -61,7 +61,7 @@ pub fn laser_from_player_hit_enemy_system(
             continue;
         }
 
-        let laser_scale = Vec2::from(laser_transform.scale.truncate());
+        let laser_scale = laser_transform.scale.truncate();
         let laser_position = laser_transform.translation;
 
         for (enemy_entity, enemy_transform, enemy_size) in enemy_query.iter() {
@@ -71,7 +71,7 @@ pub fn laser_from_player_hit_enemy_system(
                 continue;
             }
 
-            let enemy_scale = Vec2::from(enemy_transform.scale.truncate());
+            let enemy_scale = enemy_transform.scale.truncate();
             let enemy_position = enemy_transform.translation;
 
             // determine if the enemy has a collision with a laser
@@ -84,7 +84,7 @@ pub fn laser_from_player_hit_enemy_system(
 
             // perform logic when a collision happened
             // we don't care what the collision returns
-            if let Some(_) = collision {
+            if collision.is_some() {
                 // remove entity from the scene
                 commands.entity(enemy_entity).despawn();
                 despawned_entities.insert(enemy_entity);
@@ -96,7 +96,7 @@ pub fn laser_from_player_hit_enemy_system(
 
                 // spawn the ExplosionToSpawn
                 // spawn the explosion at the same place where the enemy was
-                commands.spawn(ExplosionToSpawn(enemy_transform.translation.clone()));
+                commands.spawn(ExplosionToSpawn(enemy_transform.translation));
             }
         }
     }
@@ -155,11 +155,11 @@ pub fn laser_from_enemy_hit_player_system(
 ) {
     // we know we have only one player at the time
     if let Ok((player_entity, player_transform, player_size)) = player_query.get_single() {
-        let player_scale = Vec2::from(player_transform.scale.truncate());
+        let player_scale = player_transform.scale.truncate();
 
         // we have to iterate through the all lasers
         for (laser_entity, laser_transform, laser_size) in laser_query.iter() {
-            let laser_scale = Vec2::from(laser_transform.scale.truncate());
+            let laser_scale = laser_transform.scale.truncate();
 
             // check if a collision happened
             let collision = collide(
@@ -171,7 +171,7 @@ pub fn laser_from_enemy_hit_player_system(
 
             // perform logic when a collision happened
             // we don't care what the collision returns
-            if let Some(_) = collision {
+            if collision.is_some() {
                 // remove the player
                 commands.entity(player_entity).despawn();
                 // update the player state
@@ -181,7 +181,7 @@ pub fn laser_from_enemy_hit_player_system(
                 commands.entity(laser_entity).despawn();
 
                 // spawn the ExplosionToSpawn
-                commands.spawn(ExplosionToSpawn(player_transform.translation.clone()));
+                commands.spawn(ExplosionToSpawn(player_transform.translation));
 
                 // when the player is hit, break the whole game loop
                 break;

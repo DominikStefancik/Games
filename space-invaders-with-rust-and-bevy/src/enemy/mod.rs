@@ -78,7 +78,6 @@ fn enemy_fire_system(
                     translation: Vec3::new(x, y - 20., 0.),
                     rotation: Quat::from_rotation_x(PI),
                     scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
-                    ..Default::default()
                 },
                 ..Default::default()
             })
