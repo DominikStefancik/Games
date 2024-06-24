@@ -110,24 +110,21 @@ pub fn bounce_ball_system(
                 player_y - PLAYER_HEIGHT / 2.0 - ball.radius,
                 player_x + PLAYER_WIDTH / 2.0 + ball.radius,
                 player_y + PLAYER_HEIGHT / 2.0 + ball.radius,
-            ) {
-                if ball.velocity.y < 0. {
-                    spawn_sound(&mut commands, ball.bounce_sound.clone());
-                    // Only bounce when a ball is falling
-                    ball.velocity.y *= -1.;
+            ) && ball.velocity.y < 0.
+            {
+                spawn_sound(&mut commands, ball.bounce_sound.clone());
+                // Only bounce when a ball is falling
+                ball.velocity.y *= -1.;
 
-                    let mut rng = rand::thread_rng();
-                    /*
-                     * To give the game some playability, we randomly speed up or slow down
-                     * the ball in the x-axis on collision,so the ball’s trajectory is unpredictable
-                     */
-                    match player.side {
-                        Side::LEFT => {
-                            ball.velocity.x = ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
-                        }
-                        Side::RIGHT => {
-                            ball.velocity.x = -1. * ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
-                        }
+                let mut rng = rand::thread_rng();
+                /*
+                 * To give the game some playability, we randomly speed up or slow down
+                 * the ball in the x-axis on collision,so the ball’s trajectory is unpredictable
+                 */
+                match player.side {
+                    Side::Left => ball.velocity.x = ball.velocity.x.abs() * rng.gen_range(0.6..1.4),
+                    Side::Right => {
+                        ball.velocity.x = -1. * ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
                     }
                 }
             }
@@ -164,8 +161,8 @@ pub fn update_score_system(
             // update score board
             for (score_board, mut text) in score_board_query.iter_mut() {
                 text.sections[0].value = match score_board.side {
-                    Side::LEFT => score.left.to_string(),
-                    Side::RIGHT => score.right.to_string(),
+                    Side::Left => score.left.to_string(),
+                    Side::Right => score.right.to_string(),
                 }
             }
         }

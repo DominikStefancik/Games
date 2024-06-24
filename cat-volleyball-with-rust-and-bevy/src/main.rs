@@ -118,7 +118,7 @@ fn setup_system(
         texture_atlas_layout_handle.clone(),
         sprite_sheet_handle.clone(),
         left_cat_index,
-        Side::LEFT,
+        Side::Left,
         PLAYER_WIDTH / 2.,
         PLAYER_HEIGHT / 2.,
     );
@@ -127,7 +127,7 @@ fn setup_system(
         texture_atlas_layout_handle.clone(),
         sprite_sheet_handle.clone(),
         right_cat_index,
-        Side::RIGHT,
+        Side::Right,
         ARENA_WIDTH - PLAYER_WIDTH / 2.,
         PLAYER_HEIGHT / 2.,
     );
@@ -147,13 +147,13 @@ fn setup_system(
     spawn_scoreboard(
         &mut commands,
         score_font_handle.clone(),
-        Side::LEFT,
+        Side::Left,
         SCORE_BOARD_LEFT_X,
     );
     spawn_scoreboard(
         &mut commands,
         score_font_handle.clone(),
-        Side::RIGHT,
+        Side::Right,
         SCORE_BOARD_RIGHT_X,
     );
 }
