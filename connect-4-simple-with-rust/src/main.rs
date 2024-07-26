@@ -1,5 +1,8 @@
+use model::Game;
+
 mod model;
 
 fn main() {
-    println!("Hello, world!");
+    let mut game = Game::default();
+    game.display_board();
 }
