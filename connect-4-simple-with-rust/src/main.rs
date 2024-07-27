@@ -12,6 +12,34 @@ fn main() {
 
     game.display_board();
 
+    loop {
+        play_game(&mut game);
+
+        println!("Press 'R' to restart or 'Q' to quit the game");
+
+        let mut user_input = String::new();
+
+        io::stdin()
+            .read_line(&mut user_input)
+            .expect("Failed to read user's input");
+
+        match user_input.trim() {
+            "R" | "r" => {
+                game = Game::default();
+                continue;
+            }
+            "Q" | "q" => {
+                println!("Quitting the game...");
+                break;
+            }
+            _ => {
+                game.display_error("Invalid input".to_string());
+            }
+        }
+    }
+}
+
+fn play_game(game: &mut Game) {
     while !game.is_finished() {
         println!("\n");
 

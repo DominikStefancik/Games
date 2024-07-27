@@ -39,6 +39,9 @@ impl Game {
     }
 
     pub fn display_board(&self) {
+        // clears the screen
+        print!("{}[2J", 27 as char);
+
         println!("{}--------------------{}", ORANGE_COLOR, RESET_COLOR);
         println!(
             "{}Connect 4 (Move {}){}",
