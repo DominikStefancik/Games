@@ -30,6 +30,14 @@ impl Game {
         }
     }
 
+    pub fn is_finished(&self) -> bool {
+        self.is_finished
+    }
+
+    pub fn current_player(&self) -> Player {
+        self.current_player
+    }
+
     pub fn display_board(&self) {
         println!("{}--------------------{}", ORANGE_COLOR, RESET_COLOR);
         println!(
@@ -65,7 +73,7 @@ impl Game {
         println!("{}--------------------{}", ORANGE_COLOR, RESET_COLOR);
     }
 
-    pub fn display_error(&self, error: MoveError) {
+    pub fn display_error(&self, error: String) {
         self.display_board();
         println!("{}Error: {}{}", RED_COLOR, error, RESET_COLOR);
     }
@@ -157,6 +165,6 @@ impl Game {
             self.is_finished = true;
         }
 
-        Player::One
+        Player::None
     }
 }
