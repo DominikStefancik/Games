@@ -1,6 +1,7 @@
 use crate::{
-    model::{Board, Player, BOARD_HEIGHT, BOARD_WIDTH, ORANGE_COLOR, RED_COLOR, RESET_COLOR},
+    constants::{Board, BOARD_HEIGHT, BOARD_WIDTH, ORANGE_COLOR, RED_COLOR, RESET_COLOR},
     move_error::MoveError,
+    player::Player,
 };
 
 pub struct Game {
@@ -87,14 +88,75 @@ impl Game {
             self.board[row][column] = self.current_player as u8;
             self.current_move += 1;
 
-            self.current_player = match self.current_player {
-                Player::One => Player::Two,
-                Player::Two | Player::None => Player::One,
+            let calculated_winner = self.calculate_winner();
+
+            if calculated_winner != Player::None {
+                self.winner = calculated_winner;
+            } else {
+                self.current_player = match self.current_player {
+                    Player::One => Player::Two,
+                    Player::Two | Player::None => Player::One,
+                }
             }
         } else {
             return Err(MoveError::ColumnFull);
         }
 
         Ok(())
+    }
+
+    fn calculate_winner(&mut self) -> Player {
+        // if there are not enough moves to decide who the winner is
+        if self.current_move < 7 {
+            return Player::None;
+        }
+
+        // represent possible directions a winning line can have
+        let directions = [
+            (0, 1),  // horizontal line, we update y-axis
+            (1, 0),  // vertical line, we update x-axis
+            (1, 1),  // diagonal (top-left to bottom-right), we update both axis
+            (-1, 1), // diagonal (bottom-left to top-right), we update both axis
+        ];
+
+        for row in 0..BOARD_HEIGHT {
+            for column in 0..BOARD_WIDTH {
+                let cell = self.board[row][column];
+
+                if cell != 0 {
+                    for (row_step, column_step) in directions {
+                        let mut consecutive_count: u8 = 1;
+                        let mut row_count = row as isize + row_step;
+                        let mut column_count = column as isize + column_step;
+
+                        while row_count >= 0
+                            && row_count < BOARD_HEIGHT as isize
+                            && column_count >= 0
+                            && column_count < BOARD_WIDTH as isize
+                        {
+                            if self.board[row_count as usize][column_count as usize] == cell {
+                                consecutive_count += 1;
+
+                                if consecutive_count == 4 {
+                                    self.is_finished = true;
+                                    return Player::from(cell);
+                                }
+                            } else {
+                                break;
+                            }
+                            row_count += row_step;
+                            column_count += column_count;
+                        }
+                    }
+                }
+            }
+        }
+
+        // we reached that the whole board if full, but there is no winning line
+        if self.current_move >= BOARD_HEIGHT as u8 * BOARD_WIDTH as u8 {
+            self.is_finished = true;
+        }
+
+        Player::One
     }
 }
