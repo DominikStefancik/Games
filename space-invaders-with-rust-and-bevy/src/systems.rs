@@ -6,11 +6,12 @@ use crate::{
     },
     resources::{EnemyCount, GameTextures, PlayerState, WindowSize},
 };
-use bevy::prelude::{
-    Commands, Entity, Query, Res, ResMut, SpriteSheetBundle, TextureAtlasSprite, Time, Transform,
-    With,
+use bevy::{
+    image::TextureAtlas,
+    math::bounding::{Aabb2d, IntersectsVolume},
+    prelude::{Commands, Entity, Query, Res, ResMut, Time, Transform, With},
+    sprite::Sprite,
 };
-use bevy::sprite::collide_aabb::collide;
 use std::collections::HashSet;
 
 // Bevy systems are just a function
@@ -75,16 +76,13 @@ pub fn laser_from_player_hit_enemy_system(
             let enemy_position = enemy_transform.translation;
 
             // determine if the enemy has a collision with a laser
-            let collision = collide(
-                laser_position,
-                laser_size.0 * laser_scale,
-                enemy_position,
-                enemy_size.0 * enemy_scale,
-            );
+            let collision =
+                Aabb2d::new(laser_position.truncate(), laser_size.0 * laser_scale / 2.).intersects(
+                    &Aabb2d::new(enemy_position.truncate(), enemy_size.0 * enemy_scale),
+                );
 
             // perform logic when a collision happened
-            // we don't care what the collision returns
-            if collision.is_some() {
+            if collision {
                 // remove entity from the scene
                 commands.entity(enemy_entity).despawn();
                 despawned_entities.insert(enemy_entity);
@@ -111,14 +109,16 @@ pub fn explosion_to_spawn_system(
     for (explosion_to_spawn_entity, explosion_to_spawn) in query.iter() {
         // spawn the explosion sprite
         commands
-            .spawn(SpriteSheetBundle {
-                texture_atlas: game_textures.explosion.clone(),
-                transform: Transform {
+            .spawn((
+                Sprite::from_atlas_image(
+                    game_textures.explosion.clone(),
+                    TextureAtlas::from(game_textures.explosion_atlas.clone()),
+                ),
+                Transform {
                     translation: explosion_to_spawn.0, // no clone() is needed, because Vec3 is a copy
                     ..Default::default()
                 },
-                ..Default::default()
-            })
+            ))
             .insert(Explosion)
             // we add a time for an explosion, so we can animate it
             .insert(ExplosionTimer::default());
@@ -131,16 +131,19 @@ pub fn explosion_to_spawn_system(
 pub fn explosion_animation_system(
     mut commands: Commands,
     time: Res<Time>,
-    mut query: Query<(Entity, &mut ExplosionTimer, &mut TextureAtlasSprite), With<Explosion>>,
+    mut query: Query<(Entity, &mut ExplosionTimer, &mut Sprite), With<Explosion>>,
 ) {
     for (entity, mut timer, mut sprite) in query.iter_mut() {
         timer.0.tick(time.delta());
 
         if timer.0.finished() {
             // when the timer cycle finished
-            sprite.index += 1; // move to the next sprite cell in the explosions sheet
-            if sprite.index >= EXPLOSION_LENGTH {
-                commands.entity(entity).despawn();
+            if let Some(texture_atlas) = &mut sprite.texture_atlas {
+                texture_atlas.index += 1;
+                // move to the next sprite cell in the explosions sheet
+                if texture_atlas.index >= EXPLOSION_LENGTH as usize {
+                    commands.entity(entity).despawn();
+                }
             }
         }
     }
@@ -154,7 +157,7 @@ pub fn laser_from_enemy_hit_player_system(
     player_query: Query<(Entity, &Transform, &SpriteSize), With<Player>>,
 ) {
     // we know we have only one player at the time
-    if let Ok((player_entity, player_transform, player_size)) = player_query.get_single() {
+    if let Ok((player_entity, player_transform, player_size)) = player_query.single() {
         let player_scale = player_transform.scale.truncate();
 
         // we have to iterate through the all lasers
@@ -162,20 +165,21 @@ pub fn laser_from_enemy_hit_player_system(
             let laser_scale = laser_transform.scale.truncate();
 
             // check if a collision happened
-            let collision = collide(
-                laser_transform.translation,
-                laser_size.0 * laser_scale,
-                player_transform.translation,
-                player_size.0 * player_scale,
-            );
+            let collision = Aabb2d::new(
+                laser_transform.translation.truncate(),
+                laser_size.0 * laser_scale / 2.,
+            )
+            .intersects(&Aabb2d::new(
+                player_transform.translation.truncate(),
+                player_size.0 * player_scale / 2.,
+            ));
 
             // perform logic when a collision happened
-            // we don't care what the collision returns
-            if collision.is_some() {
+            if collision {
                 // remove the player
                 commands.entity(player_entity).despawn();
                 // update the player state
-                player_state.player_shot(time.elapsed_seconds_f64());
+                player_state.player_shot(time.elapsed_secs_f64());
 
                 // remove the laser
                 commands.entity(laser_entity).despawn();

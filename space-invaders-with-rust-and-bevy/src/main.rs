@@ -1,6 +1,9 @@
+use bevy::core_pipeline::core_2d::Camera2d;
+use bevy::image::TextureAtlasLayout;
+use bevy::math::UVec2;
 use bevy::prelude::{
-    App, AssetServer, Assets, Camera2dBundle, ClearColor, Color, Commands, IVec2, PluginGroup,
-    Query, Res, ResMut, Startup, TextureAtlas, Update, Vec2, Window, WindowPlugin, WindowPosition,
+    App, AssetServer, Assets, ClearColor, Color, Commands, IVec2, PluginGroup, Query, Res, ResMut,
+    Startup, Update, Window, WindowPlugin, WindowPosition,
 };
 use bevy::DefaultPlugins;
 use space_invaders_with_rust_and_bevy::{
@@ -20,7 +23,7 @@ use space_invaders_with_rust_and_bevy::{
 // Bevy has 4 main constructs:  Entity, Component, System, Resource
 fn main() {
     App::new()
-        .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
+        .insert_resource(ClearColor(Color::srgb(0.04, 0.04, 0.04)))
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Rust Space Invaders".to_string(),
@@ -54,16 +57,16 @@ fn main() {
 fn setup_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlasLayout>>,
     // we are gonna update the position of the game window, that's why the argument has to be mutable
     mut windows: Query<&mut Window>,
 ) {
     // Add camera into the scene
     // spawn_batch() allows to spawn an entity with a set of properties
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d::default());
 
     // position the game window
-    let mut window = windows.single_mut();
+    let mut window = windows.single_mut().unwrap();
     window.position = WindowPosition::new(IVec2::new(1980, 0));
 
     let window_size = WindowSize {
@@ -74,22 +77,22 @@ fn setup_system(
 
     // create explosion texture atlas
     let explosion_texture_handle = asset_server.load(EXPLOSION_SHEET);
-    let texture_atlas = TextureAtlas::from_grid(
-        explosion_texture_handle,
-        Vec2::new(EXPLOSION_SHEET_CELL_SIZE, EXPLOSION_SHEET_CELL_SIZE),
+    let texture_atlas_layout = TextureAtlasLayout::from_grid(
+        UVec2::splat(EXPLOSION_SHEET_CELL_SIZE),
         EXPLOSION_SHEET_SIZE,
         EXPLOSION_SHEET_SIZE,
-        Some(Vec2::new(0., 0.)),
-        Some(Vec2::new(0., 0.)),
+        None,
+        None,
     );
-    let explosion = texture_atlases.add(texture_atlas);
+    let explosion_atlas_handle = texture_atlases.add(texture_atlas_layout);
 
     let game_textures = GameTextures {
         player: asset_server.load(PLAYER_SPRITE),
         player_laser: asset_server.load(PLAYER_LASER_SPRITE),
         enemy: asset_server.load(ENEMY_SPRITE),
         enemy_laser: asset_server.load(ENEMY_LASER_SPRITE),
-        explosion,
+        explosion: explosion_texture_handle,
+        explosion_atlas: explosion_atlas_handle,
     };
     commands.insert_resource(game_textures);
 

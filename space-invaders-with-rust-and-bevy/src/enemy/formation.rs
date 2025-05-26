@@ -3,7 +3,7 @@ use crate::{
     resources::WindowSize,
 };
 use bevy::prelude::{Component, Resource};
-use rand::{thread_rng, Rng};
+use rand::{rng, Rng};
 
 // Component - Enemy Formation (per enemy)
 // Each enemy will have its own formation clone
@@ -28,7 +28,7 @@ pub struct FormationFactory {
 
 impl FormationFactory {
     pub fn create_formation(&mut self, window_size: &WindowSize) -> Formation {
-        return match (
+        match (
             &self.current_template,
             self.current_members >= ENEMY_FORMATION_MEMBERS_MAX,
         ) {
@@ -45,34 +45,34 @@ impl FormationFactory {
 
                 self.current_template.as_ref().unwrap().clone()
             }
-        };
+        }
     }
 }
 
 fn compute_new_formation(window_size: &WindowSize) -> Formation {
-    let mut range = thread_rng();
+    let mut range = rng();
 
     // compute start coordinates
     let width_span = window_size.width / 2. + 100.;
     let height_span = window_size.height / 2. + 100.;
-    let x = if range.gen_bool(0.5) {
+    let x = if range.random_bool(0.5) {
         width_span
     } else {
         -width_span
     };
-    let y = range.gen_range(-height_span..height_span);
+    let y = range.random_range(-height_span..height_span);
     let start_point = (x, y);
 
     // compute the center of an ellipse
     let width_span = window_size.width / 4.;
     let height_span = window_size.height / 3. + 50.;
     let pivot = (
-        range.gen_range(-width_span..width_span),
-        range.gen_range(0.0..height_span),
+        range.random_range(-width_span..width_span),
+        range.random_range(0.0..height_span),
     );
 
     // compute the radius
-    let radius = (range.gen_range(80.0..150.), 100.);
+    let radius = (range.random_range(80.0..150.), 100.);
 
     // compute a start angle from where the first spawn will occur to the centre of the pivot
     let angle = (y - pivot.1).atan2(x - pivot.0);

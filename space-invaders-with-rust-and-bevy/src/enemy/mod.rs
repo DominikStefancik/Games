@@ -6,11 +6,14 @@ use crate::{
     enemy::formation::{Formation, FormationFactory},
     resources::{EnemyCount, GameTextures, WindowSize, ENEMY_COUNT_MAX},
 };
-use bevy::prelude::{
-    App, Commands, IntoSystemConfigs, Plugin, PostStartup, Quat, Query, Res, ResMut, SpriteBundle,
-    Transform, Update, Vec3, With,
-};
 use bevy::time::common_conditions::on_timer;
+use bevy::{
+    prelude::{
+        App, Commands, IntoScheduleConfigs, Plugin, PostStartup, Quat, Query, Res, ResMut,
+        Transform, Update, Vec3, With,
+    },
+    sprite::Sprite,
+};
 use std::f32::consts::PI;
 use std::time::Duration;
 
@@ -45,15 +48,14 @@ fn enemy_spawn_system(
         let (x, y) = formation.start_coordinate;
 
         commands
-            .spawn(SpriteBundle {
-                texture: game_textures.enemy.clone(),
-                transform: Transform {
+            .spawn((
+                Sprite::from_image(game_textures.enemy.clone()),
+                Transform {
                     translation: Vec3::new(x, y, 10.),
                     scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 0.),
                     ..Default::default()
                 },
-                ..Default::default()
-            })
+            ))
             .insert(Enemy)
             .insert(formation)
             .insert(SpriteSize::from(ENEMY_SIZE));
@@ -70,17 +72,17 @@ fn enemy_fire_system(
 ) {
     for &transform in enemy_query.iter() {
         let (x, y) = (transform.translation.x, transform.translation.y);
+
         // spawn enemy laser sprite
         commands
-            .spawn(SpriteBundle {
-                texture: game_textures.enemy_laser.clone(),
-                transform: Transform {
+            .spawn((
+                Sprite::from_image(game_textures.enemy_laser.clone()),
+                Transform {
                     translation: Vec3::new(x, y - 20., 0.),
                     rotation: Quat::from_rotation_x(PI),
                     scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
                 },
-                ..Default::default()
-            })
+            ))
             .insert(Laser)
             .insert(SpriteSize::from(ENEMY_LASER_SIZE))
             .insert(LaserFromEnemy)

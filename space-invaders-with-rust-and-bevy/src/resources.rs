@@ -1,4 +1,7 @@
-use bevy::prelude::{Handle, Image, Resource, TextureAtlas};
+use bevy::{
+    image::TextureAtlasLayout,
+    prelude::{Handle, Image, Resource},
+};
 
 #[derive(Resource)]
 pub struct WindowSize {
@@ -13,7 +16,8 @@ pub struct GameTextures {
     pub enemy: Handle<Image>,
     pub enemy_laser: Handle<Image>,
     // TextureAtlas allows us to navigate through a sheet of pictures
-    pub explosion: Handle<TextureAtlas>,
+    pub explosion: Handle<Image>,
+    pub explosion_atlas: Handle<TextureAtlasLayout>,
 }
 
 pub const ENEMY_COUNT_MAX: u8 = 3;
