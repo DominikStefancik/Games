@@ -2,10 +2,9 @@ use crate::components::{Ball, Player, ScoreBoard, Side, Sound};
 use crate::constants::{ARENA_HEIGHT, ARENA_WIDTH, BALL_RADIUS, BALL_VELOCITY, SCORE_FONT_SIZE};
 use bevy::audio::Volume;
 use bevy::prelude::{
-    AudioBundle, AudioSource, Color, Commands, Handle, Image, PlaybackSettings, SpriteSheetBundle,
-    Style, Text, TextBundle, TextStyle, TextureAtlas, TextureAtlasLayout, Transform, Val,
+    AudioPlayer, AudioSource, Commands, Font, Handle, Image, Node, PlaybackSettings, Sprite, Text,
+    TextColor, TextFont, TextureAtlas, TextureAtlasLayout, Transform, Val,
 };
-use bevy::text::Font;
 
 pub fn spawn_player(
     commands: &mut Commands,
@@ -17,17 +16,15 @@ pub fn spawn_player(
     y: f32,
 ) {
     commands.spawn((
-        // the "sprite" field initialization is covered by the `..default()` expression
-        SpriteSheetBundle {
+        Sprite::from_atlas_image(
+            sprite_sheet_handle,
             // The TextureAtlas is a single location where we can store all texture atlases in the whole program
-            atlas: TextureAtlas {
+            TextureAtlas {
                 layout: texture_atlas_layout_handle,
                 index: cat_sprite_index,
             },
-            texture: sprite_sheet_handle,
-            transform: Transform::from_xyz(x, y, 0.),
-            ..Default::default()
-        },
+        ),
+        Transform::from_xyz(x, y, 0.),
         Player { side },
     ));
 }
@@ -41,17 +38,15 @@ pub fn spawn_ball(
     score_sound: Handle<AudioSource>,
 ) {
     commands.spawn((
-        // the "sprite" field initialization is covered by the `..default()` expression
-        SpriteSheetBundle {
+        Sprite::from_atlas_image(
+            sprite_sheet_handle,
             // The TextureAtlas is a single location where we can store all texture atlases in the whole program
-            atlas: TextureAtlas {
+            TextureAtlas {
                 layout: texture_atlas_layout_handle,
                 index: ball_sprite_index,
             },
-            texture: sprite_sheet_handle,
-            transform: Transform::from_xyz(ARENA_WIDTH / 2., ARENA_HEIGHT / 2., 0.),
-            ..Default::default()
-        },
+        ),
+        Transform::from_xyz(ARENA_WIDTH / 2., ARENA_HEIGHT / 2., 0.),
         Ball {
             radius: BALL_RADIUS,
             velocity: BALL_VELOCITY,
@@ -68,20 +63,16 @@ pub fn spawn_scoreboard(
     x: f32,
 ) {
     commands.spawn((
-        TextBundle {
-            text: Text::from_section(
-                "0",
-                TextStyle {
-                    font: score_font_handle,
-                    font_size: SCORE_FONT_SIZE,
-                    color: Color::WHITE,
-                },
-            ),
-            style: Style {
-                left: Val::Px(x),
-                top: Val::Px(25.),
-                ..Default::default()
-            },
+        Text::new("0"),
+        TextFont {
+            font: score_font_handle,
+            font_size: SCORE_FONT_SIZE,
+            ..Default::default()
+        },
+        TextColor::WHITE,
+        Node {
+            left: Val::Px(x),
+            top: Val::Px(25.),
             ..Default::default()
         },
         ScoreBoard { side },
@@ -90,10 +81,8 @@ pub fn spawn_scoreboard(
 
 pub fn spawn_sound(commands: &mut Commands, sound: Handle<AudioSource>) {
     commands.spawn((
-        AudioBundle {
-            source: sound,
-            settings: PlaybackSettings::DESPAWN.with_volume(Volume::new(0.5)),
-        },
+        AudioPlayer::new(sound),
+        PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.5)),
         Sound,
     ));
 }

@@ -5,8 +5,8 @@ use crate::constants::{
 use crate::helpers::spawn_sound;
 use crate::resources::Score;
 use bevy::prelude::{
-    AudioSink, AudioSinkPlayback, ButtonInput, Commands, KeyCode, Query, Res, ResMut, Text, Time,
-    Transform, With,
+    AudioSink, AudioSinkPlayback, ButtonInput, Commands, Entity, KeyCode, Query, Res, ResMut,
+    TextUiWriter, Time, Transform, With,
 };
 use rand::Rng;
 
@@ -37,7 +37,7 @@ pub fn move_player_system(
             0.0_f32
         };
 
-        let offset = direction * PLAYER_SPEED * time.delta_seconds();
+        let offset = direction * PLAYER_SPEED * time.delta_secs();
 
         // apply movement deltas
         transform.translation.x += offset;
@@ -54,11 +54,10 @@ pub fn move_ball_system(time: Res<Time>, mut query: Query<(&mut Ball, &mut Trans
         // Apply movement deltas
         // For the accurate simulation of a falling ball we use
         // algorithm called Velocity Verlet integration
-        transform.translation.x += ball.velocity.x * time.delta_seconds();
-        transform.translation.y += (ball.velocity.y
-            + time.delta_seconds() * GRAVITY_ACCELERATION / 2.)
-            * time.delta_seconds();
-        ball.velocity.y += time.delta_seconds() * GRAVITY_ACCELERATION;
+        transform.translation.x += ball.velocity.x * time.delta_secs();
+        transform.translation.y +=
+            (ball.velocity.y + time.delta_secs() * GRAVITY_ACCELERATION / 2.) * time.delta_secs();
+        ball.velocity.y += time.delta_secs() * GRAVITY_ACCELERATION;
     }
 }
 
@@ -116,15 +115,17 @@ pub fn bounce_ball_system(
                 // Only bounce when a ball is falling
                 ball.velocity.y *= -1.;
 
-                let mut rng = rand::thread_rng();
+                let mut rng = rand::rng();
                 /*
                  * To give the game some playability, we randomly speed up or slow down
                  * the ball in the x-axis on collision,so the ball’s trajectory is unpredictable
                  */
                 match player.side {
-                    Side::Left => ball.velocity.x = ball.velocity.x.abs() * rng.gen_range(0.6..1.4),
+                    Side::Left => {
+                        ball.velocity.x = ball.velocity.x.abs() * rng.random_range(0.6..1.4)
+                    }
                     Side::Right => {
-                        ball.velocity.x = -1. * ball.velocity.x.abs() * rng.gen_range(0.6..1.4)
+                        ball.velocity.x = -1. * ball.velocity.x.abs() * rng.random_range(0.6..1.4)
                     }
                 }
             }
@@ -136,7 +137,8 @@ pub fn update_score_system(
     mut commands: Commands,
     mut score: ResMut<Score>,
     mut ball_query: Query<(&mut Ball, &mut Transform)>,
-    mut score_board_query: Query<(&ScoreBoard, &mut Text)>,
+    score_board_query: Query<(&ScoreBoard, Entity)>,
+    mut writer: TextUiWriter,
 ) {
     for (mut ball, mut transform) in ball_query.iter_mut() {
         let ball_x = transform.translation.x;
@@ -159,8 +161,8 @@ pub fn update_score_system(
             ball.velocity.y = 0.; // reset to free drop
 
             // update score board
-            for (score_board, mut text) in score_board_query.iter_mut() {
-                text.sections[0].value = match score_board.side {
+            for (score_board, entity) in score_board_query.iter() {
+                *writer.text(entity, 0) = match score_board.side {
                     Side::Left => score.left.to_string(),
                     Side::Right => score.right.to_string(),
                 }
@@ -174,8 +176,8 @@ pub fn pause_background_music_system(
     music_query: Query<&AudioSink, With<BackgroundMusic>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Space) {
-        if let Ok(sink) = music_query.get_single() {
-            sink.toggle();
+        if let Ok(sink) = music_query.single() {
+            sink.toggle_playback();
         }
     }
 }

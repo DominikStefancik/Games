@@ -18,7 +18,13 @@ use crate::systems::{
     update_score_system,
 };
 use bevy::audio::Volume;
-use bevy::prelude::*;
+use bevy::core_pipeline::core_2d::Camera2d;
+use bevy::image::TextureAtlasLayout;
+use bevy::prelude::{
+    App, AssetServer, Assets, AudioPlayer, ClearColor, Color, Commands, PlaybackSettings,
+    PluginGroup, Res, ResMut, Startup, Transform, URect, Update, Window, WindowPlugin,
+};
+use bevy::DefaultPlugins;
 
 fn main() {
     App::new()
@@ -30,13 +36,12 @@ fn main() {
             }),
             ..Default::default()
         }))
-        .insert_resource(ClearColor(Color::rgb(0., 0., 0.)))
+        .insert_resource(ClearColor(Color::srgb(0., 0., 0.)))
         .insert_resource(Score { left: 0, right: 0 })
         .add_systems(Startup, setup_system)
         .add_systems(
             Update,
             (
-                bevy::window::close_on_esc,
                 move_player_system,
                 move_ball_system,
                 bounce_ball_system,
@@ -44,7 +49,7 @@ fn main() {
                 pause_background_music_system,
             ),
         )
-        .run()
+        .run();
 }
 
 /*
@@ -60,18 +65,16 @@ fn setup_system(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    commands.spawn(Camera2dBundle {
+    commands.spawn((
+        Camera2d,
         // The camera itself is centered at the middle of the arena at unit height (z-parameter) above the canvas
-        transform: Transform::from_xyz(ARENA_WIDTH / 2., ARENA_HEIGHT / 2., 1.),
-        ..Default::default()
-    });
+        Transform::from_xyz(ARENA_WIDTH / 2., ARENA_HEIGHT / 2., 1.),
+    ));
 
     // spawn background music
     commands.spawn((
-        AudioBundle {
-            source: asset_server.load(BACKGROUND_AUDIO_PATH),
-            settings: PlaybackSettings::LOOP.with_volume(Volume::new(0.25)),
-        },
+        AudioPlayer::new(asset_server.load(BACKGROUND_AUDIO_PATH)),
+        PlaybackSettings::LOOP.with_volume(Volume::Linear(0.25)),
         BackgroundMusic,
     ));
 
@@ -93,15 +96,15 @@ fn setup_system(
      *
      * For images the (0,0) coordinate is in the top left.
      */
-    let left_cat_index = sprite_layout.add_texture(Rect::from_corners(
+    let left_cat_index = sprite_layout.add_texture(URect::from_corners(
         LEFT_CAT_TEXTURE_CORNER,
         LEFT_CAT_TEXTURE_CORNER + CAT_SIZE,
     ));
-    let right_cat_index = sprite_layout.add_texture(Rect::from_corners(
+    let right_cat_index = sprite_layout.add_texture(URect::from_corners(
         RIGHT_CAT_TEXTURE_CORNER,
         RIGHT_CAT_TEXTURE_CORNER + CAT_SIZE,
     ));
-    let ball_index = sprite_layout.add_texture(Rect::from_corners(
+    let ball_index = sprite_layout.add_texture(URect::from_corners(
         BALL_TEXTURE_CORNER,
         BALL_TEXTURE_CORNER + BALL_SIZE,
     ));
