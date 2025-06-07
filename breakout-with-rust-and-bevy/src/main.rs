@@ -1,3 +1,4 @@
+mod collision;
 mod components;
 mod constants;
 mod helpers;
@@ -11,7 +12,10 @@ use crate::systems::{
     ball_velocity_system, check_ball_collisions_system, move_paddle_system,
     update_scoreboard_system,
 };
-use bevy::prelude::*;
+use bevy::prelude::{
+    App, AssetServer, Assets, Camera2d, ClearColor, ColorMaterial, Commands, FixedUpdate,
+    IntoScheduleConfigs, Mesh, PluginGroup, Res, ResMut, Startup, Window, WindowPlugin,
+};
 use bevy::DefaultPlugins;
 
 /*
@@ -34,7 +38,6 @@ fn main() {
         // we have to add a resource into the Bevy "world" if later we want to access it in a system function
         .insert_resource(Scoreboard { score: 0 })
         .add_systems(Startup, setup_system)
-        .add_systems(Update, bevy::window::close_on_esc)
         // FixedUpdate always runs on a fixed rate; by default it is 60 frames per second
         .add_systems(
             FixedUpdate,
@@ -60,7 +63,7 @@ fn setup_system(
     // we have to spawn a camera first, so we can see our player
     // if we didn't do that, the game screen will just be black
     // Note: Bundles are used for adding multiple components at once
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
 
     // we have to insert a sound as a resource in order to be able to reference it
     // in the "check_ball_collisions_system"

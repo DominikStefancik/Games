@@ -1,4 +1,4 @@
-use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle, WallBundle};
+use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle, ScoreBoardText, WallBundle};
 use crate::constants::{
     BALL_COLOR, BALL_INITIAL_DIRECTION, BALL_RADIUS, BALL_SPEED, BALL_STARTING_POSITION,
     BOTTOM_WALL, BRICK_COLOR, BRICK_SIZE, GAP_BETWEEN_BRICKS, GAP_BETWEEN_BRICKS_AND_CEILING,
@@ -7,23 +7,21 @@ use crate::constants::{
     SCOREBOARD_TEXT_COLOR, SCOREBOARD_TEXT_PADDING, TOP_WALL, WALL_BLOCK_HEIGHT, WALL_BLOCK_WIDTH,
     WALL_COLOR, WALL_THICKNESS,
 };
-use bevy::asset::Assets;
-use bevy::math::{vec2, vec3};
-use bevy::prelude::*;
-use bevy::sprite::MaterialMesh2dBundle;
+use bevy::prelude::{
+    children, vec2, vec3, Assets, Circle, ColorMaterial, Commands, Mesh, Mesh2d, MeshMaterial2d,
+    Node, PositionType, ResMut, SpawnRelated, Sprite, Text, TextColor, TextFont, TextSpan,
+    Transform, Vec2, Vec3,
+};
 
 pub fn spawn_player(commands: &mut Commands) {
     commands.spawn((
-        SpriteBundle {
-            transform: Transform {
-                translation: Vec3::new(0., PADDLE_START_Y, 0.),
-                ..Default::default()
-            },
-            sprite: Sprite {
-                color: PADDLE_COLOR,
-                custom_size: Some(PADDLE_SIZE),
-                ..Default::default()
-            },
+        Sprite {
+            color: PADDLE_COLOR,
+            custom_size: Some(PADDLE_SIZE),
+            ..Default::default()
+        },
+        Transform {
+            translation: Vec3::new(0., PADDLE_START_Y, 0.),
             ..Default::default()
         },
         Paddle,
@@ -38,18 +36,12 @@ pub fn spawn_ball(
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn((
-        MaterialMesh2dBundle {
-            mesh: meshes.add(shape::Circle::new(BALL_RADIUS).into()).into(),
-            material: materials.add(ColorMaterial::from(BALL_COLOR)),
-            transform: Transform {
-                translation: BALL_STARTING_POSITION,
-                ..Default::default()
-            },
-            ..default()
-        },
+        Mesh2d(meshes.add(Circle::new(BALL_RADIUS))),
+        MeshMaterial2d(materials.add(ColorMaterial::from(BALL_COLOR))),
+        Transform::from_translation(BALL_STARTING_POSITION),
         Ball {
             // add a small offset number to make collisions a bit nicer
-            size: vec2(BALL_RADIUS + 5., BALL_RADIUS + 5.),
+            diameter: (BALL_RADIUS + 5.) * 2.,
         },
         BallVelocity(BALL_SPEED * BALL_INITIAL_DIRECTION),
     ));
@@ -71,18 +63,8 @@ pub fn spawn_wall(commands: &mut Commands) {
 
 fn create_wall_bundle(x: f32, y: f32, wall_size: Vec2) -> WallBundle {
     WallBundle {
-        sprite_bundle: SpriteBundle {
-            transform: Transform {
-                translation: vec3(x, y, 0.),
-                ..Default::default()
-            },
-            sprite: Sprite {
-                color: WALL_COLOR,
-                custom_size: Some(wall_size),
-                ..Default::default()
-            },
-            ..Default::default()
-        },
+        sprite: Sprite::from_color(WALL_COLOR, wall_size),
+        transform: Transform::from_translation(vec3(x, y, 0.)),
         collider: Collider { size: wall_size },
     }
 }
@@ -106,18 +88,8 @@ pub fn spawn_bricks(commands: &mut Commands) {
             );
 
             commands.spawn((
-                SpriteBundle {
-                    transform: Transform {
-                        translation: brick_position.extend(0.0),
-                        ..Default::default()
-                    },
-                    sprite: Sprite {
-                        color: BRICK_COLOR,
-                        custom_size: Some(BRICK_SIZE),
-                        ..Default::default()
-                    },
-                    ..Default::default()
-                },
+                Sprite::from_color(BRICK_COLOR, BRICK_SIZE),
+                Transform::from_translation(brick_position.extend(0.0)),
                 Brick,
                 // the Collider component is necessary if we want the ball to collide with a brick
                 Collider { size: BRICK_SIZE },
@@ -127,29 +99,24 @@ pub fn spawn_bricks(commands: &mut Commands) {
 }
 
 pub fn spawn_scoreboard(commands: &mut Commands) {
-    commands.spawn(
-        TextBundle::from_sections([
-            // this text section will always stay the same
-            TextSection::new(
-                "Score: ",
-                TextStyle {
-                    font_size: SCOREBOARD_FONT_SIZE,
-                    color: SCOREBOARD_TEXT_COLOR,
-                    ..Default::default()
-                },
-            ),
-            TextSection::from_style(TextStyle {
-                font_size: SCOREBOARD_FONT_SIZE,
-                color: SCOREBOARD_SCORE_COLOR,
-                ..Default::default()
-            }),
-        ])
-        // the Style tells Bevy how to position a text
-        .with_style(Style {
+    commands.spawn((
+        Text::new("Score: "),
+        TextFont::from_font_size(SCOREBOARD_FONT_SIZE),
+        TextColor::from(SCOREBOARD_TEXT_COLOR),
+        // the Node tells Bevy how to position a text
+        Node {
             position_type: PositionType::Absolute,
             top: SCOREBOARD_TEXT_PADDING,
             left: SCOREBOARD_TEXT_PADDING,
             ..Default::default()
-        }),
-    );
+        },
+        ScoreBoardText,
+        // children texts of the score text
+        // if we want to use the macro children! we have to import SpawnRelated
+        children![(
+            TextSpan::default(),
+            TextFont::from_font_size(SCOREBOARD_FONT_SIZE),
+            TextColor::from(SCOREBOARD_SCORE_COLOR)
+        )],
+    ));
 }

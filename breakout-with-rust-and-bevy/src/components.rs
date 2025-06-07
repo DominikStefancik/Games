@@ -1,4 +1,8 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::{Bundle, Component, Deref, DerefMut, Vec2},
+    sprite::Sprite,
+    transform::components::Transform,
+};
 
 // represents the player
 // it is called Stack component because it's a component which doesn't contain any data
@@ -9,7 +13,7 @@ pub struct Paddle;
 #[derive(Component)]
 pub struct Ball {
     // this property is used to calculate a possible collision with other objects
-    pub size: Vec2,
+    pub diameter: f32,
 }
 
 // represents the ball's velocity
@@ -26,7 +30,8 @@ pub struct Collider {
 // represents the wall
 #[derive(Bundle)]
 pub struct WallBundle {
-    pub sprite_bundle: SpriteBundle,
+    pub sprite: Sprite,
+    pub transform: Transform,
     pub collider: Collider,
 }
 
@@ -34,3 +39,7 @@ pub struct WallBundle {
 // it is called Stack component because it's a component which doesn't contain any data
 #[derive(Component)]
 pub struct Brick;
+
+// represents a text on the scoreboard
+#[derive(Component)]
+pub struct ScoreBoardText;
