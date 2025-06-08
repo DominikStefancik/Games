@@ -5,6 +5,8 @@ export const RING_SPRITE_ID = "ring";
 export const MOTOBUG_SPRITE_ID = "motobug";
 
 export const MANIA_FONT_ID = "mania";
+export const TITLE_FONT_SIZE = 90;
+export const INSTRUCTIONS_FONT_SIZE = 36;
 
 export const CITY_SOUND_ID = "city";
 export const DESTROY_SOUND_ID = "destroy";
@@ -21,3 +23,7 @@ export const BACKGROUND_SPRITE_WIDTH = 1920;
 export const BACKGROUND_SPRITE_SCALE = 2;
 export const PLATFORMS_SPRITE_WIDTH = 1280;
 export const PLATFORMS_SPRITE_SCALE = 4;
+
+export const ANIMATION_RUN = "run";
+export const ANIMATION_JUMP = "jump";
+export const ANIMATION_SPIN = "spin";
