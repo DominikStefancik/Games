@@ -1,4 +1,5 @@
 import kaplay from "kaplay";
+import { BUTTON_JUMP } from "./constants";
 
 const kaplayContext = kaplay({
   width: 1920,
@@ -9,7 +10,7 @@ const kaplayContext = kaplay({
   touchToMouse: true, // translates any touch input (e.g. on phone) to a mouse click
   // defines a concrete buttons for input bindings
   buttons: {
-    jumpKey: {
+    [BUTTON_JUMP]: {
       keyboard: ["space"], // you define multiple keys which will serve as a jump key
       mouse: "left",
     },

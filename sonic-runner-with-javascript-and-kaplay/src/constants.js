@@ -1,3 +1,5 @@
+export const BUTTON_JUMP = "jump-button";
+
 export const CHEMICAL_BACKGROUND_SPRITE_ID = "chemical-background";
 export const PLATFORMS_SPRITE_ID = "platforms";
 export const SONIC_SPRITE_ID = "sonic";
