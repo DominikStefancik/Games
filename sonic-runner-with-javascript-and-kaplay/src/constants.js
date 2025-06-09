@@ -9,6 +9,8 @@ export const MOTOBUG_SPRITE_ID = "motobug";
 export const MANIA_FONT_ID = "mania";
 export const TITLE_FONT_SIZE = 90;
 export const INSTRUCTIONS_FONT_SIZE = 36;
+export const SCORE_STATS_TEXT_FONT_SIZE = 60;
+export const SCORE_STATS_VALUE_FONT_SIZE = 100;
 
 export const CITY_SOUND_ID = "city";
 export const DESTROY_SOUND_ID = "destroy";

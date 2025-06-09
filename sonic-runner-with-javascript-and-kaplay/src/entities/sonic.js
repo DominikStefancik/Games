@@ -59,5 +59,6 @@ export const createSonic = (position) => {
     kaplayContext.anchor("center"),
     kaplayContext.pos(30, -10),
   ]);
+
   return sonicObject;
 };

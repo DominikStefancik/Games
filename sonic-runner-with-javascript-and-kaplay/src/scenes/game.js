@@ -131,7 +131,7 @@ const spawnSonic = (gameObjects) => {
 
       kaplayContext.setData(LOCAL_STORAGE_CURRENT_SCORE_KEY, score);
       // the second parameter of the "go" method is data we want to pass to the scene we go to
-      kaplayContext.go(GAME_OVER_SCENE_ID, { citySoundEffect });
+      kaplayContext.go(GAME_OVER_SCENE_ID, citySoundEffect);
     }
   });
 
