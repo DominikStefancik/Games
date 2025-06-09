@@ -29,3 +29,5 @@ export const PLATFORMS_SPRITE_SCALE = 4;
 export const ANIMATION_RUN = "run";
 export const ANIMATION_JUMP = "jump";
 export const ANIMATION_SPIN = "spin";
+
+export const TAG_ENEMY = "enemy";

@@ -1,4 +1,7 @@
 import {
+  ANIMATION_JUMP,
+  ANIMATION_RUN,
+  ANIMATION_SPIN,
   CHEMICAL_BACKGROUND_SPRITE_ID,
   CITY_SOUND_ID,
   DESTROY_SOUND_ID,
@@ -32,7 +35,7 @@ export const loadAssets = () => {
     // define your animations created from the frames in the sprite sheet
     anims: {
       // "run" is a custom name if an animation
-      run: {
+      [ANIMATION_RUN]: {
         // the frame the animation starts from
         from: 0,
         // the final frame the animation goes to
@@ -43,7 +46,7 @@ export const loadAssets = () => {
         speed: 30, // 30 frames per second
       },
       // "jump" is a custom name if an animation
-      jump: {
+      [ANIMATION_JUMP]: {
         from: 8,
         to: 15,
         loop: true,
@@ -57,7 +60,7 @@ export const loadAssets = () => {
     sliceY: 1,
     anims: {
       // "spin" is a custom name if an animation
-      spin: {
+      [ANIMATION_SPIN]: {
         from: 0,
         to: 15,
         loop: true,
@@ -66,12 +69,12 @@ export const loadAssets = () => {
     },
   });
 
-  kaplayContext.loadSprite(MOTOBUG_SPRITE_ID, "graphics/ring.png", {
+  kaplayContext.loadSprite(MOTOBUG_SPRITE_ID, "graphics/motobug.png", {
     sliceX: 5,
     sliceY: 1,
     anims: {
       // "run" is a custom name if an animation
-      run: {
+      [ANIMATION_RUN]: {
         from: 0,
         to: 4,
         loop: true,
