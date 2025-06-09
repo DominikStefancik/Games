@@ -31,3 +31,7 @@ export const ANIMATION_JUMP = "jump";
 export const ANIMATION_SPIN = "spin";
 
 export const TAG_ENEMY = "enemy";
+export const TAG_RING = "ring";
+
+export const LOCAL_STORAGE_CURRENT_SCORE_KEY = "current-score";
+export const LOCAL_STORAGE_BEST_SCORE_KEY = "best-score";

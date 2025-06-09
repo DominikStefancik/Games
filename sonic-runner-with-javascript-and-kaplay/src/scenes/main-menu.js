@@ -2,6 +2,7 @@ import {
   BUTTON_JUMP,
   GAME_SCENE_ID,
   INSTRUCTIONS_FONT_SIZE,
+  LOCAL_STORAGE_BEST_SCORE_KEY,
   MANIA_FONT_ID,
   TITLE_FONT_SIZE,
 } from "../constants";
@@ -16,8 +17,8 @@ import {
 
 const mainMenu = () => {
   // kaplay checks in the local storage for the best score
-  if (!kaplayContext.getData("best-score")) {
-    kaplayContext.setData("best-score", 0);
+  if (!kaplayContext.getData(LOCAL_STORAGE_BEST_SCORE_KEY)) {
+    kaplayContext.setData(LOCAL_STORAGE_BEST_SCORE_KEY, 0);
   }
 
   // the "BUTTON_JUMP" button is defined in the kaplay context

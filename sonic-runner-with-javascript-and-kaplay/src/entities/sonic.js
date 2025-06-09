@@ -3,6 +3,7 @@ import {
   ANIMATION_RUN,
   BUTTON_JUMP,
   JUMP_SOUND_ID,
+  MANIA_FONT_ID,
   SONIC_SPRITE_ID,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
@@ -51,5 +52,12 @@ export const createSonic = (position) => {
     },
   ]);
 
+  // add a child object to the Sonic game object
+  sonicObject.add([
+    kaplayContext.text("", { font: MANIA_FONT_ID, size: 24 }),
+    kaplayContext.color(255, 255, 0),
+    kaplayContext.anchor("center"),
+    kaplayContext.pos(30, -10),
+  ]);
   return sonicObject;
 };
