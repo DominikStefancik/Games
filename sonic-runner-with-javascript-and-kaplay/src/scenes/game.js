@@ -24,11 +24,17 @@ import {
 } from "./scene-helpers";
 
 // the game speed will get progressivelly faster during play
-let gameSpeed = 300;
-let score = 0;
-let scoreMultiplier = 0;
+let gameSpeed;
+let score;
+let scoreMultiplier;
 
 const game = () => {
+  // at the beginning of each game we need to reset the game speed and the score, because these variables
+  // are defined globally and without reseting, the value from a previous game would be kept
+  gameSpeed = 300;
+  score = 0;
+  scoreMultiplier = 0;
+
   // sets the City sound effect
   const citySoundEffect = kaplayContext.play(CITY_SOUND_ID, {
     volume: 0.2,
