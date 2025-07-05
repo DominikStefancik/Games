@@ -5,8 +5,8 @@ import {
   FENCE_SPRITE_ID,
   SHOP_SPRITE_ID,
 } from "../constants";
-import { fetchMapData } from "./helpers";
-import type { Layer } from "../models";
+import { drawTile, fetchMapData, loadSprites } from "./helpers";
+import type { TiledLayer } from "../models";
 
 export const arena = async (context: KAPLAYCtx) => {
   loadSprites(context);
@@ -38,7 +38,7 @@ export const arena = async (context: KAPLAYCtx) => {
    */
   const map = context.add([context.pos(0, 0)]);
 
-  let layer: Layer;
+  let layer: TiledLayer;
   for (layer of layers) {
     if (
       layer.name === "DecorationSpawnPoints" &&
@@ -62,7 +62,7 @@ export const arena = async (context: KAPLAYCtx) => {
             // we are adding the shop animation as a child of the map
             map.add([
               context.sprite(FENCE_SPRITE_ID),
-              context.pos(object.x, object.y + 4),
+              context.pos(object.x, object.y + 3),
               // allow us to draw the object from the middle of a canvas
               context.area(),
               context.anchor("center"),
@@ -71,36 +71,24 @@ export const arena = async (context: KAPLAYCtx) => {
         }
       }
 
-      // allows to set the position of a camera
-      context.camPos(
-        context.vec2(context.center().x - 450, context.center().y - 160),
-      );
-      // it allows you to scale the camera
-      context.camScale(context.vec2(4));
+      continue;
     }
-  }
-};
 
-const loadSprites = (context: KAPLAYCtx) => {
-  context.loadSprite(
-    BACKGROUND_SPRITE_1_ID,
-    "./assets/graphics/background/background_layer_1.png",
-  );
-  context.loadSprite(
-    BACKGROUND_SPRITE_2_ID,
-    "./assets/graphics/background/background_layer_2.png",
-  );
-  context.loadSprite(FENCE_SPRITE_ID, "./assets/graphics/fence_1.png");
-  context.loadSprite(SHOP_SPRITE_ID, "./assets/graphics/shop_anim.png", {
-    sliceX: 6,
-    sliceY: 1,
-    anims: {
-      // "default" is an arbitrary name for an animation
-      default: {
-        from: 0,
-        to: 5,
-        loop: true,
-      },
-    },
-  });
+    if (layer.type === "tilelayer") {
+      drawTile({
+        context,
+        layer,
+        map,
+        tileWidth: tilewidth,
+        tileHeight: tileheight,
+      });
+    }
+
+    // allows to set the position of a camera
+    context.setCamPos(
+      context.vec2(context.center().x - 450, context.center().y - 160),
+    );
+    // it allows you to scale the camera
+    context.setCamScale(context.vec2(4));
+  }
 };
