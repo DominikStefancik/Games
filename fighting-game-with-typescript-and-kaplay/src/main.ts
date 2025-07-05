@@ -1,6 +1,6 @@
 import { ARENA_SCENE } from "./constants";
 import kaplayContext from "./kaplay-context";
-import { arena } from "./scenes";
+import { arena } from "./scenes/arena";
 
 kaplayContext.scene(ARENA_SCENE, () => arena(kaplayContext));
 
