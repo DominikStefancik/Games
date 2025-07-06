@@ -1,15 +1,21 @@
-import type { KAPLAYCtx } from "kaplay";
+import type { GameObj, KAPLAYCtx } from "kaplay";
 import {
   BACKGROUND_SPRITE_1_ID,
   BACKGROUND_SPRITE_2_ID,
   FENCE_SPRITE_ID,
   SHOP_SPRITE_ID,
 } from "../constants";
-import { drawTile, fetchMapData, loadSprites } from "./helpers";
+import { drawTile, fetchMapData, loadSceneSprites } from "./helpers";
 import type { TiledLayer } from "../models";
+import { loadEntitySprites } from "../entities/helpers";
+import { createSamurai } from "../entities/samurai";
+import { createNinja } from "../entities/ninja";
 
 export const arena = async (context: KAPLAYCtx) => {
-  loadSprites(context);
+  context.setGravity(2000);
+
+  loadSceneSprites(context);
+  loadEntitySprites(context);
 
   // the output of calling the "add()" method is a game object
   context.add([
@@ -30,6 +36,13 @@ export const arena = async (context: KAPLAYCtx) => {
   // draw a scene based on the tile map description
   const { layers, tilewidth, tileheight } =
     await fetchMapData("./maps/arena.json");
+
+  const entities: {
+    [key: string]: GameObj | null;
+  } = {
+    player1: null,
+    player2: null,
+  };
 
   /*
    * We create a map as a main object and add tiles to it as its children
@@ -91,6 +104,31 @@ export const arena = async (context: KAPLAYCtx) => {
           // and it will not move after it collides with another game object
           context.body({ isStatic: true }),
         ]);
+      }
+
+      continue;
+    }
+
+    if (layer.name === "SpawnPoints" && layer.type === "objectgroup") {
+      for (const object of layer.objects) {
+        switch (object.name) {
+          case "player-1":
+            entities.player1 = createSamurai({
+              context,
+              parentObject: map,
+              position: context.vec2(object.x, object.y),
+            });
+            break;
+          case "player-2":
+            entities.player2 = createNinja({
+              context,
+              parentObject: map,
+              position: context.vec2(object.x, object.y),
+            });
+            break;
+          default:
+            throw new Error(`There is no spawn point for the ${object.name}`);
+        }
       }
 
       continue;

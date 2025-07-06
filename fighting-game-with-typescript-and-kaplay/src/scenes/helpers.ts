@@ -8,7 +8,7 @@ import {
   SHOP_SPRITE_ID,
 } from "../constants";
 
-export const loadSprites = (context: KAPLAYCtx) => {
+export const loadSceneSprites = (context: KAPLAYCtx) => {
   context.loadSprite(
     BACKGROUND_SPRITE_1_ID,
     "./assets/graphics/background/background_layer_1.png",
