@@ -62,13 +62,35 @@ export const arena = async (context: KAPLAYCtx) => {
             // we are adding the shop animation as a child of the map
             map.add([
               context.sprite(FENCE_SPRITE_ID),
-              context.pos(object.x, object.y + 3),
+              context.pos(object.x, object.y + 2),
               // allow us to draw the object from the middle of a canvas
               context.area(),
               context.anchor("center"),
             ]);
             break;
         }
+      }
+
+      continue;
+    }
+
+    if (layer.name === "Boundaries" && layer.type === "objectgroup") {
+      for (const object of layer.objects) {
+        // we create invisible objects in the map which will serve as Boundaries
+        // so players cannot get out of the canvas
+        map.add([
+          context.area({
+            shape: new context.Rect(
+              context.vec2(0),
+              object.width,
+              object.height,
+            ),
+          }),
+          context.pos(object.x, object.y + tileheight / 2),
+          // the property "isStatic" says that a game object is not susceptible to gravity
+          // and it will not move after it collides with another game object
+          context.body({ isStatic: true }),
+        ]);
       }
 
       continue;
