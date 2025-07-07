@@ -34,6 +34,29 @@ export const initialFighterProps: FighterProperties = {
   previousHealthPoints: 10,
 };
 
+const makeFighterBlink = async (params: {
+  context: KAPLAYCtx;
+  fighter: GameObj;
+}) => {
+  const { context, fighter } = params;
+
+  // tweening is gradually changing one value to another by using an easing function
+  await context.tween(
+    fighter.opacity, // initial value
+    0, // final value
+    0.5, // duration how long it would take to change the initial value to the final one
+    (newOpacity) => (fighter.opacity = newOpacity), // function describing how value should change
+    context.easings.linear,
+  );
+  await context.tween(
+    fighter.opacity, // after the first tween, the opacity is 0
+    1, // we want to bring the opacity back to 1
+    0.5,
+    (newOpacity) => (fighter.opacity = newOpacity),
+    context.easings.linear,
+  );
+};
+
 export const setFighterControls = (params: {
   context: KAPLAYCtx;
   fighter: GameObj;
@@ -145,7 +168,8 @@ export const setFighterControls = (params: {
   });
 
   // when the Kaplay's method "hurt()" runs, it emits the "hurt" event
-  fighter.on(HURT_EVENT_ID, () => {
+  fighter.on(HURT_EVENT_ID, async () => {
+    await makeFighterBlink({ context, fighter });
     if (fighter.hp() > 0 && fighter.getCurAnim().name !== HIT_ANIMATION_ID) {
       fighter.play(HIT_ANIMATION_ID);
       return;

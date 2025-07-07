@@ -49,5 +49,7 @@ export const createNinja = (params: {
     },
   ]);
 
+  gameObject.flipX = true;
+
   return gameObject;
 };
