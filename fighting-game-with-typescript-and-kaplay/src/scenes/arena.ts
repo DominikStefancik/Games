@@ -6,10 +6,10 @@ import {
   SHOP_SPRITE_ID,
 } from "../constants";
 import { drawTile, fetchMapData, loadSceneSprites } from "./helpers";
-import type { TiledLayer } from "../models";
 import { loadEntitySprites } from "../entities/helpers";
 import { createSamurai } from "../entities/samurai";
 import { createNinja } from "../entities/ninja";
+import { createHealthBar } from "../ui/healthbar";
 
 export const arena = async (context: KAPLAYCtx) => {
   context.setGravity(2000);
@@ -51,8 +51,7 @@ export const arena = async (context: KAPLAYCtx) => {
    */
   const map = context.add([context.pos(0, 0)]);
 
-  let layer: TiledLayer;
-  for (layer of layers) {
+  for (const layer of layers) {
     if (
       layer.name === "DecorationSpawnPoints" &&
       layer.type === "objectgroup"
@@ -152,6 +151,17 @@ export const arena = async (context: KAPLAYCtx) => {
   // it allows you to scale the camera
   context.setCamScale(context.vec2(4));
 
-  entities.player1?.setControls();
-  entities.player2?.setControls();
+  entities.player1!.setControls();
+  entities.player2!.setControls();
+
+  createHealthBar({
+    context,
+    direction: "left",
+    owner: entities.player1!,
+  });
+  createHealthBar({
+    context,
+    direction: "right",
+    owner: entities.player2!,
+  });
 };

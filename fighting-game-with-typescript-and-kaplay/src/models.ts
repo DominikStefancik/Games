@@ -41,3 +41,5 @@ interface TiledObject {
   visible: boolean;
   opacity: number;
 }
+
+export type Direction = "left" | "right";

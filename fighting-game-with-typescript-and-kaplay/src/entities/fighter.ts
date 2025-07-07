@@ -12,8 +12,7 @@ import {
   RUN_ANIMATION_ID,
   SAMURAI_TAG,
 } from "../constants";
-
-type Direction = "left" | "right";
+import type { Direction } from "../models";
 
 interface FighterProperties {
   speed: number;
@@ -232,7 +231,7 @@ export const setFighterControls = (params: {
   });
 
   context.onUpdate(() => {
-    // the "isJumping()" mthod is provided by the Kaplay and checks if a game object is not isGrounded
+    // the "isJumping()" method is provided by the Kaplay and checks if a game object is not isGrounded
     // and is ascending at the same time
     if (
       !fighter.isJumping() &&
@@ -244,8 +243,6 @@ export const setFighterControls = (params: {
       fighter.play(FALL_ANIMATION_ID);
     }
 
-    console.log("Fighter: ", fighter);
-    console.log("Current anim: ", fighter.getCurAnim());
     // a fighter was falling and reached out the ground
     if (
       fighter.getCurAnim().name === FALL_ANIMATION_ID &&
