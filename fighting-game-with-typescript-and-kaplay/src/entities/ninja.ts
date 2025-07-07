@@ -5,7 +5,7 @@ import {
   NINJA_TAG,
   SAMURAI_TAG,
 } from "../constants";
-import { initialFighterProps } from "./fighter";
+import { initialFighterProps, setFighterControls } from "./fighter";
 
 export const createNinja = (params: {
   context: KAPLAYCtx;
@@ -34,7 +34,18 @@ export const createNinja = (params: {
     // here we will define custom properties for a game object
     {
       ...initialFighterProps,
-      setControls: () => {},
+      setControls: () => {
+        setFighterControls({
+          context,
+          fighter: gameObject,
+          keys: {
+            LEFT: "left",
+            RIGHT: "right",
+            UP: "up",
+            DOWN: "down",
+          },
+        });
+      },
     },
   ]);
 

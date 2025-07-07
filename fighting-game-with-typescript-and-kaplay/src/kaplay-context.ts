@@ -16,7 +16,7 @@ const kaplayContext = kaplay({
    */
   global: false,
   debug: true, // sets the debug mode
-  debugKey: "d", // specifies which key turns on the debug mode
+  debugKey: "g", // specifies which key turns on the debug mode
 });
 
 export default kaplayContext;

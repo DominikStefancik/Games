@@ -17,5 +17,7 @@ export const ATTACK_ANIMATION_ID = "attack";
 export const HIT_ANIMATION_ID = "hit";
 export const DYING_ANIMATION_ID = "dying";
 
+export const HURT_EVENT_ID = "hurt";
+
 export const SAMURAI_TAG = "samurai";
 export const NINJA_TAG = "ninja";

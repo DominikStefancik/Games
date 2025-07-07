@@ -5,7 +5,7 @@ import {
   SAMURAI_SPRITE_ID,
   SAMURAI_TAG,
 } from "../constants";
-import { initialFighterProps } from "./fighter";
+import { initialFighterProps, setFighterControls } from "./fighter";
 
 export const createSamurai = (params: {
   context: KAPLAYCtx;
@@ -35,7 +35,18 @@ export const createSamurai = (params: {
     {
       ...initialFighterProps,
       direction: "right",
-      setControls: () => {},
+      setControls: () => {
+        setFighterControls({
+          context,
+          fighter: gameObject,
+          keys: {
+            LEFT: "a",
+            RIGHT: "d",
+            UP: "w",
+            DOWN: "s",
+          },
+        });
+      },
     },
   ]);
 

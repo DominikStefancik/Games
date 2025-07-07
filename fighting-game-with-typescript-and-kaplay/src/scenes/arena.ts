@@ -143,12 +143,15 @@ export const arena = async (context: KAPLAYCtx) => {
         tileHeight: tileheight,
       });
     }
-
-    // allows to set the position of a camera
-    context.setCamPos(
-      context.vec2(context.center().x - 450, context.center().y - 160),
-    );
-    // it allows you to scale the camera
-    context.setCamScale(context.vec2(4));
   }
+
+  // allows to set the position of a camera
+  context.setCamPos(
+    context.vec2(context.center().x - 450, context.center().y - 160),
+  );
+  // it allows you to scale the camera
+  context.setCamScale(context.vec2(4));
+
+  entities.player1?.setControls();
+  entities.player2?.setControls();
 };
