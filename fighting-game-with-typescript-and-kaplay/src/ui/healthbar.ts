@@ -38,7 +38,7 @@ export const createHealthBar = (params: {
     healthDisplay.pos = context.vec2(300, 23);
   }
 
-  const reduceWithBy = healthDisplay.width / owner.maxHealthPoints;
+  const reduceWithBy = healthDisplay.width / (owner.maxHealthPoints + 1);
 
   context.onUpdate(() => {
     if (owner.hp() === owner.previousHealthPoints) {

@@ -13,6 +13,7 @@ import {
   SAMURAI_TAG,
 } from "../constants";
 import type { Direction } from "../models";
+import { getEnemyObject } from "./helpers";
 
 interface FighterProperties {
   speed: number;
@@ -47,7 +48,7 @@ const makeFighterBlink = async (params: {
     (newOpacity) => (fighter.opacity = newOpacity), // function describing how value should change
     context.easings.linear,
   );
-  await context.tween(
+  context.tween(
     fighter.opacity, // after the first tween, the opacity is 0
     1, // we want to bring the opacity back to 1
     0.5,
@@ -143,7 +144,7 @@ export const setFighterControls = (params: {
       const enemyTag = fighter.is(SAMURAI_TAG) ? NINJA_TAG : SAMURAI_TAG;
 
       attackHitBox.onCollide(enemyTag, (enemy: GameObj) => {
-        context.wait(0.2, () => {
+        context.wait(0.001, () => {
           // the "hp()" method is provided by Kaplay as soon as you use "health" component on a game object
           enemy.previousHealthPoints = fighter.hp();
         });
@@ -166,71 +167,18 @@ export const setFighterControls = (params: {
     }
   });
 
-  // when the Kaplay's method "hurt()" runs, it emits the "hurt" event
-  fighter.on(HURT_EVENT_ID, async () => {
-    await makeFighterBlink({ context, fighter });
-    if (fighter.hp() > 0 && fighter.getCurAnim().name !== HIT_ANIMATION_ID) {
-      fighter.play(HIT_ANIMATION_ID);
+  const onUpdateController = context.onUpdate(() => {
+    // when a fighter is dead, its game object has no animation assigned
+    // because dying animation ran only one time
+    const enemyObject = getEnemyObject({ context, fighter });
+    if (fighter.isDead || enemyObject.isDead) {
       return;
     }
 
-    if (
-      fighter.hp() === 0 &&
-      fighter.getCurAnim().name !== DYING_ANIMATION_ID
-    ) {
-      fighter.isDead = true;
-
-      // we need to unregister the event listeners, because a dead fighter should not react to events
-      onKeyDownController.cancel();
-      onKeyReleaseController.cancel();
-      onKeyPressController.cancel();
-
-      fighter.play(DYING_ANIMATION_ID);
-
-      // show who won and who lost
-      const enemyTag = fighter.is(SAMURAI_TAG) ? NINJA_TAG : SAMURAI_TAG;
-      // the property "recursive" says that the Kaply will search for objects with the given tag
-      // also among children of game objects
-      const enemyObject = context.get(enemyTag, { recursive: true })[0];
-
-      const enemyStatus = context.add([
-        context.text("WINNER", { size: 16 }),
-        context.area(),
-        context.anchor("center"),
-        context.pos(),
-      ]);
-
-      const fighterStatus = context.add([
-        context.text("LOSER", { size: 16 }),
-        context.area(),
-        context.anchor("center"),
-        context.pos(),
-      ]);
-
-      context.onUpdate(() => {
-        enemyStatus.pos = context.vec2(
-          enemyObject.pos.x,
-          enemyObject.pos.y - 40,
-        );
-
-        // this is specifically for the ninja fighter
-        // so the text aligns with the dead ninja body more closely
-        if (fighter.is(NINJA_TAG) && fighter.isDead()) {
-          fighterStatus.pos = context.vec2(
-            fighter.pos.x - 25,
-            fighter.pos.y - 5,
-          );
-          return;
-        }
-
-        fighterStatus.pos = context.vec2(fighter.pos.x, fighter.pos.y - 40);
-
-        context.wait(5, () => context.go(ARENA_SCENE));
-      });
+    if (!fighter.getCurAnim()) {
+      fighter.play(IDLE_ANIMATION_ID);
     }
-  });
 
-  context.onUpdate(() => {
     // the "isJumping()" method is provided by the Kaplay and checks if a game object is not isGrounded
     // and is ascending at the same time
     if (
@@ -263,6 +211,69 @@ export const setFighterControls = (params: {
       !fighter.isDead
     ) {
       fighter.play(IDLE_ANIMATION_ID);
+    }
+  });
+
+  // when the Kaplay's method "hurt()" runs, it emits the "hurt" event
+  fighter.on(HURT_EVENT_ID, async () => {
+    await makeFighterBlink({ context, fighter });
+    if (fighter.hp() > 0 && fighter.getCurAnim().name !== HIT_ANIMATION_ID) {
+      fighter.play(HIT_ANIMATION_ID);
+      return;
+    }
+
+    if (
+      fighter.hp() === 0 &&
+      fighter.getCurAnim().name !== DYING_ANIMATION_ID
+    ) {
+      fighter.isDead = true;
+
+      // we need to unregister the event listeners, because a dead fighter should not react to events
+      onUpdateController.cancel();
+      onKeyDownController.cancel();
+      onKeyReleaseController.cancel();
+      onKeyPressController.cancel();
+
+      fighter.play(DYING_ANIMATION_ID);
+
+      // show who won and who lost
+      const enemyObject = getEnemyObject({ context, fighter });
+
+      const enemyStatus = context.add([
+        context.text("WINNER", { size: 16 }),
+        context.area(),
+        context.anchor("center"),
+        context.pos(),
+      ]);
+
+      const fighterStatus = context.add([
+        context.text("LOSER", { size: 16 }),
+        context.area(),
+        context.anchor("center"),
+        context.pos(),
+      ]);
+
+      context.onUpdate(() => {
+        enemyStatus.pos = context.vec2(
+          enemyObject.pos.x,
+          enemyObject.pos.y - 40,
+        );
+
+        // this is specifically for the ninja fighter
+        // so the text aligns with the dead ninja body more closely
+        if (fighter.is(NINJA_TAG) && fighter.isDead) {
+          fighterStatus.pos = context.vec2(
+            fighter.pos.x - 25,
+            fighter.pos.y - 5,
+          );
+        } else {
+          fighterStatus.pos = context.vec2(fighter.pos.x, fighter.pos.y - 40);
+        }
+
+        fighterStatus.pos = context.vec2(fighter.pos.x, fighter.pos.y - 40);
+
+        context.wait(5, () => context.go(ARENA_SCENE));
+      });
     }
   });
 };

@@ -1,4 +1,4 @@
-import type { KAPLAYCtx } from "kaplay";
+import type { GameObj, KAPLAYCtx } from "kaplay";
 import {
   ATTACK_ANIMATION_ID,
   DYING_ANIMATION_ID,
@@ -7,8 +7,10 @@ import {
   IDLE_ANIMATION_ID,
   JUMP_ANIMATION_ID,
   NINJA_SPRITE_ID,
+  NINJA_TAG,
   RUN_ANIMATION_ID,
   SAMURAI_SPRITE_ID,
+  SAMURAI_TAG,
 } from "../constants";
 
 export const loadEntitySprites = (context: KAPLAYCtx) => {
@@ -93,4 +95,18 @@ export const loadEntitySprites = (context: KAPLAYCtx) => {
       },
     },
   });
+};
+
+export const getEnemyObject = (params: {
+  context: KAPLAYCtx;
+  fighter: GameObj;
+}): GameObj => {
+  const { context, fighter } = params;
+
+  const enemyTag = fighter.is(SAMURAI_TAG) ? NINJA_TAG : SAMURAI_TAG;
+  // the property "recursive" says that the Kaply will search for objects with the given tag
+  // also among children of game objects
+  const enemyObject = context.get(enemyTag, { recursive: true })[0];
+
+  return enemyObject;
 };
