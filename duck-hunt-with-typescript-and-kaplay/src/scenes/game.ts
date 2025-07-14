@@ -2,11 +2,18 @@ import {
   BACKGROUND_SPRITE_ID,
   COLOR,
   CURSOR_SPRITE_ID,
+  DUCK_ESCAPED_GAME_STATE_ID,
+  DUCK_HUNTED_GAME_STATE_ID,
   DUCK_ICON_TAG_ID,
+  FONT_CONFIG,
   GUN_SHOT_SOUND_ID,
+  HUNT_END_GAME_STATE_ID,
   HUNT_START_GAME_STATE_ID,
-  NES_FONT_ID,
+  ROUND_END_GAME_STATE_ID,
+  ROUND_START_GAME_STATE_ID,
   SKY_TAG_ID,
+  TEXT_BOX_SPRITE_ID,
+  UI_APPEAR_SOUND_ID,
 } from "../constants";
 import gameStateManager from "../game-state-manager";
 import kaplayContext from "../kaplay-context";
@@ -25,20 +32,14 @@ export const game = () => {
   ]);
 
   const score = kaplayContext.add([
-    kaplayContext.text("0".toString().padStart(6, "0"), {
-      font: NES_FONT_ID,
-      size: 8,
-    }),
+    kaplayContext.text("0".toString().padStart(6, "0"), FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
     kaplayContext.pos(192, 196),
   ]);
 
   const roundCounter = kaplayContext.add([
-    kaplayContext.text("1", {
-      font: NES_FONT_ID,
-      size: 8,
-    }),
+    kaplayContext.text("1", FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
     kaplayContext.pos(42, 181),
@@ -75,8 +76,80 @@ export const game = () => {
     kaplayContext.z(3),
   ]);
 
+  // the method "onStateEnter()" is available on the game object,
+  // because we used the component "state()" on it during the creation of the object
+  const roundStartController = gameStateManager.onStateEnter(
+    ROUND_START_GAME_STATE_ID,
+    async (isFirstRound: boolean) => {
+      if (!isFirstRound) {
+        gameStateManager.duckSpeed += 50;
+        kaplayContext.play(UI_APPEAR_SOUND_ID);
+        gameStateManager.currentRoundNumber++;
+        roundCounter.text = gameStateManager.currentRoundNumber.toString();
+
+        const textBox = kaplayContext.add([
+          kaplayContext.sprite(TEXT_BOX_SPRITE_ID),
+          kaplayContext.anchor("center"),
+          kaplayContext.pos(
+            kaplayContext.center().x,
+            kaplayContext.center().y - 50,
+          ),
+          kaplayContext.z(2),
+        ]);
+        textBox.add([
+          kaplayContext.text("ROUND", FONT_CONFIG),
+          kaplayContext.anchor("center"),
+          // the position of a child is relative to the position of its parent
+          kaplayContext.pos(0, -10),
+        ]);
+        textBox.add([
+          kaplayContext.text(
+            gameStateManager.currentRoundNumber.toString(),
+            FONT_CONFIG,
+          ),
+          kaplayContext.anchor("center"),
+          // the position of a child is relative to the position of its parent
+          kaplayContext.pos(0, 4),
+        ]);
+
+        // wait 1 second before next round starts
+        await kaplayContext.wait(1);
+        kaplayContext.destroy(textBox);
+        gameStateManager.enterState(HUNT_START_GAME_STATE_ID);
+      }
+    },
+  );
+
+  const roundEndController = gameStateManager.onStateEnter(
+    ROUND_END_GAME_STATE_ID,
+    () => {},
+  );
+
+  const huntStartController = gameStateManager.onStateEnter(
+    HUNT_START_GAME_STATE_ID,
+    () => {},
+  );
+
+  const huntEndController = gameStateManager.onStateEnter(
+    HUNT_END_GAME_STATE_ID,
+    () => {},
+  );
+
+  const duckHuntedController = gameStateManager.onStateEnter(
+    DUCK_HUNTED_GAME_STATE_ID,
+    () => {},
+  );
+
+  const duckEscapedController = gameStateManager.onStateEnter(
+    DUCK_ESCAPED_GAME_STATE_ID,
+    () => {},
+  );
+
+  gameStateManager.enterState(ROUND_START_GAME_STATE_ID);
+
   kaplayContext.onClick(() => {
-    // the property "state" is available on the game object, because we used the component "state()" on it
+    // the property "state" is available on the game object,
+    // because we used the component "state()" on it during the creation of the object
     if (
       gameStateManager.state === HUNT_START_GAME_STATE_ID &&
       !gameStateManager.isGamePaused

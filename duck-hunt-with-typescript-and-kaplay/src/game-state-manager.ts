@@ -1,6 +1,5 @@
 import type { GameObj } from "kaplay";
 import {
-  CUT_SCENE_GAME_STATE_ID,
   DUCK_ESCAPED_GAME_STATE_ID,
   DUCK_HUNTED_GAME_STATE_ID,
   HUNT_END_GAME_STATE_ID,
@@ -21,7 +20,6 @@ const createGameStateManager = () => {
      */
     kaplayContext.state(MENU_GAME_STATE_ID, [
       MENU_GAME_STATE_ID,
-      CUT_SCENE_GAME_STATE_ID,
       ROUND_START_GAME_STATE_ID,
       ROUND_END_GAME_STATE_ID,
       HUNT_START_GAME_STATE_ID,

@@ -1,16 +1,16 @@
 import {
   BEST_SCORE_DATA,
   COLOR,
+  FONT_CONFIG,
   GAME_SCENE_ID,
   MENU_SPRITE_ID,
-  NES_FONT_ID,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
 export const mainMenu = () => {
   kaplayContext.add([kaplayContext.sprite(MENU_SPRITE_ID)]);
   kaplayContext.add([
-    kaplayContext.text("CLICK TO START", { font: NES_FONT_ID, size: 8 }),
+    kaplayContext.text("CLICK TO START", FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
     kaplayContext.anchor("center"),
@@ -18,10 +18,7 @@ export const mainMenu = () => {
   ]);
 
   kaplayContext.add([
-    kaplayContext.text("MADE BY DOMINIK STEFANCIK", {
-      font: NES_FONT_ID,
-      size: 8,
-    }),
+    kaplayContext.text("MADE BY DOMINIK STEFANCIK", FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
     // kaplayContext.anchor("center"),
@@ -32,10 +29,10 @@ export const mainMenu = () => {
 
   const bestScore: number = kaplayContext.getData(BEST_SCORE_DATA, 0)!;
   kaplayContext.add([
-    kaplayContext.text(`TOP SCORE: ${bestScore.toString().padStart(6, "0")}`, {
-      font: NES_FONT_ID,
-      size: 8,
-    }),
+    kaplayContext.text(
+      `TOP SCORE: ${bestScore.toString().padStart(6, "0")}`,
+      FONT_CONFIG,
+    ),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
     kaplayContext.pos(55, 184),
