@@ -38,7 +38,6 @@ export const mainMenu = () => {
     }),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
-    // kaplayContext.anchor("center"),
     kaplayContext.pos(55, 184),
     kaplayContext.color(COLOR.RED),
     kaplayContext.opacity(0.5),
