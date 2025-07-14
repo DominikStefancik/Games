@@ -4,6 +4,9 @@ export const GAME_OVER_SCENE_ID = "game-over";
 
 export const MENU_SPRITE_ID = "menu";
 export const BACKGROUND_SPRITE_ID = "background";
+export const CURSOR_SPRITE_ID = "cursor";
+
+export const GUN_SHOT_SOUND_ID = "gun-shot";
 
 export const NES_FONT_ID = "nes";
 

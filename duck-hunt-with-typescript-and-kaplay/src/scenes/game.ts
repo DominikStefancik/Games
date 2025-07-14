@@ -1,10 +1,14 @@
 import {
   BACKGROUND_SPRITE_ID,
   COLOR,
+  CURSOR_SPRITE_ID,
   DUCK_ICON_TAG_ID,
+  GUN_SHOT_SOUND_ID,
+  HUNT_START_GAME_STATE_ID,
   NES_FONT_ID,
   SKY_TAG_ID,
 } from "../constants";
+import gameStateManager from "../game-state-manager";
 import kaplayContext from "../kaplay-context";
 
 export const game = () => {
@@ -19,7 +23,8 @@ export const game = () => {
     kaplayContext.pos(0, -10),
     kaplayContext.z(1),
   ]);
-  kaplayContext.add([
+
+  const score = kaplayContext.add([
     kaplayContext.text("0".toString().padStart(6, "0"), {
       font: NES_FONT_ID,
       size: 8,
@@ -59,4 +64,48 @@ export const game = () => {
     kaplayContext.z(2),
     kaplayContext.color(COLOR.BLACK),
   ]);
+
+  const cursor = kaplayContext.add([
+    kaplayContext.sprite(CURSOR_SPRITE_ID),
+    kaplayContext.anchor("center"),
+    // we deliberately won't specify the position of the cursor,
+    // because we want to use the method "moveTo()" which is available only if no arguments are passed
+    kaplayContext.pos(),
+    // defines a "z-layer" which is used when we want to display game objects on top of each other
+    kaplayContext.z(3),
+  ]);
+
+  kaplayContext.onClick(() => {
+    // the property "state" is available on the game object, because we used the component "state()" on it
+    if (
+      gameStateManager.state === HUNT_START_GAME_STATE_ID &&
+      !gameStateManager.isGamePaused
+    ) {
+      if (gameStateManager.numberOfBulletsLeft > 0) {
+        kaplayContext.play(GUN_SHOT_SOUND_ID, { volume: 0.5 });
+        gameStateManager.numberOfBulletsLeft--;
+      }
+    }
+  });
+
+  kaplayContext.onUpdate(() => {
+    score.text = gameStateManager.currentScore.toString().padStart(6, "0");
+
+    switch (gameStateManager.numberOfBulletsLeft) {
+      case 3:
+        bulletsUIMask.width = 0;
+        break;
+      case 2:
+        bulletsUIMask.width = 8;
+        break;
+      case 1:
+        bulletsUIMask.width = 15;
+        break;
+      default:
+        bulletsUIMask.width = 22;
+    }
+
+    // move the cursor to the position of the mouse cursor
+    cursor.moveTo(kaplayContext.mousePos());
+  });
 };

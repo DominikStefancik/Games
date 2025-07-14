@@ -11,7 +11,7 @@ import {
 } from "./constants";
 import kaplayContext from "./kaplay-context";
 
-const createGameManager = () => {
+const createGameStateManager = () => {
   return kaplayContext.add([
     /*
      * the method "state()" creates a finite state machine
@@ -53,6 +53,6 @@ const createGameManager = () => {
 
 // this will ensure that a game manager object is only created once
 // and the same object exported as many times as needed
-const gameManager = createGameManager();
+const gameStateManager = createGameStateManager();
 
-export default gameManager;
+export default gameStateManager;
