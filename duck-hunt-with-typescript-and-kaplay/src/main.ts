@@ -4,9 +4,12 @@ import {
   MAIN_MENU_SCENE_ID,
 } from "./constants";
 import kaplayContext from "./kaplay-context";
+import { loadSceneAssets } from "./scenes/assets-loader";
+import { mainMenu } from "./scenes/main-menu";
 
-//
-kaplayContext.scene(MAIN_MENU_SCENE_ID, () => {});
+loadSceneAssets();
+
+kaplayContext.scene(MAIN_MENU_SCENE_ID, mainMenu);
 
 kaplayContext.scene(GAME_SCENE_ID, () => {});
 
