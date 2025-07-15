@@ -89,10 +89,6 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
           loop: true,
           speed: 2,
         });
-        this.fallingSound = kaplayContext.play(FALLING_SOUND_ID, {
-          loop: true,
-          speed: 2,
-        });
 
         const sky = kaplayContext.get(SKY_TAG_ID)[0];
 
@@ -118,7 +114,7 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
             this.play(currentAnimation);
           }
 
-          this.move(kaplayContext.vec2(this.flyDirection)).scale(this.speed);
+          this.move(kaplayContext.vec2(this.flyDirection).scale(this.speed));
         });
 
         this.onStateEnter(SHOT_DUCK_STATE_ID, async () => {
@@ -137,7 +133,7 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
            * which name is passed as an argument.
            */
           this.play(FALLING_ANIMATION_ID);
-          kaplayContext.play(FALLING_SOUND_ID, {
+          this.fallingSound = kaplayContext.play(FALLING_SOUND_ID, {
             volume: 0.7,
           });
         });

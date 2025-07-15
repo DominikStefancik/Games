@@ -1,14 +1,18 @@
 import {
   BACKGROUND_SPRITE_ID,
+  BEST_SCORE_DATA,
   COLOR,
   CURSOR_SPRITE_ID,
+  DUCK_COUNT_IN_ROUND,
   DUCK_ESCAPED_GAME_STATE_ID,
   DUCK_HUNTED_GAME_STATE_ID,
   DUCK_ICON_TAG_ID,
   FONT_CONFIG,
+  GAME_OVER_SCENE_ID,
   GUN_SHOT_SOUND_ID,
   HUNT_END_GAME_STATE_ID,
   HUNT_START_GAME_STATE_ID,
+  MAX_HUNT_NUMBER,
   ROUND_END_GAME_STATE_ID,
   ROUND_START_GAME_STATE_ID,
   SKY_TAG_ID,
@@ -16,6 +20,7 @@ import {
   UI_APPEAR_SOUND_ID,
 } from "../constants";
 import createDog from "../entities/dog";
+import createDuck from "../entities/duck";
 import gameStateManager from "../game-state-manager";
 import kaplayContext from "../kaplay-context";
 
@@ -127,27 +132,71 @@ export const game = () => {
 
   const roundEndController = gameStateManager.onStateEnter(
     ROUND_END_GAME_STATE_ID,
-    () => {},
+    () => {
+      if (gameStateManager.numberOfDucksShotInRound < 6) {
+        kaplayContext.go(GAME_OVER_SCENE_ID);
+        return;
+      }
+
+      // player gets a bonus if all ducks were shot
+      if (gameStateManager.numberOfDucksShotInRound === DUCK_COUNT_IN_ROUND) {
+        gameStateManager.currentScore += 500;
+      }
+
+      gameStateManager.numberOfDucksShotInRound = 0;
+      // restart the colour of each duck items to white
+      for (const icon of duckIcons.children) {
+        icon.color = kaplayContext.Color.fromHex(COLOR.WHITE);
+      }
+
+      gameStateManager.enterState(ROUND_START_GAME_STATE_ID);
+    },
   );
 
   const huntStartController = gameStateManager.onStateEnter(
     HUNT_START_GAME_STATE_ID,
-    () => {},
+    () => {
+      gameStateManager.currentHuntNumber++;
+      const duck = createDuck({
+        duckId: `${gameStateManager.currentHuntNumber - 1}`,
+        speed: gameStateManager.duckSpeed,
+      });
+      duck.setBehaviour();
+    },
   );
 
   const huntEndController = gameStateManager.onStateEnter(
     HUNT_END_GAME_STATE_ID,
-    () => {},
+    () => {
+      const bestScore = kaplayContext.getData(BEST_SCORE_DATA) as number;
+
+      if (bestScore < gameStateManager.currentScore) {
+        kaplayContext.setData(BEST_SCORE_DATA, gameStateManager.currentScore);
+      }
+
+      if (gameStateManager.currentHuntNumber < MAX_HUNT_NUMBER) {
+        gameStateManager.enterState(HUNT_START_GAME_STATE_ID);
+        return;
+      }
+
+      gameStateManager.currentHuntNumber = 1;
+      gameStateManager.enterState(ROUND_END_GAME_STATE_ID);
+    },
   );
 
   const duckHuntedController = gameStateManager.onStateEnter(
     DUCK_HUNTED_GAME_STATE_ID,
-    () => {},
+    () => {
+      gameStateManager.numberOfBulletsLeft = 3;
+      dog.catchFallenDuck();
+    },
   );
 
   const duckEscapedController = gameStateManager.onStateEnter(
     DUCK_ESCAPED_GAME_STATE_ID,
-    () => {},
+    () => {
+      dog.laugtAtPlayer();
+    },
   );
 
   kaplayContext.onClick(() => {

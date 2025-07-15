@@ -4,15 +4,18 @@ import {
   DETECTING_ANIMATION_ID,
   DOG_SPRITE_ID,
   DUCK_SPRITE_ID,
+  FALLING_ANIMATION_ID,
   FALLING_SOUND_ID,
   FLAPPING_SOUND_ID,
   FLYING_DIAGONAL_ANIMATION_ID,
+  FLYING_SIDE_ANIMATION_ID,
   IMPACT_SOUND_ID,
   JUMPING_ANIMATION_ID,
   LAUGHING_ANIMATION_ID,
   LAUGHING_SOUND_ID,
   QUACKING_SOUND_ID,
   SEARCHING_ANIMATION_ID,
+  SHOT_ANIMATION_ID,
   SNIFFING_SOUND_ID,
   SUCCESSFUL_HUNT_SOUND_ID,
 } from "../constants";
@@ -61,14 +64,14 @@ export const loadEntitiesAssets = () => {
         to: 2,
         loop: true,
       },
-      [SNIFFING_SOUND_ID]: {
+      [FLYING_SIDE_ANIMATION_ID]: {
         from: 3,
         to: 5,
         loop: true,
       },
       // if an animation consists only of a sigle frame, we just set its number
-      [DETECTING_ANIMATION_ID]: 6,
-      [CATCHING_ANIMATION_ID]: 7,
+      [SHOT_ANIMATION_ID]: 6,
+      [FALLING_ANIMATION_ID]: 7,
     },
   });
 

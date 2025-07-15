@@ -63,6 +63,10 @@ export const COLOR = {
   RED: "#cb7387",
   BLACK: "#000000",
   BEIGE: "#ffccc5",
+  WHITE: "#ffffff",
 };
 
 export const BEST_SCORE_DATA = "best-score";
+
+export const MAX_HUNT_NUMBER = 10;
+export const DUCK_COUNT_IN_ROUND = 10;
