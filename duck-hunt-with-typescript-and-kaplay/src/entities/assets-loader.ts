@@ -3,9 +3,15 @@ import {
   CATCHING_ANIMATION_ID,
   DETECTING_ANIMATION_ID,
   DOG_SPRITE_ID,
+  DUCK_SPRITE_ID,
+  FALLING_SOUND_ID,
+  FLAPPING_SOUND_ID,
+  FLYING_DIAGONAL_ANIMATION_ID,
+  IMPACT_SOUND_ID,
   JUMPING_ANIMATION_ID,
   LAUGHING_ANIMATION_ID,
   LAUGHING_SOUND_ID,
+  QUACKING_SOUND_ID,
   SEARCHING_ANIMATION_ID,
   SNIFFING_SOUND_ID,
   SUCCESSFUL_HUNT_SOUND_ID,
@@ -46,6 +52,25 @@ export const loadEntitiesAssets = () => {
       },
     },
   });
+  kaplayContext.loadSprite(DUCK_SPRITE_ID, "./graphics/duck.png", {
+    sliceX: 8,
+    sliceY: 1,
+    anims: {
+      [FLYING_DIAGONAL_ANIMATION_ID]: {
+        from: 0,
+        to: 2,
+        loop: true,
+      },
+      [SNIFFING_SOUND_ID]: {
+        from: 3,
+        to: 5,
+        loop: true,
+      },
+      // if an animation consists only of a sigle frame, we just set its number
+      [DETECTING_ANIMATION_ID]: 6,
+      [CATCHING_ANIMATION_ID]: 7,
+    },
+  });
 
   // load sounds
   kaplayContext.loadSound(SNIFFING_SOUND_ID, "./sounds/sniffing.wav");
@@ -55,4 +80,8 @@ export const loadEntitiesAssets = () => {
     SUCCESSFUL_HUNT_SOUND_ID,
     "./sounds/successful-hunt.wav",
   );
+  kaplayContext.loadSound(QUACKING_SOUND_ID, "./sounds/quacking.wav");
+  kaplayContext.loadSound(FLAPPING_SOUND_ID, "./sounds/flapping.ogg");
+  kaplayContext.loadSound(FALLING_SOUND_ID, "./sounds/fall.wav");
+  kaplayContext.loadSound(IMPACT_SOUND_ID, "./sounds/impact.wav");
 };
