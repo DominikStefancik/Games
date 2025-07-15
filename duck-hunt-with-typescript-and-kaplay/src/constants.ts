@@ -6,9 +6,14 @@ export const MENU_SPRITE_ID = "menu";
 export const BACKGROUND_SPRITE_ID = "background";
 export const TEXT_BOX_SPRITE_ID = "text-box";
 export const CURSOR_SPRITE_ID = "cursor";
+export const DOG_SPRITE_ID = "dog";
 
 export const UI_APPEAR_SOUND_ID = "ui-appear";
 export const GUN_SHOT_SOUND_ID = "gun-shot";
+export const SNIFFING_SOUND_ID = "sniffing";
+export const BARKING_SOUND_ID = "barking";
+export const LAUGHING_SOUND_ID = "laughing";
+export const SUCCESSFUL_HUNT_SOUND_ID = "successful-hunt";
 
 export const NES_FONT_ID = "nes";
 export const FONT_CONFIG = {
@@ -26,6 +31,19 @@ export const HUNT_START_GAME_STATE_ID = "hunt-start";
 export const HUNT_END_GAME_STATE_ID = "hunt-end";
 export const DUCK_HUNTED_GAME_STATE_ID = "duck-hunted";
 export const DUCK_ESCAPED_GAME_STATE_ID = "duck-escaped";
+
+export const SEARCH_DOG_STATE_ID = "search";
+export const SNIF_DOG_STATE_ID = "snif";
+export const DETECT_DOG_STATE_ID = "detect";
+export const JUMP_DOG_STATE_ID = "jump";
+export const DROP_DOG_STATE_ID = "drop";
+
+export const SEARCHING_ANIMATION_ID = "searching";
+export const SNIFFING_ANIMATION_ID = "sniffing";
+export const DETECTING_ANIMATION_ID = "detecting";
+export const JUMPING_ANIMATION_ID = "jumping";
+export const CATCHING_ANIMATION_ID = "catching";
+export const LAUGHING_ANIMATION_ID = "laughing";
 
 export const COLOR = {
   BLUE: "#9fa2cb",

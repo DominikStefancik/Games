@@ -15,6 +15,7 @@ import {
   TEXT_BOX_SPRITE_ID,
   UI_APPEAR_SOUND_ID,
 } from "../constants";
+import createDog from "../entities/dog";
 import gameStateManager from "../game-state-manager";
 import kaplayContext from "../kaplay-context";
 
@@ -76,6 +77,9 @@ export const game = () => {
     kaplayContext.z(3),
   ]);
 
+  const dog = createDog(kaplayContext.vec2(0, kaplayContext.center().y));
+  dog.searchForDucks();
+
   // the method "onStateEnter()" is available on the game object,
   // because we used the component "state()" on it during the creation of the object
   const roundStartController = gameStateManager.onStateEnter(
@@ -83,40 +87,41 @@ export const game = () => {
     async (isFirstRound: boolean) => {
       if (!isFirstRound) {
         gameStateManager.duckSpeed += 50;
-        kaplayContext.play(UI_APPEAR_SOUND_ID);
-        gameStateManager.currentRoundNumber++;
-        roundCounter.text = gameStateManager.currentRoundNumber.toString();
-
-        const textBox = kaplayContext.add([
-          kaplayContext.sprite(TEXT_BOX_SPRITE_ID),
-          kaplayContext.anchor("center"),
-          kaplayContext.pos(
-            kaplayContext.center().x,
-            kaplayContext.center().y - 50,
-          ),
-          kaplayContext.z(2),
-        ]);
-        textBox.add([
-          kaplayContext.text("ROUND", FONT_CONFIG),
-          kaplayContext.anchor("center"),
-          // the position of a child is relative to the position of its parent
-          kaplayContext.pos(0, -10),
-        ]);
-        textBox.add([
-          kaplayContext.text(
-            gameStateManager.currentRoundNumber.toString(),
-            FONT_CONFIG,
-          ),
-          kaplayContext.anchor("center"),
-          // the position of a child is relative to the position of its parent
-          kaplayContext.pos(0, 4),
-        ]);
-
-        // wait 1 second before next round starts
-        await kaplayContext.wait(1);
-        kaplayContext.destroy(textBox);
-        gameStateManager.enterState(HUNT_START_GAME_STATE_ID);
       }
+
+      kaplayContext.play(UI_APPEAR_SOUND_ID);
+      gameStateManager.currentRoundNumber++;
+      roundCounter.text = gameStateManager.currentRoundNumber.toString();
+
+      const textBox = kaplayContext.add([
+        kaplayContext.sprite(TEXT_BOX_SPRITE_ID),
+        kaplayContext.anchor("center"),
+        kaplayContext.pos(
+          kaplayContext.center().x,
+          kaplayContext.center().y - 50,
+        ),
+        kaplayContext.z(2),
+      ]);
+      textBox.add([
+        kaplayContext.text("ROUND", FONT_CONFIG),
+        kaplayContext.anchor("center"),
+        // the position of a child is relative to the position of its parent
+        kaplayContext.pos(0, -10),
+      ]);
+      textBox.add([
+        kaplayContext.text(
+          gameStateManager.currentRoundNumber.toString(),
+          FONT_CONFIG,
+        ),
+        kaplayContext.anchor("center"),
+        // the position of a child is relative to the position of its parent
+        kaplayContext.pos(0, 4),
+      ]);
+
+      // wait 1 second before next round starts
+      await kaplayContext.wait(1);
+      kaplayContext.destroy(textBox);
+      gameStateManager.enterState(HUNT_START_GAME_STATE_ID);
     },
   );
 
@@ -144,8 +149,6 @@ export const game = () => {
     DUCK_ESCAPED_GAME_STATE_ID,
     () => {},
   );
-
-  gameStateManager.enterState(ROUND_START_GAME_STATE_ID);
 
   kaplayContext.onClick(() => {
     // the property "state" is available on the game object,
@@ -180,5 +183,15 @@ export const game = () => {
 
     // move the cursor to the position of the mouse cursor
     cursor.moveTo(kaplayContext.mousePos());
+  });
+
+  kaplayContext.onSceneLeave(() => {
+    roundStartController.cancel();
+    roundEndController.cancel();
+    huntStartController.cancel();
+    huntEndController.cancel();
+    duckHuntedController.cancel();
+    duckEscapedController.cancel();
+    gameStateManager.resetGameState();
   });
 };

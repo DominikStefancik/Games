@@ -3,12 +3,14 @@ import {
   GAME_SCENE_ID,
   MAIN_MENU_SCENE_ID,
 } from "./constants";
+import { loadEntitiesAssets } from "./entities/assets-loader";
 import kaplayContext from "./kaplay-context";
 import { loadSceneAssets } from "./scenes/assets-loader";
 import { game } from "./scenes/game";
 import { mainMenu } from "./scenes/main-menu";
 
 loadSceneAssets();
+loadEntitiesAssets();
 
 kaplayContext.scene(MAIN_MENU_SCENE_ID, mainMenu);
 
