@@ -8,6 +8,7 @@ import {
   DUCK_HUNTED_GAME_STATE_ID,
   DUCK_ICON_TAG_ID,
   FONT_CONFIG,
+  FOREST_AMBIANCE_SOUND_ID,
   GAME_OVER_SCENE_ID,
   GUN_SHOT_SOUND_ID,
   HUNT_END_GAME_STATE_ID,
@@ -234,7 +235,13 @@ export const game = () => {
     cursor.moveTo(kaplayContext.mousePos());
   });
 
+  const forestAmbianceSound = kaplayContext.play(FOREST_AMBIANCE_SOUND_ID, {
+    volume: 0.1,
+    loop: true,
+  });
+
   kaplayContext.onSceneLeave(() => {
+    forestAmbianceSound.stop();
     roundStartController.cancel();
     roundEndController.cancel();
     huntStartController.cancel();

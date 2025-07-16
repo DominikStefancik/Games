@@ -21,7 +21,6 @@ export const mainMenu = () => {
     kaplayContext.text("MADE BY DOMINIK STEFANCIK", FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
-    // kaplayContext.anchor("center"),
     kaplayContext.pos(10, 215),
     kaplayContext.color(COLOR.BLUE),
     kaplayContext.opacity(0.5),

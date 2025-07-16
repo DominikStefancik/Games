@@ -9,6 +9,7 @@ export const CURSOR_SPRITE_ID = "cursor";
 export const DOG_SPRITE_ID = "dog";
 export const DUCK_SPRITE_ID = "duck";
 
+export const FOREST_AMBIANCE_SOUND_ID = "forest-ambiance";
 export const UI_APPEAR_SOUND_ID = "ui-appear";
 export const GUN_SHOT_SOUND_ID = "gun-shot";
 export const SNIFFING_SOUND_ID = "sniffing";

@@ -1,6 +1,7 @@
 import {
   BACKGROUND_SPRITE_ID,
   CURSOR_SPRITE_ID,
+  FOREST_AMBIANCE_SOUND_ID,
   GUN_SHOT_SOUND_ID,
   MENU_SPRITE_ID,
   NES_FONT_ID,
@@ -18,6 +19,10 @@ export const loadSceneAssets = () => {
   kaplayContext.loadSprite(TEXT_BOX_SPRITE_ID, "./graphics/text-box.png");
 
   // load sounds
+  kaplayContext.loadSound(
+    FOREST_AMBIANCE_SOUND_ID,
+    "./sounds/forest-ambiance.wav",
+  );
   kaplayContext.loadSound(UI_APPEAR_SOUND_ID, "./sounds/ui-appear.wav");
   kaplayContext.loadSound(GUN_SHOT_SOUND_ID, "./sounds/gun-shot.wav");
 
