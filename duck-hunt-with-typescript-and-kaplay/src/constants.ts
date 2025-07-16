@@ -29,6 +29,7 @@ export const FONT_CONFIG = {
 
 export const SKY_TAG_ID = "sky";
 export const DUCK_ICON_TAG_ID = "duck-icon";
+export const PAUSED_TEXT_TAG_ID = "paused-text";
 
 export const MENU_GAME_STATE_ID = "menu";
 export const ROUND_START_GAME_STATE_ID = "round-start";
@@ -71,3 +72,5 @@ export const BEST_SCORE_DATA = "best-score";
 
 export const MAX_HUNT_NUMBER = 10;
 export const DUCK_COUNT_IN_ROUND = 10;
+
+export const PAUSE_KEY = "space";

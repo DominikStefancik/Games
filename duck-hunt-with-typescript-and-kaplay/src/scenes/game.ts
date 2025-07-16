@@ -14,6 +14,8 @@ import {
   HUNT_END_GAME_STATE_ID,
   HUNT_START_GAME_STATE_ID,
   MAX_HUNT_NUMBER,
+  PAUSE_KEY,
+  PAUSED_TEXT_TAG_ID,
   ROUND_END_GAME_STATE_ID,
   ROUND_START_GAME_STATE_ID,
   SKY_TAG_ID,
@@ -249,5 +251,36 @@ export const game = () => {
     duckHuntedController.cancel();
     duckEscapedController.cancel();
     gameStateManager.resetGameState();
+  });
+
+  kaplayContext.onKeyPress((key) => {
+    const audioContext = new AudioContext();
+
+    if (key === PAUSE_KEY) {
+      kaplayContext.getTreeRoot().paused = !kaplayContext.getTreeRoot().paused;
+    }
+
+    gameStateManager.isGamePaused = kaplayContext.getTreeRoot().paused;
+
+    if (kaplayContext.getTreeRoot().paused) {
+      audioContext.suspend();
+      kaplayContext.add([
+        kaplayContext.text("PAUSED!", FONT_CONFIG),
+        kaplayContext.pos(
+          kaplayContext.center().x,
+          kaplayContext.center().y - 30,
+        ),
+        kaplayContext.anchor("center"),
+        kaplayContext.z(3),
+        PAUSED_TEXT_TAG_ID,
+      ]);
+    } else {
+      audioContext.resume();
+      const pausedText = kaplayContext.get(PAUSED_TEXT_TAG_ID)[0];
+
+      if (pausedText) {
+        kaplayContext.destroy(pausedText);
+      }
+    }
   });
 };
