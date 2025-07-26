@@ -9,13 +9,14 @@ import {
 } from "./constants";
 import kaplayContext from "./kaplay-context";
 import { loadSceneAssets } from "./scenes/assets-loader";
+import { controls } from "./scenes/controls";
 import { menu } from "./scenes/menu";
 
 loadSceneAssets();
 
 const scenes: { [key: string]: () => void } = {
   [MENU_SCENE]: menu,
-  [CONTROLS_SCENE]: () => {},
+  [CONTROLS_SCENE]: controls,
   [FIRST_LEVEL_SCENE]: () => {},
   [SECOND_LEVEL_SCENE]: () => {},
   [THIRD_LEVEL_SCENE]: () => {},
