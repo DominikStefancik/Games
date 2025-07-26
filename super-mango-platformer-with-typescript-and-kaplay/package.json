@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": "Dominik Stefancik",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
