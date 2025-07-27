@@ -1,21 +1,17 @@
 import {
-  ARROW_DOWN_KEY_SPRITE,
-  ARROW_LEFT_KEY_SPRITE,
-  ARROW_RIGHT_KEY_SPRITE,
-  ARROW_UP_KEY_SPRITE,
-  CONFIRM_UI_SOUND,
+  BACKGROUND_SPRITE,
+  KEY_CONTROL_SPRITE,
   ENTER_KEY,
-  FIRST_LEVEL_SCENE,
-  FOREST_BACKGROUND_SPRITE,
   ROUND_FONT,
-  SPACE_KEY_SPRITE,
+  SCENE,
+  SOUND,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 import { displayBlinkingMessage } from "./helpers";
 
 export const controls = () => {
   kaplayContext.add([
-    kaplayContext.sprite(FOREST_BACKGROUND_SPRITE),
+    kaplayContext.sprite(BACKGROUND_SPRITE.forest),
     kaplayContext.scale(4),
   ]);
   kaplayContext.add([
@@ -33,23 +29,23 @@ export const controls = () => {
     kaplayContext.pos(kaplayContext.center().x + 30, kaplayContext.center().y),
   ]);
   controlsPrompts.add([
-    kaplayContext.sprite(ARROW_UP_KEY_SPRITE),
+    kaplayContext.sprite(KEY_CONTROL_SPRITE.arrowUp),
     // the position of a child game object is relative to its parent game object
     kaplayContext.pos(0, -80),
   ]);
-  controlsPrompts.add([kaplayContext.sprite(ARROW_DOWN_KEY_SPRITE)]);
+  controlsPrompts.add([kaplayContext.sprite(KEY_CONTROL_SPRITE.arrowDown)]);
   controlsPrompts.add([
-    kaplayContext.sprite(ARROW_LEFT_KEY_SPRITE),
+    kaplayContext.sprite(KEY_CONTROL_SPRITE.arrowLeft),
     // the position of a child game object is relative to its parent game object
     kaplayContext.pos(-80, 0),
   ]);
   controlsPrompts.add([
-    kaplayContext.sprite(ARROW_RIGHT_KEY_SPRITE),
+    kaplayContext.sprite(KEY_CONTROL_SPRITE.arrowRight),
     // the position of a child game object is relative to its parent game object
     kaplayContext.pos(80, 0),
   ]);
   controlsPrompts.add([
-    kaplayContext.sprite(SPACE_KEY_SPRITE),
+    kaplayContext.sprite(KEY_CONTROL_SPRITE.space),
     // the position of a child game object is relative to its parent game object
     kaplayContext.pos(-200, 0),
   ]);
@@ -73,7 +69,7 @@ export const controls = () => {
   );
 
   kaplayContext.onKeyPress(ENTER_KEY, () => {
-    kaplayContext.play(CONFIRM_UI_SOUND, { speed: 1.5 });
-    kaplayContext.go(FIRST_LEVEL_SCENE);
+    kaplayContext.play(SOUND.confirmUi, { speed: 1.5 });
+    kaplayContext.go(SCENE.firstLevel);
   });
 };

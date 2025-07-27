@@ -1,4 +1,4 @@
-import { BRIDGE_SPRITE, COIN_SPRITE, TAG, TILE_ANIMATION } from "../constants";
+import { SCENE_ELEMENT_SPRITE, TAG, TILE_ANIMATION } from "../constants";
 import kaplayContext from "../kaplay-context";
 
 export type TileType = "grass";
@@ -7,7 +7,7 @@ export type TileType = "grass";
 export const generateMappings = (tileType: TileType) => {
   return {
     0: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.topLeft,
       }),
       kaplayContext.area(),
@@ -20,7 +20,7 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.offscreen(),
     ],
     1: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.topMiddle,
       }),
       kaplayContext.area(),
@@ -28,7 +28,7 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.offscreen(),
     ],
     2: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.topRight,
       }),
       kaplayContext.area(),
@@ -36,7 +36,7 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.offscreen(),
     ],
     3: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.middleLeft,
       }),
       kaplayContext.area(),
@@ -44,7 +44,7 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.offscreen(),
     ],
     4: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.middleMiddle,
       }),
       kaplayContext.area(),
@@ -52,7 +52,7 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.offscreen(),
     ],
     5: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.middleRight,
       }),
       kaplayContext.area(),
@@ -60,25 +60,25 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.offscreen(),
     ],
     6: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.bottomLeft,
       }),
       kaplayContext.offscreen(),
     ],
     7: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.bottomMiddle,
       }),
       kaplayContext.offscreen(),
     ],
     8: () => [
-      kaplayContext.sprite(`${tileType}-tileset`, {
+      kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.bottomRight,
       }),
       kaplayContext.offscreen(),
     ],
     9: () => [
-      kaplayContext.sprite(`${tileType}-oneway`, {
+      kaplayContext.sprite(`${tileType}Oneway`, {
         anim: TILE_ANIMATION.topLeft,
       }),
       kaplayContext.area({
@@ -89,7 +89,7 @@ export const generateMappings = (tileType: TileType) => {
       TAG.passthrough,
     ],
     a: () => [
-      kaplayContext.sprite(`${tileType}-oneway`, {
+      kaplayContext.sprite(`${tileType}Oneway`, {
         anim: TILE_ANIMATION.topMiddle,
       }),
       kaplayContext.area({
@@ -100,7 +100,7 @@ export const generateMappings = (tileType: TileType) => {
       TAG.passthrough,
     ],
     b: () => [
-      kaplayContext.sprite(`${tileType}-oneway`, {
+      kaplayContext.sprite(`${tileType}Oneway`, {
         anim: TILE_ANIMATION.topRight,
       }),
       kaplayContext.area({
@@ -111,31 +111,31 @@ export const generateMappings = (tileType: TileType) => {
       TAG.passthrough,
     ],
     c: () => [
-      kaplayContext.sprite(`${tileType}-oneway`, {
+      kaplayContext.sprite(`${tileType}Oneway`, {
         anim: TILE_ANIMATION.middleLeft,
       }),
       kaplayContext.offscreen(),
     ],
     d: () => [
-      kaplayContext.sprite(`${tileType}-oneway`, {
+      kaplayContext.sprite(`${tileType}Oneway`, {
         anim: TILE_ANIMATION.middleMiddle,
       }),
       kaplayContext.offscreen(),
     ],
     e: () => [
-      kaplayContext.sprite(`${tileType}-oneway`, {
+      kaplayContext.sprite(`${tileType}Oneway`, {
         anim: TILE_ANIMATION.middleRight,
       }),
       kaplayContext.offscreen(),
     ],
     o: () => [
-      kaplayContext.sprite(BRIDGE_SPRITE),
+      kaplayContext.sprite(SCENE_ELEMENT_SPRITE.bridge),
       kaplayContext.area(),
       kaplayContext.body({ isStatic: true }),
       kaplayContext.offscreen(),
     ],
     "@": () => [
-      kaplayContext.sprite(COIN_SPRITE),
+      kaplayContext.sprite(SCENE_ELEMENT_SPRITE.coin),
       kaplayContext.area(),
       kaplayContext.offscreen(),
       TAG.coin,

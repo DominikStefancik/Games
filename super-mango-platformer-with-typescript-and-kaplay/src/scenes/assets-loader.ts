@@ -1,20 +1,13 @@
 import {
-  ARROW_DOWN_KEY_SPRITE,
-  ARROW_LEFT_KEY_SPRITE,
-  ARROW_RIGHT_KEY_SPRITE,
-  ARROW_UP_KEY_SPRITE,
-  BRIDGE_SPRITE,
-  COIN_SPRITE,
-  CONFIRM_UI_SOUND,
-  FOREST_BACKGROUND_SPRITE,
-  GRASS_ONEWAY_TILESET_SPRITE,
-  GRASS_TILESET_SPRITE,
+  BACKGROUND_SPRITE,
+  KEY_CONTROL_SPRITE,
   LOGO_SPRITE,
   ROUND_FONT,
-  SPACE_KEY_SPRITE,
+  SOUND,
   TILE_ANIMATION,
+  TILESET_SPRITE,
   WAVE_ANIMATION,
-  WAVE_TYPE_SPRITE,
+  SCENE_ELEMENT_SPRITE,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
@@ -29,38 +22,38 @@ const loadFonts = () => {
 };
 
 const loadSounds = () => {
-  kaplayContext.loadSound(CONFIRM_UI_SOUND, "./sounds/confirm-ui.wav");
+  kaplayContext.loadSound(SOUND.confirmUi, "./sounds/confirm-ui.wav");
 };
 
 const loadSprites = () => {
   kaplayContext.loadSprite(
-    FOREST_BACKGROUND_SPRITE,
+    BACKGROUND_SPRITE.forest,
     "./graphics/backgrounds/Forest_Background_0.png",
   );
   kaplayContext.loadSprite(LOGO_SPRITE, "./Logo.png");
   kaplayContext.loadSprite(
-    ARROW_UP_KEY_SPRITE,
+    KEY_CONTROL_SPRITE.arrowUp,
     "./graphics/controls/Arrow_Up_Key_Dark.png",
   );
   kaplayContext.loadSprite(
-    ARROW_DOWN_KEY_SPRITE,
+    KEY_CONTROL_SPRITE.arrowDown,
     "./graphics/controls/Arrow_Down_Key_Dark.png",
   );
   kaplayContext.loadSprite(
-    ARROW_LEFT_KEY_SPRITE,
+    KEY_CONTROL_SPRITE.arrowLeft,
     "./graphics/controls/Arrow_Left_Key_Dark.png",
   );
   kaplayContext.loadSprite(
-    ARROW_RIGHT_KEY_SPRITE,
+    KEY_CONTROL_SPRITE.arrowRight,
     "./graphics/controls/Arrow_Right_Key_Dark.png",
   );
   kaplayContext.loadSprite(
-    SPACE_KEY_SPRITE,
+    KEY_CONTROL_SPRITE.space,
     "./graphics/controls/Space_Key_Dark.png",
   );
 
   kaplayContext.loadSprite(
-    GRASS_TILESET_SPRITE,
+    TILESET_SPRITE.grassTileset,
     "./graphics/tilesets/Grass_Tileset.png",
     // the third argument defines how a picture will be devided into frames/slices
     {
@@ -80,7 +73,7 @@ const loadSprites = () => {
     },
   );
   kaplayContext.loadSprite(
-    GRASS_ONEWAY_TILESET_SPRITE,
+    TILESET_SPRITE.grassOneway,
     "./graphics/tilesets/Grass_Oneway.png",
     // the third argument defines how a picture will be devided into frames/slices
     {
@@ -99,10 +92,16 @@ const loadSprites = () => {
       },
     },
   );
-  kaplayContext.loadSprite(BRIDGE_SPRITE, "./graphics/scene-elements/Coin.png");
-  kaplayContext.loadSprite(COIN_SPRITE, "./graphics/scene-elements/Bridge.png");
   kaplayContext.loadSprite(
-    WAVE_TYPE_SPRITE.water,
+    SCENE_ELEMENT_SPRITE.bridge,
+    "./graphics/scene-elements/Bridge.png",
+  );
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.coin,
+    "./graphics/scene-elements/Coin.png",
+  );
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.water,
     "./graphics/scene-elements/Water.png",
     // the third argument defines how a picture will be devided into frames/slices
     {

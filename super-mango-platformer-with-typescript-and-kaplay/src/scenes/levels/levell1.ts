@@ -1,7 +1,7 @@
 import {
-  FOREST_BACKGROUND_SPRITE,
   WAVE_ANIMATION,
-  WAVE_TYPE_SPRITE,
+  SCENE_ELEMENT_SPRITE,
+  BACKGROUND_SPRITE,
 } from "../../constants";
 import {
   level1Layout,
@@ -10,7 +10,7 @@ import {
 import { drawBackground, drawLevelLayout, drawWaves } from "./helpers";
 
 export const level1 = () => {
-  drawBackground(FOREST_BACKGROUND_SPRITE);
+  drawBackground(BACKGROUND_SPRITE.forest);
   drawLevelLayout(level1Layout, level1Mappings);
-  drawWaves(WAVE_TYPE_SPRITE.water, WAVE_ANIMATION);
+  drawWaves(SCENE_ELEMENT_SPRITE.water, WAVE_ANIMATION);
 };

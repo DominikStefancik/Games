@@ -1,10 +1,6 @@
 import type { GameObj, Vec2 } from "kaplay";
 import kaplayContext from "../kaplay-context";
-import {
-  ROUND_FONT,
-  TEXT_FLASH_DOWN_STATE,
-  TEXT_FLASH_UP_STATE,
-} from "../constants";
+import { ROUND_FONT, TEXT_STATE } from "../constants";
 
 export const displayBlinkingMessage = (
   text: string,
@@ -19,19 +15,19 @@ export const displayBlinkingMessage = (
     kaplayContext.pos(position),
     kaplayContext.opacity(),
     // a state machine for a blinking message
-    kaplayContext.state(TEXT_FLASH_UP_STATE, [
-      TEXT_FLASH_UP_STATE,
-      TEXT_FLASH_DOWN_STATE,
+    kaplayContext.state(TEXT_STATE.flashUp, [
+      TEXT_STATE.flashUp,
+      TEXT_STATE.flashDown,
     ]),
   ]);
 
   /*
-   * A blinking effect is done by changing the message states, between "flash-up" and "flash-down"
-   * When the "flash-up" state is entered, the text opacity is slowly (by tweening) decreased to 0
-   * When the "flash-do" state is entered, the text opacity is slowly (by tweening) increased to 1
+   * A blinking effect is done by changing the message states, between "flashUp" and "flashDown"
+   * When the "flashUp" state is entered, the text opacity is slowly (by tweening) decreased to 0
+   * When the "flashDown" state is entered, the text opacity is slowly (by tweening) increased to 1
    * After each state finishes, the another is entered
    */
-  message.onStateEnter(TEXT_FLASH_UP_STATE, async () => {
+  message.onStateEnter(TEXT_STATE.flashUp, async () => {
     await kaplayContext.tween(
       message.opacity,
       0,
@@ -40,10 +36,10 @@ export const displayBlinkingMessage = (
       kaplayContext.easings.linear,
     );
 
-    message.enterState(TEXT_FLASH_DOWN_STATE);
+    message.enterState(TEXT_STATE.flashDown);
   });
 
-  message.onStateEnter(TEXT_FLASH_DOWN_STATE, async () => {
+  message.onStateEnter(TEXT_STATE.flashDown, async () => {
     await kaplayContext.tween(
       message.opacity,
       1,
@@ -52,7 +48,7 @@ export const displayBlinkingMessage = (
       kaplayContext.easings.linear,
     );
 
-    message.enterState(TEXT_FLASH_UP_STATE);
+    message.enterState(TEXT_STATE.flashUp);
   });
 
   return message;

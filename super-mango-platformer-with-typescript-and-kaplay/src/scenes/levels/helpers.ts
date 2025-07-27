@@ -41,12 +41,12 @@ export const drawLevelLayout = (
  * Waves are rendered only once and they are fixed.
  * Then when a camera is moving the screen, the waves move with it.
  */
-export const drawWaves = (type: string, animation: string) => {
+export const drawWaves = (sprite: string, animation: string) => {
   let offset = -100;
 
   for (let index = 0; index < 21; index++) {
     kaplayContext.add([
-      kaplayContext.sprite(type, { anim: animation }),
+      kaplayContext.sprite(sprite, { anim: animation }),
       kaplayContext.scale(4),
       kaplayContext.pos(offset, 600),
       kaplayContext.fixed(),

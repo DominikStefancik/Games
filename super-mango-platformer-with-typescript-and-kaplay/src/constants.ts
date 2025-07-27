@@ -1,30 +1,44 @@
-export const MENU_SCENE = "menu";
-export const CONTROLS_SCENE = "controls";
-export const FIRST_LEVEL_SCENE = "first-level";
-export const SECOND_LEVEL_SCENE = "second-level";
-export const THIRD_LEVEL_SCENE = "third-level";
-export const GAME_FINISHED_SCENE = "game-finished";
-export const GAME_OVER_SCENE = "game-over";
+export const SCENE = {
+  menu: "menu",
+  controls: "controls",
+  firstLevel: "firstLevel",
+  secondLevel: "secondLevel",
+  thirdLevel: "thirdLevel",
+  gameFinished: "gameFinished",
+  gameOver: "gameOver",
+};
 
 export const ROUND_FONT = "round";
 
-export const CONFIRM_UI_SOUND = "confirm-ui";
+export const SOUND = {
+  confirmUi: "confirmUi",
+};
 
 export const LOGO_SPRITE = "logo";
-export const ARROW_UP_KEY_SPRITE = "arrow-up";
-export const ARROW_DOWN_KEY_SPRITE = "arrow-down";
-export const ARROW_LEFT_KEY_SPRITE = "arrow-left";
-export const ARROW_RIGHT_KEY_SPRITE = "arrow-right";
-export const SPACE_KEY_SPRITE = "space";
-export const FOREST_BACKGROUND_SPRITE = "forest-background";
-export const GRASS_TILESET_SPRITE = "grass-tileset";
-export const GRASS_ONEWAY_TILESET_SPRITE = "grass-oneway";
-export const BRIDGE_SPRITE = "bridge";
-export const COIN_SPRITE = "coin";
-export const WAVE_TYPE_SPRITE = {
+
+export const KEY_CONTROL_SPRITE = {
+  arrowUp: "arrowUp",
+  arrowDown: "arrowDown",
+  arrowLeft: "arrowLeft",
+  arrowRight: "arrowRight",
+  space: "space",
+};
+
+export const BACKGROUND_SPRITE = {
+  forest: "forest",
+};
+
+export const TILESET_SPRITE = {
+  grassTileset: "grassTileset",
+  grassOneway: "grassOneway",
+};
+
+export const SCENE_ELEMENT_SPRITE = {
   water: "water",
-  lava: "lave",
+  lava: "lava",
   cloud: "cloud",
+  bridge: "bridge",
+  coin: "coin",
 };
 
 export const TILE_ANIMATION = {
@@ -38,6 +52,7 @@ export const TILE_ANIMATION = {
   bottomMiddle: "bottomMiddle",
   bottomRight: "bottomRight",
 };
+
 export const WAVE_ANIMATION = "wave";
 
 export const TAG = {
@@ -45,7 +60,9 @@ export const TAG = {
   coin: "coin",
 };
 
-export const TEXT_FLASH_UP_STATE = "flash-up";
-export const TEXT_FLASH_DOWN_STATE = "flash-down";
+export const TEXT_STATE = {
+  flashUp: "flashUp",
+  flashDown: "flashDown",
+};
 
 export const ENTER_KEY = "enter";

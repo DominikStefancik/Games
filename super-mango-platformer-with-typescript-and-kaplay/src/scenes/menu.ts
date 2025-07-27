@@ -1,16 +1,16 @@
 import {
-  CONFIRM_UI_SOUND,
-  CONTROLS_SCENE,
+  BACKGROUND_SPRITE,
   ENTER_KEY,
-  FOREST_BACKGROUND_SPRITE,
   LOGO_SPRITE,
+  SCENE,
+  SOUND,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 import { displayBlinkingMessage } from "./helpers";
 
 export const menu = () => {
   kaplayContext.add([
-    kaplayContext.sprite(FOREST_BACKGROUND_SPRITE),
+    kaplayContext.sprite(BACKGROUND_SPRITE.forest),
     kaplayContext.scale(4),
   ]);
   kaplayContext.add([
@@ -32,7 +32,7 @@ export const menu = () => {
   );
 
   kaplayContext.onKeyPress(ENTER_KEY, () => {
-    kaplayContext.play(CONFIRM_UI_SOUND, { speed: 1.5 });
-    kaplayContext.go(CONTROLS_SCENE);
+    kaplayContext.play(SOUND.confirmUi, { speed: 1.5 });
+    kaplayContext.go(SCENE.controls);
   });
 };

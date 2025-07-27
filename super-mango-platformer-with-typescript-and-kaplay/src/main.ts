@@ -1,12 +1,4 @@
-import {
-  CONTROLS_SCENE,
-  FIRST_LEVEL_SCENE,
-  GAME_FINISHED_SCENE,
-  GAME_OVER_SCENE,
-  MENU_SCENE,
-  SECOND_LEVEL_SCENE,
-  THIRD_LEVEL_SCENE,
-} from "./constants";
+import { SCENE } from "./constants";
 import kaplayContext from "./kaplay-context";
 import { loadSceneAssets } from "./scenes/assets-loader";
 import { controls } from "./scenes/controls";
@@ -16,13 +8,13 @@ import { menu } from "./scenes/menu";
 loadSceneAssets();
 
 const scenes: { [key: string]: () => void } = {
-  [MENU_SCENE]: menu,
-  [CONTROLS_SCENE]: controls,
-  [FIRST_LEVEL_SCENE]: level1,
-  [SECOND_LEVEL_SCENE]: () => {},
-  [THIRD_LEVEL_SCENE]: () => {},
-  [GAME_FINISHED_SCENE]: () => {},
-  [GAME_OVER_SCENE]: () => {},
+  [SCENE.menu]: menu,
+  [SCENE.controls]: controls,
+  [SCENE.firstLevel]: level1,
+  [SCENE.secondLevel]: () => {},
+  [SCENE.thirdLevel]: () => {},
+  [SCENE.gameFinished]: () => {},
+  [SCENE.gameOver]: () => {},
 };
 
 // create scenes
@@ -31,4 +23,4 @@ for (const gameScene of Object.keys(scenes)) {
 }
 
 // specify a default scene which will be loaded when the game starts
-kaplayContext.go(MENU_SCENE);
+kaplayContext.go(SCENE.menu);
