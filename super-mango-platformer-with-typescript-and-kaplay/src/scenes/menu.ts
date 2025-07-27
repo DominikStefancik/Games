@@ -6,7 +6,7 @@ import {
   SOUND,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
-import { displayBlinkingMessage } from "./helpers";
+import { displayBlinkingMessage } from "./utils/helpers";
 
 export const menu = () => {
   kaplayContext.add([

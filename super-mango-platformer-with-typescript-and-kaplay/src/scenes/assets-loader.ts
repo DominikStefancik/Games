@@ -8,6 +8,8 @@ import {
   TILESET_SPRITE,
   WAVE_ANIMATION,
   SCENE_ELEMENT_SPRITE,
+  ENTITY_SPRITE,
+  PLAYER_ANIMATIOM,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
@@ -26,11 +28,22 @@ const loadSounds = () => {
 };
 
 const loadSprites = () => {
+  loadBackgroundSprites();
+  kaplayContext.loadSprite(LOGO_SPRITE, "./Logo.png");
+  loadControlsSprites();
+  loadTilesetSprites();
+  loadSceneElementSprites();
+  loadEntitySprites();
+};
+
+const loadBackgroundSprites = () => {
   kaplayContext.loadSprite(
     BACKGROUND_SPRITE.forest,
     "./graphics/backgrounds/Forest_Background_0.png",
   );
-  kaplayContext.loadSprite(LOGO_SPRITE, "./Logo.png");
+};
+
+const loadControlsSprites = () => {
   kaplayContext.loadSprite(
     KEY_CONTROL_SPRITE.arrowUp,
     "./graphics/controls/Arrow_Up_Key_Dark.png",
@@ -51,7 +64,9 @@ const loadSprites = () => {
     KEY_CONTROL_SPRITE.space,
     "./graphics/controls/Space_Key_Dark.png",
   );
+};
 
+const loadTilesetSprites = () => {
   kaplayContext.loadSprite(
     TILESET_SPRITE.grassTileset,
     "./graphics/tilesets/Grass_Tileset.png",
@@ -92,6 +107,21 @@ const loadSprites = () => {
       },
     },
   );
+};
+
+const loadSceneElementSprites = () => {
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.water,
+    "./graphics/scene-elements/Water.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 8,
+      sliceY: 1,
+      anims: {
+        [WAVE_ANIMATION]: { from: 0, to: 7, speed: 16, loop: true },
+      },
+    },
+  );
   kaplayContext.loadSprite(
     SCENE_ELEMENT_SPRITE.bridge,
     "./graphics/scene-elements/Bridge.png",
@@ -100,15 +130,20 @@ const loadSprites = () => {
     SCENE_ELEMENT_SPRITE.coin,
     "./graphics/scene-elements/Coin.png",
   );
+};
+
+const loadEntitySprites = () => {
   kaplayContext.loadSprite(
-    SCENE_ELEMENT_SPRITE.water,
-    "./graphics/scene-elements/Water.png",
-    // the third argument defines how a picture will be devided into frames/slices
+    ENTITY_SPRITE.player,
+    "./graphics/entities/Player.png",
     {
-      sliceX: 3,
-      sliceY: 4,
+      sliceX: 4,
+      sliceY: 6,
       anims: {
-        [WAVE_ANIMATION]: { from: 0, to: 7, speed: 16, loop: true },
+        [PLAYER_ANIMATIOM.idle]: { from: 0, to: 3, loop: true },
+        [PLAYER_ANIMATIOM.run]: { from: 4, to: 7, loop: true },
+        [PLAYER_ANIMATIOM.jumpUp]: 8,
+        [PLAYER_ANIMATIOM.jumpDown]: 9,
       },
     },
   );

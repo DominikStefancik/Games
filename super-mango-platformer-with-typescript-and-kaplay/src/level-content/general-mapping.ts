@@ -47,8 +47,6 @@ export const generateMappings = (tileType: TileType) => {
       kaplayContext.sprite(`${tileType}Tileset`, {
         anim: TILE_ANIMATION.middleMiddle,
       }),
-      kaplayContext.area(),
-      kaplayContext.body({ isStatic: true }),
       kaplayContext.offscreen(),
     ],
     5: () => [

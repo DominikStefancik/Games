@@ -41,6 +41,10 @@ export const SCENE_ELEMENT_SPRITE = {
   coin: "coin",
 };
 
+export const ENTITY_SPRITE = {
+  player: "player",
+};
+
 export const TILE_ANIMATION = {
   topLeft: "topLeft",
   topMiddle: "topMiddle",
@@ -55,9 +59,17 @@ export const TILE_ANIMATION = {
 
 export const WAVE_ANIMATION = "wave";
 
+export const PLAYER_ANIMATIOM = {
+  idle: "idle",
+  run: "run",
+  jumpUp: "jumpUp",
+  jumpDown: "jumpDown",
+};
+
 export const TAG = {
   passthrough: "passthrough",
   coin: "coin",
+  player: "player",
 };
 
 export const TEXT_STATE = {

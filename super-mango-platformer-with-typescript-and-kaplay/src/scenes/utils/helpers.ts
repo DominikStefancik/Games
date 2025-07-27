@@ -1,6 +1,6 @@
 import type { GameObj, Vec2 } from "kaplay";
-import kaplayContext from "../kaplay-context";
-import { ROUND_FONT, TEXT_STATE } from "../constants";
+import kaplayContext from "../../kaplay-context";
+import { ROUND_FONT, TEXT_STATE } from "../../constants";
 
 export const displayBlinkingMessage = (
   text: string,
