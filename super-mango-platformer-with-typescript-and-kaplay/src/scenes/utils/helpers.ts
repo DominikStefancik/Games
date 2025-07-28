@@ -1,6 +1,11 @@
 import type { GameObj, Vec2 } from "kaplay";
 import kaplayContext from "../../kaplay-context";
-import { ROUND_FONT, TEXT_STATE } from "../../constants";
+import {
+  ROUND_FONT,
+  STATUS_ELEMENT_SPRITE,
+  TAG,
+  TEXT_STATE,
+} from "../../constants";
 
 export const displayBlinkingMessage = (
   text: string,
@@ -52,4 +57,53 @@ export const displayBlinkingMessage = (
   });
 
   return message;
+};
+
+export const displayLivesCount = (player: GameObj) => {
+  const coinCounter = kaplayContext.add([
+    kaplayContext.text("", { font: ROUND_FONT, size: 50 }),
+    kaplayContext.fixed(),
+    kaplayContext.pos(70, 10),
+  ]);
+
+  coinCounter.add([
+    kaplayContext.sprite(STATUS_ELEMENT_SPRITE.stars),
+    kaplayContext.scale(3),
+    kaplayContext.pos(-60, -5),
+    kaplayContext.fixed(),
+  ]);
+
+  kaplayContext.onUpdate(() => {
+    coinCounter.text = player.lives;
+  });
+};
+
+export const displayCoinCount = (player: GameObj) => {
+  const coinCounter = kaplayContext.add([
+    kaplayContext.text("", { font: ROUND_FONT, size: 50 }),
+    kaplayContext.fixed(),
+    kaplayContext.pos(70, 70),
+    {
+      allCoinsCount: kaplayContext.get(TAG.coin, { recursive: true }).length,
+    },
+  ]);
+
+  coinCounter.add([
+    kaplayContext.sprite(STATUS_ELEMENT_SPRITE.coins),
+    kaplayContext.scale(3),
+    kaplayContext.pos(-60, 0),
+    kaplayContext.fixed(),
+  ]);
+
+  kaplayContext.onUpdate(() => {
+    coinCounter.text = `${player.collectedCoinCount} / ${coinCounter.allCoinsCount}`;
+  });
+};
+
+export const displayStatusBox = () => {
+  kaplayContext.add([
+    kaplayContext.rect(270, 130),
+    kaplayContext.color(0, 0, 0),
+    kaplayContext.fixed(),
+  ]);
 };

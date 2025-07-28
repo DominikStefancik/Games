@@ -4,6 +4,7 @@ import {
   ENTITY_SPRITE,
   KEY_CONTROL,
   PLAYER_ANIMATION,
+  SCENE,
   SOUND,
   TAG,
 } from "../constants";
@@ -40,7 +41,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
       timeSinceLastGrounded: 0,
       coyoteLapse: 0.1,
       hasJumpedOnce: false,
-      collectedCoins: 0,
+      collectedCoinCount: 0,
       setControls(this: GameObj) {
         kaplayContext.onKeyDown(KEY_CONTROL.left, () => {
           if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
@@ -122,7 +123,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
       enableCoinPickup(this: GameObj) {
         // the "coin" paramater represents a coin game object the player collided with
         this.onCollide(TAG.coin, (coin: GameObj) => {
-          this.collectedCoins++;
+          this.collectedCoinCount++;
           kaplayContext.destroy(coin);
           kaplayContext.play(SOUND.coin);
         });
@@ -130,9 +131,14 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
 
       respawnPlayer(this: GameObj) {
         if (this.lives > 0) {
+          this.lives--;
           this.pos = playerStartPosition;
           this.isRespawning = true;
           kaplayContext.wait(1, () => (this.isRespawning = false));
+        }
+
+        if (this.lives === 0) {
+          kaplayContext.go(SCENE.gameOver);
         }
       },
 

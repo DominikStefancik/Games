@@ -10,6 +10,7 @@ import {
   SCENE_ELEMENT_SPRITE,
   ENTITY_SPRITE,
   PLAYER_ANIMATION,
+  STATUS_ELEMENT_SPRITE,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
@@ -36,6 +37,7 @@ const loadSprites = () => {
   loadControlsSprites();
   loadTilesetSprites();
   loadSceneElementSprites();
+  loadStatusElementSprites();
   loadEntitySprites();
 };
 
@@ -132,6 +134,17 @@ const loadSceneElementSprites = () => {
   kaplayContext.loadSprite(
     SCENE_ELEMENT_SPRITE.coin,
     "./graphics/scene-elements/Coin.png",
+  );
+};
+
+const loadStatusElementSprites = () => {
+  kaplayContext.loadSprite(
+    STATUS_ELEMENT_SPRITE.coins,
+    "./graphics/status-elements/Coins_Ui.png",
+  );
+  kaplayContext.loadSprite(
+    STATUS_ELEMENT_SPRITE.stars,
+    "./graphics/status-elements/Stars_Ui.png",
   );
 };
 

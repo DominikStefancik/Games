@@ -44,6 +44,11 @@ export const SCENE_ELEMENT_SPRITE = {
   coin: "coin",
 };
 
+export const STATUS_ELEMENT_SPRITE = {
+  coins: "coins",
+  stars: "stars",
+};
+
 export const ENTITY_SPRITE = {
   player: "player",
 };
