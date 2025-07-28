@@ -1,4 +1,4 @@
-import type { GameObj } from "kaplay";
+import type { Collision, GameObj } from "kaplay";
 import kaplayContext from "../kaplay-context";
 import {
   ENTITY_SPRITE,
@@ -34,6 +34,9 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
     {
       lives: playerLivesCount,
       isRespawning: false,
+      previousHeight: playerStartPosition.y,
+      heightDelta: 0,
+      isMoving: false,
       setControls(this: GameObj) {
         kaplayContext.onKeyDown(KEY_CONTROL.left, () => {
           if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
@@ -45,6 +48,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
           if (!this.isRespawning) {
             // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
             this.move(-playerSpeed, 0);
+            this.isMoving = true;
           }
         });
 
@@ -58,6 +62,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
           if (!this.isRespawning) {
             // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
             this.move(playerSpeed, 0);
+            this.isMoving = true;
           }
         });
 
@@ -74,8 +79,32 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
           [KEY_CONTROL.left, KEY_CONTROL.right],
           () => {
             this.play(PLAYER_ANIMATION.idle);
+            this.isMoving = false;
           },
         );
+      },
+
+      enablePassthrough(this: GameObj) {
+        /*
+         * The "onBeforePhysicsResolve()" method is available because the game object has the "body" component
+         * The method runs before a collision with another game object would be resolved.
+         * Using it is one way to intercept the collision.
+         *
+         */
+        this.onBeforePhysicsResolve((collision: Collision) => {
+          if (collision.target.is(TAG.passthrough) && this.isJumping()) {
+            // ignore collistion and allow jump on a platform from below
+            collision.preventResolution();
+          }
+
+          if (
+            collision.target.is(TAG.passthrough) &&
+            kaplayContext.isKeyDown(KEY_CONTROL.down)
+          ) {
+            // ignore collistion and allow jump on a platform from below
+            collision.preventResolution();
+          }
+        });
       },
 
       respawnPlayer(this: GameObj) {
@@ -88,10 +117,41 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
 
       update(this: GameObj) {
         kaplayContext.onUpdate(() => {
+          this.heightDelta = this.previousHeight - this.pos.y;
+          this.previousHeight = this.pos.y;
+
           // the player died
           if (this.pos.y > lostLiveLevel) {
             kaplayContext.play(SOUND.hit);
             this.respawnPlayer();
+          }
+
+          if (
+            !this.isMoving &&
+            this.isGrounded() &&
+            this.getCurAnim()?.name !== PLAYER_ANIMATION.idle
+          ) {
+            this.play(PLAYER_ANIMATION.idle);
+          }
+
+          if (!this.isGrounded()) {
+            /*
+             * Only play the animation, if it is not currently playing,
+             * otherwise the Kaplay would start playing it from the first frame
+             */
+            if (
+              this.heightDelta > 0 &&
+              this.getCurAnim()?.name !== PLAYER_ANIMATION.jumpUp
+            ) {
+              this.play(PLAYER_ANIMATION.jumpUp);
+            }
+
+            if (
+              this.heightDelta < 0 &&
+              this.getCurAnim()?.name !== PLAYER_ANIMATION.jumpDown
+            ) {
+              this.play(PLAYER_ANIMATION.jumpDown);
+            }
           }
         });
       },
@@ -99,6 +159,8 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
   ]);
 
   playerObject.setControls();
+  playerObject.enablePassthrough();
+  playerObject.update();
 
   return playerObject;
 };
