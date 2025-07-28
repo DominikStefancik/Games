@@ -1,4 +1,4 @@
-import type { GameObj, Vec2 } from "kaplay";
+import type { GameObj } from "kaplay";
 import kaplayContext from "../kaplay-context";
 import {
   ENTITY_SPRITE,
@@ -7,16 +7,10 @@ import {
   SOUND,
   TAG,
 } from "../constants";
+import type { LevelConfig } from "../level-content/models";
 
-export const createPlayer = (params: {
-  position: Vec2;
-  speed: number;
-  jumpForce: number;
-  livesCount: number;
-  currentLevelScene: number;
-  isInLastLeveL: boolean;
-}): GameObj => {
-  const { position, speed, jumpForce } = params;
+export const createPlayer = (levelConfig: LevelConfig): GameObj => {
+  const { playerStartPosition, playerSpeed, jumpForce } = levelConfig;
 
   const playerObject = kaplayContext.add([
     kaplayContext.sprite(ENTITY_SPRITE.player, {
@@ -27,7 +21,7 @@ export const createPlayer = (params: {
       shape: new kaplayContext.Rect(kaplayContext.vec2(0, 3), 8, 8),
     }),
     kaplayContext.body(),
-    kaplayContext.pos(position),
+    kaplayContext.pos(playerStartPosition),
     kaplayContext.anchor("center"),
     TAG.player,
     // custom properties specific to a player playerObject
@@ -39,7 +33,7 @@ export const createPlayer = (params: {
           }
           playerObject.flipX = true;
           // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
-          playerObject.move(-speed, 0);
+          playerObject.move(-playerSpeed, 0);
         });
 
         kaplayContext.onKeyDown(KEY_CONTROL.right, () => {
@@ -48,7 +42,7 @@ export const createPlayer = (params: {
           }
           playerObject.flipX = false;
           // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
-          playerObject.move(speed, 0);
+          playerObject.move(playerSpeed, 0);
         });
 
         kaplayContext.onKeyDown(KEY_CONTROL.space, () => {

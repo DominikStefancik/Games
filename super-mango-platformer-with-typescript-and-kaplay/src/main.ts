@@ -2,7 +2,7 @@ import { SCENE } from "./constants";
 import kaplayContext from "./kaplay-context";
 import { loadSceneAssets } from "./scenes/assets-loader";
 import { controls } from "./scenes/controls";
-import { level1 } from "./scenes/levels/levell1";
+import { level1 } from "./scenes/levels/level1";
 import { menu } from "./scenes/menu";
 
 loadSceneAssets();
