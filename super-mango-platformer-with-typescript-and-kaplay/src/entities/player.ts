@@ -40,6 +40,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
       timeSinceLastGrounded: 0,
       coyoteLapse: 0.1,
       hasJumpedOnce: false,
+      collectedCoins: 0,
       setControls(this: GameObj) {
         kaplayContext.onKeyDown(KEY_CONTROL.left, () => {
           if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
@@ -118,6 +119,15 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
         });
       },
 
+      enableCoinPickup(this: GameObj) {
+        // the "coin" paramater represents a coin game object the player collided with
+        this.onCollide(TAG.coin, (coin: GameObj) => {
+          this.collectedCoins++;
+          kaplayContext.destroy(coin);
+          kaplayContext.play(SOUND.coin);
+        });
+      },
+
       respawnPlayer(this: GameObj) {
         if (this.lives > 0) {
           this.pos = playerStartPosition;
@@ -176,6 +186,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
 
   playerObject.setControls();
   playerObject.enablePassthrough();
+  playerObject.enableCoinPickup();
   playerObject.update();
 
   return playerObject;

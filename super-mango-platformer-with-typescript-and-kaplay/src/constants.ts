@@ -14,6 +14,7 @@ export const SOUND = {
   confirmUi: "confirmUi",
   jump: "jump",
   hit: "hit",
+  coin: "coin",
 };
 
 export const LOGO_SPRITE = "logo";
