@@ -9,7 +9,7 @@ import {
   WAVE_ANIMATION,
   SCENE_ELEMENT_SPRITE,
   ENTITY_SPRITE,
-  PLAYER_ANIMATIOM,
+  PLAYER_ANIMATION,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
@@ -25,6 +25,7 @@ const loadFonts = () => {
 
 const loadSounds = () => {
   kaplayContext.loadSound(SOUND.confirmUi, "./sounds/confirm-ui.wav");
+  kaplayContext.loadSound(SOUND.jump, "./sounds/jump.wav");
 };
 
 const loadSprites = () => {
@@ -140,10 +141,10 @@ const loadEntitySprites = () => {
       sliceX: 4,
       sliceY: 6,
       anims: {
-        [PLAYER_ANIMATIOM.idle]: { from: 0, to: 3, loop: true },
-        [PLAYER_ANIMATIOM.run]: { from: 4, to: 7, loop: true },
-        [PLAYER_ANIMATIOM.jumpUp]: 8,
-        [PLAYER_ANIMATIOM.jumpDown]: 9,
+        [PLAYER_ANIMATION.idle]: { from: 0, to: 3, loop: true },
+        [PLAYER_ANIMATION.run]: { from: 4, to: 7, loop: true },
+        [PLAYER_ANIMATION.jumpUp]: 8,
+        [PLAYER_ANIMATION.jumpDown]: 9,
       },
     },
   );

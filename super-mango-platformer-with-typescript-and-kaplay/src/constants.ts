@@ -12,6 +12,7 @@ export const ROUND_FONT = "round";
 
 export const SOUND = {
   confirmUi: "confirmUi",
+  jump: "jump",
 };
 
 export const LOGO_SPRITE = "logo";
@@ -59,7 +60,7 @@ export const TILE_ANIMATION = {
 
 export const WAVE_ANIMATION = "wave";
 
-export const PLAYER_ANIMATIOM = {
+export const PLAYER_ANIMATION = {
   idle: "idle",
   run: "run",
   jumpUp: "jumpUp",
@@ -77,4 +78,11 @@ export const TEXT_STATE = {
   flashDown: "flashDown",
 };
 
-export const ENTER_KEY = "enter";
+export const KEY_CONTROL = {
+  up: "up",
+  down: "down",
+  left: "left",
+  right: "right",
+  space: "space",
+  enter: "enter",
+};

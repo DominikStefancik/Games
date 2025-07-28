@@ -1,6 +1,6 @@
 import {
   BACKGROUND_SPRITE,
-  ENTER_KEY,
+  KEY_CONTROL,
   LOGO_SPRITE,
   SCENE,
   SOUND,
@@ -31,7 +31,7 @@ export const menu = () => {
     ),
   );
 
-  kaplayContext.onKeyPress(ENTER_KEY, () => {
+  kaplayContext.onKeyPress(KEY_CONTROL.enter, () => {
     kaplayContext.play(SOUND.confirmUi, { speed: 1.5 });
     kaplayContext.go(SCENE.controls);
   });
