@@ -18,6 +18,7 @@ export const level1 = () => {
   drawBackground(BACKGROUND_SPRITE.forest);
   drawLevelLayout(level1Layout, level1Mappings);
   const player = createPlayer(level1Config);
+  player.update();
   attachCamera({ objectToAttachTo: player, offsetX: 0, fixedY: 200 });
   drawWaves(SCENE_ELEMENT_SPRITE.water, WAVE_ANIMATION);
 };

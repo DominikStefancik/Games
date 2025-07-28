@@ -13,6 +13,7 @@ export const ROUND_FONT = "round";
 export const SOUND = {
   confirmUi: "confirmUi",
   jump: "jump",
+  hit: "hit",
 };
 
 export const LOGO_SPRITE = "logo";

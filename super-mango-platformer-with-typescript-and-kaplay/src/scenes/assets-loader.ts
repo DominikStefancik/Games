@@ -26,6 +26,7 @@ const loadFonts = () => {
 const loadSounds = () => {
   kaplayContext.loadSound(SOUND.confirmUi, "./sounds/confirm-ui.wav");
   kaplayContext.loadSound(SOUND.jump, "./sounds/jump.wav");
+  kaplayContext.loadSound(SOUND.hit, "./sounds/hit.wav");
 };
 
 const loadSprites = () => {

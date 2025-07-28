@@ -10,7 +10,13 @@ import {
 import type { LevelConfig } from "../level-content/models";
 
 export const createPlayer = (levelConfig: LevelConfig): GameObj => {
-  const { playerStartPosition, playerSpeed, jumpForce } = levelConfig;
+  const {
+    playerStartPosition,
+    playerSpeed,
+    jumpForce,
+    playerLivesCount,
+    lostLiveLevel,
+  } = levelConfig;
 
   const playerObject = kaplayContext.add([
     kaplayContext.sprite(ENTITY_SPRITE.player, {
@@ -26,30 +32,40 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
     TAG.player,
     // custom properties specific to a player playerObject
     {
-      setControls() {
+      lives: playerLivesCount,
+      isRespawning: false,
+      setControls(this: GameObj) {
         kaplayContext.onKeyDown(KEY_CONTROL.left, () => {
-          if (playerObject.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
-            playerObject.play(PLAYER_ANIMATION.run);
+          if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
+            this.play(PLAYER_ANIMATION.run);
           }
-          playerObject.flipX = true;
-          // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
-          playerObject.move(-playerSpeed, 0);
+          this.flipX = true;
+
+          // if  the player is respowning, don't react to a key press
+          if (!this.isRespawning) {
+            // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
+            this.move(-playerSpeed, 0);
+          }
         });
 
         kaplayContext.onKeyDown(KEY_CONTROL.right, () => {
-          if (playerObject.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
-            playerObject.play(PLAYER_ANIMATION.run);
+          if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
+            this.play(PLAYER_ANIMATION.run);
           }
-          playerObject.flipX = false;
-          // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
-          playerObject.move(playerSpeed, 0);
+          this.flipX = false;
+
+          // if  the player is respowning, don't react to a key press
+          if (!this.isRespawning) {
+            // the "move()" method is from Kaplay and it moves a game object in a vertical and horizontal direction
+            this.move(playerSpeed, 0);
+          }
         });
 
         kaplayContext.onKeyDown(KEY_CONTROL.space, () => {
           // the "isGrounded()" method is from Kaplay and it checks if a game object is on a platform
-          if (playerObject.isGrounded()) {
+          if (this.isGrounded() && !this.isRespawning) {
             // the "jump()" method is from Kaplay and it jumps a game object in a vertical and horizontal direction
-            playerObject.jump(jumpForce);
+            this.jump(jumpForce);
             kaplayContext.play(SOUND.jump);
           }
         });
@@ -57,9 +73,27 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
         kaplayContext.onKeyRelease(
           [KEY_CONTROL.left, KEY_CONTROL.right],
           () => {
-            playerObject.play(PLAYER_ANIMATION.idle);
+            this.play(PLAYER_ANIMATION.idle);
           },
         );
+      },
+
+      respawnPlayer(this: GameObj) {
+        if (this.lives > 0) {
+          this.pos = playerStartPosition;
+          this.isRespawning = true;
+          kaplayContext.wait(1, () => (this.isRespawning = false));
+        }
+      },
+
+      update(this: GameObj) {
+        kaplayContext.onUpdate(() => {
+          // the player died
+          if (this.pos.y > lostLiveLevel) {
+            kaplayContext.play(SOUND.hit);
+            this.respawnPlayer();
+          }
+        });
       },
     },
   ]);

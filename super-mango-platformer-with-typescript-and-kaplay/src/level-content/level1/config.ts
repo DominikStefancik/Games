@@ -9,4 +9,5 @@ export const level1Config: LevelConfig = {
   playerStartPosition: kaplayContext.vec2(1500, 100),
   currentLevelScene: 1,
   isInLastLeveL: false,
+  lostLiveLevel: 1000,
 };
