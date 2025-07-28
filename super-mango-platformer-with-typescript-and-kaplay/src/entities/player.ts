@@ -37,6 +37,9 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
       previousHeight: playerStartPosition.y,
       heightDelta: 0,
       isMoving: false,
+      timeSinceLastGrounded: 0,
+      coyoteLapse: 0.1,
+      hasJumpedOnce: false,
       setControls(this: GameObj) {
         kaplayContext.onKeyDown(KEY_CONTROL.left, () => {
           if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {
@@ -68,10 +71,18 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
 
         kaplayContext.onKeyDown(KEY_CONTROL.space, () => {
           // the "isGrounded()" method is from Kaplay and it checks if a game object is on a platform
-          if (this.isGrounded() && !this.isRespawning) {
+          const isOnGroundAndCanJump = this.isGrounded() && !this.isRespawning;
+          const isOnTheEdgeAndCanJump =
+            !this.isGrounded() &&
+            kaplayContext.time() - this.timeSinceLastGrounded <
+              this.coyoteLapse &&
+            !this.hasJumpedOnce;
+
+          if (isOnGroundAndCanJump || isOnTheEdgeAndCanJump) {
             // the "jump()" method is from Kaplay and it jumps a game object in a vertical and horizontal direction
             this.jump(jumpForce);
             kaplayContext.play(SOUND.jump);
+            this.hasJumpedOnce = true;
           }
         });
 
@@ -117,6 +128,11 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
 
       update(this: GameObj) {
         kaplayContext.onUpdate(() => {
+          if (this.isGrounded()) {
+            this.hasJumpedOnce = false;
+            this.timeSinceLastGrounded = kaplayContext.time();
+          }
+
           this.heightDelta = this.previousHeight - this.pos.y;
           this.previousHeight = this.pos.y;
 
