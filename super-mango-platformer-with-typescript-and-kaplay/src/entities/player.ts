@@ -17,6 +17,8 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
     jumpForce,
     playerLivesCount,
     lostLiveLevel,
+    currentLevelScene,
+    isInLastLeveL,
   } = levelConfig;
 
   const playerObject = kaplayContext.add([
@@ -34,6 +36,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
     // custom properties specific to a player playerObject
     {
       lives: playerLivesCount,
+      currentLevelScene,
       isRespawning: false,
       previousHeight: playerStartPosition.y,
       heightDelta: 0,
@@ -42,6 +45,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
       coyoteLapse: 0.1,
       hasJumpedOnce: false,
       collectedCoinCount: 0,
+      isInLastLeveL,
       setControls(this: GameObj) {
         kaplayContext.onKeyDown(KEY_CONTROL.left, () => {
           if (this.getCurAnim()?.name !== PLAYER_ANIMATION.run) {

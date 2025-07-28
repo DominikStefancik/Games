@@ -2,6 +2,7 @@ import type { GameObj, Vec2 } from "kaplay";
 import kaplayContext from "../../kaplay-context";
 import {
   ROUND_FONT,
+  SCENE,
   STATUS_ELEMENT_SPRITE,
   TAG,
   TEXT_STATE,
@@ -97,6 +98,25 @@ export const displayCoinCount = (player: GameObj) => {
 
   kaplayContext.onUpdate(() => {
     coinCounter.text = `${player.collectedCoinCount} / ${coinCounter.allCoinsCount}`;
+
+    if (player.collectedCoinCount === coinCounter.allCoinsCount) {
+      let nextScene = "";
+
+      switch (player.currentLevelScene) {
+        case 1:
+          nextScene = SCENE.secondLevel;
+          break;
+        case 2:
+          nextScene = SCENE.thirdLevel;
+          break;
+        case 3:
+          nextScene = SCENE.gameFinished;
+          break;
+        default:
+          break;
+      }
+      kaplayContext.go(player.isInLastLeveL ? SCENE.gameFinished : nextScene);
+    }
   });
 };
 
