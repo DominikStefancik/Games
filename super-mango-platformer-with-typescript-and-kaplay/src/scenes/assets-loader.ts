@@ -46,6 +46,22 @@ const loadBackgroundSprites = () => {
     BACKGROUND_SPRITE.forest,
     "./graphics/backgrounds/Forest_Background_0.png",
   );
+  kaplayContext.loadSprite(
+    BACKGROUND_SPRITE.castle,
+    "./graphics/backgrounds/Castle_Background_0.png",
+  );
+  kaplayContext.loadSprite(
+    BACKGROUND_SPRITE.sky0,
+    "./graphics/backgrounds/Sky_Background_0.png",
+  );
+  kaplayContext.loadSprite(
+    BACKGROUND_SPRITE.sky1,
+    "./graphics/backgrounds/Sky_Background_1.png",
+  );
+  kaplayContext.loadSprite(
+    BACKGROUND_SPRITE.sky2,
+    "./graphics/backgrounds/Sky_Background_2.png",
+  );
 };
 
 const loadControlsSprites = () => {
@@ -112,12 +128,116 @@ const loadTilesetSprites = () => {
       },
     },
   );
+  kaplayContext.loadSprite(
+    TILESET_SPRITE.brickTileset,
+    "./graphics/tilesets/Brick_Tileset.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 3,
+      sliceY: 4,
+      anims: {
+        [TILE_ANIMATION.topLeft]: 0,
+        [TILE_ANIMATION.topMiddle]: 1,
+        [TILE_ANIMATION.topRight]: 2,
+        [TILE_ANIMATION.middleLeft]: 3,
+        [TILE_ANIMATION.middleMiddle]: 4,
+        [TILE_ANIMATION.middleRight]: 5,
+        [TILE_ANIMATION.bottomLeft]: 6,
+        [TILE_ANIMATION.bottomMiddle]: 7,
+        [TILE_ANIMATION.bottomRight]: 8,
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    TILESET_SPRITE.brickOneway,
+    "./graphics/tilesets/Brick_Oneway.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 3,
+      sliceY: 4,
+      anims: {
+        [TILE_ANIMATION.topLeft]: 0,
+        [TILE_ANIMATION.topMiddle]: 1,
+        [TILE_ANIMATION.topRight]: 2,
+        [TILE_ANIMATION.middleLeft]: 3,
+        [TILE_ANIMATION.middleMiddle]: 4,
+        [TILE_ANIMATION.middleRight]: 5,
+        [TILE_ANIMATION.bottomLeft]: 6,
+        [TILE_ANIMATION.bottomMiddle]: 7,
+        [TILE_ANIMATION.bottomRight]: 8,
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    TILESET_SPRITE.grassRockTileset,
+    "./graphics/tilesets/Grass_Rock_Tileset.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 3,
+      sliceY: 4,
+      anims: {
+        [TILE_ANIMATION.topLeft]: 0,
+        [TILE_ANIMATION.topMiddle]: 1,
+        [TILE_ANIMATION.topRight]: 2,
+        [TILE_ANIMATION.middleLeft]: 3,
+        [TILE_ANIMATION.middleMiddle]: 4,
+        [TILE_ANIMATION.middleRight]: 5,
+        [TILE_ANIMATION.bottomLeft]: 6,
+        [TILE_ANIMATION.bottomMiddle]: 7,
+        [TILE_ANIMATION.bottomRight]: 8,
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    TILESET_SPRITE.grassRockOneway,
+    "./graphics/tilesets/Grass_Rock_Oneway.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 3,
+      sliceY: 4,
+      anims: {
+        [TILE_ANIMATION.topLeft]: 0,
+        [TILE_ANIMATION.topMiddle]: 1,
+        [TILE_ANIMATION.topRight]: 2,
+        [TILE_ANIMATION.middleLeft]: 3,
+        [TILE_ANIMATION.middleMiddle]: 4,
+        [TILE_ANIMATION.middleRight]: 5,
+        [TILE_ANIMATION.bottomLeft]: 6,
+        [TILE_ANIMATION.bottomMiddle]: 7,
+        [TILE_ANIMATION.bottomRight]: 8,
+      },
+    },
+  );
 };
 
 const loadSceneElementSprites = () => {
   kaplayContext.loadSprite(
     SCENE_ELEMENT_SPRITE.water,
     "./graphics/scene-elements/Water.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 8,
+      sliceY: 1,
+      anims: {
+        [WAVE_ANIMATION]: { from: 0, to: 7, speed: 16, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.lava,
+    "./graphics/scene-elements/Lava.png",
+    // the third argument defines how a picture will be devided into frames/slices
+    {
+      sliceX: 8,
+      sliceY: 1,
+      anims: {
+        [WAVE_ANIMATION]: { from: 0, to: 7, speed: 16, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.clouds,
+    "./graphics/scene-elements/Clouds.png",
     // the third argument defines how a picture will be devided into frames/slices
     {
       sliceX: 8,

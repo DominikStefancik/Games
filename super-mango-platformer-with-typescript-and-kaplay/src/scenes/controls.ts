@@ -70,6 +70,6 @@ export const controls = () => {
 
   kaplayContext.onKeyPress(KEY_CONTROL.enter, () => {
     kaplayContext.play(SOUND.confirmUi, { speed: 1.5 });
-    kaplayContext.go(SCENE.firstLevel);
+    kaplayContext.go(SCENE.level1);
   });
 };

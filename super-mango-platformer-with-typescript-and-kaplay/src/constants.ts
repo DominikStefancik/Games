@@ -1,9 +1,9 @@
 export const SCENE = {
   menu: "menu",
   controls: "controls",
-  firstLevel: "firstLevel",
-  secondLevel: "secondLevel",
-  thirdLevel: "thirdLevel",
+  level1: "level1",
+  level2: "level2",
+  level3: "level3",
   gameFinished: "gameFinished",
   gameOver: "gameOver",
 };
@@ -29,17 +29,25 @@ export const KEY_CONTROL_SPRITE = {
 
 export const BACKGROUND_SPRITE = {
   forest: "forest",
+  castle: "castle",
+  sky0: "sky0",
+  sky1: "sky1",
+  sky2: "sky2",
 };
 
 export const TILESET_SPRITE = {
   grassTileset: "grassTileset",
   grassOneway: "grassOneway",
+  grassRockTileset: "grassRockTileset",
+  grassRockOneway: "grassRockOneway",
+  brickTileset: "brickTileset",
+  brickOneway: "brickOneway",
 };
 
 export const SCENE_ELEMENT_SPRITE = {
   water: "water",
   lava: "lava",
-  cloud: "cloud",
+  clouds: "clouds",
   bridge: "bridge",
   coin: "coin",
 };

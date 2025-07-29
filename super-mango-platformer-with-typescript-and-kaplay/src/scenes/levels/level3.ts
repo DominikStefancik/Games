@@ -5,11 +5,11 @@ import {
 } from "../../constants";
 import { createPlayer } from "../../entities/player";
 import kaplayContext from "../../kaplay-context";
-import { level1Config } from "../../level-content/level1/config";
+import { level3Config } from "../../level-content/level3/config";
 import {
-  level1Layout,
-  level1Mappings,
-} from "../../level-content/level1/leve1-layout";
+  level3Layout,
+  level3Mappings,
+} from "../../level-content/level3/leve3-layout";
 import { attachCamera } from "../utils/camera";
 import {
   displayCoinCount,
@@ -18,13 +18,15 @@ import {
 } from "../utils/helpers";
 import { addBackground, drawLevelLayout, drawWaves } from "./helpers";
 
-export const level1 = () => {
-  kaplayContext.setGravity(level1Config.gravity);
-  addBackground(BACKGROUND_SPRITE.forest);
-  drawLevelLayout(level1Layout, level1Mappings);
-  const player = createPlayer(level1Config);
+export const level3 = () => {
+  kaplayContext.setGravity(level3Config.gravity);
+  addBackground(BACKGROUND_SPRITE.sky0);
+  addBackground(BACKGROUND_SPRITE.sky1);
+  addBackground(BACKGROUND_SPRITE.sky2);
+  drawLevelLayout(level3Layout, level3Mappings);
+  const player = createPlayer(level3Config);
   attachCamera({ objectToAttachTo: player, offsetX: 0, fixedY: 200 });
-  drawWaves(SCENE_ELEMENT_SPRITE.water, WAVE_ANIMATION);
+  drawWaves(SCENE_ELEMENT_SPRITE.clouds, WAVE_ANIMATION);
   displayStatusBox();
   displayLivesCount(player);
   displayCoinCount(player);

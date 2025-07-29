@@ -3,6 +3,8 @@ import kaplayContext from "./kaplay-context";
 import { loadSceneAssets } from "./scenes/assets-loader";
 import { controls } from "./scenes/controls";
 import { level1 } from "./scenes/levels/level1";
+import { level2 } from "./scenes/levels/level2";
+import { level3 } from "./scenes/levels/level3";
 import { menu } from "./scenes/menu";
 
 loadSceneAssets();
@@ -10,9 +12,9 @@ loadSceneAssets();
 const scenes: { [key: string]: () => void } = {
   [SCENE.menu]: menu,
   [SCENE.controls]: controls,
-  [SCENE.firstLevel]: level1,
-  [SCENE.secondLevel]: () => {},
-  [SCENE.thirdLevel]: () => {},
+  [SCENE.level1]: level1,
+  [SCENE.level2]: level2,
+  [SCENE.level3]: level3,
   [SCENE.gameFinished]: () => {},
   [SCENE.gameOver]: () => {},
 };

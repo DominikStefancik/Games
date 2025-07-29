@@ -1,7 +1,7 @@
 import { SCENE_ELEMENT_SPRITE, TAG, TILE_ANIMATION } from "../constants";
 import kaplayContext from "../kaplay-context";
 
-export type TileType = "grass";
+export type TileType = "grass" | "brick" | "grassRock";
 
 // generates various mappings to various symbols in a map
 export const generateMappings = (tileType: TileType) => {

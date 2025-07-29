@@ -1,7 +1,7 @@
 import type { CompList, GameObj, LevelOpt, Vec2 } from "kaplay";
 import kaplayContext from "../../kaplay-context";
 
-export const drawBackground = (spriteName: string) => {
+export const addBackground = (spriteName: string) => {
   kaplayContext.add([
     kaplayContext.sprite(spriteName),
     kaplayContext.scale(4),

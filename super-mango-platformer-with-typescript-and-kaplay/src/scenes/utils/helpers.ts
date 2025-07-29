@@ -104,10 +104,10 @@ export const displayCoinCount = (player: GameObj) => {
 
       switch (player.currentLevelScene) {
         case 1:
-          nextScene = SCENE.secondLevel;
+          nextScene = SCENE.level2;
           break;
         case 2:
-          nextScene = SCENE.thirdLevel;
+          nextScene = SCENE.level3;
           break;
         case 3:
           nextScene = SCENE.gameFinished;
