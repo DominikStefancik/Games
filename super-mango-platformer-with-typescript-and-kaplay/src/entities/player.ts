@@ -33,7 +33,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
     kaplayContext.pos(playerStartPosition),
     kaplayContext.anchor("center"),
     TAG.player,
-    // custom properties specific to a player playerObject
+    // custom properties specific to a player game object
     {
       lives: playerLivesCount,
       currentLevelScene,
@@ -133,6 +133,13 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
         });
       },
 
+      enableCreatureVulnerability(this: GameObj) {
+        this.onCollide(TAG.spider, () => {
+          kaplayContext.play(SOUND.hit, { speed: 1.5 });
+          this.respawnPlayer();
+        });
+      },
+
       respawnPlayer(this: GameObj) {
         if (this.lives > 0) {
           this.lives--;
@@ -197,6 +204,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
   playerObject.setControls();
   playerObject.enablePassthrough();
   playerObject.enableCoinPickup();
+  playerObject.enableCreatureVulnerability();
   playerObject.update();
 
   return playerObject;

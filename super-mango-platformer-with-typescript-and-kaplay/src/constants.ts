@@ -15,6 +15,7 @@ export const SOUND = {
   jump: "jump",
   hit: "hit",
   coin: "coin",
+  spiderAttack: "spiderAttack",
 };
 
 export const LOGO_SPRITE = "logo";
@@ -59,6 +60,8 @@ export const STATUS_ELEMENT_SPRITE = {
 
 export const ENTITY_SPRITE = {
   player: "player",
+  spiderGreen: "spiderGreen",
+  spiderRed: "spiderRed",
 };
 
 export const TILE_ANIMATION = {
@@ -82,15 +85,27 @@ export const PLAYER_ANIMATION = {
   jumpDown: "jumpDown",
 };
 
+export const SPIDER_ANIMATION = {
+  idle: "idle",
+  crawl: "crawl",
+};
+
 export const TAG = {
   passthrough: "passthrough",
   coin: "coin",
   player: "player",
+  spider: "spider",
 };
 
 export const TEXT_STATE = {
   flashUp: "flashUp",
   flashDown: "flashDown",
+};
+
+export const SPIDER_STATE = {
+  idle: "idle",
+  crawlLeft: "crawlLeft",
+  crawlRight: "crawlRight",
 };
 
 export const KEY_CONTROL = {

@@ -14,4 +14,14 @@ export interface LevelConfig {
    * As the player falls, his vertical position (pos.y) increaces, so if he is dead, his pos.y > limit
    */
   lostLiveLevel: number;
+  spiders?: SpiderConfig[];
+}
+
+type SpiderType = "Green" | "Red";
+
+export interface SpiderConfig {
+  type: SpiderType;
+  movementRange: number;
+  speed: number;
+  position: Vec2;
 }
