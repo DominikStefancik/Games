@@ -3,7 +3,7 @@ import { SOUND, SPIDER_ANIMATION, SPIDER_STATE, TAG } from "../constants";
 import kaplayContext from "../kaplay-context";
 import type { SpiderConfig } from "../level-content/models";
 
-// the function creates an array of spiders depending on the spider config passed as an argument
+// the function creates an array of spiders depending on the spider configs passed as an argument
 export const createSpiders = (spiderConfigs: SpiderConfig[]) => {
   for (const config of spiderConfigs) {
     const { type, position, movementRange, speed } = config;

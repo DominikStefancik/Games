@@ -12,6 +12,8 @@ import {
   PLAYER_ANIMATION,
   STATUS_ELEMENT_SPRITE,
   SPIDER_ANIMATION,
+  FISH_ANIMATION,
+  FLAME_ANIMATION,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
@@ -306,6 +308,39 @@ const loadEntitySprites = () => {
       anims: {
         [SPIDER_ANIMATION.idle]: 0,
         [SPIDER_ANIMATION.crawl]: { from: 0, to: 2, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    ENTITY_SPRITE.fishBlue,
+    "./graphics/entities/Fish_1.png",
+    {
+      sliceX: 2,
+      sliceY: 1,
+      anims: {
+        [FISH_ANIMATION.jump]: { from: 0, to: 1, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    ENTITY_SPRITE.fishPurple,
+    "./graphics/entities/Fish_2.png",
+    {
+      sliceX: 2,
+      sliceY: 1,
+      anims: {
+        [FISH_ANIMATION.jump]: { from: 0, to: 1, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    ENTITY_SPRITE.flameYellow,
+    "./graphics/entities/Flame_1.png",
+    {
+      sliceX: 2,
+      sliceY: 1,
+      anims: {
+        [FLAME_ANIMATION.jump]: { from: 0, to: 1, loop: true },
       },
     },
   );

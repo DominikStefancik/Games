@@ -62,6 +62,9 @@ export const ENTITY_SPRITE = {
   player: "player",
   spiderGreen: "spiderGreen",
   spiderRed: "spiderRed",
+  fishBlue: "fishBlue",
+  fishPurple: "fishPurple",
+  flameYellow: "flameYellow",
 };
 
 export const TILE_ANIMATION = {
@@ -90,11 +93,21 @@ export const SPIDER_ANIMATION = {
   crawl: "crawl",
 };
 
+export const FISH_ANIMATION = {
+  jump: "jump",
+};
+
+export const FLAME_ANIMATION = {
+  jump: "jump",
+};
+
 export const TAG = {
   passthrough: "passthrough",
   coin: "coin",
   player: "player",
   spider: "spider",
+  fish: "fish",
+  flame: "flame",
 };
 
 export const TEXT_STATE = {
@@ -106,6 +119,16 @@ export const SPIDER_STATE = {
   idle: "idle",
   crawlLeft: "crawlLeft",
   crawlRight: "crawlRight",
+};
+
+export const FISH_STATE = {
+  jumpUp: "jumpUp",
+  fall: "fall",
+};
+
+export const FLAME_STATE = {
+  jumpUp: "jumpUp",
+  fall: "fall",
 };
 
 export const KEY_CONTROL = {
