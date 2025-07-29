@@ -16,6 +16,7 @@ export interface LevelConfig {
   lostLiveLevel: number;
   spiderConfigs?: SpiderConfig[];
   fishConfigs?: FishConfig[];
+  flameConfigs?: FlameConfig[];
 }
 
 type SpiderType = "Green" | "Red";
@@ -31,6 +32,14 @@ type FishType = "Blue" | "Purple";
 
 export interface FishConfig {
   type: FishType;
+  movementRange: number;
+  position: Vec2;
+}
+
+type FlameType = "Yellow" | "Blue";
+
+export interface FlameConfig {
+  type: FlameType;
   movementRange: number;
   position: Vec2;
 }

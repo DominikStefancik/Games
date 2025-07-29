@@ -1,5 +1,7 @@
 import kaplayContext from "../../kaplay-context";
 import type { LevelConfig } from "../models";
+import { level2FlameConfigs } from "./flame-config";
+import { level2SpiderConfigs } from "./spiders-config";
 
 export const level2Config: LevelConfig = {
   gravity: 1400,
@@ -10,4 +12,6 @@ export const level2Config: LevelConfig = {
   currentLevelScene: 2,
   isInLastLeveL: false,
   lostLiveLevel: 1000,
+  spiderConfigs: level2SpiderConfigs,
+  flameConfigs: level2FlameConfigs,
 };

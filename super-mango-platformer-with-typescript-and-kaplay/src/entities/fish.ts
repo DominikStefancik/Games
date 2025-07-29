@@ -52,7 +52,7 @@ export const createFish = (fishConfigs: FishConfig[]) => {
             this.enterState(FISH_STATE.jumpUp);
           });
 
-          // when we leave a scene we want all actions associated with spider's state to be canceled
+          // when we leave a scene we want all actions associated with fish' state to be canceled
           kaplayContext.onSceneLeave(() => {
             jumpUpState.cancel();
             fallState.cancel();
