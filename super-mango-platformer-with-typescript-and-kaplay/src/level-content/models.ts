@@ -17,6 +17,7 @@ export interface LevelConfig {
   spiderConfigs?: SpiderConfig[];
   fishConfigs?: FishConfig[];
   flameConfigs?: FlameConfig[];
+  birdConfigs?: BirdConfig[];
   axeConfigs?: AxeConfig[];
   sawConfigs?: SawConfig[];
 }
@@ -54,4 +55,13 @@ export interface AxeConfig {
 export interface SawConfig {
   position: Vec2;
   movementRange: number;
+}
+
+type BirdType = "Purple" | "Yellow";
+
+export interface BirdConfig {
+  type: BirdType;
+  movementRange: number;
+  speed: number;
+  position: Vec2;
 }

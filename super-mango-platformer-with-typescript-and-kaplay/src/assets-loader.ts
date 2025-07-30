@@ -14,6 +14,7 @@ import {
   SPIDER_ANIMATION,
   FISH_ANIMATION,
   FLAME_ANIMATION,
+  BIRD_ANIMATION,
 } from "./constants";
 import kaplayContext from "./kaplay-context";
 
@@ -35,6 +36,7 @@ const loadSounds = () => {
   kaplayContext.loadSound(SOUND.spiderAttack, "./sounds/spider-attack.mp3");
   kaplayContext.loadSound(SOUND.swingingAxe, "./sounds/swinging-axe.mp3");
   kaplayContext.loadSound(SOUND.saw, "./sounds/saw.wav");
+  kaplayContext.loadSound(SOUND.dive, "./sounds/dive.wav");
 };
 
 const loadSprites = () => {
@@ -351,6 +353,28 @@ const loadEntitySprites = () => {
       sliceY: 1,
       anims: {
         [FLAME_ANIMATION.jump]: { from: 0, to: 1, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    ENTITY_SPRITE.birdPurple,
+    "./graphics/entities/Bird_1.png",
+    {
+      sliceX: 3,
+      sliceY: 1,
+      anims: {
+        [BIRD_ANIMATION.fly]: { from: 0, to: 2, speed: 9, loop: true },
+      },
+    },
+  );
+  kaplayContext.loadSprite(
+    ENTITY_SPRITE.birdYellow,
+    "./graphics/entities/Bird_2.png",
+    {
+      sliceX: 3,
+      sliceY: 1,
+      anims: {
+        [BIRD_ANIMATION.fly]: { from: 0, to: 2, speed: 9, loop: true },
       },
     },
   );

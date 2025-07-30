@@ -3,8 +3,10 @@ import {
   SCENE_ELEMENT_SPRITE,
   BACKGROUND_SPRITE,
 } from "../../constants";
+import { createBirds } from "../../entities/bird";
 import { createPlayer } from "../../entities/player";
 import kaplayContext from "../../kaplay-context";
+import { level3BirdConfigs } from "../../level-content/level3/bird-config";
 import { level3Config } from "../../level-content/level3/config";
 import {
   level3Layout,
@@ -26,6 +28,7 @@ export const level3 = () => {
   drawLevelLayout(level3Layout, level3Mappings);
   const player = createPlayer(level3Config);
   attachCamera({ objectToAttachTo: player, offsetX: 0, fixedY: 200 });
+  createBirds(level3BirdConfigs);
   drawWaves(SCENE_ELEMENT_SPRITE.clouds, WAVE_ANIMATION);
   displayStatusBox();
   displayLivesCount(player);

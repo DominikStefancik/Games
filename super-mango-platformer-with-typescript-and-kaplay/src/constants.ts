@@ -18,6 +18,7 @@ export const SOUND = {
   spiderAttack: "spiderAttack",
   swingingAxe: "swingingAxe",
   saw: "saw",
+  dive: "dive",
 };
 
 export const LOGO_SPRITE = "logo";
@@ -69,6 +70,8 @@ export const ENTITY_SPRITE = {
   fishBlue: "fishBlue",
   fishPurple: "fishPurple",
   flameYellow: "flameYellow",
+  birdPurple: "birdPurple",
+  birdYellow: "birdYellow",
 };
 
 export const TILE_ANIMATION = {
@@ -105,6 +108,10 @@ export const FLAME_ANIMATION = {
   jump: "jump",
 };
 
+export const BIRD_ANIMATION = {
+  fly: "fly",
+};
+
 export const TAG = {
   passthrough: "passthrough",
   coin: "coin",
@@ -114,6 +121,7 @@ export const TAG = {
   flame: "flame",
   axe: "axe",
   saw: "saw",
+  bird: "bird",
 };
 
 export const TEXT_STATE = {
@@ -145,6 +153,13 @@ export const AXE_STATE = {
 export const SAW_STATE = {
   rotateLeft: "rotateLeft",
   rotateRight: "rotateRight",
+};
+
+export const BIRD_STATE = {
+  flyLeft: "flyLeft",
+  flyRight: "flyRight",
+  diveAttackLeft: "diveAttackLeft",
+  diveAttackRight: "diveAttackRight",
 };
 
 export const KEY_CONTROL = {
