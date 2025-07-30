@@ -143,6 +143,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
         this.onCollide(TAG.fish, playSoundAndRespawn);
         this.onCollide(TAG.flame, playSoundAndRespawn);
         this.onCollide(TAG.axe, playSoundAndRespawn);
+        this.onCollide(TAG.saw, playSoundAndRespawn);
       },
 
       respawnPlayer(this: GameObj) {

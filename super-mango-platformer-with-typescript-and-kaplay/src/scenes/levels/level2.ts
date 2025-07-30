@@ -14,8 +14,10 @@ import {
   level2Layout,
   level2Mappings,
 } from "../../level-content/level2/leve2-layout";
+import { level2SawConfigs } from "../../level-content/level2/saw-config";
 import { level2SpiderConfigs } from "../../level-content/level2/spiders-config";
 import { createAxes } from "../../scene-elements/axe";
+import { createSaws } from "../../scene-elements/saw";
 import { attachCamera } from "../utils/camera";
 import {
   displayCoinCount,
@@ -33,6 +35,7 @@ export const level2 = () => {
   createSpiders(level2SpiderConfigs);
   createFlames(level2FlameConfigs);
   createAxes(level2AxeConfigs);
+  createSaws(level2SawConfigs);
   drawWaves(SCENE_ELEMENT_SPRITE.lava, WAVE_ANIMATION);
   displayStatusBox();
   displayLivesCount(player);

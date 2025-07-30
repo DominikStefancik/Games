@@ -34,6 +34,7 @@ const loadSounds = () => {
   kaplayContext.loadSound(SOUND.coin, "./sounds/coin.wav");
   kaplayContext.loadSound(SOUND.spiderAttack, "./sounds/spider-attack.mp3");
   kaplayContext.loadSound(SOUND.swingingAxe, "./sounds/swinging-axe.mp3");
+  kaplayContext.loadSound(SOUND.saw, "./sounds/saw.wav");
 };
 
 const loadSprites = () => {
@@ -263,6 +264,10 @@ const loadSceneElementSprites = () => {
   kaplayContext.loadSprite(
     SCENE_ELEMENT_SPRITE.axe,
     "./graphics/scene-elements/Axe_Trap.png",
+  );
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.saw,
+    "./graphics/scene-elements/Circular_Saw.png",
   );
 };
 

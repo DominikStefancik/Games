@@ -13,6 +13,12 @@ export const createAxes = (axeConfigs: AxeConfig[]) => {
       kaplayContext.scale(4),
       kaplayContext.pos(position),
       kaplayContext.area({
+        /*
+         * With the "shape" field we specify dimensions of a hit box and where it will be located.
+         *
+         * The first argument of the "Rect" defines the position of the hitbox -> we want it to be 40 pixels
+         * lower as is the original position of an axe game object.
+         */
         shape: new kaplayContext.Rect(kaplayContext.vec2(0, 40), 30, 10),
         collisionIgnore: [TAG.spider, TAG.flame],
       }),
@@ -60,7 +66,7 @@ export const createAxes = (axeConfigs: AxeConfig[]) => {
             },
           );
 
-          // when an axe game object is out of the screen, we want it sounds to stop playing
+          // when an axe game object is out of the screen, we want its sounds to stop playing
           kaplayContext.onSceneLeave(() => {
             swingLeftState.cancel();
             swingRightState.cancel();

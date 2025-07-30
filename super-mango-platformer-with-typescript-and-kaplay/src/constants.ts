@@ -17,6 +17,7 @@ export const SOUND = {
   coin: "coin",
   spiderAttack: "spiderAttack",
   swingingAxe: "swingingAxe",
+  saw: "saw",
 };
 
 export const LOGO_SPRITE = "logo";
@@ -53,6 +54,7 @@ export const SCENE_ELEMENT_SPRITE = {
   bridge: "bridge",
   coin: "coin",
   axe: "axe",
+  saw: "saw",
 };
 
 export const STATUS_ELEMENT_SPRITE = {
@@ -111,6 +113,7 @@ export const TAG = {
   fish: "fish",
   flame: "flame",
   axe: "axe",
+  saw: "saw",
 };
 
 export const TEXT_STATE = {
@@ -137,6 +140,11 @@ export const FLAME_STATE = {
 export const AXE_STATE = {
   swingLeft: "swingLeft",
   swingRight: "swingRight",
+};
+
+export const SAW_STATE = {
+  rotateLeft: "rotateLeft",
+  rotateRight: "rotateRight",
 };
 
 export const KEY_CONTROL = {
