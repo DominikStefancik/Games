@@ -17,6 +17,7 @@ export interface LevelConfig {
   spiderConfigs?: SpiderConfig[];
   fishConfigs?: FishConfig[];
   flameConfigs?: FlameConfig[];
+  axeConfigs?: AxeConfig[];
 }
 
 type SpiderType = "Green" | "Red";
@@ -42,4 +43,9 @@ export interface FlameConfig {
   type: FlameType;
   movementRange: number;
   position: Vec2;
+}
+
+export interface AxeConfig {
+  position: Vec2;
+  swingDuration: number;
 }

@@ -16,6 +16,7 @@ export const SOUND = {
   hit: "hit",
   coin: "coin",
   spiderAttack: "spiderAttack",
+  swingingAxe: "swingingAxe",
 };
 
 export const LOGO_SPRITE = "logo";
@@ -51,6 +52,7 @@ export const SCENE_ELEMENT_SPRITE = {
   clouds: "clouds",
   bridge: "bridge",
   coin: "coin",
+  axe: "axe",
 };
 
 export const STATUS_ELEMENT_SPRITE = {
@@ -108,6 +110,7 @@ export const TAG = {
   spider: "spider",
   fish: "fish",
   flame: "flame",
+  axe: "axe",
 };
 
 export const TEXT_STATE = {
@@ -129,6 +132,11 @@ export const FISH_STATE = {
 export const FLAME_STATE = {
   jumpUp: "jumpUp",
   fall: "fall",
+};
+
+export const AXE_STATE = {
+  swingLeft: "swingLeft",
+  swingRight: "swingRight",
 };
 
 export const KEY_CONTROL = {

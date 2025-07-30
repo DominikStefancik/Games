@@ -14,8 +14,8 @@ import {
   SPIDER_ANIMATION,
   FISH_ANIMATION,
   FLAME_ANIMATION,
-} from "../constants";
-import kaplayContext from "../kaplay-context";
+} from "./constants";
+import kaplayContext from "./kaplay-context";
 
 export const loadSceneAssets = () => {
   loadFonts();
@@ -33,6 +33,7 @@ const loadSounds = () => {
   kaplayContext.loadSound(SOUND.hit, "./sounds/hit.wav");
   kaplayContext.loadSound(SOUND.coin, "./sounds/coin.wav");
   kaplayContext.loadSound(SOUND.spiderAttack, "./sounds/spider-attack.mp3");
+  kaplayContext.loadSound(SOUND.swingingAxe, "./sounds/swinging-axe.mp3");
 };
 
 const loadSprites = () => {
@@ -258,6 +259,10 @@ const loadSceneElementSprites = () => {
   kaplayContext.loadSprite(
     SCENE_ELEMENT_SPRITE.coin,
     "./graphics/scene-elements/Coin.png",
+  );
+  kaplayContext.loadSprite(
+    SCENE_ELEMENT_SPRITE.axe,
+    "./graphics/scene-elements/Axe_Trap.png",
   );
 };
 

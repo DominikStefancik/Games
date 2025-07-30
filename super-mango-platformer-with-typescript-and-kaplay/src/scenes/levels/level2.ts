@@ -7,6 +7,7 @@ import { createFlames } from "../../entities/flame";
 import { createPlayer } from "../../entities/player";
 import { createSpiders } from "../../entities/spider";
 import kaplayContext from "../../kaplay-context";
+import { level2AxeConfigs } from "../../level-content/level2/axe-config";
 import { level2Config } from "../../level-content/level2/config";
 import { level2FlameConfigs } from "../../level-content/level2/flame-config";
 import {
@@ -14,6 +15,7 @@ import {
   level2Mappings,
 } from "../../level-content/level2/leve2-layout";
 import { level2SpiderConfigs } from "../../level-content/level2/spiders-config";
+import { createAxes } from "../../scene-elements/axe";
 import { attachCamera } from "../utils/camera";
 import {
   displayCoinCount,
@@ -30,6 +32,7 @@ export const level2 = () => {
   attachCamera({ objectToAttachTo: player, offsetX: 0, fixedY: 200 });
   createSpiders(level2SpiderConfigs);
   createFlames(level2FlameConfigs);
+  createAxes(level2AxeConfigs);
   drawWaves(SCENE_ELEMENT_SPRITE.lava, WAVE_ANIMATION);
   displayStatusBox();
   displayLivesCount(player);

@@ -3,7 +3,7 @@ import { FLAME_ANIMATION, FLAME_STATE, TAG } from "../constants";
 import kaplayContext from "../kaplay-context";
 import type { FlameConfig } from "../level-content/models";
 
-// the function creates an array of fish depending on the flame configs passed as an argument
+// the function creates an array of flames depending on the flame configs passed as an argument
 export const createFlames = (flameConfigs: FlameConfig[]) => {
   for (const config of flameConfigs) {
     const { type, position, movementRange } = config;

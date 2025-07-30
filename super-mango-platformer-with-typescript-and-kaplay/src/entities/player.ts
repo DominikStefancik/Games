@@ -133,7 +133,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
         });
       },
 
-      enableCreatureVulnerability(this: GameObj) {
+      enableCreatureAndItemVulnerability(this: GameObj) {
         const playSoundAndRespawn = () => {
           kaplayContext.play(SOUND.hit, { speed: 1.5 });
           this.respawnPlayer();
@@ -142,6 +142,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
         this.onCollide(TAG.spider, playSoundAndRespawn);
         this.onCollide(TAG.fish, playSoundAndRespawn);
         this.onCollide(TAG.flame, playSoundAndRespawn);
+        this.onCollide(TAG.axe, playSoundAndRespawn);
       },
 
       respawnPlayer(this: GameObj) {
@@ -208,7 +209,7 @@ export const createPlayer = (levelConfig: LevelConfig): GameObj => {
   playerObject.setControls();
   playerObject.enablePassthrough();
   playerObject.enableCoinPickup();
-  playerObject.enableCreatureVulnerability();
+  playerObject.enableCreatureAndItemVulnerability();
   playerObject.update();
 
   return playerObject;

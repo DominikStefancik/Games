@@ -1,6 +1,6 @@
 import { SCENE } from "./constants";
 import kaplayContext from "./kaplay-context";
-import { loadSceneAssets } from "./scenes/assets-loader";
+import { loadSceneAssets } from "./assets-loader";
 import { controls } from "./scenes/controls";
 import { level1 } from "./scenes/levels/level1";
 import { level2 } from "./scenes/levels/level2";
