@@ -6,6 +6,8 @@ import { level1 } from "./scenes/levels/level1";
 import { level2 } from "./scenes/levels/level2";
 import { level3 } from "./scenes/levels/level3";
 import { menu } from "./scenes/menu";
+import { gameOver } from "./scenes/game-over";
+import { gameFinished } from "./scenes/game-finished";
 
 loadSceneAssets();
 
@@ -15,8 +17,8 @@ const scenes: { [key: string]: () => void } = {
   [SCENE.level1]: level1,
   [SCENE.level2]: level2,
   [SCENE.level3]: level3,
-  [SCENE.gameFinished]: () => {},
-  [SCENE.gameOver]: () => {},
+  [SCENE.gameFinished]: gameFinished,
+  [SCENE.gameOver]: gameOver,
 };
 
 // create scenes

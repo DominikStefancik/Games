@@ -1,8 +1,9 @@
 import kaplay, { type KAPLAYCtx } from "kaplay";
+import { SCREEN } from "./constants";
 
 const kaplayContext: KAPLAYCtx = kaplay({
-  width: 1280,
-  height: 720,
+  width: SCREEN.width,
+  height: SCREEN.height,
   /*
    * keeps the aspect ratio of the canvas -> it allows your canvas to be responsive
    * regardless of the screen size, it will respect (keep) the aspect ratio

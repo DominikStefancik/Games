@@ -1,3 +1,8 @@
+export const SCREEN = {
+  width: 1280,
+  height: 720,
+};
+
 export const SCENE = {
   menu: "menu",
   controls: "controls",
