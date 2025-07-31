@@ -23,7 +23,7 @@ export const level3BirdConfigs: BirdConfig[] = [
   {
     type: "Yellow",
     movementRange: 300,
-    position: kaplayContext.vec2(3500, 800),
+    position: kaplayContext.vec2(3500, 600),
     speed: 0.3,
   },
   {
