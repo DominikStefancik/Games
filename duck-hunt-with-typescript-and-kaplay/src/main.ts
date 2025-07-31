@@ -1,8 +1,4 @@
-import {
-  GAME_OVER_SCENE_ID,
-  GAME_SCENE_ID,
-  MAIN_MENU_SCENE_ID,
-} from "./constants";
+import { SCENE } from "./constants";
 import { loadEntitiesAssets } from "./entities/assets-loader";
 import kaplayContext from "./kaplay-context";
 import { loadSceneAssets } from "./scenes/assets-loader";
@@ -13,10 +9,10 @@ import { mainMenu } from "./scenes/main-menu";
 loadSceneAssets();
 loadEntitiesAssets();
 
-kaplayContext.scene(MAIN_MENU_SCENE_ID, mainMenu);
+kaplayContext.scene(SCENE.mainMenu, mainMenu);
 
-kaplayContext.scene(GAME_SCENE_ID, game);
+kaplayContext.scene(SCENE.game, game);
 
-kaplayContext.scene(GAME_OVER_SCENE_ID, gameOver);
+kaplayContext.scene(SCENE.gameOver, gameOver);
 
-kaplayContext.go(MAIN_MENU_SCENE_ID);
+kaplayContext.go(SCENE.mainMenu);

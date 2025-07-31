@@ -2,13 +2,13 @@ import {
   BEST_SCORE_DATA,
   COLOR,
   FONT_CONFIG,
-  GAME_SCENE_ID,
-  MENU_SPRITE_ID,
+  SCENE,
+  SPRITE,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
 
 export const mainMenu = () => {
-  kaplayContext.add([kaplayContext.sprite(MENU_SPRITE_ID)]);
+  kaplayContext.add([kaplayContext.sprite(SPRITE.menu)]);
   kaplayContext.add([
     kaplayContext.text("CLICK TO START", FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
@@ -21,7 +21,7 @@ export const mainMenu = () => {
     kaplayContext.text("MADE BY DOMINIK STEFANCIK", FONT_CONFIG),
     // defines a "z-layer" which is used when we want to display game objects on top of each other
     kaplayContext.z(2),
-    kaplayContext.pos(10, 215),
+    kaplayContext.pos(10, 205),
     kaplayContext.color(COLOR.BLUE),
     kaplayContext.opacity(0.5),
   ]);
@@ -40,6 +40,6 @@ export const mainMenu = () => {
   ]);
 
   kaplayContext.onClick(() => {
-    kaplayContext.go(GAME_SCENE_ID);
+    kaplayContext.go(SCENE.game);
   });
 };

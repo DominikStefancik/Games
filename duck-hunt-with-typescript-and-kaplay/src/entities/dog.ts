@@ -1,29 +1,16 @@
 import type { GameObj, Vec2 } from "kaplay";
 import kaplayContext from "../kaplay-context";
 import {
-  BARKING_SOUND_ID,
-  CATCHING_ANIMATION_ID,
-  DETECT_DOG_STATE_ID,
-  DETECTING_ANIMATION_ID,
-  DOG_SPRITE_ID,
-  DROP_DOG_STATE_ID,
-  HUNT_END_GAME_STATE_ID,
-  JUMP_DOG_STATE_ID,
-  JUMPING_ANIMATION_ID,
-  LAUGHING_ANIMATION_ID,
-  LAUGHING_SOUND_ID,
-  ROUND_START_GAME_STATE_ID,
-  SEARCH_DOG_STATE_ID,
-  SEARCHING_ANIMATION_ID,
-  SNIF_DOG_STATE_ID,
-  SNIFFING_ANIMATION_ID,
-  SNIFFING_SOUND_ID,
-  SUCCESSFUL_HUNT_SOUND_ID,
+  DOG_STATE,
+  GAME_STATE,
+  DOG_ANIMATION,
+  SPRITE,
+  SOUND,
 } from "../constants";
 import gameStateManager from "../game-state-manager";
 
 const createDog = (position: Vec2): GameObj => {
-  const sniffingSound = kaplayContext.play(SNIFFING_SOUND_ID, { volume: 2 });
+  const sniffingSound = kaplayContext.play(SOUND.sniffing, { volume: 2 });
   /*
    * We play the sound and immediatelly stop it.
    * That way we will have the sound available in the "sniffingSound" constant, so later we can play it again
@@ -31,22 +18,22 @@ const createDog = (position: Vec2): GameObj => {
    */
   sniffingSound.stop();
 
-  const barkingSound = kaplayContext.play(BARKING_SOUND_ID);
+  const barkingSound = kaplayContext.play(SOUND.barking);
   barkingSound.stop();
 
-  const laughingSound = kaplayContext.play(LAUGHING_SOUND_ID);
+  const laughingSound = kaplayContext.play(SOUND.laughing);
   laughingSound.stop();
 
   return kaplayContext.add([
-    kaplayContext.sprite(DOG_SPRITE_ID),
+    kaplayContext.sprite(SPRITE.dog),
     kaplayContext.pos(position),
     // defines a state machine specifically for the dog game object
-    kaplayContext.state(SEARCH_DOG_STATE_ID, [
-      SEARCH_DOG_STATE_ID,
-      SNIF_DOG_STATE_ID,
-      DETECT_DOG_STATE_ID,
-      JUMP_DOG_STATE_ID,
-      DROP_DOG_STATE_ID,
+    kaplayContext.state(DOG_STATE.search, [
+      DOG_STATE.search,
+      DOG_STATE.snif,
+      DOG_STATE.detect,
+      DOG_STATE.jump,
+      DOG_STATE.drop,
     ]),
     kaplayContext.z(2),
     // custom properties
@@ -55,16 +42,16 @@ const createDog = (position: Vec2): GameObj => {
       searchForDucks(this: GameObj) {
         let numberOfSnifs = 0;
 
-        this.onStateEnter(SEARCH_DOG_STATE_ID, () => {
-          this.play(SEARCHING_ANIMATION_ID);
+        this.onStateEnter(DOG_STATE.search, () => {
+          this.play(DOG_ANIMATION.searching);
 
           kaplayContext.wait(2, () => {
-            this.enterState(SNIF_DOG_STATE_ID);
+            this.enterState(DOG_STATE.snif);
           });
         });
 
         // defines what happens on every frame while the dog is searching
-        this.onStateUpdate(SEARCH_DOG_STATE_ID, () => {
+        this.onStateUpdate(DOG_STATE.search, () => {
           /*
            * The first argument: rate of a movement on the x-axis
            * The second argument: rate of a movement on the y-axis
@@ -74,35 +61,35 @@ const createDog = (position: Vec2): GameObj => {
           this.move(this.speed, 0);
         });
 
-        this.onStateEnter(SNIF_DOG_STATE_ID, () => {
+        this.onStateEnter(DOG_STATE.snif, () => {
           numberOfSnifs++;
-          this.play(SNIFFING_ANIMATION_ID);
+          this.play(DOG_ANIMATION.sniffing);
           sniffingSound.play();
           kaplayContext.wait(2, () => {
             sniffingSound.stop();
 
             if (numberOfSnifs === 2) {
-              this.enterState(DETECT_DOG_STATE_ID);
+              this.enterState(DOG_STATE.detect);
               return;
             }
 
-            this.enterState(SEARCH_DOG_STATE_ID);
+            this.enterState(DOG_STATE.search);
           });
         });
 
-        this.onStateEnter(DETECT_DOG_STATE_ID, () => {
+        this.onStateEnter(DOG_STATE.detect, () => {
           barkingSound.play();
-          this.play(DETECTING_ANIMATION_ID);
+          this.play(DOG_ANIMATION.detecting);
 
           kaplayContext.wait(1, () => {
             barkingSound.stop();
-            this.enterState(JUMP_DOG_STATE_ID);
+            this.enterState(DOG_STATE.jump);
           });
         });
 
-        this.onStateEnter(JUMP_DOG_STATE_ID, () => {
+        this.onStateEnter(DOG_STATE.jump, () => {
           barkingSound.play();
-          this.play(JUMPING_ANIMATION_ID);
+          this.play(DOG_ANIMATION.jumping);
 
           kaplayContext.wait(0.5, () => {
             barkingSound.stop();
@@ -112,15 +99,15 @@ const createDog = (position: Vec2): GameObj => {
              * We change the z-value of the dog game object, so it looks like it is hidden behind the grass.
              */
             this.use(kaplayContext.z(0));
-            this.enterState(DROP_DOG_STATE_ID);
+            this.enterState(DOG_STATE.drop);
           });
         });
 
-        this.onStateUpdate(JUMP_DOG_STATE_ID, () => {
+        this.onStateUpdate(DOG_STATE.jump, () => {
           this.move(100, -50);
         });
 
-        this.onStateEnter(DROP_DOG_STATE_ID, async () => {
+        this.onStateEnter(DOG_STATE.drop, async () => {
           await kaplayContext.tween(
             this.pos.y,
             125,
@@ -130,7 +117,7 @@ const createDog = (position: Vec2): GameObj => {
           );
           // the second argument represents the value for the "isFirstRound" argument,
           // see the "roundStartController" in the "game" function
-          gameStateManager.enterState(ROUND_START_GAME_STATE_ID, true);
+          gameStateManager.enterState(GAME_STATE.roundStart, true);
         });
       },
       async showUpAndHide(this: GameObj) {
@@ -160,16 +147,16 @@ const createDog = (position: Vec2): GameObj => {
          * When the method "play()" is called on the Kaplay's context object, it plays a sound
          * which name is passed as an argument.
          */
-        this.play(CATCHING_ANIMATION_ID);
-        kaplayContext.play(SUCCESSFUL_HUNT_SOUND_ID);
+        this.play(DOG_ANIMATION.catching);
+        kaplayContext.play(SOUND.successfulHunt);
         await this.showUpAndHide();
-        gameStateManager.enterState(HUNT_END_GAME_STATE_ID);
+        gameStateManager.enterState(GAME_STATE.huntEnd);
       },
       async laugtAtPlayer(this: GameObj) {
         laughingSound.play();
-        this.play(LAUGHING_ANIMATION_ID);
+        this.play(DOG_ANIMATION.laughing);
         await this.showUpAndHide();
-        gameStateManager.enterState(HUNT_END_GAME_STATE_ID);
+        gameStateManager.enterState(GAME_STATE.huntEnd);
       },
     },
   ]);

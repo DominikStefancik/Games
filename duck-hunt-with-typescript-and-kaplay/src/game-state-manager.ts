@@ -1,13 +1,5 @@
 import type { GameObj } from "kaplay";
-import {
-  DUCK_ESCAPED_GAME_STATE_ID,
-  DUCK_HUNTED_GAME_STATE_ID,
-  HUNT_END_GAME_STATE_ID,
-  HUNT_START_GAME_STATE_ID,
-  MENU_GAME_STATE_ID,
-  ROUND_END_GAME_STATE_ID,
-  ROUND_START_GAME_STATE_ID,
-} from "./constants";
+import { GAME_STATE } from "./constants";
 import kaplayContext from "./kaplay-context";
 
 const createGameStateManager = () => {
@@ -18,14 +10,14 @@ const createGameStateManager = () => {
      * for each of the states we can define a custom logic which will be executed
      * when th game is in that state
      */
-    kaplayContext.state(MENU_GAME_STATE_ID, [
-      MENU_GAME_STATE_ID,
-      ROUND_START_GAME_STATE_ID,
-      ROUND_END_GAME_STATE_ID,
-      HUNT_START_GAME_STATE_ID,
-      HUNT_END_GAME_STATE_ID,
-      DUCK_HUNTED_GAME_STATE_ID,
-      DUCK_ESCAPED_GAME_STATE_ID,
+    kaplayContext.state(GAME_STATE.menu, [
+      GAME_STATE.menu,
+      GAME_STATE.roundStart,
+      GAME_STATE.roundEnd,
+      GAME_STATE.huntStart,
+      GAME_STATE.huntEnd,
+      GAME_STATE.duckHunted,
+      GAME_STATE.duckEscaped,
     ]),
     // custom properties of the game object
     {

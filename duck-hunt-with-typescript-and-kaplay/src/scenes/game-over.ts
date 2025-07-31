@@ -1,5 +1,5 @@
 import kaplayContext from "../kaplay-context";
-import { COLOR, FONT_CONFIG, MAIN_MENU_SCENE_ID } from "../constants";
+import { COLOR, FONT_CONFIG, SCENE } from "../constants";
 
 const gameOver = () => {
   kaplayContext.add([
@@ -13,7 +13,7 @@ const gameOver = () => {
   ]);
 
   kaplayContext.wait(2, () => {
-    kaplayContext.go(MAIN_MENU_SCENE_ID);
+    kaplayContext.go(SCENE.mainMenu);
   });
 };
 

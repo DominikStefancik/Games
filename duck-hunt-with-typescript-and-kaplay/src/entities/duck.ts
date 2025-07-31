@@ -1,23 +1,13 @@
 import type { GameObj, Vec2 } from "kaplay";
 import kaplayContext from "../kaplay-context";
 import {
-  DUCK_SPRITE_ID,
-  FALL_DUCK_STATE_ID,
-  FLAPPING_SOUND_ID,
-  FLY_DUCK_STATE_ID,
-  FLYING_SIDE_ANIMATION_ID,
-  QUACKING_SOUND_ID,
-  SHOT_ANIMATION_ID,
-  SHOT_DUCK_STATE_ID,
-  SKY_TAG_ID,
+  DUCK_STATE,
   COLOR,
-  DUCK_ESCAPED_GAME_STATE_ID,
-  FLYING_DIAGONAL_ANIMATION_ID,
-  FALLING_SOUND_ID,
-  FALLING_ANIMATION_ID,
-  IMPACT_SOUND_ID,
-  DUCK_ICON_TAG_ID,
-  DUCK_HUNTED_GAME_STATE_ID,
+  TAG,
+  GAME_STATE,
+  DUCK_ANIMATION,
+  SPRITE,
+  SOUND,
 } from "../constants";
 import gameStateManager from "../game-state-manager";
 
@@ -39,17 +29,17 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
   const chosenFlyDirectionIndex = kaplayContext.randi(flyDirections.length);
 
   return kaplayContext.add([
-    kaplayContext.sprite(DUCK_SPRITE_ID, { anim: FLYING_SIDE_ANIMATION_ID }),
+    kaplayContext.sprite(SPRITE.duck, { anim: DUCK_ANIMATION.flyingSide }),
     kaplayContext.area({
       shape: new kaplayContext.Rect(kaplayContext.vec2(0), 24, 24),
     }),
     kaplayContext.anchor("center"),
     kaplayContext.pos(startingPositions[chosenStartingPositionIndex]),
     // defines a state machine specifically for the duck game object
-    kaplayContext.state(FLY_DUCK_STATE_ID, [
-      FLY_DUCK_STATE_ID,
-      SHOT_DUCK_STATE_ID,
-      FALL_DUCK_STATE_ID,
+    kaplayContext.state(DUCK_STATE.fly, [
+      DUCK_STATE.fly,
+      DUCK_STATE.shot,
+      DUCK_STATE.fall,
     ]),
     // the "timer()" component allows a game object to have timer methods
     kaplayContext.timer(),
@@ -81,22 +71,22 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
           this.flipX = true;
         }
 
-        this.quackingSound = kaplayContext.play(QUACKING_SOUND_ID, {
+        this.quackingSound = kaplayContext.play(SOUND.quacking, {
           volume: 0.5,
           loop: true,
         });
-        this.flappingSound = kaplayContext.play(FLAPPING_SOUND_ID, {
+        this.flappingSound = kaplayContext.play(SOUND.flapping, {
           loop: true,
           speed: 2,
         });
 
-        const sky = kaplayContext.get(SKY_TAG_ID)[0];
+        const sky = kaplayContext.get(TAG.sky)[0];
 
-        this.onStateUpdate(FLY_DUCK_STATE_ID, () => {
+        this.onStateUpdate(DUCK_STATE.fly, () => {
           const currentAnimation =
-            this.getCurAnim().name === FLYING_SIDE_ANIMATION_ID
-              ? FLYING_DIAGONAL_ANIMATION_ID
-              : FLYING_SIDE_ANIMATION_ID;
+            this.getCurAnim().name === DUCK_ANIMATION.flyingSide
+              ? DUCK_ANIMATION.flyingDiagonal
+              : DUCK_ANIMATION.flyingSide;
 
           // make sure that the duck doesn't fly of the screen
           // if it is near the edge, change the direction
@@ -117,38 +107,38 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
           this.move(kaplayContext.vec2(this.flyDirection).scale(this.speed));
         });
 
-        this.onStateEnter(SHOT_DUCK_STATE_ID, async () => {
+        this.onStateEnter(DUCK_STATE.shot, async () => {
           gameStateManager.numberOfDucksShotInRound++;
           this.quackingSound.stop();
           this.flappingSound.stop();
           await kaplayContext.wait(0.2);
-          this.enterState(FALL_DUCK_STATE_ID);
+          this.enterState(DUCK_STATE.fall);
         });
 
-        this.onStateEnter(FALL_DUCK_STATE_ID, () => {
+        this.onStateEnter(DUCK_STATE.fall, () => {
           /*
            * When the method "play()" is called on a game object, it plays its animation
            * which name is passed as an argument.
            * When the method "play()" is called on the Kaplay's context object, it plays a sound
            * which name is passed as an argument.
            */
-          this.play(FALLING_ANIMATION_ID);
-          this.fallingSound = kaplayContext.play(FALLING_SOUND_ID, {
+          this.play(DUCK_ANIMATION.falling);
+          this.fallingSound = kaplayContext.play(SOUND.falling, {
             volume: 0.7,
           });
         });
 
-        this.onStateUpdate(FALL_DUCK_STATE_ID, async () => {
+        this.onStateUpdate(DUCK_STATE.fall, async () => {
           this.move(0, this.speed);
 
           // if the falling duck reached the ground
           if (this.pos.y > kaplayContext.height() - 70) {
             this.fallingSound.stop();
-            kaplayContext.play(IMPACT_SOUND_ID);
+            kaplayContext.play(SOUND.impact);
             kaplayContext.destroy(this);
             sky.color = kaplayContext.Color.fromHex(COLOR.BLUE);
             const duckIcon = kaplayContext.get(
-              `${DUCK_ICON_TAG_ID}-${this.duckId}`,
+              `${TAG.duckIcon}-${this.duckId}`,
               { recursive: true },
             )[0];
 
@@ -157,7 +147,7 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
             }
 
             await kaplayContext.wait(1);
-            gameStateManager.enterState(DUCK_HUNTED_GAME_STATE_ID);
+            gameStateManager.enterState(GAME_STATE.duckHunted);
           }
         });
 
@@ -168,8 +158,8 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
           }
 
           gameStateManager.currentScore += 100;
-          this.play(SHOT_ANIMATION_ID);
-          this.enterState(SHOT_DUCK_STATE_ID);
+          this.play(DUCK_ANIMATION.shot);
+          this.enterState(DUCK_STATE.shot);
         });
 
         /*
@@ -191,7 +181,7 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
           this.flappingSound.stop();
           sky.color = kaplayContext.Color.fromHex(COLOR.BLUE);
           gameStateManager.numberOfBulletsLeft = 3;
-          gameStateManager.enterState(DUCK_ESCAPED_GAME_STATE_ID);
+          gameStateManager.enterState(GAME_STATE.duckEscaped);
         });
       },
     },

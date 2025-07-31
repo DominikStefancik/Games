@@ -1,26 +1,15 @@
 import {
-  BACKGROUND_SPRITE_ID,
   BEST_SCORE_DATA,
   COLOR,
-  CURSOR_SPRITE_ID,
   DUCK_COUNT_IN_ROUND,
-  DUCK_ESCAPED_GAME_STATE_ID,
-  DUCK_HUNTED_GAME_STATE_ID,
-  DUCK_ICON_TAG_ID,
   FONT_CONFIG,
-  FOREST_AMBIANCE_SOUND_ID,
-  GAME_OVER_SCENE_ID,
-  GUN_SHOT_SOUND_ID,
-  HUNT_END_GAME_STATE_ID,
-  HUNT_START_GAME_STATE_ID,
+  GAME_STATE,
   MAX_HUNT_NUMBER,
   PAUSE_KEY,
-  PAUSED_TEXT_TAG_ID,
-  ROUND_END_GAME_STATE_ID,
-  ROUND_START_GAME_STATE_ID,
-  SKY_TAG_ID,
-  TEXT_BOX_SPRITE_ID,
-  UI_APPEAR_SOUND_ID,
+  SCENE,
+  SOUND,
+  SPRITE,
+  TAG,
 } from "../constants";
 import createDog from "../entities/dog";
 import createDuck from "../entities/duck";
@@ -32,10 +21,10 @@ export const game = () => {
   kaplayContext.add([
     kaplayContext.rect(kaplayContext.width(), kaplayContext.height()),
     kaplayContext.color(COLOR.BLUE),
-    SKY_TAG_ID,
+    TAG.sky,
   ]);
   kaplayContext.add([
-    kaplayContext.sprite(BACKGROUND_SPRITE_ID),
+    kaplayContext.sprite(SPRITE.background),
     kaplayContext.pos(0, -10),
     kaplayContext.z(1),
   ]);
@@ -62,7 +51,7 @@ export const game = () => {
     duckIcons.add([
       kaplayContext.rect(7, 9),
       kaplayContext.pos(duckIconPositionX, 0),
-      `${DUCK_ICON_TAG_ID}-${index}`,
+      `${TAG.duckIcon}-${index}`,
     ]);
     duckIconPositionX += 8;
   }
@@ -76,7 +65,7 @@ export const game = () => {
   ]);
 
   const cursor = kaplayContext.add([
-    kaplayContext.sprite(CURSOR_SPRITE_ID),
+    kaplayContext.sprite(SPRITE.cursor),
     kaplayContext.anchor("center"),
     // we deliberately won't specify the position of the cursor,
     // because we want to use the method "moveTo()" which is available only if no arguments are passed
@@ -91,18 +80,18 @@ export const game = () => {
   // the method "onStateEnter()" is available on the game object,
   // because we used the component "state()" on it during the creation of the object
   const roundStartController = gameStateManager.onStateEnter(
-    ROUND_START_GAME_STATE_ID,
+    GAME_STATE.roundStart,
     async (isFirstRound: boolean) => {
       if (!isFirstRound) {
         gameStateManager.duckSpeed += 50;
       }
 
-      kaplayContext.play(UI_APPEAR_SOUND_ID);
+      kaplayContext.play(SOUND.uiAppear);
       gameStateManager.currentRoundNumber++;
       roundCounter.text = gameStateManager.currentRoundNumber.toString();
 
       const textBox = kaplayContext.add([
-        kaplayContext.sprite(TEXT_BOX_SPRITE_ID),
+        kaplayContext.sprite(SPRITE.textBox),
         kaplayContext.anchor("center"),
         kaplayContext.pos(
           kaplayContext.center().x,
@@ -129,15 +118,15 @@ export const game = () => {
       // wait 1 second before next round starts
       await kaplayContext.wait(1);
       kaplayContext.destroy(textBox);
-      gameStateManager.enterState(HUNT_START_GAME_STATE_ID);
+      gameStateManager.enterState(GAME_STATE.huntStart);
     },
   );
 
   const roundEndController = gameStateManager.onStateEnter(
-    ROUND_END_GAME_STATE_ID,
+    GAME_STATE.roundEnd,
     () => {
       if (gameStateManager.numberOfDucksShotInRound < 6) {
-        kaplayContext.go(GAME_OVER_SCENE_ID);
+        kaplayContext.go(SCENE.gameOver);
         return;
       }
 
@@ -152,12 +141,12 @@ export const game = () => {
         icon.color = kaplayContext.Color.fromHex(COLOR.WHITE);
       }
 
-      gameStateManager.enterState(ROUND_START_GAME_STATE_ID);
+      gameStateManager.enterState(GAME_STATE.roundStart);
     },
   );
 
   const huntStartController = gameStateManager.onStateEnter(
-    HUNT_START_GAME_STATE_ID,
+    GAME_STATE.huntStart,
     () => {
       gameStateManager.currentHuntNumber++;
       const duck = createDuck({
@@ -169,7 +158,7 @@ export const game = () => {
   );
 
   const huntEndController = gameStateManager.onStateEnter(
-    HUNT_END_GAME_STATE_ID,
+    GAME_STATE.huntEnd,
     () => {
       const bestScore = kaplayContext.getData(BEST_SCORE_DATA) as number;
 
@@ -178,17 +167,17 @@ export const game = () => {
       }
 
       if (gameStateManager.currentHuntNumber < MAX_HUNT_NUMBER) {
-        gameStateManager.enterState(HUNT_START_GAME_STATE_ID);
+        gameStateManager.enterState(GAME_STATE.huntStart);
         return;
       }
 
       gameStateManager.currentHuntNumber = 1;
-      gameStateManager.enterState(ROUND_END_GAME_STATE_ID);
+      gameStateManager.enterState(GAME_STATE.roundEnd);
     },
   );
 
   const duckHuntedController = gameStateManager.onStateEnter(
-    DUCK_HUNTED_GAME_STATE_ID,
+    GAME_STATE.duckHunted,
     () => {
       gameStateManager.numberOfBulletsLeft = 3;
       dog.catchFallenDuck();
@@ -196,7 +185,7 @@ export const game = () => {
   );
 
   const duckEscapedController = gameStateManager.onStateEnter(
-    DUCK_ESCAPED_GAME_STATE_ID,
+    GAME_STATE.duckEscaped,
     () => {
       dog.laugtAtPlayer();
     },
@@ -206,11 +195,11 @@ export const game = () => {
     // the property "state" is available on the game object,
     // because we used the component "state()" on it during the creation of the object
     if (
-      gameStateManager.state === HUNT_START_GAME_STATE_ID &&
+      gameStateManager.state === GAME_STATE.huntStart &&
       !gameStateManager.isGamePaused
     ) {
       if (gameStateManager.numberOfBulletsLeft > 0) {
-        kaplayContext.play(GUN_SHOT_SOUND_ID, { volume: 0.5 });
+        kaplayContext.play(SOUND.gunShot, { volume: 0.5 });
         gameStateManager.numberOfBulletsLeft--;
       }
     }
@@ -237,7 +226,7 @@ export const game = () => {
     cursor.moveTo(kaplayContext.mousePos());
   });
 
-  const forestAmbianceSound = kaplayContext.play(FOREST_AMBIANCE_SOUND_ID, {
+  const forestAmbianceSound = kaplayContext.play(SOUND.forestAmbiance, {
     volume: 0.1,
     loop: true,
   });
@@ -272,11 +261,11 @@ export const game = () => {
         ),
         kaplayContext.anchor("center"),
         kaplayContext.z(3),
-        PAUSED_TEXT_TAG_ID,
+        TAG.pausedText,
       ]);
     } else {
       audioContext.resume();
-      const pausedText = kaplayContext.get(PAUSED_TEXT_TAG_ID)[0];
+      const pausedText = kaplayContext.get(TAG.pausedText)[0];
 
       if (pausedText) {
         kaplayContext.destroy(pausedText);
