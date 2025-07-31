@@ -39,7 +39,7 @@ export const createBirds = (birdConfigs: BirdConfig[]) => {
 
         async diveAttack(this: GameObj, targetPosition: Vec2) {
           if (!this.isOffScreen()) {
-            kaplayContext.play(SOUND.dive, { volume: 0.2 });
+            kaplayContext.play(SOUND.dive, { volume: 0.02 });
           }
 
           await kaplayContext.tween(

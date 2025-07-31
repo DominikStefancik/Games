@@ -2,6 +2,7 @@ import {
   WAVE_ANIMATION,
   SCENE_ELEMENT_SPRITE,
   BACKGROUND_SPRITE,
+  SOUND,
 } from "../../constants";
 import { createBirds } from "../../entities/bird";
 import { createPlayer } from "../../entities/player";
@@ -33,4 +34,12 @@ export const level3 = () => {
   displayStatusBox();
   displayLivesCount(player);
   displayCoinCount(player);
+
+  const windSound = kaplayContext.play(SOUND.windAmbience, {
+    volume: 0.3,
+    loop: true,
+  });
+  kaplayContext.onSceneLeave(() => {
+    windSound.stop();
+  });
 };

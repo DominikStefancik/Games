@@ -2,6 +2,7 @@ import {
   WAVE_ANIMATION,
   SCENE_ELEMENT_SPRITE,
   BACKGROUND_SPRITE,
+  SOUND,
 } from "../../constants";
 import { createFish } from "../../entities/fish";
 import { createPlayer } from "../../entities/player";
@@ -34,4 +35,12 @@ export const level1 = () => {
   displayStatusBox();
   displayLivesCount(player);
   displayCoinCount(player);
+
+  const waterSound = kaplayContext.play(SOUND.waterAmbience, {
+    volume: 0.03,
+    loop: true,
+  });
+  kaplayContext.onSceneLeave(() => {
+    waterSound.stop();
+  });
 };

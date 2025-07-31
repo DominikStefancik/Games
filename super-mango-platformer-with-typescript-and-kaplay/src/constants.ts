@@ -24,6 +24,9 @@ export const SOUND = {
   swingingAxe: "swingingAxe",
   saw: "saw",
   dive: "dive",
+  waterAmbience: "waterAmbience",
+  lavaAmbience: "lavaAmbience",
+  windAmbience: "windAmbience",
 };
 
 export const LOGO_SPRITE = "logo";

@@ -2,6 +2,7 @@ import {
   WAVE_ANIMATION,
   SCENE_ELEMENT_SPRITE,
   BACKGROUND_SPRITE,
+  SOUND,
 } from "../../constants";
 import { createFlames } from "../../entities/flame";
 import { createPlayer } from "../../entities/player";
@@ -40,4 +41,9 @@ export const level2 = () => {
   displayStatusBox();
   displayLivesCount(player);
   displayCoinCount(player);
+
+  const lavaSound = kaplayContext.play(SOUND.lavaAmbience, { loop: true });
+  kaplayContext.onSceneLeave(() => {
+    lavaSound.stop();
+  });
 };

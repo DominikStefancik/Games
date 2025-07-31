@@ -37,6 +37,9 @@ const loadSounds = () => {
   kaplayContext.loadSound(SOUND.swingingAxe, "./sounds/swinging-axe.mp3");
   kaplayContext.loadSound(SOUND.saw, "./sounds/saw.wav");
   kaplayContext.loadSound(SOUND.dive, "./sounds/dive.wav");
+  kaplayContext.loadSound(SOUND.waterAmbience, "./sounds/water-ambience.mp3");
+  kaplayContext.loadSound(SOUND.lavaAmbience, "./sounds/lava.wav");
+  kaplayContext.loadSound(SOUND.windAmbience, "./sounds/strong-wind.wav");
 };
 
 const loadSprites = () => {
