@@ -92,14 +92,14 @@ const createDuck = (params: { duckId: string; speed: number }): GameObj => {
           // if it is near the edge, change the direction
           if (
             this.flyTimer < this.timeBeforeEscape &&
-            (this.pos.x > kaplayContext.width() + 10 || this.pos.x < -10)
+            (this.pos.x > kaplayContext.width() - 8 || this.pos.x < 8)
           ) {
             this.flyDirection.x = -this.flyDirection.x;
             this.flipX = !this.flipX;
             this.play(currentAnimation);
           }
 
-          if (this.pos.y > kaplayContext.height() - 70 || this.pos.y < -10) {
+          if (this.pos.y > kaplayContext.height() - 70 || this.pos.y < 8) {
             this.flyDirection.y = -this.flyDirection.y;
             this.play(currentAnimation);
           }
