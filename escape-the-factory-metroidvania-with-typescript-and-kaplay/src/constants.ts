@@ -17,6 +17,12 @@ export const SOUND = {
   flamethrower: "flamethrower",
 };
 
+export const SCENE = {
+  intro: "intro",
+  room1: "room1",
+  room2: "room2",
+};
+
 export const ENTITY_SPRITE = {
   player: "player",
   drone: "drone",
