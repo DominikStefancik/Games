@@ -1,0 +1,9 @@
+[package]
+name = "minesweeper-with-rust-and-macroquad"
+version = "0.1.0"
+edition = "2024"
+authors = ["Dominik Stefancik <dstefancik@gmail.com>"]
+
+[dependencies]
+macroquad = "0.4.14"
+rand = "0.9.2"
