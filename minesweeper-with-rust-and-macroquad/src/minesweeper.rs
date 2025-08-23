@@ -1,10 +1,11 @@
-use rand::Rng;
+use crate::constants::{LEFT_MARGIN, TILE_SIZE, TOP_MARGIN};
 use crate::tile::Tile;
+use rand::Rng;
 
 enum GameState {
     Playing,
     Won,
-    Lost
+    Lost,
 }
 
 pub struct Minesweeper {
@@ -24,6 +25,23 @@ impl Minesweeper {
             tiles,
             state: GameState::Playing,
         }
+    }
+
+    pub fn draw(&self) {
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                let tile_index = self.get_index(i, j);
+                let tile = &self.tiles[tile_index];
+                tile.draw(
+                    LEFT_MARGIN + i as f32 * TILE_SIZE,
+                    TOP_MARGIN + j as f32 * TILE_SIZE,
+                )
+            }
+        }
+    }
+
+    fn get_index(&self, row_index: u32, col_index: u32) -> usize {
+        (self.cols * col_index + row_index) as usize
     }
 }
 
