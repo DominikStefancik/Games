@@ -1,5 +1,6 @@
 import kaplayContext from "../kaplay-context";
+import { setBackground } from "./helpers";
 
 export const intro = () => {
-  kaplayContext.add([]);
+  setBackground("#a2aed5");
 };

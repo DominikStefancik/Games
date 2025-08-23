@@ -1,5 +1,6 @@
 import kaplayContext from "../kaplay-context";
+import { setBackground } from "./helpers";
 
 export const room1 = () => {
-  kaplayContext.add([]);
+  setBackground("#a2aed5");
 };

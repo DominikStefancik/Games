@@ -7,6 +7,10 @@ import { room2 } from "./scenes/room2";
 const scenes: { [key: string]: () => void } = {
   [SCENE.intro]: intro,
   [SCENE.room1]: () => {
+    const room1Data = kaplayContext.loadJSON(
+      "room1Data",
+      "./maps/room1.json",
+    ).data;
     room1();
   },
   [SCENE.room2]: () => {
