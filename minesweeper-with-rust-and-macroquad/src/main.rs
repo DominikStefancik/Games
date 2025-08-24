@@ -2,13 +2,14 @@ use crate::minesweeper::Minesweeper;
 use macroquad::color::WHITE;
 use macroquad::window::{clear_background, next_frame};
 
+mod assets;
 mod constants;
 mod minesweeper;
 mod tile;
 
 #[macroquad::main("Minesweeper with Macroquad")]
 async fn main() {
-    let game = Minesweeper::new(10, 10, 10);
+    let game = Minesweeper::new(10, 10, 10).await;
     loop {
         clear_background(WHITE);
 
