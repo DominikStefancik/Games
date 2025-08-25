@@ -1,6 +1,9 @@
 use crate::assets::Assets;
 use crate::constants::{BOTTOM_MARGIN, LEFT_MARGIN, RIGHT_MARGIN, TOP_MARGIN};
+use crate::mouse::get_pressed_mouse_position;
+use crate::position::Position;
 use crate::tile::Tile;
+use macroquad::input::MouseButton;
 use macroquad::window::{screen_height, screen_width};
 use rand::Rng;
 
@@ -36,7 +39,7 @@ impl Minesweeper {
         let tile_size = self.get_tile_size();
         for i in 0..self.rows {
             for j in 0..self.cols {
-                let tile_index = self.get_index(i, j);
+                let tile_index = self.get_index(&Position::new(i, j));
                 let tile = &self.tiles[tile_index];
                 tile.draw(
                     LEFT_MARGIN + i as f32 * tile_size,
@@ -48,8 +51,8 @@ impl Minesweeper {
         }
     }
 
-    fn get_index(&self, row_index: u32, col_index: u32) -> usize {
-        (self.cols * col_index + row_index) as usize
+    fn get_index(&self, position: &Position<u32>) -> usize {
+        (self.cols * position.x + position.y) as usize
     }
 
     /*
@@ -60,6 +63,48 @@ impl Minesweeper {
         let height = (screen_height() - TOP_MARGIN - BOTTOM_MARGIN) / self.rows as f32;
 
         width.min(height)
+    }
+
+    pub fn handle_mouse_click(&mut self) {
+        if let Some(position) = get_pressed_mouse_position(MouseButton::Left) {
+            self.make_move(position);
+        } else if let Some(position) = get_pressed_mouse_position(MouseButton::Right) {
+        }
+    }
+
+    fn make_move(&mut self, position: Position<f32>) {
+        // first find out which tile was clicked on via a cursor position
+        let position = match self.resolve_tile_position(&position) {
+            Some(position) => position,
+            None => return,
+        };
+
+        // if the position is the position of a tile, we want to get the index of the tile
+        let index = self.get_index(&position);
+        let tile = &mut self.tiles[index];
+        tile.reveal();
+    }
+
+    fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<u32>> {
+        let tile_size = self.get_tile_size();
+        let position_without_padding = position.subtract(&Position::new(LEFT_MARGIN, TOP_MARGIN));
+
+        if position_without_padding.x < 0. || position_without_padding.y < 0. {
+            return None;
+        }
+
+        let divided_position = position_without_padding.divide(tile_size);
+        let result = divided_position.into();
+
+        if self.is_within_bounds(&result) {
+            return Some(result);
+        }
+
+        None
+    }
+
+    fn is_within_bounds(&self, position: &Position<u32>) -> bool {
+        position.x >= 0 && position.y >= 0 && position.x < self.cols && position.y < self.rows
     }
 }
 

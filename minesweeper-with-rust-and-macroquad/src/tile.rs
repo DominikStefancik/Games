@@ -55,4 +55,8 @@ impl Tile {
             );
         }
     }
+
+    pub fn reveal(&mut self) {
+        self.state = TileState::Revealed;
+    }
 }
