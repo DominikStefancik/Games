@@ -6,17 +6,17 @@ pub struct Position<T> {
     pub y: T,
 }
 
-impl From<Position<f32>> for Position<u32> {
+impl From<Position<f32>> for Position<i32> {
     fn from(value: Position<f32>) -> Self {
         Self {
-            x: value.x as u32,
-            y: value.y as u32,
+            x: value.x as i32,
+            y: value.y as i32,
         }
     }
 }
 
 impl<T> Position<T> {
-    pub fn new(x: T, y: T) -> Self {
+    pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 

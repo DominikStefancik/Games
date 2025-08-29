@@ -1,11 +1,14 @@
 use crate::assets::Assets;
-use crate::constants::{BOTTOM_MARGIN, LEFT_MARGIN, RIGHT_MARGIN, TOP_MARGIN};
+use crate::constants::{
+    BOTTOM_MARGIN, LEFT_MARGIN, NEIGHBOURS_DIFFERENCE, RIGHT_MARGIN, TOP_MARGIN,
+};
 use crate::mouse::get_pressed_mouse_position;
 use crate::position::Position;
-use crate::tile::Tile;
+use crate::tile::{Tile, TileState};
 use macroquad::input::MouseButton;
 use macroquad::window::{screen_height, screen_width};
 use rand::Rng;
+use std::collections::VecDeque;
 
 pub enum GameState {
     Playing,
@@ -26,20 +29,45 @@ impl Minesweeper {
         let tiles = create_tiles(rows, cols, mines_count);
         let assets = Assets::load().await;
 
-        Minesweeper {
+        let mut game = Minesweeper {
             rows,
             cols,
             tiles,
             state: GameState::Playing,
             assets,
+        };
+        game.update_number_of_surrounding_mines();
+
+        game
+    }
+
+    fn update_number_of_surrounding_mines(&mut self) {
+        for i in 0..self.cols {
+            for j in 0..self.rows {
+                let position = Position::new(i as i32, j as i32);
+                let tile_index = self.get_tile_index(&position);
+                self.tiles[tile_index].number_of_surrounding_mines =
+                    self.get_surrounding_mines_count(&position);
+            }
         }
+    }
+
+    fn get_surrounding_mines_count(&self, tile_position: &Position<i32>) -> u32 {
+        NEIGHBOURS_DIFFERENCE
+            .iter()
+            .map(|difference| tile_position.add(difference))
+            .filter(|position| {
+                self.is_within_board_bounds(position)
+                    && self.tiles[self.get_tile_index(position)].contains_mine
+            })
+            .count() as u32
     }
 
     pub fn draw(&self) {
         let tile_size = self.get_tile_size();
-        for i in 0..self.rows {
-            for j in 0..self.cols {
-                let tile_index = self.get_index(&Position::new(i, j));
+        for i in 0..self.cols {
+            for j in 0..self.rows {
+                let tile_index = self.get_tile_index(&Position::new(i as i32, j as i32));
                 let tile = &self.tiles[tile_index];
                 tile.draw(
                     LEFT_MARGIN + i as f32 * tile_size,
@@ -51,8 +79,8 @@ impl Minesweeper {
         }
     }
 
-    fn get_index(&self, position: &Position<u32>) -> usize {
-        (self.cols * position.x + position.y) as usize
+    fn get_tile_index(&self, position: &Position<i32>) -> usize {
+        (self.cols * position.x as u32 + position.y as u32) as usize
     }
 
     /*
@@ -81,9 +109,24 @@ impl Minesweeper {
         };
 
         // if the position is the position of a tile, we want to get the index of the tile
-        let index = self.get_index(&position);
+        let index = self.get_tile_index(&position);
         let tile = &mut self.tiles[index];
-        tile.reveal();
+
+        match tile.state {
+            TileState::Hidden if tile.contains_mine => {
+                tile.reveal();
+                println!("User clicked a mine. Game over!");
+                self.state = GameState::Lost;
+            }
+            TileState::Hidden if !tile.contains_mine => {
+                tile.reveal();
+                self.reveal_neighbour_tiles(&position);
+            }
+            TileState::Revealed => {
+                self.reveal_neighbour_tiles(&position);
+            }
+            _ => {}
+        }
     }
 
     fn flag_tile(&mut self, position: Position<f32>) {
@@ -94,12 +137,12 @@ impl Minesweeper {
         };
 
         // if the position is the position of a tile, we want to get the index of the tile
-        let index = self.get_index(&position);
+        let index = self.get_tile_index(&position);
         let tile = &mut self.tiles[index];
         tile.flag();
     }
 
-    fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<u32>> {
+    fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<i32>> {
         let tile_size = self.get_tile_size();
         // we need to remove the padding in case a cursor is slightly away from a tile square, where the padding is
         let position_without_padding = position.subtract(&Position::new(LEFT_MARGIN, TOP_MARGIN));
@@ -113,18 +156,54 @@ impl Minesweeper {
         let divided_position = position_without_padding.divide(tile_size);
         let result = divided_position.into();
 
-        // only if a cursor is "in" the tile area, return a position
-        if self.is_within_bounds(&result) {
+        // only if a cursor is in the board area, return a position
+        if self.is_within_board_bounds(&result) {
             return Some(result);
         }
 
         None
     }
 
-    fn is_within_bounds(&self, position: &Position<u32>) -> bool {
-        // since the Position type can have only positive values, we can skip the test for
-        // position.x >= 0 && position.y >= 0
-        position.x < self.cols && position.y < self.rows
+    fn is_within_board_bounds(&self, position: &Position<i32>) -> bool {
+        position.x >= 0
+            && position.y >= 0
+            && position.x < self.cols as i32
+            && position.y < self.rows as i32
+    }
+
+    // the method uses the Breadth First Search algorithm to reveal tiles
+    // it starts with a tile on a board and investigates all tiles on the current depth level before moving
+    // to the tiles on the next depth level
+    fn reveal_neighbour_tiles(&mut self, position: &Position<i32>) {
+        let mut queue: VecDeque<Position<i32>> = VecDeque::new();
+        // we start with a tile a user clicked
+        queue.push_back(position.clone());
+
+        // then go over all surrounding tiles
+        while let Some(position) = queue.pop_front() {
+            for difference in NEIGHBOURS_DIFFERENCE {
+                // for each neighbour we get a new position by adding the current position to the neighbour difference
+                let neighbour_position = position.add(difference);
+
+                // if a tile is on a border and adding a difference will take us out of the board
+                if !self.is_within_board_bounds(&neighbour_position) {
+                    continue;
+                }
+
+                let neighbour_tile_index = self.get_tile_index(&neighbour_position);
+                let neighbour_tile = &mut self.tiles[neighbour_tile_index];
+
+                if neighbour_tile.contains_mine || neighbour_tile.state != TileState::Hidden {
+                    continue;
+                }
+
+                neighbour_tile.reveal();
+
+                if neighbour_tile.number_of_surrounding_mines == 0 {
+                    queue.push_back(neighbour_position);
+                }
+            }
+        }
     }
 }
 

@@ -2,9 +2,9 @@ use crate::assets::Assets;
 use macroquad::color::{LIGHTGRAY, SKYBLUE, WHITE};
 use macroquad::math::Vec2;
 use macroquad::shapes::draw_rectangle;
-use macroquad::texture::{draw_texture_ex, DrawTextureParams};
+use macroquad::texture::{DrawTextureParams, draw_texture_ex};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum TileState {
     Hidden,
     Revealed,
@@ -15,6 +15,7 @@ pub enum TileState {
 pub struct Tile {
     pub state: TileState,
     pub contains_mine: bool,
+    pub number_of_surrounding_mines: u32,
 }
 
 impl Tile {
@@ -22,6 +23,7 @@ impl Tile {
         Tile {
             state: TileState::Hidden,
             contains_mine: false,
+            number_of_surrounding_mines: 0,
         }
     }
 
