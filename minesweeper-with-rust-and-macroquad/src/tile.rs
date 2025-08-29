@@ -59,4 +59,8 @@ impl Tile {
     pub fn reveal(&mut self) {
         self.state = TileState::Revealed;
     }
+
+    pub fn flag(&mut self) {
+        self.state = TileState::Flagged;
+    }
 }

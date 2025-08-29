@@ -69,6 +69,7 @@ impl Minesweeper {
         if let Some(position) = get_pressed_mouse_position(MouseButton::Left) {
             self.make_move(position);
         } else if let Some(position) = get_pressed_mouse_position(MouseButton::Right) {
+            self.flag_tile(position)
         }
     }
 
@@ -83,6 +84,19 @@ impl Minesweeper {
         let index = self.get_index(&position);
         let tile = &mut self.tiles[index];
         tile.reveal();
+    }
+
+    fn flag_tile(&mut self, position: Position<f32>) {
+        // first find out which tile was clicked on via a cursor position
+        let position = match self.resolve_tile_position(&position) {
+            Some(position) => position,
+            None => return,
+        };
+
+        // if the position is the position of a tile, we want to get the index of the tile
+        let index = self.get_index(&position);
+        let tile = &mut self.tiles[index];
+        tile.flag();
     }
 
     fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<u32>> {
