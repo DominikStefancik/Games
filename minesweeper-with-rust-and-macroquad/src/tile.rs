@@ -81,8 +81,12 @@ impl Tile {
         self.state = TileState::Revealed;
     }
 
-    pub fn flag(&mut self) {
-        self.state = TileState::Flagged;
+    pub fn toggle_flag(&mut self) {
+        self.state = if self.state == TileState::Flagged {
+            TileState::Hidden
+        } else {
+            TileState::Flagged
+        };
     }
 }
 

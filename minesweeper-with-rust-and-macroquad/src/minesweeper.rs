@@ -95,6 +95,11 @@ impl Minesweeper {
     }
 
     pub fn handle_mouse_click(&mut self) {
+        // don't react to a user click if the game is over
+        if self.state != GameState::Playing {
+            return;
+        }
+
         if let Some(position) = get_pressed_mouse_position(MouseButton::Left) {
             self.make_move(position);
         } else if let Some(position) = get_pressed_mouse_position(MouseButton::Right) {
@@ -103,11 +108,6 @@ impl Minesweeper {
     }
 
     fn make_move(&mut self, position: Position<f32>) {
-        // don't react to user if the game is over
-        if self.state != GameState::Playing {
-            return;
-        }
-
         // first find out which tile was clicked on via a cursor position
         let position = match self.resolve_tile_position(&position) {
             Some(position) => position,
@@ -121,7 +121,7 @@ impl Minesweeper {
         match tile.state {
             TileState::Hidden if tile.contains_mine => {
                 tile.reveal();
-                println!("User clicked a mine. Game over!");
+                println!("You clicked on a mine. Game over!");
                 self.state = GameState::Lost;
             }
             TileState::Hidden if !tile.contains_mine => {
@@ -129,7 +129,9 @@ impl Minesweeper {
                 self.reveal_neighbour_tiles(&position);
             }
             TileState::Revealed => {
-                self.reveal_neighbour_tiles(&position);
+                if self.can_reveal_neighbour_tiles(&position) {
+                    self.reveal_neighbour_tiles(&position);
+                }
             }
             _ => {}
         }
@@ -150,7 +152,13 @@ impl Minesweeper {
         // if the position is the position of a tile, we want to get the index of the tile
         let index = self.get_tile_index(&position);
         let tile = &mut self.tiles[index];
-        tile.flag();
+
+        // if user wants to flag an already revealed tile, we don't allow it
+        if tile.state == TileState::Revealed {
+            return;
+        }
+
+        tile.toggle_flag();
     }
 
     fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<i32>> {
@@ -188,7 +196,7 @@ impl Minesweeper {
     fn reveal_neighbour_tiles(&mut self, position: &Position<i32>) {
         let mut queue: VecDeque<Position<i32>> = VecDeque::new();
         // we start with a tile a user clicked
-        queue.push_back(position.clone());
+        queue.push_back(*position);
 
         // then go over all surrounding tiles
         while let Some(position) = queue.pop_front() {
@@ -217,10 +225,41 @@ impl Minesweeper {
         }
     }
 
+    fn can_reveal_neighbour_tiles(&self, position: &Position<i32>) -> bool {
+        let index = self.get_tile_index(position);
+        let tile = &self.tiles[index];
+
+        // if this tile has no mines around it, then it has been already revealed
+        // if it has a mine, the game is lost anyway
+        if tile.number_of_surrounding_mines == 0 || tile.contains_mine {
+            return false;
+        }
+
+        // check if the number of tiles a user flagged correctly equals the number of mines around this tile
+        let count = NEIGHBOURS_DIFFERENCE
+            .iter()
+            .map(|difference| position.add(difference))
+            .filter(|position| self.is_within_board_bounds(position))
+            .map(|position| {
+                let neighbour_index = self.get_tile_index(&position);
+                let neighbour_tile = &self.tiles[neighbour_index];
+
+                match (neighbour_tile.contains_mine, &neighbour_tile.state) {
+                    (true, TileState::Flagged) => 1,
+                    (false, TileState::Flagged) => 100000, // means a user flagged the tile incorrectly
+                    _ => 0,
+                }
+            })
+            .sum();
+
+        tile.number_of_surrounding_mines == count
+    }
+
     fn has_won(&self) -> bool {
         self.tiles
             .iter()
-            .all(|tile| !tile.contains_mine && tile.state == TileState::Revealed)
+            .filter(|tile| !tile.contains_mine)
+            .all(|tile| tile.state == TileState::Revealed)
     }
 }
 
