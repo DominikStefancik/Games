@@ -2,10 +2,10 @@ use crate::assets::Assets;
 use macroquad::color::{LIGHTGRAY, SKYBLUE, WHITE};
 use macroquad::math::Vec2;
 use macroquad::shapes::draw_rectangle;
-use macroquad::texture::{DrawTextureParams, draw_texture_ex};
+use macroquad::texture::{draw_texture_ex, DrawTextureParams};
 
 #[derive(Clone, Debug)]
-enum TileState {
+pub enum TileState {
     Hidden,
     Revealed,
     Flagged,

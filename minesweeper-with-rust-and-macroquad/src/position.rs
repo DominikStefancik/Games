@@ -21,6 +21,7 @@ impl<T> Position<T> {
     }
 
     pub fn add(&self, other: &Position<T>) -> Self
+    // we need to add a WHERE part in which we specify that the type can perform a addition
     where
         T: Add<T, Output = T> + Copy,
     {
@@ -31,6 +32,7 @@ impl<T> Position<T> {
     }
 
     pub fn subtract(&self, other: &Position<T>) -> Self
+    // we need to add a WHERE part in which we specify that the type can perform a subtraction
     where
         T: Sub<T, Output = T> + Copy,
     {
@@ -41,6 +43,7 @@ impl<T> Position<T> {
     }
 
     pub fn divide(self, value: T) -> Self
+    // we need to add a WHERE part in which we specify that the type can perform a division
     where
         T: Div<T, Output = T> + Copy,
     {

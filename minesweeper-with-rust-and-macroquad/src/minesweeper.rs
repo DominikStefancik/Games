@@ -7,7 +7,7 @@ use macroquad::input::MouseButton;
 use macroquad::window::{screen_height, screen_width};
 use rand::Rng;
 
-enum GameState {
+pub enum GameState {
     Playing,
     Won,
     Lost,
@@ -87,15 +87,19 @@ impl Minesweeper {
 
     fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<u32>> {
         let tile_size = self.get_tile_size();
+        // we need to remove the padding in case a cursor is slightly away from a tile square, where the padding is
         let position_without_padding = position.subtract(&Position::new(LEFT_MARGIN, TOP_MARGIN));
 
+        // since we subtract the margins, we need to check if any of the position value is below zero
         if position_without_padding.x < 0. || position_without_padding.y < 0. {
             return None;
         }
 
+        // we need to divide by the tile size to pixel position down to tile position
         let divided_position = position_without_padding.divide(tile_size);
         let result = divided_position.into();
 
+        // only if a cursor is "in" the tile area, return a position
         if self.is_within_bounds(&result) {
             return Some(result);
         }
@@ -104,7 +108,9 @@ impl Minesweeper {
     }
 
     fn is_within_bounds(&self, position: &Position<u32>) -> bool {
-        position.x >= 0 && position.y >= 0 && position.x < self.cols && position.y < self.rows
+        // since the Position type can have only positive values, we can skip the test for
+        // position.x >= 0 && position.y >= 0
+        position.x < self.cols && position.y < self.rows
     }
 }
 
