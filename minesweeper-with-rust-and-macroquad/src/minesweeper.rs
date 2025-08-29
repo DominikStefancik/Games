@@ -10,6 +10,7 @@ use macroquad::window::{screen_height, screen_width};
 use rand::Rng;
 use std::collections::VecDeque;
 
+#[derive(PartialEq)]
 pub enum GameState {
     Playing,
     Won,
@@ -102,6 +103,11 @@ impl Minesweeper {
     }
 
     fn make_move(&mut self, position: Position<f32>) {
+        // don't react to user if the game is over
+        if self.state != GameState::Playing {
+            return;
+        }
+
         // first find out which tile was clicked on via a cursor position
         let position = match self.resolve_tile_position(&position) {
             Some(position) => position,
@@ -126,6 +132,11 @@ impl Minesweeper {
                 self.reveal_neighbour_tiles(&position);
             }
             _ => {}
+        }
+
+        if self.has_won() {
+            println!("You won!");
+            self.state = GameState::Won;
         }
     }
 
@@ -204,6 +215,12 @@ impl Minesweeper {
                 }
             }
         }
+    }
+
+    fn has_won(&self) -> bool {
+        self.tiles
+            .iter()
+            .all(|tile| !tile.contains_mine && tile.state == TileState::Revealed)
     }
 }
 
