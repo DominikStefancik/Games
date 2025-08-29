@@ -1,4 +1,5 @@
 use crate::assets::Assets;
+use crate::board::Board;
 use crate::constants::{
     BOTTOM_MARGIN, LEFT_MARGIN, NEIGHBOURS_DIFFERENCE, RIGHT_MARGIN, TOP_MARGIN,
 };
@@ -18,21 +19,19 @@ pub enum GameState {
 }
 
 pub struct Minesweeper {
-    pub rows: u32,
-    pub cols: u32,
+    pub board: Board,
     pub tiles: Vec<Tile>,
     pub state: GameState,
     pub assets: Assets,
 }
 
 impl Minesweeper {
-    pub async fn new(rows: u32, cols: u32, mines_count: u32) -> Self {
-        let tiles = create_tiles(rows, cols, mines_count);
+    pub async fn new(board: Board) -> Self {
+        let tiles = create_tiles(&board);
         let assets = Assets::load().await;
 
         let mut game = Minesweeper {
-            rows,
-            cols,
+            board,
             tiles,
             state: GameState::Playing,
             assets,
@@ -43,8 +42,8 @@ impl Minesweeper {
     }
 
     fn update_number_of_surrounding_mines(&mut self) {
-        for i in 0..self.cols {
-            for j in 0..self.rows {
+        for i in 0..self.board.cols {
+            for j in 0..self.board.rows {
                 let position = Position::new(i as i32, j as i32);
                 let tile_index = self.get_tile_index(&position);
                 self.tiles[tile_index].number_of_surrounding_mines =
@@ -66,8 +65,8 @@ impl Minesweeper {
 
     pub fn draw(&self) {
         let tile_size = self.get_tile_size();
-        for i in 0..self.cols {
-            for j in 0..self.rows {
+        for i in 0..self.board.cols {
+            for j in 0..self.board.rows {
                 let tile_index = self.get_tile_index(&Position::new(i as i32, j as i32));
                 let tile = &self.tiles[tile_index];
                 tile.draw(
@@ -81,15 +80,15 @@ impl Minesweeper {
     }
 
     fn get_tile_index(&self, position: &Position<i32>) -> usize {
-        (self.cols * position.x as u32 + position.y as u32) as usize
+        (self.board.cols * position.x as u32 + position.y as u32) as usize
     }
 
     /*
      * Calculates the size of a tile dynamically, depending on how the size of the window changes
      */
     fn get_tile_size(&self) -> f32 {
-        let width = (screen_width() - LEFT_MARGIN - RIGHT_MARGIN) / self.cols as f32;
-        let height = (screen_height() - TOP_MARGIN - BOTTOM_MARGIN) / self.rows as f32;
+        let width = (screen_width() - LEFT_MARGIN - RIGHT_MARGIN) / self.board.cols as f32;
+        let height = (screen_height() - TOP_MARGIN - BOTTOM_MARGIN) / self.board.rows as f32;
 
         width.min(height)
     }
@@ -186,8 +185,8 @@ impl Minesweeper {
     fn is_within_board_bounds(&self, position: &Position<i32>) -> bool {
         position.x >= 0
             && position.y >= 0
-            && position.x < self.cols as i32
-            && position.y < self.rows as i32
+            && position.x < self.board.cols as i32
+            && position.y < self.board.rows as i32
     }
 
     // the method uses the Breadth First Search algorithm to reveal tiles
@@ -263,13 +262,19 @@ impl Minesweeper {
     }
 }
 
-fn create_tiles(rows: u32, cols: u32, mines_count: u32) -> Vec<Tile> {
+fn create_tiles(board: &Board) -> Vec<Tile> {
+    let Board {
+        rows,
+        cols,
+        mines_count,
+    } = board;
+
     // it better to treat tiles as one-dimensional array rather than two-dimensional
     // because it will be faster and more efficient memory wise
     let mut tiles = vec![Tile::new(); (rows * cols) as usize];
     let mut rnd = rand::rng();
 
-    (0..mines_count).for_each(|_| {
+    (0..*mines_count).for_each(|_| {
         let mut index = rnd.random_range(0..(rows * cols) as usize);
 
         while tiles[index].contains_mine {
