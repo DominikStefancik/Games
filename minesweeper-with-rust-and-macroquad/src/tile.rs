@@ -1,7 +1,10 @@
 use crate::assets::Assets;
-use macroquad::color::{LIGHTGRAY, SKYBLUE, WHITE};
+use macroquad::color::{
+    BLUE, BROWN, Color, DARKBLUE, GREEN, LIGHTGRAY, PINK, PURPLE, RED, SKYBLUE, WHITE,
+};
 use macroquad::math::Vec2;
 use macroquad::shapes::draw_rectangle;
+use macroquad::text::draw_text;
 use macroquad::texture::{DrawTextureParams, draw_texture_ex};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -56,6 +59,22 @@ impl Tile {
                 },
             );
         }
+
+        if self.number_of_surrounding_mines > 0
+            && self.state == TileState::Revealed
+            && !self.contains_mine
+        {
+            let text_x = x_coordinate + tile_size / 2. - tile_size / 5.;
+            let text_y = y_coordinate + tile_size / 2. + tile_size / 5.;
+
+            draw_text(
+                self.number_of_surrounding_mines.to_string().as_str(),
+                text_x,
+                text_y,
+                tile_size,
+                get_number_color(self.number_of_surrounding_mines),
+            );
+        }
     }
 
     pub fn reveal(&mut self) {
@@ -64,5 +83,19 @@ impl Tile {
 
     pub fn flag(&mut self) {
         self.state = TileState::Flagged;
+    }
+}
+
+fn get_number_color(number: u32) -> Color {
+    match number {
+        1 => BLUE,
+        2 => GREEN,
+        3 => RED,
+        4 => DARKBLUE,
+        5 => PINK,
+        6 => SKYBLUE,
+        7 => PURPLE,
+        8 => BROWN,
+        _ => WHITE,
     }
 }
