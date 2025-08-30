@@ -1,7 +1,8 @@
 use crate::assets::Assets;
 use crate::board::Board;
 use crate::constants::{
-    BOTTOM_MARGIN, LEFT_MARGIN, NEIGHBOURS_DIFFERENCE, RIGHT_MARGIN, TOP_MARGIN,
+    BOARD_BOTTOM_MARGIN, BOARD_LEFT_MARGIN, BOARD_RIGHT_MARGIN, BOARD_TOP_MARGIN,
+    NEIGHBOURS_DIFFERENCES,
 };
 use crate::mouse::get_pressed_mouse_position;
 use crate::position::Position;
@@ -53,7 +54,7 @@ impl Minesweeper {
     }
 
     fn get_surrounding_mines_count(&self, tile_position: &Position<i32>) -> u32 {
-        NEIGHBOURS_DIFFERENCE
+        NEIGHBOURS_DIFFERENCES
             .iter()
             .map(|difference| tile_position.add(difference))
             .filter(|position| {
@@ -67,11 +68,12 @@ impl Minesweeper {
         let tile_size = self.get_tile_size();
         for i in 0..self.board.cols {
             for j in 0..self.board.rows {
-                let tile_index = self.get_tile_index(&Position::new(i as i32, j as i32));
+                let position = Position::new(i as i32, j as i32);
+                let tile_index = self.get_tile_index(&position);
                 let tile = &self.tiles[tile_index];
                 tile.draw(
-                    LEFT_MARGIN + i as f32 * tile_size,
-                    TOP_MARGIN + j as f32 * tile_size,
+                    BOARD_LEFT_MARGIN + i as f32 * tile_size,
+                    BOARD_TOP_MARGIN + j as f32 * tile_size,
                     tile_size,
                     &self.assets,
                 )
@@ -80,15 +82,17 @@ impl Minesweeper {
     }
 
     fn get_tile_index(&self, position: &Position<i32>) -> usize {
-        (self.board.cols * position.x as u32 + position.y as u32) as usize
+        (self.board.rows * position.x as u32 + position.y as u32) as usize
     }
 
     /*
      * Calculates the size of a tile dynamically, depending on how the size of the window changes
      */
     fn get_tile_size(&self) -> f32 {
-        let width = (screen_width() - LEFT_MARGIN - RIGHT_MARGIN) / self.board.cols as f32;
-        let height = (screen_height() - TOP_MARGIN - BOTTOM_MARGIN) / self.board.rows as f32;
+        let width =
+            (screen_width() - BOARD_LEFT_MARGIN - BOARD_RIGHT_MARGIN) / self.board.cols as f32;
+        let height =
+            (screen_height() - BOARD_TOP_MARGIN - BOARD_BOTTOM_MARGIN) / self.board.rows as f32;
 
         width.min(height)
     }
@@ -120,7 +124,6 @@ impl Minesweeper {
         match tile.state {
             TileState::Hidden if tile.contains_mine => {
                 tile.reveal();
-                println!("You clicked on a mine. Game over!");
                 self.state = GameState::Lost;
             }
             TileState::Hidden if !tile.contains_mine => {
@@ -136,7 +139,6 @@ impl Minesweeper {
         }
 
         if self.has_won() {
-            println!("You won!");
             self.state = GameState::Won;
         }
     }
@@ -163,7 +165,8 @@ impl Minesweeper {
     fn resolve_tile_position(&self, position: &Position<f32>) -> Option<Position<i32>> {
         let tile_size = self.get_tile_size();
         // we need to remove the padding in case a cursor is slightly away from a tile square, where the padding is
-        let position_without_padding = position.subtract(&Position::new(LEFT_MARGIN, TOP_MARGIN));
+        let position_without_padding =
+            position.subtract(&Position::new(BOARD_LEFT_MARGIN, BOARD_TOP_MARGIN));
 
         // since we subtract the margins, we need to check if any of the position value is below zero
         if position_without_padding.x < 0. || position_without_padding.y < 0. {
@@ -199,7 +202,7 @@ impl Minesweeper {
 
         // then go over all surrounding tiles
         while let Some(position) = queue.pop_front() {
-            for difference in NEIGHBOURS_DIFFERENCE {
+            for difference in NEIGHBOURS_DIFFERENCES {
                 // for each neighbour we get a new position by adding the current position to the neighbour difference
                 let neighbour_position = position.add(difference);
 
@@ -235,7 +238,7 @@ impl Minesweeper {
         }
 
         // check if the number of tiles a user flagged correctly equals the number of mines around this tile
-        let count = NEIGHBOURS_DIFFERENCE
+        let count = NEIGHBOURS_DIFFERENCES
             .iter()
             .map(|difference| position.add(difference))
             .filter(|position| self.is_within_board_bounds(position))

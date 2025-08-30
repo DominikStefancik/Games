@@ -23,9 +23,9 @@ impl Board {
 
     pub fn large() -> Self {
         Board {
-            rows: 20,
+            rows: 28,
             cols: 40,
-            mines_count: 200,
+            mines_count: 250,
         }
     }
 }
