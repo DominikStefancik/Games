@@ -13,7 +13,7 @@ mod mouse;
 mod position;
 mod tile;
 
-#[macroquad::main("Minesweeper with Macroquad")]
+#[macroquad::main("Rust Minesweeper")]
 async fn main() {
     let mut game = Minesweeper::new(Board::small()).await;
     let controls = Controls::new();
