@@ -3,6 +3,7 @@ import {
   ATLAS_SPRITE,
   ENTITY_SPRITE,
   FONT,
+  MAP_SPRITE,
   SOUND,
   TILESET_SPRITE,
 } from "./constants";
@@ -28,16 +29,17 @@ const loadSounds = () => {
 
 const loadSprites = () => {
   loadTilesetSprites();
+  loadMapSprites();
   loadEntitySprites();
 };
 
 const loadSpriteAtlases = () => {
   /*
    * When we are loading sprite atlas, we are cutting out a specific portion of a whole image.
-   * So we are not loding a whole image, only its part.
+   * So we are not loading a whole image, only its part.
    * We have to specify the coordinates of the top left corner where the cut starts,
    * and then the width and height of the area being cut.
-   * The unit of the coordinates and dimensions id a pixel in the image.
+   * The unit of the coordinates and dimensions is a pixel in the image.
    */
   kaplayContext.loadSpriteAtlas("./graphics/atlases/ui-elements.png", {
     [ATLAS_SPRITE.healthbar]: {
@@ -83,6 +85,11 @@ const loadTilesetSprites = () => {
       sliceY: 25,
     },
   );
+};
+
+const loadMapSprites = () => {
+  kaplayContext.loadSprite(MAP_SPRITE.room1, "./maps/room1.png");
+  kaplayContext.loadSprite(MAP_SPRITE.room2, "./maps/room2.png");
 };
 
 const loadEntitySprites = () => {

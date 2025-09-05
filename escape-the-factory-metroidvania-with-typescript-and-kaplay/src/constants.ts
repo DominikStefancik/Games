@@ -6,6 +6,13 @@ export const SCREEN = {
   background: [0, 0, 0] as RGBValue,
 };
 
+export const KEY_CONTROL = {
+  enter: "enter",
+  left: "left",
+  right: "right",
+  space: "space",
+};
+
 export const FONT = {
   glyphmesss: "glyphmesss",
 };
@@ -19,6 +26,11 @@ export const SOUND = {
 
 export const SCENE = {
   intro: "intro",
+  room1: "room1",
+  room2: "room2",
+};
+
+export const MAP_SPRITE = {
   room1: "room1",
   room2: "room2",
 };
@@ -64,4 +76,12 @@ export const ANIMATION = {
   cartridge: {
     default: "default",
   },
+};
+
+export const TAG = {
+  collider: "collider",
+};
+
+export const COLLIDER_TYPE = {
+  "boss-barrier": "boss-barrier",
 };

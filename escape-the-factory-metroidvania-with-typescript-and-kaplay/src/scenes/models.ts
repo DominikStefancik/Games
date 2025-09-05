@@ -1,4 +1,9 @@
-// the values for the types are taken from the map defined in the arena.json
+// the values for the types are taken from the map defined in the room1.json and room2.json
+export interface RoomData {
+  layers: TiledLayer[];
+  tilesets: Tileset[];
+}
+
 export type TiledLayer = TiledTileLayer | TiledObjectLayer;
 
 interface TileBaseLayer {
@@ -28,7 +33,7 @@ export interface TiledObjectLayer extends TileBaseLayer {
   objects: TiledObject[];
 }
 
-interface TiledObject {
+export interface TiledObject {
   id: number;
   name: string;
   type: string;
@@ -40,4 +45,19 @@ interface TiledObject {
   rotation: number;
   visible: boolean;
   opacity: number;
+  polygon?: { x: number; y: number }[];
+}
+
+interface Tileset {
+  columns: number;
+  firstgid: number;
+  image: string;
+  imageheight: number;
+  imagewidth: number;
+  margin: number;
+  name: string;
+  spacing: number;
+  tilecount: number;
+  tileheight: number;
+  tilewidth: number;
 }

@@ -1694,7 +1694,7 @@
     {
       "columns": 33,
       "firstgid": 1,
-      "image": "..\/assets\/tileset.png",
+      "image": "..\/public\/graphics\/tilesets\/tileset.png",
       "imageheight": 336,
       "imagewidth": 528,
       "margin": 0,
@@ -1707,7 +1707,7 @@
     {
       "columns": 13,
       "firstgid": 694,
-      "image": "..\/assets\/background.png",
+      "image": "..\/public\/graphics\/tilesets\/background.png",
       "imageheight": 400,
       "imagewidth": 208,
       "margin": 0,
