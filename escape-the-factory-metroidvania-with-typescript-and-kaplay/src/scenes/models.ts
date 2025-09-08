@@ -1,5 +1,7 @@
 // the values for the types are taken from the map defined in the room1.json and room2.json
 export interface RoomData {
+  width: number;
+  tilewidth: number;
   layers: TiledLayer[];
   tilesets: Tileset[];
 }
@@ -45,6 +47,9 @@ export interface TiledObject {
   rotation: number;
   visible: boolean;
   opacity: number;
+  properties?: {
+    [key: string]: any;
+  }[];
   polygon?: { x: number; y: number }[];
 }
 

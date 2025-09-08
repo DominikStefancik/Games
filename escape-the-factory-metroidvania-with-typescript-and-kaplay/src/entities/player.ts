@@ -27,9 +27,9 @@ export const createPlayer = (): GameObj => {
     // the "doubleJump" component allows to implement multiple jumps for a game objects
     // (it doesn't have to be only a double-jump)
     // Note: initially we set the number of jumps to 1, and then later increase it
-    kaplayContext.doubleJump(state.currentState().isDoubleJumpUnlocked ? 2 : 1),
+    kaplayContext.doubleJump(state.getState().isDoubleJumpUnlocked ? 2 : 1),
     kaplayContext.opacity(),
-    kaplayContext.health(state.currentState().playerHealthPoints),
+    kaplayContext.health(state.getState().playerHealthPoints),
     TAG.player,
     {
       speed: 150,
@@ -163,7 +163,7 @@ const createKeyDownHandler = (player: GameObj): KEventController => {
 const createKeyReleaseHandler = (player: GameObj): KEventController => {
   return kaplayContext.onKeyRelease(() => {
     if (
-      [
+      ![
         ANIMATION.player.idle,
         ANIMATION.player.jump,
         ANIMATION.player.fall,

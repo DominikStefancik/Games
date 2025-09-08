@@ -89,3 +89,11 @@ export const COLLIDER_TYPE = {
   "boss-barrier": "boss-barrier",
   passthrough: "passthrough",
 };
+
+export const ROOM_DATA_LAYER_NAME = {
+  colliders: "colliders",
+  positions: "positions",
+  cameras: "cameras",
+};
+
+export const MAP_HORIZONTAL_OFFSET = 160;

@@ -2,7 +2,7 @@ interface StateProps {
   playerHealthPoints: number;
   maxPlayerHealthPoints: number;
   isDoubleJumpUnlocked: boolean;
-  playerIsInBossFight: boolean;
+  isPlayerInFightWithBoss: boolean;
   isBossDefeated: boolean;
 }
 
@@ -11,12 +11,12 @@ const initStateManager = () => {
     playerHealthPoints: 3,
     maxPlayerHealthPoints: 3,
     isDoubleJumpUnlocked: false,
-    playerIsInBossFight: false,
+    isPlayerInFightWithBoss: false,
     isBossDefeated: false,
   };
 
   return {
-    currentState: () => {
+    getState: () => {
       return { ...state };
     },
     setState: (property: keyof StateProps, value: number | boolean) => {
