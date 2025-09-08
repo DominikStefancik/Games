@@ -1,4 +1,5 @@
 import { MAP_SPRITE } from "../constants";
+import { createPlayer } from "../entities/player";
 import kaplayContext from "../kaplay-context";
 import { setBackground, setMapColliders } from "./helpers";
 import type { RoomData } from "./models";
@@ -20,4 +21,17 @@ export const room1 = (roomData: RoomData) => {
     (layer) => layer.name == "colliders",
   )!.objects;
   setMapColliders(map, colliders);
+
+  const positions = roomData.layers.find(
+    (layer) => layer.name == "positions",
+  )!.objects;
+  const playerPosition = positions.find(
+    (position) => position.name === "player",
+  )!;
+
+  const player = map.add(createPlayer());
+  player.setPosition(playerPosition.x, playerPosition.y);
+  player.setControls();
+  player.setEvents();
+  player.enablePassthrough();
 };

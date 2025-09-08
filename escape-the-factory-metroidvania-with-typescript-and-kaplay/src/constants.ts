@@ -10,6 +10,7 @@ export const KEY_CONTROL = {
   enter: "enter",
   left: "left",
   right: "right",
+  up: "up",
   space: "space",
 };
 
@@ -79,9 +80,12 @@ export const ANIMATION = {
 };
 
 export const TAG = {
+  player: "player",
   collider: "collider",
+  "sword-hitbox": "sword-hitbox",
 };
 
 export const COLLIDER_TYPE = {
   "boss-barrier": "boss-barrier",
+  passthrough: "passthrough",
 };
