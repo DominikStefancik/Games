@@ -1,4 +1,5 @@
-import { MAP_SPRITE, ROOM_DATA_LAYER_NAME } from "../constants";
+import { MAP_SPRITE, POSITION_TAG, ROOM_DATA_LAYER_NAME } from "../constants";
+import { createEnemyDrone } from "../entities/enemyDrone";
 import { createPlayer } from "../entities/player";
 import kaplayContext from "../kaplay-context";
 import {
@@ -49,15 +50,21 @@ export const room1 = (roomData: RoomData) => {
   setMapColliders(map, colliders);
   setCameraVerticalZones(map, cameras);
 
-  const playerPosition = positions.find(
-    (position) => position.name === "player",
-  )!;
+  for (const position of positions) {
+    if (position.name === POSITION_TAG.player) {
+      const player = map.add(createPlayer());
+      player.setPosition(kaplayContext.vec2(position.x, position.y));
+      player.setControls();
+      player.setEvents();
+      setCameraHorizontalControls({ map, player, roomData });
+    }
 
-  const player = map.add(createPlayer());
-  player.setPosition(playerPosition.x, playerPosition.y);
-  player.setControls();
-  player.setEvents();
-  player.enablePassthrough();
-
-  setCameraHorizontalControls({ map, player, roomData });
+    if (position.type === POSITION_TAG.drone) {
+      const drone = map.add(
+        createEnemyDrone(kaplayContext.vec2(position.x, position.y)),
+      );
+      drone.setBehaviour();
+      drone.setEvents();
+    }
+  }
 };

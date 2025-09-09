@@ -1,4 +1,4 @@
-import type { Collision, GameObj, KEventController } from "kaplay";
+import type { Collision, GameObj, KEventController, Vec2 } from "kaplay";
 import {
   ANIMATION,
   COLLIDER_TYPE,
@@ -41,9 +41,8 @@ export const createPlayer = (): GameObj => {
         this.controlHandlers.push(createKeyDownHandler(this));
         this.controlHandlers.push(createKeyReleaseHandler(this));
       },
-      setPosition(this: GameObj, x: number, y: number) {
-        this.pos.x = x;
-        this.pos.y = y;
+      setPosition(this: GameObj, position: Vec2) {
+        this.pos = position;
       },
       setEvents(this: GameObj) {
         // the method "onFall" from Kaplay checks if a game object starts falling after jumping

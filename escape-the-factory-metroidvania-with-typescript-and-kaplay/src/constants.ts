@@ -79,8 +79,27 @@ export const ANIMATION = {
   },
 };
 
+export const ENTITY_STATE = {
+  drone: {
+    patrolRight: "patrolRight",
+    patrolLeft: "patrolLeft",
+    alert: "alert",
+    attack: "attack",
+    retreat: "retreat",
+  },
+};
+
+export const KAPLAY_EVENT = {
+  hurt: "hurt",
+};
+
+export const CUSTOM_EVENT = {
+  explode: "explode",
+};
+
 export const TAG = {
   player: "player",
+  drone: "drone",
   collider: "collider",
   "sword-hitbox": "sword-hitbox",
 };
@@ -96,4 +115,10 @@ export const ROOM_DATA_LAYER_NAME = {
   cameras: "cameras",
 };
 
+export const POSITION_TAG = {
+  player: "player",
+  drone: "drone",
+};
+
 export const MAP_HORIZONTAL_OFFSET = 160;
+export const OFFSCREEN_DISTANCE = 400;
