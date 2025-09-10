@@ -2,6 +2,7 @@ import type { Collision, GameObj, KEventController, Vec2 } from "kaplay";
 import {
   ANIMATION,
   COLLIDER_TYPE,
+  CUSTOM_EVENT,
   ENTITY_SPRITE,
   KAPLAY_EVENT,
   KEY_CONTROL,
@@ -12,6 +13,7 @@ import {
 import kaplayContext from "../kaplay-context";
 import { stateManager } from "../state/globalStateManager";
 import { makeEntityBlink } from "./helpers";
+import { healthBar } from "../ui/healthBar";
 
 export const createPlayer = (): GameObj => {
   // the method "make()" from Kaplay creates a game object, but doesn't make it visible
@@ -83,6 +85,7 @@ export const createPlayer = (): GameObj => {
 
         this.on(KAPLAY_EVENT.heal, () => {
           stateManager.setState("playerHealthPoints", this.hp());
+          healthBar.trigger(CUSTOM_EVENT.updateHealthBar);
         });
 
         this.on(KAPLAY_EVENT.hurt, () => {
@@ -90,6 +93,7 @@ export const createPlayer = (): GameObj => {
 
           if (this.hp() > 0) {
             stateManager.setState("playerHealthPoints", this.hp());
+            healthBar.trigger(CUSTOM_EVENT.updateHealthBar);
             return;
           }
 

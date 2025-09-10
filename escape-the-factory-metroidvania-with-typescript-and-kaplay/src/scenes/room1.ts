@@ -1,9 +1,11 @@
 import { MAP_SPRITE, POSITION_TAG, ROOM_DATA_LAYER_NAME } from "../constants";
 import { createEnemyBoss } from "../entities/enemyBoss";
 import { createEnemyDrone } from "../entities/enemyDrone";
+import { createHealthCartridge } from "../entities/healthCartridge";
 import { createPlayer } from "../entities/player";
 import kaplayContext from "../kaplay-context";
 import { stateManager } from "../state/globalStateManager";
+import { healthBar } from "../ui/healthBar";
 import {
   setBackground,
   setCameraHorizontalControls,
@@ -79,5 +81,13 @@ export const room1 = (roomData: RoomData) => {
       boss.setBehaviour();
       boss.setEvents();
     }
+
+    if (position.type === POSITION_TAG.cartridge) {
+      map.add(
+        createHealthCartridge(kaplayContext.vec2(position.x, position.y)),
+      );
+    }
   }
+
+  kaplayContext.add(healthBar);
 };

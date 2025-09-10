@@ -104,6 +104,7 @@ export const KAPLAY_EVENT = {
 
 export const CUSTOM_EVENT = {
   explode: "explode",
+  updateHealthBar: "updateHealthBar",
 };
 
 export const TAG = {
@@ -130,6 +131,7 @@ export const POSITION_TAG = {
   player: "player",
   drone: "drone",
   boss: "boss",
+  cartridge: "cartridge",
 };
 
 export const MAP_HORIZONTAL_OFFSET = 160;
