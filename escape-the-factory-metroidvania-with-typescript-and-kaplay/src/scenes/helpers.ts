@@ -7,7 +7,7 @@ import {
   MAP_HORIZONTAL_OFFSET,
   TAG,
 } from "../constants";
-import { state } from "../state/globalStateManager";
+import { stateManager } from "../state/globalStateManager";
 
 export const setBackground = (hexColorCode: string) => {
   kaplayContext.add([
@@ -105,14 +105,14 @@ export const setMapColliders = (map: GameObj, colliders: TiledObject[]) => {
       ]);
 
       bossBarrier.onCollide(TAG.player, async (player: GameObj) => {
-        const currentState = state.getState();
+        const currentState = stateManager.getState();
 
         if (currentState.isPlayerInFightWithBoss) {
           return;
         }
 
         if (currentState.isBossDefeated) {
-          state.setState("isPlayerInFightWithBoss", false);
+          stateManager.setState("isPlayerInFightWithBoss", false);
           bossBarrier.deactivate(player.pos.x);
           return;
         }
@@ -138,7 +138,7 @@ export const setMapColliders = (map: GameObj, colliders: TiledObject[]) => {
       });
 
       bossBarrier.onCollideEnd(TAG.player, () => {
-        const currentState = state.getState();
+        const currentState = stateManager.getState();
 
         if (
           currentState.isPlayerInFightWithBoss ||
@@ -147,7 +147,7 @@ export const setMapColliders = (map: GameObj, colliders: TiledObject[]) => {
           return;
         }
 
-        state.setState("isPlayerInFightWithBoss", true);
+        stateManager.setState("isPlayerInFightWithBoss", true);
         bossBarrier.activate();
         bossBarrier.use(kaplayContext.body({ isStatic: true }));
       });
@@ -187,7 +187,7 @@ export const setCameraHorizontalControls = (params: {
     const { y: cameraY } = kaplayContext.getCamPos();
 
     // if the player is in a fight with a level boss, we don't want the camera to move
-    if (state.getState().isPlayerInFightWithBoss) {
+    if (stateManager.getState().isPlayerInFightWithBoss) {
       return;
     }
 

@@ -1,7 +1,9 @@
 import { MAP_SPRITE, POSITION_TAG, ROOM_DATA_LAYER_NAME } from "../constants";
+import { createEnemyBoss } from "../entities/enemyBoss";
 import { createEnemyDrone } from "../entities/enemyDrone";
 import { createPlayer } from "../entities/player";
 import kaplayContext from "../kaplay-context";
+import { stateManager } from "../state/globalStateManager";
 import {
   setBackground,
   setCameraHorizontalControls,
@@ -65,6 +67,17 @@ export const room1 = (roomData: RoomData) => {
       );
       drone.setBehaviour();
       drone.setEvents();
+    }
+
+    if (
+      position.name === POSITION_TAG.boss &&
+      !stateManager.getState().isBossDefeated
+    ) {
+      const boss = map.add(
+        createEnemyBoss(kaplayContext.vec2(position.x, position.y)),
+      );
+      boss.setBehaviour();
+      boss.setEvents();
     }
   }
 };

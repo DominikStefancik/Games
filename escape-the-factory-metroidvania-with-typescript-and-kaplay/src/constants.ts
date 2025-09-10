@@ -87,10 +87,19 @@ export const ENTITY_STATE = {
     attack: "attack",
     retreat: "retreat",
   },
+  bossBurner: {
+    idle: "idle",
+    follow: "follow",
+    openFire: "openFire",
+    fire: "fire",
+    shutFire: "shutFire",
+    explode: "explode",
+  },
 };
 
 export const KAPLAY_EVENT = {
   hurt: "hurt",
+  heal: "heal",
 };
 
 export const CUSTOM_EVENT = {
@@ -102,6 +111,7 @@ export const TAG = {
   drone: "drone",
   collider: "collider",
   "sword-hitbox": "sword-hitbox",
+  "fire-hitbox": "fire-hitbox",
   "boss-barrier": "boss-barrier",
 };
 
@@ -119,6 +129,7 @@ export const ROOM_DATA_LAYER_NAME = {
 export const POSITION_TAG = {
   player: "player",
   drone: "drone",
+  boss: "boss",
 };
 
 export const MAP_HORIZONTAL_OFFSET = 160;

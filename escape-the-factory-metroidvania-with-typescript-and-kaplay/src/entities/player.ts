@@ -3,11 +3,15 @@ import {
   ANIMATION,
   COLLIDER_TYPE,
   ENTITY_SPRITE,
+  KAPLAY_EVENT,
   KEY_CONTROL,
+  SCENE,
+  SOUND,
   TAG,
 } from "../constants";
 import kaplayContext from "../kaplay-context";
-import { state } from "../state/globalStateManager";
+import { stateManager } from "../state/globalStateManager";
+import { makeEntityBlink } from "./helpers";
 
 export const createPlayer = (): GameObj => {
   // the method "make()" from Kaplay creates a game object, but doesn't make it visible
@@ -27,9 +31,11 @@ export const createPlayer = (): GameObj => {
     // the "doubleJump" component allows to implement multiple jumps for a game objects
     // (it doesn't have to be only a double-jump)
     // Note: initially we set the number of jumps to 1, and then later increase it
-    kaplayContext.doubleJump(state.getState().isDoubleJumpUnlocked ? 2 : 1),
+    kaplayContext.doubleJump(
+      stateManager.getState().isDoubleJumpUnlocked ? 2 : 1,
+    ),
     kaplayContext.opacity(),
-    kaplayContext.health(state.getState().playerHealthPoints),
+    kaplayContext.health(stateManager.getState().playerHealthPoints),
     TAG.player,
     {
       speed: 150,
@@ -73,6 +79,34 @@ export const createPlayer = (): GameObj => {
         // the method "onGround" from Kaplay checks if a game object bumps into something on the head
         this.onHeadbutt(() => {
           this.play(ANIMATION.player.fall);
+        });
+
+        this.on(KAPLAY_EVENT.heal, () => {
+          stateManager.setState("playerHealthPoints", this.hp());
+        });
+
+        this.on(KAPLAY_EVENT.hurt, () => {
+          makeEntityBlink(this);
+
+          if (this.hp() > 0) {
+            stateManager.setState("playerHealthPoints", this.hp());
+            return;
+          }
+
+          kaplayContext.play(SOUND.boom);
+          this.play(ANIMATION.player.explode);
+          stateManager.setState(
+            "maxPlayerHealthPoints",
+            stateManager.getState().maxPlayerHealthPoints,
+          );
+        });
+
+        this.onAnimEnd((animation: string) => {
+          if (animation === ANIMATION.player.explode) {
+            kaplayContext.wait(3, () => {
+              kaplayContext.go(SCENE.room1);
+            });
+          }
         });
       },
       enablePassthrough(this: GameObj) {

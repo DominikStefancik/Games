@@ -31,4 +31,4 @@ const initStateManager = () => {
   };
 };
 
-export const state = initStateManager();
+export const stateManager = initStateManager();
