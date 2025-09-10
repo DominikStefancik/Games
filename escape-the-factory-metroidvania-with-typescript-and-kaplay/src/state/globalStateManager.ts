@@ -16,7 +16,7 @@ const initStateManager = () => {
   };
 
   return {
-    getState: () => {
+    getState: (): StateProps => {
       return { ...state };
     },
     setState: (property: keyof StateProps, value: number | boolean) => {

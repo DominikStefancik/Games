@@ -102,6 +102,7 @@ export const TAG = {
   drone: "drone",
   collider: "collider",
   "sword-hitbox": "sword-hitbox",
+  "boss-barrier": "boss-barrier",
 };
 
 export const COLLIDER_TYPE = {

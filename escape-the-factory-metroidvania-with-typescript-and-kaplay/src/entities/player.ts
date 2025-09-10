@@ -41,6 +41,16 @@ export const createPlayer = (): GameObj => {
         this.controlHandlers.push(createKeyDownHandler(this));
         this.controlHandlers.push(createKeyReleaseHandler(this));
       },
+      disableControls(this: GameObj) {
+        for (const handler of this.controlHandlers) {
+          handler.cancel();
+        }
+      },
+      respawnIfOutOfBounds(
+        boundValue: number,
+        destinationName: string,
+        previousSceneData = { exitName: null },
+      ) {},
       setPosition(this: GameObj, position: Vec2) {
         this.pos = position;
       },
