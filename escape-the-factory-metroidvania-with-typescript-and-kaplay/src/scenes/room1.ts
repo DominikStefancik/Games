@@ -1,4 +1,10 @@
-import { MAP_SPRITE, POSITION_TAG, ROOM_DATA_LAYER_NAME } from "../constants";
+import {
+  MAP_SPRITE,
+  POSITION_TAG,
+  ROOM_DATA_LAYER_NAME,
+  SCENE,
+  VERTICAL_BOUND,
+} from "../constants";
 import { createEnemyBoss } from "../entities/enemyBoss";
 import { createEnemyDrone } from "../entities/enemyDrone";
 import { createHealthCartridge } from "../entities/healthCartridge";
@@ -60,6 +66,7 @@ export const room1 = (roomData: RoomData) => {
       player.setPosition(kaplayContext.vec2(position.x, position.y));
       player.setControls();
       player.setEvents();
+      player.respawnIfOutOfBounds(VERTICAL_BOUND.room1, SCENE.room1);
       setCameraHorizontalControls({ map, player, roomData });
     }
 

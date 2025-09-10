@@ -55,10 +55,19 @@ export const createPlayer = (): GameObj => {
         }
       },
       respawnIfOutOfBounds(
+        this: GameObj,
         boundValue: number,
-        destinationName: string,
+        destinationScene: string,
         previousSceneData = { exitName: null },
-      ) {},
+      ) {
+        kaplayContext.onUpdate(() => {
+          if (this.pos.y > boundValue) {
+            // when going to a particular scene with with the Kaply method "go", we can pass it
+            // an additional parameter representing data from a previous scene
+            kaplayContext.go(destinationScene, previousSceneData);
+          }
+        });
+      },
       setPosition(this: GameObj, position: Vec2) {
         this.pos = position;
       },

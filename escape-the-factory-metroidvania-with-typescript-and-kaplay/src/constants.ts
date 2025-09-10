@@ -136,3 +136,5 @@ export const POSITION_TAG = {
 
 export const MAP_HORIZONTAL_OFFSET = 160;
 export const OFFSCREEN_DISTANCE = 400;
+
+export const VERTICAL_BOUND = { room1: 1000 };
