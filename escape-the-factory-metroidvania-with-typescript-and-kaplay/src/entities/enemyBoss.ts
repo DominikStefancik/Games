@@ -48,6 +48,8 @@ export const createEnemyBoss = (initialPosition: Vec2): GameObj => {
         setBehaviourForShutFireState(this);
       },
       setEvents(this: GameObj) {
+        const player = kaplayContext.get(TAG.player, { recursive: true })[0];
+
         this.onCollide(TAG["sword-hitbox"], () => {
           kaplayContext.play(SOUND.boom);
           this.hurt(1);
@@ -77,16 +79,17 @@ export const createEnemyBoss = (initialPosition: Vec2): GameObj => {
           this.collisionIgnore = [TAG.player];
           // the method "unuse" from Kaplay says which game object's component we don't want to use anymore
           this.unuse("body");
-          this.play(ANIMATION.drone.explode);
+          this.play(ANIMATION.bossBurner.explode);
           stateManager.setState("isBossDefeated", true);
           stateManager.setState("isDoubleJumpUnlocked", true);
+          player.enableDoubleJump();
           kaplayContext.play(SOUND.notify);
           const notification = kaplayContext.add(
             createNotificationBox(
-              "You have unlocked a new ability!\nNow you can doulejump",
+              "You have unlocked a new ability!\nNow you can double jump",
             ),
           );
-          kaplayContext.wait(5, () => {
+          kaplayContext.wait(3, () => {
             notification.close();
           });
         });

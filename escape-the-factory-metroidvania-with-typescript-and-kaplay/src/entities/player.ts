@@ -135,6 +135,15 @@ export const createPlayer = (): GameObj => {
           }
         });
       },
+      enableDoubleJump(this: GameObj) {
+        /*
+         * the property "numJumps" on a game object is available only if the game object has the component "doubleJump"
+         *
+         * Note: the value can be any positive number, not only 2
+         *
+         */
+        this.numJumps = 2;
+      },
     },
   ]);
 };

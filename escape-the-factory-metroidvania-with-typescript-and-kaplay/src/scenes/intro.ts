@@ -5,6 +5,6 @@ import { setBackground } from "./helpers";
 export const intro = () => {
   setBackground("#a2aed5");
   kaplayContext.onKeyPress(KEY_CONTROL.enter, () => {
-    kaplayContext.go(SCENE.room1);
+    kaplayContext.go(SCENE.room1, { exitName: null });
   });
 };

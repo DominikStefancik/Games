@@ -29,6 +29,7 @@ export const SCENE = {
   intro: "intro",
   room1: "room1",
   room2: "room2",
+  finalExit: "finalExit",
 };
 
 export const MAP_SPRITE = {
@@ -125,6 +126,7 @@ export const ROOM_DATA_LAYER_NAME = {
   colliders: "colliders",
   positions: "positions",
   cameras: "cameras",
+  exits: "exits",
 };
 
 export const POSITION_TAG = {
@@ -132,9 +134,19 @@ export const POSITION_TAG = {
   drone: "drone",
   boss: "boss",
   cartridge: "cartridge",
+  entrance1: "entrance-1",
+  entrance2: "entrance-2",
+};
+
+export const EXIT_NAME = {
+  "exit-1": "exit-1",
+  "exit-2": "exit-2",
+  "final-exit": "final-exit",
 };
 
 export const MAP_HORIZONTAL_OFFSET = 160;
 export const OFFSCREEN_DISTANCE = 400;
 
-export const VERTICAL_BOUND = { room1: 1000 };
+export const VERTICAL_BOUND = { room1: 1000, room2: 1000 };
+
+export const ROOM_BACKGROUND_COLOR = "#a2aed5";

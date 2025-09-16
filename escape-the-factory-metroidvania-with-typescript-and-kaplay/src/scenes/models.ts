@@ -66,3 +66,7 @@ interface Tileset {
   tileheight: number;
   tilewidth: number;
 }
+
+export interface SceneData {
+  exitName: string | null;
+}

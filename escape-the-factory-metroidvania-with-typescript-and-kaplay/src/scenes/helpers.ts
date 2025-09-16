@@ -4,7 +4,9 @@ import type { RoomData, TiledObject } from "./models";
 import {
   ANIMATION,
   COLLIDER_TYPE,
+  EXIT_NAME,
   MAP_HORIZONTAL_OFFSET,
+  SCENE,
   TAG,
 } from "../constants";
 import { stateManager } from "../state/globalStateManager";
@@ -107,13 +109,13 @@ export const setMapColliders = (map: GameObj, colliders: TiledObject[]) => {
       bossBarrier.onCollide(TAG.player, async (player: GameObj) => {
         const currentState = stateManager.getState();
 
-        if (currentState.isPlayerInFightWithBoss) {
-          return;
-        }
-
         if (currentState.isBossDefeated) {
           stateManager.setState("isPlayerInFightWithBoss", false);
           bossBarrier.deactivate(player.pos.x);
+          return;
+        }
+
+        if (currentState.isPlayerInFightWithBoss) {
           return;
         }
 
@@ -259,6 +261,56 @@ export const setCameraVerticalZones = (
           );
         }
       }
+    });
+  }
+};
+
+export const setExitZones = (params: {
+  map: GameObj;
+  exits: TiledObject[];
+  destinationScene: string;
+}) => {
+  const { map, exits, destinationScene } = params;
+
+  for (const exit of exits) {
+    const exitZone = map.add([
+      kaplayContext.pos(exit.x, exit.y),
+      kaplayContext.area({
+        // "shape" property only adds a rectangular hitbox to the "map" game object, but it will NOT draw a rectangle
+        shape: new kaplayContext.Rect(
+          kaplayContext.vec2(0),
+          exit.width,
+          exit.height,
+        ),
+        collisionIgnore: [TAG.collider],
+      }),
+      // the "body" component can be defind ONLY when a game object has also the "area" component
+      // the property "isStatic" makes sure that a game object will not move if it collides with another game object
+      kaplayContext.body({ isStatic: true }),
+      exit.name,
+    ]);
+
+    exitZone.onCollide(TAG.player, async () => {
+      const background = kaplayContext.add([
+        kaplayContext.pos(-kaplayContext.width(), 0),
+        kaplayContext.rect(kaplayContext.width(), kaplayContext.height()),
+        kaplayContext.color("#20214a"),
+      ]);
+
+      await kaplayContext.tween(
+        background.pos.x,
+        0,
+        0.3,
+        (newValue) => (background.pos.x = newValue),
+        kaplayContext.easings.linear,
+      );
+
+      if (exit.name === EXIT_NAME["final-exit"]) {
+        kaplayContext.go(SCENE.finalExit);
+        return;
+      }
+
+      kaplayContext.go(destinationScene, { exitName: exit.name });
     });
   }
 };
