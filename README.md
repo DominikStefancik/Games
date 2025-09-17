@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="games_logo.jpeg" width="40%" height="40%">
+    <img src="games_logo.jpeg" width="30%" height="30%">
 <p/>
 
 -----
