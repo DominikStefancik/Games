@@ -35,8 +35,8 @@ const loadSprites = () => {
 
 const loadSpriteAtlases = () => {
   /*
-   * When we are loading sprite atlas, we are cutting out a specific portion of a whole image.
-   * So we are not loading a whole image, only its part.
+   * When we are loading a sprite atlas, we are cutting out a specific portion of a whole image.
+   * So we are not loading a whole image, but only its part.
    * We have to specify the coordinates of the top left corner where the cut starts,
    * and then the width and height of the area being cut.
    * The unit of the coordinates and dimensions is a pixel in the image.

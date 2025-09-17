@@ -18,7 +18,7 @@ export const createNotificationBox = (content: string): GameObj => {
   ]);
 
   container.add([
-    kaplayContext.text(content, { font: FONT.glyphmesss, size: 32 }),
+    kaplayContext.text(content, { font: FONT.glyphmesss, size: 34 }),
     kaplayContext.color(kaplayContext.Color.fromHex("eacfba")),
     kaplayContext.area(),
     kaplayContext.anchor("center"),

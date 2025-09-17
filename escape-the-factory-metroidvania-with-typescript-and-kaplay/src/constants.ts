@@ -149,4 +149,8 @@ export const OFFSCREEN_DISTANCE = 400;
 
 export const VERTICAL_BOUND = { room1: 1000, room2: 1000 };
 
-export const ROOM_BACKGROUND_COLOR = "#a2aed5";
+export const BACKGROUND_COLOR = {
+  room: "#a2aed5",
+  intro: "#20214a",
+  outro: "#20214a",
+};

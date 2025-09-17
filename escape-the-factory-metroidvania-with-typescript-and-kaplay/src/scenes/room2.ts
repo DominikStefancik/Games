@@ -1,6 +1,6 @@
 import {
+  BACKGROUND_COLOR,
   MAP_SPRITE,
-  ROOM_BACKGROUND_COLOR,
   SCENE,
   VERTICAL_BOUND,
 } from "../constants";
@@ -10,7 +10,7 @@ import { setBackground } from "./helpers";
 import type { RoomData, SceneData } from "./models";
 
 export const room2 = (roomData: RoomData, previousSceneData: SceneData) => {
-  setBackground(ROOM_BACKGROUND_COLOR);
+  setBackground(BACKGROUND_COLOR.room);
 
   kaplayContext.setCamScale(4);
   kaplayContext.setCamPos(170, 100);

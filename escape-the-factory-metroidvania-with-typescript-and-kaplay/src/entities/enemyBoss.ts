@@ -44,7 +44,7 @@ export const createEnemyBoss = (initialPosition: Vec2): GameObj => {
         setBehaviourForIdleState(this);
         setBehaviourForFollowState(this, player);
         setBehaviourForOpenFireState(this);
-        setBehaviourForFireState(this, player);
+        setBehaviourForFireState(this);
         setBehaviourForShutFireState(this);
       },
       setEvents(this: GameObj) {
@@ -139,7 +139,7 @@ const setBehaviourForOpenFireState = (bossBurner: GameObj) => {
   });
 };
 
-const setBehaviourForFireState = (bossBurner: GameObj, player: GameObj) => {
+const setBehaviourForFireState = (bossBurner: GameObj) => {
   bossBurner.onStateEnter(ENTITY_STATE.bossBurner.fire, () => {
     const flamethrowerSound = kaplayContext.play(SOUND.flamethrower);
 

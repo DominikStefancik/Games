@@ -1,6 +1,7 @@
 import { loadSceneAssets } from "./assets-loader";
 import { SCENE } from "./constants";
 import kaplayContext from "./kaplay-context";
+import { finalExit } from "./scenes/final-exit";
 import { intro } from "./scenes/intro";
 import type { RoomData, SceneData } from "./scenes/models";
 import { room1 } from "./scenes/room1";
@@ -24,6 +25,7 @@ const scenes: { [key: string]: (previousSceneData: SceneData) => void } = {
     )) as RoomData;
     room2(room2Data, previousSceneData);
   },
+  [SCENE.finalExit]: finalExit,
 };
 
 // create scenes
