@@ -28,6 +28,8 @@ const createHealthBar = (): GameObj => {
   ]);
 };
 
-export const healthBar = createHealthBar();
+const healthBar = createHealthBar();
 healthBar.setEvents();
 healthBar.trigger(CUSTOM_EVENT.updateHealthBar);
+
+export default healthBar;

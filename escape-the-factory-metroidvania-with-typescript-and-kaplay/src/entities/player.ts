@@ -13,7 +13,7 @@ import {
 import kaplayContext from "../kaplay-context";
 import { stateManager } from "../state/globalStateManager";
 import { makeEntityBlink } from "./helpers";
-import { healthBar } from "../ui/healthBar";
+import healthBar from "../ui/healthBar";
 
 export const createPlayer = (): GameObj => {
   // the method "make()" from Kaplay creates a game object, but doesn't make it visible
@@ -106,18 +106,24 @@ export const createPlayer = (): GameObj => {
             return;
           }
 
+          // make sure the player doesn't move after he is dead
+          this.disableControls();
           kaplayContext.play(SOUND.boom);
           this.play(ANIMATION.player.explode);
-          stateManager.setState(
-            "maxPlayerHealthPoints",
-            stateManager.getState().maxPlayerHealthPoints,
-          );
         });
 
         this.onAnimEnd((animation: string) => {
           if (animation === ANIMATION.player.explode) {
-            kaplayContext.wait(3, () => {
-              kaplayContext.go(SCENE.room1);
+            // update the heath bar after the player dies
+            stateManager.setState("playerHealthPoints", 0);
+            healthBar.trigger(CUSTOM_EVENT.updateHealthBar);
+
+            kaplayContext.wait(1, () => {
+              stateManager.setState(
+                "playerHealthPoints",
+                stateManager.getState().maxPlayerHealthPoints,
+              );
+              kaplayContext.go(SCENE.room1, { exitName: null });
             });
           }
         });

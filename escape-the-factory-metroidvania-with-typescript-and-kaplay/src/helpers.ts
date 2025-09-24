@@ -15,7 +15,7 @@ import {
 import { createPlayer } from "./entities/player";
 import kaplayContext from "./kaplay-context";
 import { createHealthCartridge } from "./entities/healthCartridge";
-import { healthBar } from "./ui/healthBar";
+import healthBar from "./ui/healthBar";
 import { createEnemyDrone } from "./entities/enemyDrone";
 import { stateManager } from "./state/globalStateManager";
 import { createEnemyBoss } from "./entities/enemyBoss";

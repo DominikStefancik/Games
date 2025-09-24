@@ -143,10 +143,6 @@ const setBehaviourForFireState = (bossBurner: GameObj) => {
   bossBurner.onStateEnter(ENTITY_STATE.bossBurner.fire, () => {
     const flamethrowerSound = kaplayContext.play(SOUND.flamethrower);
 
-    if (bossBurner.getCurAnim()?.name !== ANIMATION.bossBurner.fire) {
-      bossBurner.play(ANIMATION.bossBurner.fire);
-    }
-
     // when attacking, we create an invisible hitbox. If the player collides with this inbox,
     // he will receive damage
     const fireHitBox = bossBurner.add([
@@ -180,6 +176,12 @@ const setBehaviourForFireState = (bossBurner: GameObj) => {
 
     if (fireHitBox) {
       kaplayContext.destroy(fireHitBox);
+    }
+  });
+
+  bossBurner.onStateUpdate(ENTITY_STATE.bossBurner.fire, () => {
+    if (bossBurner.getCurAnim()?.name !== ANIMATION.bossBurner.fire) {
+      bossBurner.play(ANIMATION.bossBurner.fire);
     }
   });
 };
