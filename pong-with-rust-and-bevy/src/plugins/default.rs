@@ -10,7 +10,7 @@ use bevy::{
 use std::num::NonZero;
 
 const WINDOW_RESOLUTION: (u32, u32) = (1000, 800);
-const BACKGROUND_COLOR: Color = Color::srgb(0.0, 0.0, 0.0);
+const BACKGROUND_COLOR: Color = Color::srgb(0.1, 0.1, 0.1);
 
 pub fn plugin(app: &mut App) {
     let primary_window = Window {
