@@ -1,33 +1,14 @@
+use crate::ball::components::{BALL_COLOR, BALL_SHAPE, Ball};
 use crate::components::Position;
 use bevy::{
     asset::Assets,
-    color::Color,
     ecs::{
-        component::Component,
-        system::{Commands, ResMut},
+        query::With,
+        system::{Commands, ResMut, Single},
     },
-    math::primitives::Circle,
     mesh::{Mesh, Mesh2d},
     sprite_render::{ColorMaterial, MeshMaterial2d},
 };
-
-const BALL_RADIUS: f32 = 10.;
-const BALL_SHAPE: Circle = Circle::new(BALL_RADIUS);
-const BALL_COLOR: Color = Color::srgb(1., 0., 0.);
-
-/*
- * We need something to mark our entity is a ball, rather than a wall or a paddle.
- * For this component, it's enough to just have it on our entity. It doesn't need any data.
- * When you use a component in this way its called a "marker component".
- */
-#[derive(Component)]
-/*
- * By adding a require macro to our ball we are telling Bevy that any entity with a Ball should also be spawned
- * with a Position.
- * So long as our Position has a default trait implemented, it will add that default if we do not add our own.
- */
-#[require(Position)]
-pub struct Ball;
 
 /*
  * To render a shape onto the screen we need two things:
@@ -72,4 +53,20 @@ pub fn spawn_ball_system(
      * Ball, Position and Transform
      */
     commands.spawn((Ball, Mesh2d(mesh), MeshMaterial2d(material)));
+}
+
+/*
+ * We have a query that uses both generic arguments: Query<D, F>
+ *      The first one D is what we want returned. So we are asking for all the Position components.
+ *      The second F is a filter which is modifying our request to only get Position components
+ *      from entities which also have a Ball.
+ *
+ * The upside of using the filter is that the Ball is not actually returned from the query. It is only changing
+ * which Position components get returned to us.
+ *
+ * Note:
+ * "Single" is special version of a Query that will skip the system if none or more than one match of the query exists.
+ */
+pub fn move_ball_system(mut position: Single<&mut Position, With<Ball>>) {
+    position.0.x += 1.;
 }

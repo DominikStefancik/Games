@@ -1,9 +1,12 @@
 use bevy::{
-    app::{App, FixedUpdate, Startup},
-    ecs::system::Commands,
+    app::{App, Startup, Update},
+    ecs::{schedule::IntoScheduleConfigs, system::Commands},
 };
 
-use crate::{ball::spawn_ball_system, systems::project_positions};
+use crate::{
+    ball::systems::{move_ball_system, spawn_ball_system},
+    systems::project_positions,
+};
 
 mod ball;
 mod components;
@@ -15,7 +18,15 @@ fn main() {
     App::new()
         .add_plugins(plugins::default::plugin)
         .add_systems(Startup, (setup_system, spawn_ball_system))
-        .add_systems(FixedUpdate, project_positions)
+        .add_systems(
+            Update,
+            (
+                // We add "move_ball" system to run before
+                // we project our positions so we are not reading movement one frame behind
+                move_ball_system.before(project_positions),
+                project_positions,
+            ),
+        )
         .run();
 }
 
