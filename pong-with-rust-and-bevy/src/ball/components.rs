@@ -1,5 +1,3 @@
-use crate::collision::Collider;
-use crate::components::Position;
 use bevy::{
     color::Color,
     ecs::component::Component,
@@ -8,6 +6,9 @@ use bevy::{
         primitives::{Circle, Rectangle},
     },
 };
+
+use crate::collision::Collider;
+use crate::components::Position;
 
 const BALL_RADIUS: f32 = 10.;
 pub const BALL_SHAPE: Circle = Circle::new(BALL_RADIUS);
@@ -38,7 +39,7 @@ pub struct Velocity(pub Vec2);
  * By adding a require macro to our ball we are telling Bevy that any entity with a Ball should also be spawned
  * with a Position, Velocity and Collider.
  * So long as our Position has a default trait implemented, it will add that default if we do not add our own.
- * We gave our ball a Velocity with a different default that wasn't 0 so that our ball actually moves
+ * We give our ball a Velocity with a different default that wasn't 0 so that our ball actually moves
  * when its first spawned.
  */
 #[require(Position, Velocity = Velocity(Vec2::new(-BALL_SPEED, BALL_SPEED)), Collider = Collider(Rectangle::new(BALL_RADIUS, BALL_RADIUS)))]

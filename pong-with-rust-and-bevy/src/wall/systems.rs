@@ -1,18 +1,19 @@
 use bevy::{
     asset::Assets,
     ecs::system::{Commands, ResMut, Single},
-    math::Vec2,
+    math::{Vec2, primitives::Rectangle},
     mesh::{Mesh, Mesh2d},
     sprite_render::{ColorMaterial, MeshMaterial2d},
     window::Window,
 };
 
 use crate::{
-    components::{AiPlayer, HumanPlayer, Position},
-    paddle::components::{PADDLE_COLOR, PADDLE_SHAPE, Paddle},
+    collision::Collider,
+    components::Position,
+    wall::components::{WALL_COLOR, WALL_HEIGHT, Wall},
 };
 
-pub fn spawn_paddles_system(
+pub fn spawn_walls_system(
     mut commands: Commands,
     /*
      * "Resource" is like our components, but doesn't belong to a specific Entity.
@@ -41,38 +42,40 @@ pub fn spawn_paddles_system(
      * "Assets::add" will load these into memory and return a Handle (an ID) to these assets.
      * When all references to this Handle are cleaned up the asset is cleaned up.
      */
-    let mesh = meshes.add(PADDLE_SHAPE);
-    let material = materials.add(PADDLE_COLOR);
-    let half_window_size = window.resolution.size() / 2.;
-    let padding = 30.;
+    let material = materials.add(WALL_COLOR);
+    let padding = 20.;
 
-    let human_player_position = Vec2::new(-half_window_size.x + padding, 0.);
+    let Window { resolution, .. } = window.into_inner();
+    let border_shape = Rectangle::new(resolution.width(), WALL_HEIGHT);
+    let mesh = meshes.add(border_shape);
+
+    let top_position = Vec2::new(0., resolution.height() / 2. - padding);
 
     commands.spawn((
-        HumanPlayer,
-        Paddle,
+        Wall,
         Mesh2d(mesh.clone()),
         MeshMaterial2d(material.clone()),
-        Position(human_player_position),
+        Position(top_position),
         /*
-         * we don't have to add the Collider component here,
-         * because we added it by default when defining the Paddle struct
-         * (see comparison with spawning a Wall object)
+         * we have to add the Collider component here,
+         * because we didn't add it by default when defining the Wall struct
+         * (see comparison with spawning a Paddle object)
          */
+        Collider(border_shape),
     ));
 
-    let ai_player_position = Vec2::new(half_window_size.x - padding, 0.);
+    let bottom_position = Vec2::new(0., -resolution.height() / 2. + padding);
 
     commands.spawn((
-        AiPlayer,
-        Paddle,
+        Wall,
         Mesh2d(mesh.clone()),
         MeshMaterial2d(material.clone()),
-        Position(ai_player_position),
+        Position(bottom_position),
         /*
-         * we don't have to add the Collider component here,
-         * because we added it by default when defining the Paddle struct
-         * (see comparison with spawning a Wall object)
+         * we have to add the Collider component here,
+         * because we didn't add it by default when defining the Wall struct
+         * (see comparison with spawning a Paddle object)
          */
+        Collider(border_shape),
     ));
 }

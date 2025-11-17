@@ -8,6 +8,7 @@ use crate::{
     collision::handle_collisions_system,
     paddle::systems::spawn_paddles_system,
     systems::project_positions,
+    wall::systems::spawn_walls_system,
 };
 
 mod ball;
@@ -17,13 +18,19 @@ mod paddle;
 mod plugins;
 mod spawn_helpers;
 mod systems;
+mod wall;
 
 fn main() {
     App::new()
         .add_plugins(plugins::default::plugin)
         .add_systems(
             Startup,
-            (setup_system, spawn_ball_system, spawn_paddles_system),
+            (
+                setup_system,
+                spawn_ball_system,
+                spawn_paddles_system,
+                spawn_walls_system,
+            ),
         )
         .add_systems(
             FixedUpdate,
