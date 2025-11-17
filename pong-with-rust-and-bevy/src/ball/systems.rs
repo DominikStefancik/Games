@@ -1,4 +1,4 @@
-use crate::ball::components::{BALL_COLOR, BALL_SHAPE, Ball};
+use crate::ball::components::{BALL_COLOR, BALL_SHAPE, BALL_SPEED, Ball, Velocity};
 use crate::components::Position;
 use bevy::{
     asset::Assets,
@@ -67,6 +67,7 @@ pub fn spawn_ball_system(
  * Note:
  * "Single" is special version of a Query that will skip the system if none or more than one match of the query exists.
  */
-pub fn move_ball_system(mut position: Single<&mut Position, With<Ball>>) {
-    position.0.x += 1.;
+pub fn move_ball_system(ball: Single<(&mut Position, &Velocity), With<Ball>>) {
+    let (mut position, velocity) = ball.into_inner();
+    position.0 += velocity.0 * BALL_SPEED;
 }

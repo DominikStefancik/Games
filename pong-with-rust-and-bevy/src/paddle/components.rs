@@ -1,4 +1,4 @@
-use crate::components::Position;
+use crate::{collision::Collider, components::Position};
 use bevy::{color::Color, ecs::component::Component, math::primitives::Rectangle};
 
 pub const PADDLE_SHAPE: Rectangle = Rectangle::new(20., 100.);
@@ -15,5 +15,5 @@ pub const PADDLE_COLOR: Color = Color::srgb(0., 1., 0.);
  * with a Position.
  * So long as our Position has a default trait implemented, it will add that default if we do not add our own.
  */
-#[require(Position)]
+#[require(Position, Collider = Collider(PADDLE_SHAPE))]
 pub struct Paddle;
