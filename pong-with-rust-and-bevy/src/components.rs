@@ -19,3 +19,9 @@ use bevy::{ecs::component::Component, math::Vec2, prelude::Transform};
 #[derive(Component, Default)]
 #[require(Transform)]
 pub struct Position(pub Vec2);
+
+#[derive(Component)]
+pub struct HumanPlayer;
+
+#[derive(Component)]
+pub struct AiPlayer;

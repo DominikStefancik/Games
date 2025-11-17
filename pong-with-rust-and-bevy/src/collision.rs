@@ -1,8 +1,7 @@
-/*
- * "Aabb2d" represents a bounding box for gutters, paddles or ball.
- * The other two types "BoundingVolume" and "IntersectsVolume" are traits that won't be used directly
- * but are implemented in the first two types and will need to be in scope.
- */
+use crate::{
+    ball::components::{Ball, Velocity},
+    components::Position,
+};
 use bevy::{
     ecs::{
         component::Component,
@@ -11,14 +10,14 @@ use bevy::{
     },
     math::{
         Vec2,
+        /*
+         * "Aabb2d" represents a bounding box for gutters, paddles or ball.
+         * The other two types "BoundingVolume" and "IntersectsVolume" are traits that won't be used directly
+         * but are implemented in the first two types and will need to be in scope.
+         */
         bounding::{Aabb2d, BoundingVolume, IntersectsVolume},
         primitives::Rectangle,
     },
-};
-
-use crate::{
-    ball::components::{Ball, Velocity},
-    components::Position,
 };
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
