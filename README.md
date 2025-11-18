@@ -28,7 +28,8 @@
 * [Cat volleyball](cat-volleyball-with-rust-and-bevy) - game based on the classical Pikachu Volleyball implemented with Bevy. Instead of Pikachu characters, two cats are playing a volleyball.
 * [Connect4](connect-4-simple-with-rust) - Connect4 game played in a terminal
 * [Minesweeper](minesweeper-with-rust-and-macroquad) - classical Windows game Minesweeper implemented with Macroquad
-* [Pong](pong-with-rust-and-ggez) - classical game Pong implemented with Ggez
+* [Pong (Bevy)](pong-with-rust-and-bevy) - classical game Pong implemented with Bevy
+* [Pong (Ggez)](pong-with-rust-and-ggez) - classical game Pong implemented with Ggez
 * [Space Invaders (simple)](space-invaders-simple-with-rust) - classical Space Invaders game implemented for a terminal
 * [Space Invaders (Bevy)](space-invaders-with-rust-and-bevy) - classical Space Invaders game implemented with Bevy
 
