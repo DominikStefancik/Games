@@ -108,7 +108,7 @@ pub fn handle_player_input_system(
     }
 }
 
-pub fn move_ai_paddle(
+pub fn move_ai_paddle_system(
     ai_paddle: Single<(&mut Velocity, &Position), With<AiPlayer>>,
     ball: Single<&Position, With<Ball>>,
 ) {

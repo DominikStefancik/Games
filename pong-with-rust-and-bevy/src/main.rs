@@ -4,11 +4,15 @@ use bevy::{
 };
 
 use crate::{
-    ball::systems::{move_ball_system, spawn_ball_system},
+    ball::systems::{move_ball_system, reset_ball_system, spawn_ball_system},
     collision::handle_collisions_system,
     paddle::systems::{
-        constrain_paddle_position_system, handle_player_input_system, move_ai_paddle,
+        constrain_paddle_position_system, handle_player_input_system, move_ai_paddle_system,
         move_paddles_system, spawn_paddles_system,
+    },
+    score::{
+        resources::Score,
+        systems::{detect_goal_system, update_score_system},
     },
     systems::project_positions,
     wall::systems::spawn_walls_system,
@@ -19,6 +23,7 @@ mod collision;
 mod components;
 mod paddle;
 mod plugins;
+mod score;
 mod spawn_helpers;
 mod systems;
 mod wall;
@@ -26,6 +31,10 @@ mod wall;
 fn main() {
     App::new()
         .add_plugins(plugins::default::plugin)
+        .insert_resource(Score {
+            human_player: 0,
+            ai_player: 0,
+        })
         .add_systems(
             Startup,
             (
@@ -46,9 +55,13 @@ fn main() {
                 handle_player_input_system.before(move_paddles_system),
                 move_paddles_system.before(project_positions),
                 constrain_paddle_position_system.after(move_paddles_system),
-                move_ai_paddle,
+                move_ai_paddle_system,
+                detect_goal_system.after(move_ball_system),
             ),
         )
+        // Here we are adding our observer systems as global observers
+        .add_observer(update_score_system)
+        .add_observer(reset_ball_system)
         .run();
 }
 

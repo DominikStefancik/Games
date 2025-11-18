@@ -1,18 +1,20 @@
 use bevy::{
     asset::Assets,
     ecs::{
+        observer::On,
         query::With,
         system::{Commands, ResMut, Single},
     },
+    math::Vec2,
     mesh::{Mesh, Mesh2d},
     sprite_render::{ColorMaterial, MeshMaterial2d},
 };
 
-use crate::components::Position;
 use crate::{
     ball::components::{BALL_COLOR, BALL_SHAPE, BALL_SPEED, Ball},
     components::Velocity,
 };
+use crate::{components::Position, score::systems::Scored};
 
 /*
  * To render a shape onto the screen we need two things:
@@ -74,4 +76,18 @@ pub fn spawn_ball_system(
 pub fn move_ball_system(ball: Single<(&mut Position, &Velocity), With<Ball>>) {
     let (mut position, velocity) = ball.into_inner();
     position.0 += velocity.0 * BALL_SPEED;
+}
+
+/*
+ * This system is special because of its first system parameter: "On".
+ * This makes it observer which is a callback that responds to certain events.
+ */
+pub fn reset_ball_system(
+    _event: On<Scored>,
+    ball: Single<(&mut Position, &mut Velocity), With<Ball>>,
+) {
+    let (mut ball_position, mut ball_velocity) = ball.into_inner();
+
+    ball_position.0 = Vec2::ZERO;
+    ball_velocity.0 = Vec2::new(BALL_SPEED, 0.);
 }
