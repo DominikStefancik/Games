@@ -1,15 +1,21 @@
 use bevy::{
     asset::Assets,
-    ecs::system::{Commands, ResMut, Single},
-    math::Vec2,
+    ecs::{
+        query::{With, Without},
+        system::{Commands, Query, Res, ResMut, Single},
+    },
+    input::{ButtonInput, keyboard::KeyCode},
+    math::{Vec2, bounding::Aabb2d},
     mesh::{Mesh, Mesh2d},
     sprite_render::{ColorMaterial, MeshMaterial2d},
     window::Window,
 };
 
 use crate::{
-    components::{AiPlayer, HumanPlayer, Position},
-    paddle::components::{PADDLE_COLOR, PADDLE_SHAPE, Paddle},
+    collision::{Collider, Collision, collide_with_wall_side},
+    components::{AiPlayer, HumanPlayer, Position, Velocity},
+    paddle::components::{PADDLE_COLOR, PADDLE_SHAPE, PADDLE_SPEED, Paddle},
+    wall::components::Wall,
 };
 
 pub fn spawn_paddles_system(
@@ -75,4 +81,73 @@ pub fn spawn_paddles_system(
          * (see comparison with spawning a Wall object)
          */
     ));
+}
+
+pub fn handle_player_input_system(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    /*
+     * We are using "Single" for the querying the paddle controled by human player.
+     * That's why we have to use "With<HumanPlayer>" as a filter.
+     * If we used "With<Paddle>" as a filter instead, Bevy would find 2 paddles and because
+     * we are using "Single" type, and not type "Query", the system function would not run
+     * and our paddle would not move after we press ArrowUp or ArrowDown
+     */
+    mut paddle_velocity: Single<&mut Velocity, With<HumanPlayer>>,
+) {
+    /*
+     * The keyboard_input.pressed will return true during a frame where the key-code we pass it
+     * matches to a key pressed by a user.
+     */
+    if keyboard_input.pressed(KeyCode::ArrowUp) {
+        paddle_velocity.0.y = PADDLE_SPEED;
+    } else if keyboard_input.pressed(KeyCode::ArrowDown) {
+        paddle_velocity.0.y = -PADDLE_SPEED;
+    } else {
+        paddle_velocity.0.y = 0.;
+    }
+}
+
+pub fn move_paddles_system(mut paddles: Query<(&mut Position, &Velocity), With<Paddle>>) {
+    for (mut position, velocity) in &mut paddles {
+        position.0 += velocity.0;
+    }
+}
+
+/*
+ * Checks if paddles collide with any of the walls.
+ * Force paddles' position inside the bounds when they do.
+ */
+pub fn constrain_paddle_position_system(
+    mut paddles: Query<(&mut Position, &Collider), (With<Paddle>, Without<Wall>)>,
+    walls: Query<(&mut Position, &Collider), (With<Wall>, Without<Paddle>)>,
+) {
+    for (mut paddle_position, paddle_collider) in &mut paddles {
+        for (wall_position, wall_collider) in &walls {
+            let paddle_bounding_box = Aabb2d::new(paddle_position.0, paddle_collider.half_size());
+            let wall_bounding_box = Aabb2d::new(wall_position.0, wall_collider.half_size());
+
+            /*
+             * We are reusing the logic from "collide_with_side" function to determine which way
+             * we need to push the paddle (either up or down) to keep it from going outside of the walls.
+             */
+            if let Some(collision) = collide_with_wall_side(paddle_bounding_box, wall_bounding_box)
+            {
+                match collision {
+                    // we hit the top side of the wall -> we hit the wall which is down
+                    Collision::Top => {
+                        paddle_position.0.y = wall_position.0.y
+                            + wall_collider.half_size().y
+                            + paddle_collider.half_size().y;
+                    }
+                    // we hit the bottom side of the wall -> we hit the wall which is up
+                    Collision::Bottom => {
+                        paddle_position.0.y = wall_position.0.y
+                            - wall_collider.half_size().y
+                            - paddle_collider.half_size().y;
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
 }

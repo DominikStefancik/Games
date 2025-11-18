@@ -6,7 +6,10 @@ use bevy::{
 use crate::{
     ball::systems::{move_ball_system, spawn_ball_system},
     collision::handle_collisions_system,
-    paddle::systems::spawn_paddles_system,
+    paddle::systems::{
+        constrain_paddle_position_system, handle_player_input_system, move_paddles_system,
+        spawn_paddles_system,
+    },
     systems::project_positions,
     wall::systems::spawn_walls_system,
 };
@@ -40,6 +43,9 @@ fn main() {
                 // we project our positions so we are not reading movement one frame behind
                 move_ball_system.before(project_positions),
                 handle_collisions_system.after(move_ball_system),
+                handle_player_input_system.before(move_paddles_system),
+                move_paddles_system.before(project_positions),
+                constrain_paddle_position_system.after(move_paddles_system),
             ),
         )
         .run();

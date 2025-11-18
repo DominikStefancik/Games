@@ -8,8 +8,11 @@ use bevy::{
     sprite_render::{ColorMaterial, MeshMaterial2d},
 };
 
-use crate::ball::components::{BALL_COLOR, BALL_SHAPE, BALL_SPEED, Ball, Velocity};
 use crate::components::Position;
+use crate::{
+    ball::components::{BALL_COLOR, BALL_SHAPE, BALL_SPEED, Ball},
+    components::Velocity,
+};
 
 /*
  * To render a shape onto the screen we need two things:

@@ -7,27 +7,13 @@ use bevy::{
     },
 };
 
-use crate::collision::Collider;
 use crate::components::Position;
+use crate::{collision::Collider, components::Velocity};
 
 const BALL_RADIUS: f32 = 10.;
 pub const BALL_SHAPE: Circle = Circle::new(BALL_RADIUS);
 pub const BALL_COLOR: Color = Color::srgb(1., 0., 0.);
 pub const BALL_SPEED: f32 = 2.;
-
-/*
- * Velocity here is just something we invented, a new component we will make that lets us set a direction we desire to
- * move the next time we do. That way our movement system can just read this value and move the ball.
- *
- * We use velocity to determine where we go with the ball next frame, so the logic for our collision system becomes simple:
- *      If we are colliding on the top or bottom: reverse our y velocity
- *      If we are colliding on the left or right: reverse our x velocity
- *
- * This component is a tuple type, we can access the Vec2 it holds by using the position of the item in the tuple
- * e.g. velocity.0 which would be a Vec2
- */
-#[derive(Component, Default)]
-pub struct Velocity(pub Vec2);
 
 /*
  * We need something to mark our entity is a ball, rather than a wall or a paddle.

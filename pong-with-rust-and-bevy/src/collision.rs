@@ -1,6 +1,6 @@
 use crate::{
-    ball::components::{Ball, Velocity},
-    components::Position,
+    ball::components::Ball,
+    components::{Position, Velocity},
 };
 use bevy::{
     ecs::{
@@ -11,7 +11,7 @@ use bevy::{
     math::{
         Vec2,
         /*
-         * "Aabb2d" represents a bounding box for gutters, paddles or ball.
+         * "Aabb2d" represents a bounding box for walls, paddles or ball.
          * The other two types "BoundingVolume" and "IntersectsVolume" are traits that won't be used directly
          * but are implemented in the first two types and will need to be in scope.
          */
@@ -32,14 +32,14 @@ pub enum Collision {
 pub struct Collider(pub Rectangle);
 
 impl Collider {
-    fn half_size(&self) -> Vec2 {
+    pub fn half_size(&self) -> Vec2 {
         self.0.half_size
     }
 }
 
 /*
- * We know there is only one game object with a component Ball, so we use Single type to find it
- * But there can be more than on objects with the components Position and Collider, so we use Query.
+ * We know there is only one game object with a component Ball, so we use Single type to find it.
+ * But there can be more than one objects with the components Position and Collider which are not Ball, so we use Query.
  *
  */
 pub fn handle_collisions_system(
@@ -49,7 +49,7 @@ pub fn handle_collisions_system(
     let (mut ball_velocity, ball_position, ball_collider) = ball.into_inner();
 
     for (other_position, other_collider) in &other_objects {
-        if let Some(collision) = collide_with_side(
+        if let Some(collision) = collide_with_wall_side(
             Aabb2d::new(ball_position.0, ball_collider.half_size()),
             Aabb2d::new(other_position.0, other_collider.half_size()),
         ) {
@@ -62,17 +62,18 @@ pub fn handle_collisions_system(
 }
 
 /*
- * Returns Some if ball collides with wall. The returned Collision is the side of wall that ball hit.
+ * Returns Some if game object (this can be Ball or Paddle) collides with Wall.
+ * The returned Collision is the side of wall that object hits.
  *
- * The type "Aabb2d" represents a bounding box for gutters, paddles or ball.
+ * The type "Aabb2d" represents a bounding box for walls, paddles or ball.
  */
-fn collide_with_side(ball: Aabb2d, wall: Aabb2d) -> Option<Collision> {
-    if !ball.intersects(&wall) {
+pub fn collide_with_wall_side(game_object: Aabb2d, wall: Aabb2d) -> Option<Collision> {
+    if !game_object.intersects(&wall) {
         return None;
     }
 
-    let closest_point = wall.closest_point(ball.center());
-    let offset = ball.center() - closest_point;
+    let closest_point = wall.closest_point(game_object.center());
+    let offset = game_object.center() - closest_point;
 
     let side = if offset.x.abs() > offset.y.abs() {
         if offset.x < 0. {

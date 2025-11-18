@@ -20,6 +20,20 @@ use bevy::{ecs::component::Component, math::Vec2, prelude::Transform};
 #[require(Transform)]
 pub struct Position(pub Vec2);
 
+/*
+ * Velocity here is just something we invented, a new component we will make that lets us set a direction we desire to
+ * move the next time we do. That way our movement system can just read this value and move the ball.
+ *
+ * We use velocity to determine where we go with the ball next frame, so the logic for our collision system becomes simple:
+ *      If we are colliding on the top or bottom: reverse our y velocity
+ *      If we are colliding on the left or right: reverse our x velocity
+ *
+ * This component is a tuple type, we can access the Vec2 it holds by using the position of the item in the tuple
+ * e.g. velocity.0 which would be a Vec2
+ */
+#[derive(Component, Default)]
+pub struct Velocity(pub Vec2);
+
 #[derive(Component)]
 pub struct HumanPlayer;
 

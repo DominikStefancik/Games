@@ -1,9 +1,13 @@
 use bevy::{color::Color, ecs::component::Component, math::primitives::Rectangle};
 
-use crate::{collision::Collider, components::Position};
+use crate::{
+    collision::Collider,
+    components::{Position, Velocity},
+};
 
 pub const PADDLE_SHAPE: Rectangle = Rectangle::new(20., 100.);
 pub const PADDLE_COLOR: Color = Color::srgb(0., 1., 0.);
+pub const PADDLE_SPEED: f32 = 5.;
 
 /*
  * We need something to mark our entity is a paddle, rather than a wall or a ball.
@@ -17,5 +21,5 @@ pub const PADDLE_COLOR: Color = Color::srgb(0., 1., 0.);
  * So long as our Position has a default trait implemented, it will add that default if we do not add our own.
  * We give our paddle's collider a default shape.
  */
-#[require(Position, Collider = Collider(PADDLE_SHAPE))]
+#[require(Position, Velocity, Collider = Collider(PADDLE_SHAPE))]
 pub struct Paddle;
