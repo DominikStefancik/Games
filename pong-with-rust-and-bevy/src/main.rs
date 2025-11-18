@@ -7,8 +7,8 @@ use crate::{
     ball::systems::{move_ball_system, spawn_ball_system},
     collision::handle_collisions_system,
     paddle::systems::{
-        constrain_paddle_position_system, handle_player_input_system, move_paddles_system,
-        spawn_paddles_system,
+        constrain_paddle_position_system, handle_player_input_system, move_ai_paddle,
+        move_paddles_system, spawn_paddles_system,
     },
     systems::project_positions,
     wall::systems::spawn_walls_system,
@@ -46,6 +46,7 @@ fn main() {
                 handle_player_input_system.before(move_paddles_system),
                 move_paddles_system.before(project_positions),
                 constrain_paddle_position_system.after(move_paddles_system),
+                move_ai_paddle,
             ),
         )
         .run();

@@ -13,7 +13,7 @@ use crate::{collision::Collider, components::Velocity};
 const BALL_RADIUS: f32 = 10.;
 pub const BALL_SHAPE: Circle = Circle::new(BALL_RADIUS);
 pub const BALL_COLOR: Color = Color::srgb(1., 0., 0.);
-pub const BALL_SPEED: f32 = 2.;
+pub const BALL_SPEED: f32 = 1.5;
 
 /*
  * We need something to mark our entity is a ball, rather than a wall or a paddle.

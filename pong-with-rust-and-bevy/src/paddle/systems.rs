@@ -12,6 +12,7 @@ use bevy::{
 };
 
 use crate::{
+    ball::components::Ball,
     collision::{Collider, Collision, collide_with_wall_side},
     components::{AiPlayer, HumanPlayer, Position, Velocity},
     paddle::components::{PADDLE_COLOR, PADDLE_SHAPE, PADDLE_SPEED, Paddle},
@@ -105,6 +106,20 @@ pub fn handle_player_input_system(
     } else {
         paddle_velocity.0.y = 0.;
     }
+}
+
+pub fn move_ai_paddle(
+    ai_paddle: Single<(&mut Velocity, &Position), With<AiPlayer>>,
+    ball: Single<&Position, With<Ball>>,
+) {
+    let (mut velocity, position) = ai_paddle.into_inner();
+    /*
+     * Subtracting two vectors that represent coordinates in our game will give us a new vector pointing
+     * from one to the other.
+     * We can then use this new vector's y component to set our desired movement.
+     */
+    let a_to_b = ball.0 - position.0;
+    velocity.0.y = a_to_b.y.signum() * PADDLE_SPEED;
 }
 
 pub fn move_paddles_system(mut paddles: Query<(&mut Position, &Velocity), With<Paddle>>) {
