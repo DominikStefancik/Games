@@ -7,8 +7,10 @@ use bevy::{
     },
 };
 
-use crate::components::Position;
-use crate::{collision::Collider, components::Velocity};
+use crate::{
+    collision::Collider,
+    components::{Position, Velocity},
+};
 
 const BALL_RADIUS: f32 = 10.;
 pub const BALL_SHAPE: Circle = Circle::new(BALL_RADIUS);

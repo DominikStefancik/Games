@@ -12,7 +12,10 @@ use crate::{
     },
     score::{
         resources::Score,
-        systems::{detect_goal_system, update_score_system},
+        systems::{
+            detect_goal_system, spawn_scoreboard_system, update_score_system,
+            update_scoreboard_system,
+        },
     },
     systems::project_positions,
     wall::systems::spawn_walls_system,
@@ -42,6 +45,7 @@ fn main() {
                 spawn_ball_system,
                 spawn_paddles_system,
                 spawn_walls_system,
+                spawn_scoreboard_system,
             ),
         )
         .add_systems(
@@ -57,6 +61,7 @@ fn main() {
                 constrain_paddle_position_system.after(move_paddles_system),
                 move_ai_paddle_system,
                 detect_goal_system.after(move_ball_system),
+                update_scoreboard_system,
             ),
         )
         // Here we are adding our observer systems as global observers

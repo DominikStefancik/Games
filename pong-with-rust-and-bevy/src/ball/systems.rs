@@ -12,9 +12,9 @@ use bevy::{
 
 use crate::{
     ball::components::{BALL_COLOR, BALL_SHAPE, BALL_SPEED, Ball},
-    components::Velocity,
+    components::{Position, Velocity},
+    score::systems::Scored,
 };
-use crate::{components::Position, score::systems::Scored};
 
 /*
  * To render a shape onto the screen we need two things:
@@ -89,5 +89,5 @@ pub fn reset_ball_system(
     let (mut ball_position, mut ball_velocity) = ball.into_inner();
 
     ball_position.0 = Vec2::ZERO;
-    ball_velocity.0 = Vec2::new(BALL_SPEED, 0.);
+    ball_velocity.0 = Vec2::new(BALL_SPEED, -BALL_SPEED);
 }

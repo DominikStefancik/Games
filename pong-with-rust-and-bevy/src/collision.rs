@@ -1,7 +1,3 @@
-use crate::{
-    ball::components::Ball,
-    components::{Position, Velocity},
-};
 use bevy::{
     ecs::{
         component::Component,
@@ -18,6 +14,11 @@ use bevy::{
         bounding::{Aabb2d, BoundingVolume, IntersectsVolume},
         primitives::Rectangle,
     },
+};
+
+use crate::{
+    ball::components::Ball,
+    components::{Position, Velocity},
 };
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
