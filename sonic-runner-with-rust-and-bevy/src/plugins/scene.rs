@@ -1,15 +1,14 @@
 use bevy::{
     app::{App, Startup},
-    asset::{AssetServer, Assets},
+    asset::AssetServer,
     camera::Camera2d,
     color::Color,
     ecs::{
         children,
         spawn::SpawnRelated,
-        system::{Commands, Res, ResMut},
+        system::{Commands, Res},
     },
-    image::{TextureAtlas, TextureAtlasLayout},
-    math::{UVec2, Vec3},
+    math::Vec3,
     prelude::Plugin,
     sprite::Sprite,
     text::{Justify, TextColor, TextFont, TextLayout},
@@ -17,11 +16,10 @@ use bevy::{
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
-use crate::plugins::default::WINDOW_RESOLUTION;
+use crate::entities::sonic::systems::spawn_sonic;
 
 const BACKGROUND_SPRITE_SCALE: f32 = 1.7;
 const PLATFORM_SPRITE_SCALE: f32 = 3.2;
-const SONIC_SPRITE_SCALE: f32 = 3.;
 const GAME_NAME_FONT_SIZE: f32 = 72.;
 const INSTRUCTIONS_FONT_SIZE: f32 = 30.;
 
@@ -66,28 +64,6 @@ fn spawn_platform(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         Sprite::from_image(texture.clone()),
         Transform::from_xyz(0., -200., 1.).with_scale(Vec3::splat(PLATFORM_SPRITE_SCALE)),
-    ));
-}
-
-fn spawn_sonic(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-) {
-    let texture = asset_server.load("graphics/sonic.png");
-    let layout = TextureAtlasLayout::from_grid(UVec2::new(32, 44), 8, 2, None, None);
-    let texture_atlas_layout = texture_atlas_layouts.add(layout);
-
-    commands.spawn((
-        Sprite::from_atlas_image(
-            texture.clone(),
-            TextureAtlas {
-                layout: texture_atlas_layout.clone(),
-                index: 0,
-            },
-        ),
-        Transform::from_xyz(-(WINDOW_RESOLUTION.0 as f32) / 2. + 180., -185., 1.)
-            .with_scale(Vec3::splat(SONIC_SPRITE_SCALE)),
     ));
 }
 
