@@ -6,11 +6,11 @@ use bevy::{
     window::{Window, WindowPlugin, WindowResolution},
 };
 
-const WINDOW_RESOLUTION: (u32, u32) = (1400, 900);
+pub const WINDOW_RESOLUTION: (u32, u32) = (1400, 900);
 
 pub fn plugin(app: &mut App) {
     let primary_window = Window {
-        title: "Sonic Runner".into(),
+        title: "Sonic Ring Run".into(),
         resizable: false,
         resolution: WindowResolution::new(WINDOW_RESOLUTION.0, WINDOW_RESOLUTION.1),
         canvas: Some("#bevy".to_owned()),
