@@ -10,5 +10,14 @@ pub struct Animation {
     pub last_frame: usize,
 }
 
+impl Animation {
+    pub fn new(first_frame: usize, last_frame: usize) -> Self {
+        Animation {
+            first_frame,
+            last_frame,
+        }
+    }
+}
+
 #[derive(Component, Deref, DerefMut)]
 pub struct AnimationTimer(pub Timer);

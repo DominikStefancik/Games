@@ -24,10 +24,7 @@ pub fn spawn_sonic(
     let layout = TextureAtlasLayout::from_grid(UVec2::new(32, 44), 8, 2, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
-    let run_animation = Animation {
-        first_frame: 0,
-        last_frame: 7,
-    };
+    let run_animation = Animation::new(0, 7);
 
     commands.spawn((
         Sprite::from_atlas_image(
