@@ -1,5 +1,6 @@
 use bevy::{
     ecs::component::Component,
+    math::{Vec2, primitives::Rectangle},
     prelude::{Deref, DerefMut},
     time::Timer,
 };
@@ -21,3 +22,13 @@ impl Animation {
 
 #[derive(Component, Deref, DerefMut)]
 pub struct AnimationTimer(pub Timer);
+
+// represents a hit box (a collision area) of an entity
+#[derive(Component)]
+pub struct ColliderHitBox(pub Rectangle);
+
+impl ColliderHitBox {
+    pub fn half_size(&self) -> Vec2 {
+        self.0.half_size
+    }
+}

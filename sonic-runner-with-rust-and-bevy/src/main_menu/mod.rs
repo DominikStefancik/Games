@@ -12,7 +12,6 @@ use crate::{
         despawn_backgrounds, despawn_platforms, scroll_background, scroll_platform,
         spawn_background, spawn_platform,
     },
-    sonic::systems::{despawn_sonic, spawn_sonic},
 };
 
 mod components;
@@ -22,30 +21,17 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            Startup,
-            (
-                spawn_background,
-                spawn_platform,
-                spawn_sonic,
-                spawn_main_text,
-            ),
-        )
-        .add_systems(
-            FixedUpdate,
-            (
-                scroll_background.run_if(in_state(AppState::MainMenu)),
-                scroll_platform.run_if(in_state(AppState::MainMenu)),
-            ),
-        )
-        .add_systems(
-            OnExit(AppState::MainMenu),
-            (
-                despawn_backgrounds,
-                despawn_platforms,
-                despawn_main_text,
-                despawn_sonic,
-            ),
-        );
+        app.add_systems(Startup, (spawn_background, spawn_platform, spawn_main_text))
+            .add_systems(
+                FixedUpdate,
+                (
+                    scroll_background.run_if(in_state(AppState::MainMenu)),
+                    scroll_platform.run_if(in_state(AppState::MainMenu)),
+                ),
+            )
+            .add_systems(
+                OnExit(AppState::MainMenu),
+                (despawn_backgrounds, despawn_platforms, despawn_main_text),
+            );
     }
 }

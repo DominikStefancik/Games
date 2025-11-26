@@ -9,6 +9,7 @@ use crate::{
     game::GamePlugin,
     main_menu::MainMenuPlugin,
     scenes::systems::spawn_camera,
+    sonic::SonicPlugin,
 };
 
 mod app_states;
@@ -16,6 +17,7 @@ mod entities;
 mod game;
 mod main_menu;
 mod plugins;
+mod ring;
 mod scenes;
 mod sonic;
 
@@ -25,6 +27,7 @@ fn main() {
         .init_state::<AppState>() // Alternatively we could use .insert_state(AppState::MainMenu)
         .add_plugins(MainMenuPlugin)
         .add_plugins(GamePlugin)
+        .add_plugins(SonicPlugin)
         .add_systems(Startup, spawn_camera)
         .add_systems(
             FixedUpdate,
