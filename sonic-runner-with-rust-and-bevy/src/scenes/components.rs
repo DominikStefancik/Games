@@ -23,3 +23,6 @@ pub struct Background;
 
 #[derive(Component)]
 pub struct Platform;
+
+#[derive(Component)]
+pub struct BackgroundMusic;
