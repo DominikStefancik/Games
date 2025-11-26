@@ -3,6 +3,7 @@ use bevy::{
     camera::Camera2d,
     color::Color,
     ecs::{
+        entity::Entity,
         query::With,
         system::{Commands, Query, Res},
     },
@@ -147,5 +148,20 @@ pub fn scroll_platform(
                     - 180.;
             }
         }
+    }
+}
+
+pub fn despawn_backgrounds(
+    mut commands: Commands,
+    background_query: Query<Entity, With<Background>>,
+) {
+    for entity in background_query {
+        commands.entity(entity).despawn();
+    }
+}
+
+pub fn despawn_platforms(mut commands: Commands, platform_query: Query<Entity, With<Platform>>) {
+    for entity in platform_query {
+        commands.entity(entity).despawn();
     }
 }

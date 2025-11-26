@@ -15,11 +15,9 @@ pub fn toggle_pausing_game(
         match game_state.get() {
             GameState::Running => {
                 next_state.set(GameState::Paused);
-                println!("Game is paused!");
             }
             GameState::Paused => {
                 next_state.set(GameState::Running);
-                println!("Game is running!");
             }
         }
     }

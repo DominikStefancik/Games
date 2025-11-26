@@ -1,6 +1,10 @@
 use bevy::{
     asset::{AssetServer, Assets},
-    ecs::system::{Commands, Res, ResMut},
+    ecs::{
+        entity::{ContainsEntity, Entity},
+        query::With,
+        system::{Commands, Res, ResMut, Single},
+    },
     image::{TextureAtlas, TextureAtlasLayout},
     math::{UVec2, Vec3},
     sprite::Sprite,
@@ -11,6 +15,7 @@ use bevy::{
 use crate::{
     entities::components::{Animation, AnimationTimer},
     plugins::default::WINDOW_RESOLUTION,
+    sonic::components::Sonic,
 };
 
 const SONIC_SPRITE_SCALE: f32 = 3.;
@@ -38,5 +43,10 @@ pub fn spawn_sonic(
             .with_scale(Vec3::splat(SONIC_SPRITE_SCALE)),
         run_animation,
         AnimationTimer(Timer::from_seconds(0.04, TimerMode::Repeating)),
+        Sonic,
     ));
+}
+
+pub fn despawn_sonic(mut commands: Commands, sonic: Single<Entity, With<Sonic>>) {
+    commands.entity(sonic.entity()).despawn();
 }

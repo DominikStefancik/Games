@@ -1,28 +1,23 @@
 use bevy::{
     app::{App, FixedUpdate, Startup},
-    state::{app::AppExtStates, state::States},
+    state::app::AppExtStates,
 };
 
 use crate::{
-    entities::systems::run_animations, game::GamePlugin, main_menu::MainMenuPlugin,
+    app_states::{AppState, move_to_game_over_state, move_to_game_state},
+    entities::systems::run_animations,
+    game::GamePlugin,
+    main_menu::MainMenuPlugin,
     scenes::systems::spawn_camera,
 };
 
+mod app_states;
 mod entities;
 mod game;
 mod main_menu;
 mod plugins;
 mod scenes;
 mod sonic;
-
-#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
-pub enum AppState {
-    // this says MainMenu will be a default state of the app when we start it
-    #[default]
-    MainMenu,
-    Game,
-    GameOver,
-}
 
 fn main() {
     App::new()
@@ -31,6 +26,9 @@ fn main() {
         .add_plugins(MainMenuPlugin)
         .add_plugins(GamePlugin)
         .add_systems(Startup, spawn_camera)
-        .add_systems(FixedUpdate, run_animations)
+        .add_systems(
+            FixedUpdate,
+            (run_animations, move_to_game_state, move_to_game_over_state),
+        )
         .run();
 }

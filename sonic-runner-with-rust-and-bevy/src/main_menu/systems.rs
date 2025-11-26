@@ -3,12 +3,16 @@ use bevy::{
     color::Color,
     ecs::{
         children,
+        entity::{ContainsEntity, Entity},
+        query::With,
         spawn::SpawnRelated,
-        system::{Commands, Res},
+        system::{Commands, Res, Single},
     },
     text::{Justify, TextColor, TextFont, TextLayout},
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
+
+use crate::main_menu::components::MainMenuText;
 
 const GAME_NAME_FONT_SIZE: f32 = 72.;
 const SUBTEXT_FONT_SIZE: f32 = 30.;
@@ -83,10 +87,18 @@ pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     );
 
     commands.spawn((
+        MainMenuText,
         container,
         children![(
             text_container,
             children![game_name, play_instructions, pause_instructions]
         )],
     ));
+}
+
+pub fn despawn_main_text(
+    mut commands: Commands,
+    text_container: Single<Entity, With<MainMenuText>>,
+) {
+    commands.entity(text_container.entity()).despawn();
 }

@@ -1,14 +1,21 @@
 use bevy::{
     app::{App, FixedUpdate, Startup},
+    ecs::schedule::IntoScheduleConfigs,
     prelude::Plugin,
+    state::{condition::in_state, state::OnExit},
 };
 
 use crate::{
-    main_menu::systems::spawn_main_text,
-    scenes::systems::{scroll_background, scroll_platform, spawn_background, spawn_platform},
-    sonic::systems::spawn_sonic,
+    app_states::AppState,
+    main_menu::systems::{despawn_main_text, spawn_main_text},
+    scenes::systems::{
+        despawn_backgrounds, despawn_platforms, scroll_background, scroll_platform,
+        spawn_background, spawn_platform,
+    },
+    sonic::systems::{despawn_sonic, spawn_sonic},
 };
 
+mod components;
 mod systems;
 
 pub struct MainMenuPlugin;
@@ -24,6 +31,21 @@ impl Plugin for MainMenuPlugin {
                 spawn_main_text,
             ),
         )
-        .add_systems(FixedUpdate, (scroll_background, scroll_platform));
+        .add_systems(
+            FixedUpdate,
+            (
+                scroll_background.run_if(in_state(AppState::MainMenu)),
+                scroll_platform.run_if(in_state(AppState::MainMenu)),
+            ),
+        )
+        .add_systems(
+            OnExit(AppState::MainMenu),
+            (
+                despawn_backgrounds,
+                despawn_platforms,
+                despawn_main_text,
+                despawn_sonic,
+            ),
+        );
     }
 }
