@@ -3,30 +3,24 @@ use bevy::{
     camera::Camera2d,
     color::Color,
     ecs::{
-        children,
         query::With,
-        spawn::SpawnRelated,
         system::{Commands, Query, Res},
     },
     math::Vec3,
     sprite::Sprite,
-    text::{Justify, TextColor, TextFont, TextLayout},
     time::{Time, Timer, TimerMode},
     transform::components::Transform,
-    ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
-use crate::plugins::{
-    default::WINDOW_RESOLUTION,
-    scene::components::{Background, Platform, Scrollable, ScrollingTimer},
+use crate::{
+    plugins::default::WINDOW_RESOLUTION,
+    scenes::components::{Background, Platform, Scrollable, ScrollingTimer},
 };
 
 const BACKGROUND_SPRITE_WIDTH: f32 = 1920.;
 const BACKGROUND_SPRITE_SCALE: f32 = 1.7;
 const PLATFORM_SPRITE_WIDTH: f32 = 1280.;
 const PLATFORM_SPRITE_SCALE: f32 = 3.2;
-const GAME_NAME_FONT_SIZE: f32 = 72.;
-const INSTRUCTIONS_FONT_SIZE: f32 = 30.;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2d);
@@ -101,64 +95,6 @@ pub fn spawn_platform(mut commands: Commands, asset_server: Res<AssetServer>) {
         Scrollable::new(pixels_to_scroll),
         ScrollingTimer(timer),
         Platform,
-    ));
-}
-
-pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let font_handle = asset_server.load("fonts/mania.ttf");
-
-    // Create a container that will center everything
-    let container = Node {
-        width: percent(100.),
-        height: percent(100.),
-        justify_content: JustifyContent::Center,
-        ..Default::default()
-    };
-
-    // Then add a container for the text
-    let text_container = Node {
-        width: px(480.),
-        height: px(500.),
-        ..Default::default()
-    };
-
-    let game_name = (
-        Text::new("SONIC RING RUN"),
-        TextFont {
-            font: font_handle.clone(),
-            font_size: GAME_NAME_FONT_SIZE,
-            ..Default::default()
-        },
-        TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
-        Node {
-            position_type: PositionType::Absolute,
-            top: px(100.),
-            left: px(0.),
-            ..Default::default()
-        },
-    );
-
-    let instructions = (
-        Text::new("Press Space/Click/Touch to Play"),
-        TextFont {
-            font: font_handle.clone(),
-            font_size: INSTRUCTIONS_FONT_SIZE,
-            ..Default::default()
-        },
-        TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
-        Node {
-            position_type: PositionType::Absolute,
-            top: px(250.),
-            left: px(20.),
-            ..Default::default()
-        },
-    );
-
-    commands.spawn((
-        container,
-        children![(text_container, children![game_name, instructions])],
     ));
 }
 

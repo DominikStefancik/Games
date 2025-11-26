@@ -4,19 +4,18 @@ use bevy::{
 };
 
 use crate::{
-    entities::sonic::systems::spawn_sonic,
-    plugins::scene::systems::{
-        scroll_background, scroll_platform, spawn_background, spawn_camera, spawn_main_text,
-        spawn_platform,
+    main_menu::systems::spawn_main_text,
+    scenes::systems::{
+        scroll_background, scroll_platform, spawn_background, spawn_camera, spawn_platform,
     },
+    sonic::systems::spawn_sonic,
 };
 
-mod components;
 mod systems;
 
-pub struct ScenePlugin;
+pub struct MainMenuPlugin;
 
-impl Plugin for ScenePlugin {
+impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Startup,
