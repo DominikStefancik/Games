@@ -1,5 +1,4 @@
 use bevy::{
-    asset::AssetServer,
     ecs::{
         entity::{ContainsEntity, Entity},
         query::With,
@@ -19,7 +18,7 @@ use crate::{
     entities::components::{Animation, AnimationTimer, ColliderHitBox},
     game::systems::spawn_sound,
     plugins::default::WINDOW_RESOLUTION,
-    resources::GameTextures,
+    resources::{GameSounds, GameTextures},
     ring::components::Ring,
     sonic::components::{SONIC_SPRITE_SCALE, Sonic},
 };
@@ -49,7 +48,7 @@ pub fn despawn_sonic(mut commands: Commands, sonic: Single<Entity, With<Sonic>>)
 
 pub fn detect_collision_sonic_with_ring(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    game_sounds: Res<GameSounds>,
     sonic: Single<(&ColliderHitBox, &Transform), With<Sonic>>,
     ring_query: Query<(Entity, &ColliderHitBox, &Transform), With<Ring>>,
 ) {
@@ -60,8 +59,7 @@ pub fn detect_collision_sonic_with_ring(
         let ring_hit_box = Aabb2d::new(ring_transform.translation.xy(), ring_collider.half_size());
 
         if sonic_hit_box.intersects(&ring_hit_box) {
-            let ring_sound = asset_server.load("sounds/Ring.wav");
-            spawn_sound(&mut commands, ring_sound);
+            spawn_sound(&mut commands, &game_sounds.ring);
             commands.entity(ring_entity).despawn();
         }
     }

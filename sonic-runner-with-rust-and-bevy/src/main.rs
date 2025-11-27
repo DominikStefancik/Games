@@ -9,7 +9,7 @@ use crate::{
     game::GamePlugin,
     main_menu::MainMenuPlugin,
     sonic::SonicPlugin,
-    systems::{load_textures, spawn_camera},
+    systems::{load_sounds, load_textures, spawn_camera},
 };
 
 mod app_states;
@@ -30,7 +30,7 @@ fn main() {
         .add_plugins(MainMenuPlugin)
         .add_plugins(GamePlugin)
         .add_plugins(SonicPlugin)
-        .add_systems(Startup, (spawn_camera, load_textures))
+        .add_systems(Startup, (spawn_camera, load_textures, load_sounds))
         .add_systems(
             FixedUpdate,
             (run_animations, move_to_game_state, move_to_game_over_state),

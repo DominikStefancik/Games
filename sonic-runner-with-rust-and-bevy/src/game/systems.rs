@@ -1,5 +1,5 @@
 use bevy::{
-    asset::{AssetServer, Handle},
+    asset::Handle,
     audio::{AudioPlayer, AudioSink, AudioSinkPlayback, AudioSource, PlaybackSettings, Volume},
     ecs::{
         query::With,
@@ -9,7 +9,7 @@ use bevy::{
     state::state::{NextState, State},
 };
 
-use crate::{game::GameState, scenes::components::BackgroundMusic};
+use crate::{game::GameState, resources::GameSounds, scenes::components::BackgroundMusic};
 
 pub fn toggle_pausing_game(
     keyboard_input: Res<ButtonInput<KeyCode>>,
@@ -28,9 +28,9 @@ pub fn toggle_pausing_game(
     }
 }
 
-pub fn spawn_background_music(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_background_music(mut commands: Commands, game_sounds: Res<GameSounds>) {
     commands.spawn((
-        AudioPlayer::new(asset_server.load("sounds/City.mp3")),
+        AudioPlayer::new(game_sounds.background.clone()),
         PlaybackSettings::LOOP.with_volume(Volume::Linear(0.25)),
         BackgroundMusic,
     ));
@@ -46,9 +46,9 @@ pub fn pause_background_music(
     }
 }
 
-pub fn spawn_sound(commands: &mut Commands, sound: Handle<AudioSource>) {
+pub fn spawn_sound(commands: &mut Commands, sound: &Handle<AudioSource>) {
     commands.spawn((
-        AudioPlayer::new(sound),
+        AudioPlayer::new(sound.clone()),
         PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.5)),
     ));
 }
