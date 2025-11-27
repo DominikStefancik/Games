@@ -11,9 +11,9 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
-    game::{
-        resources::GameSettings,
-        systems::{pause_background_music, spawn_background_music, toggle_pausing_game},
+    game::systems::{
+        despawn_score_text, pause_background_music, reset_game_settings, spawn_background_music,
+        spawn_score_text, toggle_pausing_game, update_score_text_ui,
     },
     ring::RingPlugin,
     scenes::systems::{
@@ -22,7 +22,8 @@ use crate::{
     },
 };
 
-pub mod resources;
+pub mod components;
+pub mod events;
 pub mod systems;
 
 pub struct GamePlugin;
@@ -37,16 +38,21 @@ pub enum GameState {
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(GameSettings::new())
-            .init_state::<GameState>() // Alternatively we could use .insert_state(GameState::Running)
+        app.init_state::<GameState>() // Alternatively we could use .insert_state(GameState::Running)
             .add_plugins(RingPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
-                (spawn_background, spawn_platform, spawn_background_music),
+                (
+                    spawn_background,
+                    spawn_platform,
+                    spawn_score_text,
+                    spawn_background_music,
+                    reset_game_settings,
+                ),
             )
             .add_systems(
                 OnExit(AppState::Game),
-                (despawn_backgrounds, despawn_platforms),
+                (despawn_backgrounds, despawn_platforms, despawn_score_text),
             )
             .add_systems(
                 FixedUpdate,
@@ -60,6 +66,8 @@ impl Plugin for GamePlugin {
                     toggle_pausing_game.run_if(in_state(AppState::Game)),
                     pause_background_music,
                 ),
-            );
+            )
+            // Global observers
+            .add_observer(update_score_text_ui);
     }
 }

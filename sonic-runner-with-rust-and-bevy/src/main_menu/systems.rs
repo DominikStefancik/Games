@@ -1,5 +1,4 @@
 use bevy::{
-    asset::AssetServer,
     color::Color,
     ecs::{
         children,
@@ -12,14 +11,12 @@ use bevy::{
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
-use crate::main_menu::components::MainMenuText;
+use crate::{main_menu::components::MainMenuTextUi, resources::GameFonts};
 
 const GAME_NAME_FONT_SIZE: f32 = 72.;
 const SUBTEXT_FONT_SIZE: f32 = 30.;
 
-pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let font_handle = asset_server.load("fonts/mania.ttf");
-
+pub fn spawn_main_text(mut commands: Commands, game_fonts: Res<GameFonts>) {
     // Create a container that will center everything
     let container = Node {
         width: percent(100.),
@@ -38,7 +35,7 @@ pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     let game_name = (
         Text::new("SONIC RING RUN"),
         TextFont {
-            font: font_handle.clone(),
+            font: game_fonts.mania.clone(),
             font_size: GAME_NAME_FONT_SIZE,
             ..Default::default()
         },
@@ -55,7 +52,7 @@ pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     let play_instructions = (
         Text::new("Press Space/Click/Touch to Play"),
         TextFont {
-            font: font_handle.clone(),
+            font: game_fonts.mania.clone(),
             font_size: SUBTEXT_FONT_SIZE,
             ..Default::default()
         },
@@ -72,7 +69,7 @@ pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     let pause_instructions = (
         Text::new("Press P to Pause or Unpause"),
         TextFont {
-            font: font_handle.clone(),
+            font: game_fonts.mania.clone(),
             font_size: SUBTEXT_FONT_SIZE,
             ..Default::default()
         },
@@ -87,7 +84,7 @@ pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     );
 
     commands.spawn((
-        MainMenuText,
+        MainMenuTextUi,
         container,
         children![(
             text_container,
@@ -98,7 +95,7 @@ pub fn spawn_main_text(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 pub fn despawn_main_text(
     mut commands: Commands,
-    text_container: Single<Entity, With<MainMenuText>>,
+    text_container: Single<Entity, With<MainMenuTextUi>>,
 ) {
     commands.entity(text_container.entity()).despawn();
 }

@@ -7,7 +7,7 @@ use bevy::{
 };
 
 use crate::{
-    resources::{GameSounds, GameTextures},
+    resources::{GameFonts, GameSounds, GameTextures},
     ring::components::RING_SPRITE_FRAME_SIZE,
     sonic::components::SONIC_SPRITE_FRAME_SIZE,
 };
@@ -71,4 +71,12 @@ pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
     let game_sounds = GameSounds { background, ring };
 
     commands.insert_resource(game_sounds);
+}
+
+pub fn load_fonts(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let mania = asset_server.load("fonts/mania.ttf");
+
+    let game_fonts = GameFonts { mania };
+
+    commands.insert_resource(game_fonts);
 }

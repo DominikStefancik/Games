@@ -2,7 +2,7 @@ use bevy::{
     ecs::{
         entity::{ContainsEntity, Entity},
         query::With,
-        system::{Commands, Query, Res, Single},
+        system::{Commands, Query, Res, ResMut, Single},
     },
     image::TextureAtlas,
     math::{
@@ -16,9 +16,9 @@ use bevy::{
 
 use crate::{
     entities::components::{Animation, AnimationTimer, ColliderHitBox},
-    game::systems::spawn_sound,
+    game::{events::ScoreUpdated, systems::spawn_sound},
     plugins::default::WINDOW_RESOLUTION,
-    resources::{GameSounds, GameTextures},
+    resources::{GameSettings, GameSounds, GameTextures},
     ring::components::Ring,
     sonic::components::{SONIC_SPRITE_SCALE, Sonic},
 };
@@ -49,6 +49,7 @@ pub fn despawn_sonic(mut commands: Commands, sonic: Single<Entity, With<Sonic>>)
 pub fn detect_collision_sonic_with_ring(
     mut commands: Commands,
     game_sounds: Res<GameSounds>,
+    mut game_settings: ResMut<GameSettings>,
     sonic: Single<(&ColliderHitBox, &Transform), With<Sonic>>,
     ring_query: Query<(Entity, &ColliderHitBox, &Transform), With<Ring>>,
 ) {
@@ -59,7 +60,9 @@ pub fn detect_collision_sonic_with_ring(
         let ring_hit_box = Aabb2d::new(ring_transform.translation.xy(), ring_collider.half_size());
 
         if sonic_hit_box.intersects(&ring_hit_box) {
+            game_settings.increase_score(1);
             spawn_sound(&mut commands, &game_sounds.ring);
+            commands.trigger(ScoreUpdated(ring_entity));
             commands.entity(ring_entity).despawn();
         }
     }

@@ -13,9 +13,8 @@ use bevy::{
 
 use crate::{
     entities::components::{Animation, AnimationTimer},
-    game::resources::GameSettings,
     plugins::default::WINDOW_RESOLUTION,
-    resources::GameTextures,
+    resources::{GameSettings, GameTextures},
     ring::{
         components::{RING_SPRITE_SCALE, Ring},
         resources::RingGenerationTimer,
