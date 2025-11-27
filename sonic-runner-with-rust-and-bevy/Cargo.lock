@@ -4110,6 +4110,7 @@ name = "sonic-runner-with-rust-and-bevy"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "rand",
 ]
 
 [[package]]

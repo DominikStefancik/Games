@@ -1,6 +1,4 @@
 use bevy::{
-    asset::AssetServer,
-    camera::Camera2d,
     color::Color,
     ecs::{
         entity::Entity,
@@ -15,6 +13,7 @@ use bevy::{
 
 use crate::{
     plugins::default::WINDOW_RESOLUTION,
+    resources::GameTextures,
     scenes::components::{Background, Platform, Scrollable, ScrollingTimer},
 };
 
@@ -23,12 +22,7 @@ const BACKGROUND_SPRITE_SCALE: f32 = 1.7;
 const PLATFORM_SPRITE_WIDTH: f32 = 1280.;
 const PLATFORM_SPRITE_SCALE: f32 = 3.2;
 
-pub fn spawn_camera(mut commands: Commands) {
-    commands.spawn(Camera2d);
-}
-
-pub fn spawn_background(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let texture = asset_server.load("graphics/chemical-background.png");
+pub fn spawn_background(mut commands: Commands, game_textures: Res<GameTextures>) {
     // Alpha channel of the color controls transparency
     let color = Color::srgba(1.0, 1.0, 1.0, 0.9);
     let pixels_to_scroll = 3.;
@@ -37,7 +31,7 @@ pub fn spawn_background(mut commands: Commands, asset_server: Res<AssetServer>) 
 
     commands.spawn((
         Sprite {
-            image: texture.clone(),
+            image: game_textures.background.clone(),
             color,
             ..Default::default()
         },
@@ -50,7 +44,7 @@ pub fn spawn_background(mut commands: Commands, asset_server: Res<AssetServer>) 
 
     commands.spawn((
         Sprite {
-            image: texture.clone(),
+            image: game_textures.background.clone(),
             color,
             ..Default::default()
         },
@@ -68,14 +62,13 @@ pub fn spawn_background(mut commands: Commands, asset_server: Res<AssetServer>) 
     ));
 }
 
-pub fn spawn_platform(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let texture = asset_server.load("graphics/platforms.png");
+pub fn spawn_platform(mut commands: Commands, game_textures: Res<GameTextures>) {
     let pixels_to_scroll = 15.;
     let timer = Timer::from_seconds(0.0001, TimerMode::Repeating);
     let vertical_position_value = -200.;
 
     commands.spawn((
-        Sprite::from_image(texture.clone()),
+        Sprite::from_image(game_textures.platforms.clone()),
         Transform::from_xyz(0., vertical_position_value, 1.)
             .with_scale(Vec3::splat(PLATFORM_SPRITE_SCALE)),
         Scrollable::new(pixels_to_scroll),
@@ -84,7 +77,7 @@ pub fn spawn_platform(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 
     commands.spawn((
-        Sprite::from_image(texture.clone()),
+        Sprite::from_image(game_textures.platforms.clone()),
         // we want to position the "second" platforms image right after the first one
         // but since we scaled the image, we have to add PLATFORMS_SPRITE_WIDTH * PLATFORM_SPRITE_SCALE
         Transform::from_xyz(

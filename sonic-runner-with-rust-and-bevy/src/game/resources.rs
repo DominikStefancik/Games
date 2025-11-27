@@ -20,19 +20,19 @@ impl GameSettings {
         }
     }
 
-    pub fn increase_speed(self: &mut Self, speed_increment: f32) {
+    pub fn increase_speed(&mut self, speed_increment: f32) {
         self.speed += speed_increment;
     }
 
-    pub fn increase_score_multiplier(self: &mut Self) {
+    pub fn increase_score_multiplier(&mut self) {
         self.score_multiplier += 1;
     }
 
-    pub fn reset_score_multiplier(self: &mut Self) {
+    pub fn reset_score_multiplier(&mut self) {
         self.score_multiplier = 0;
     }
 
-    pub fn reset(self: &mut Self) {
+    pub fn reset(&mut self) {
         self.speed = INITIAL_SPEED;
         self.score = 0;
         self.score_multiplier = 0;

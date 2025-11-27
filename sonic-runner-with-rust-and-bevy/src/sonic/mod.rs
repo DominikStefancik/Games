@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, FixedUpdate},
+    app::{App, FixedUpdate, PostStartup},
     prelude::Plugin,
     state::state::{OnEnter, OnExit},
 };
@@ -16,7 +16,7 @@ pub struct SonicPlugin;
 
 impl Plugin for SonicPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::MainMenu), spawn_sonic)
+        app.add_systems(PostStartup, spawn_sonic)
             .add_systems(OnEnter(AppState::Game), spawn_sonic)
             .add_systems(OnExit(AppState::MainMenu), despawn_sonic)
             .add_systems(OnExit(AppState::Game), despawn_sonic)

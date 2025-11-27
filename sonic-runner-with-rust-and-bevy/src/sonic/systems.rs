@@ -1,13 +1,13 @@
 use bevy::{
-    asset::{AssetServer, Assets},
+    asset::AssetServer,
     ecs::{
         entity::{ContainsEntity, Entity},
         query::With,
-        system::{Commands, Query, Res, ResMut, Single},
+        system::{Commands, Query, Res, Single},
     },
-    image::{TextureAtlas, TextureAtlasLayout},
+    image::TextureAtlas,
     math::{
-        UVec2, Vec3, Vec3Swizzles,
+        Vec3, Vec3Swizzles,
         bounding::{Aabb2d, IntersectsVolume},
     },
     sprite::Sprite,
@@ -19,35 +19,19 @@ use crate::{
     entities::components::{Animation, AnimationTimer, ColliderHitBox},
     game::systems::spawn_sound,
     plugins::default::WINDOW_RESOLUTION,
+    resources::GameTextures,
     ring::components::Ring,
-    sonic::components::{SONIC_SPRITE_FRAME_SIZE, SONIC_SPRITE_SCALE, Sonic},
+    sonic::components::{SONIC_SPRITE_SCALE, Sonic},
 };
 
-pub fn spawn_sonic(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-) {
-    let texture = asset_server.load("graphics/sonic.png");
-    let layout = TextureAtlasLayout::from_grid(
-        UVec2::new(
-            SONIC_SPRITE_FRAME_SIZE.0 as u32,
-            SONIC_SPRITE_FRAME_SIZE.1 as u32,
-        ),
-        8,
-        2,
-        None,
-        None,
-    );
-    let texture_atlas_layout = texture_atlas_layouts.add(layout);
-
+pub fn spawn_sonic(mut commands: Commands, game_textures: Res<GameTextures>) {
     let run_animation = Animation::new(0, 7);
 
     commands.spawn((
         Sprite::from_atlas_image(
-            texture.clone(),
+            game_textures.sonic.clone(),
             TextureAtlas {
-                layout: texture_atlas_layout.clone(),
+                layout: game_textures.sonic_atlas.clone(),
                 index: 0,
             },
         ),

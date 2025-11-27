@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, FixedUpdate, Startup},
+    app::{App, FixedUpdate, PostStartup},
     ecs::schedule::IntoScheduleConfigs,
     prelude::Plugin,
     state::{condition::in_state, state::OnExit},
@@ -21,17 +21,20 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (spawn_background, spawn_platform, spawn_main_text))
-            .add_systems(
-                FixedUpdate,
-                (
-                    scroll_background.run_if(in_state(AppState::MainMenu)),
-                    scroll_platform.run_if(in_state(AppState::MainMenu)),
-                ),
-            )
-            .add_systems(
-                OnExit(AppState::MainMenu),
-                (despawn_backgrounds, despawn_platforms, despawn_main_text),
-            );
+        app.add_systems(
+            PostStartup,
+            (spawn_background, spawn_platform, spawn_main_text),
+        )
+        .add_systems(
+            FixedUpdate,
+            (
+                scroll_background.run_if(in_state(AppState::MainMenu)),
+                scroll_platform.run_if(in_state(AppState::MainMenu)),
+            ),
+        )
+        .add_systems(
+            OnExit(AppState::MainMenu),
+            (despawn_backgrounds, despawn_platforms, despawn_main_text),
+        );
     }
 }
