@@ -21,7 +21,7 @@ use crate::{
     game::{GameState, components::ScoreTextUi, events::ScoreUpdated},
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameFonts, GameSettings, GameSounds},
-    scenes::components::BackgroundMusic,
+    scene::components::BackgroundMusic,
 };
 
 const SCORE_FONT_SIZE: f32 = 52.;

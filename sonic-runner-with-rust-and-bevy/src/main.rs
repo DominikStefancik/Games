@@ -20,7 +20,7 @@ mod main_menu;
 mod plugins;
 mod resources;
 mod ring;
-mod scenes;
+mod scene;
 mod sonic;
 mod systems;
 

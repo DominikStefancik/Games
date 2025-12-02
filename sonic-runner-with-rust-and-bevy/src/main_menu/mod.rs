@@ -8,7 +8,7 @@ use bevy::{
 use crate::{
     app_states::AppState,
     main_menu::systems::{despawn_main_text, spawn_main_text},
-    scenes::systems::{
+    scene::systems::{
         despawn_backgrounds, despawn_platforms, scroll_background, scroll_platform,
         spawn_background, spawn_platform,
     },

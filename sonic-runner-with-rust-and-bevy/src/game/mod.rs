@@ -16,7 +16,7 @@ use crate::{
         spawn_score_text, toggle_pausing_game, update_score_text_ui,
     },
     ring::RingPlugin,
-    scenes::systems::{
+    scene::systems::{
         despawn_backgrounds, despawn_platforms, scroll_background, scroll_platform,
         spawn_background, spawn_platform,
     },
