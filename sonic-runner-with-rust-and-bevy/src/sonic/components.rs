@@ -10,6 +10,8 @@ const SONIC_COLLIDER_SHAPE: Rectangle = Rectangle::new(
 );
 pub const SONIC_JUMP_MAX_HIGH: f32 = 40.;
 pub const SONIC_POSITION_MAX_LOW: f32 = -185.;
+pub const SONIC_RUN_ANIMATION_DURATION: f32 = 0.04;
+pub const SONIC_JUMP_ANIMATION_DURATION: f32 = 0.02;
 
 #[derive(Component)]
 #[require(ColliderHitBox = ColliderHitBox(SONIC_COLLIDER_SHAPE))]
@@ -36,4 +38,9 @@ impl Jump {
             velocity: 0.,
         }
     }
+}
+
+pub enum SonicAnimationKind {
+    Run,
+    Jump,
 }

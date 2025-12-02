@@ -30,7 +30,7 @@ pub fn spawn_ring(
     timer.tick(time.delta());
 
     if timer.just_finished() {
-        let run_animation = Animation::new(0, 15);
+        let animation = Animation::new(0, 15);
 
         commands.spawn((
             Sprite::from_atlas_image(
@@ -42,7 +42,7 @@ pub fn spawn_ring(
             ),
             Transform::from_xyz((WINDOW_RESOLUTION.0 as f32) / 2. - 30., -205., 1.)
                 .with_scale(Vec3::splat(RING_SPRITE_SCALE)),
-            run_animation,
+            animation,
             AnimationTimer(Timer::from_seconds(0.04, TimerMode::Repeating)),
             Ring,
         ));

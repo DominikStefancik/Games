@@ -24,9 +24,11 @@ use crate::{
     ring::components::Ring,
     sonic::{
         components::{
-            Jump, SONIC_JUMP_MAX_HIGH, SONIC_POSITION_MAX_LOW, SONIC_SPRITE_SCALE, Sonic,
+            Jump, SONIC_JUMP_MAX_HIGH, SONIC_POSITION_MAX_LOW, SONIC_RUN_ANIMATION_DURATION,
+            SONIC_SPRITE_SCALE, Sonic, SonicAnimationKind,
         },
         events::JumpStarted,
+        helpers::switch_sonic_animation,
     },
 };
 
@@ -44,7 +46,10 @@ pub fn spawn_sonic(mut commands: Commands, game_textures: Res<GameTextures>) {
         Transform::from_xyz(-(WINDOW_RESOLUTION.0 as f32) / 2. + 180., -185., 1.)
             .with_scale(Vec3::splat(SONIC_SPRITE_SCALE)),
         run_animation,
-        AnimationTimer(Timer::from_seconds(0.04, TimerMode::Repeating)),
+        AnimationTimer(Timer::from_seconds(
+            SONIC_RUN_ANIMATION_DURATION,
+            TimerMode::Repeating,
+        )),
         Sonic::new(),
         Jump::new(),
     ));
@@ -102,11 +107,32 @@ pub fn start_jump(
     }
 }
 
-pub fn jump(sonic_query: Single<(&mut Transform, &mut Jump), With<Sonic>>) {
-    let (mut sonic_transform, mut sonic_jump) = sonic_query.into_inner();
+pub fn jump(
+    mut commands: Commands,
+    sonic_query: Single<
+        (
+            Entity,
+            &mut Transform,
+            &mut Jump,
+            &mut Sprite,
+            &mut AnimationTimer,
+        ),
+        With<Sonic>,
+    >,
+) {
+    let (sonic_entity, mut sonic_transform, mut sonic_jump, mut sprite, mut animation_timer) =
+        sonic_query.into_inner();
 
     if sonic_jump.is_in_progress {
         let delta_v = 0.5;
+
+        // when Sonic is jumping, change the animation
+        switch_sonic_animation(
+            SonicAnimationKind::Jump,
+            &mut commands,
+            sonic_entity,
+            &mut animation_timer,
+        );
 
         if sonic_transform.translation.y < SONIC_JUMP_MAX_HIGH {
             sonic_jump.velocity += delta_v;
@@ -118,6 +144,15 @@ pub fn jump(sonic_query: Single<(&mut Transform, &mut Jump), With<Sonic>>) {
 
         if sonic_transform.translation.y <= SONIC_POSITION_MAX_LOW {
             sonic_jump.is_in_progress = false;
+
+            // after Sonic landed on the platform, change the animation back to running
+            sprite.texture_atlas.as_mut().unwrap().index = 0;
+            switch_sonic_animation(
+                SonicAnimationKind::Run,
+                &mut commands,
+                sonic_entity,
+                &mut animation_timer,
+            );
         }
     }
 }

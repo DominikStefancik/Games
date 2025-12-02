@@ -10,6 +10,7 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
+    game::GameState,
     sonic::systems::{
         despawn_sonic, detect_collision_sonic_with_ring, jump, spawn_sonic, start_jump,
         trigger_jump,
@@ -18,6 +19,7 @@ use crate::{
 
 pub mod components;
 pub mod events;
+mod helpers;
 pub mod systems;
 
 pub struct SonicPlugin;
@@ -35,7 +37,8 @@ impl Plugin for SonicPlugin {
                     trigger_jump,
                     jump.after(trigger_jump),
                 )
-                    .run_if(in_state(AppState::Game)),
+                    .run_if(in_state(AppState::Game))
+                    .run_if(in_state(GameState::Running)),
             )
             // Global observers
             .add_observer(start_jump);
