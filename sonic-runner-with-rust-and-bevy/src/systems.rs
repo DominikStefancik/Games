@@ -67,8 +67,13 @@ pub fn load_textures(
 pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
     let background = asset_server.load("sounds/City.mp3");
     let ring = asset_server.load("sounds/Ring.wav");
+    let jump = asset_server.load("sounds/Jump.wav");
 
-    let game_sounds = GameSounds { background, ring };
+    let game_sounds = GameSounds {
+        background,
+        ring,
+        jump,
+    };
 
     commands.insert_resource(game_sounds);
 }

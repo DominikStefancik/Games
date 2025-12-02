@@ -1,8 +1,10 @@
 use bevy::{
-    ecs::system::{Res, ResMut},
+    ecs::system::{Res, ResMut, Single},
     input::{ButtonInput, keyboard::KeyCode},
     state::state::{NextState, State, States},
 };
+
+use crate::sonic::components::Sonic;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum AppState {
@@ -26,9 +28,9 @@ pub fn move_to_game_state(
 pub fn move_to_game_over_state(
     app_state: Res<State<AppState>>,
     mut next_state: ResMut<NextState<AppState>>,
+    sonic: Single<&Sonic>,
 ) {
-    let is_sonic_dead = false;
-    if *app_state.get() == AppState::Game && is_sonic_dead {
+    if *app_state.get() == AppState::Game && sonic.is_dead {
         next_state.set(AppState::GameOver);
     }
 }

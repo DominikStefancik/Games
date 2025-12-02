@@ -20,6 +20,7 @@ pub struct GameTextures {
 pub struct GameSounds {
     pub background: Handle<AudioSource>,
     pub ring: Handle<AudioSource>,
+    pub jump: Handle<AudioSource>,
 }
 
 #[derive(Resource)]

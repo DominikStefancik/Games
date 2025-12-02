@@ -1,10 +1,12 @@
 use bevy::{
     ecs::{
         entity::{ContainsEntity, Entity},
+        observer::On,
         query::With,
         system::{Commands, Query, Res, ResMut, Single},
     },
     image::TextureAtlas,
+    input::{ButtonInput, keyboard::KeyCode},
     math::{
         Vec3, Vec3Swizzles,
         bounding::{Aabb2d, IntersectsVolume},
@@ -20,7 +22,12 @@ use crate::{
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameSettings, GameSounds, GameTextures},
     ring::components::Ring,
-    sonic::components::{SONIC_SPRITE_SCALE, Sonic},
+    sonic::{
+        components::{
+            Jump, SONIC_JUMP_MAX_HIGH, SONIC_POSITION_MAX_LOW, SONIC_SPRITE_SCALE, Sonic,
+        },
+        events::JumpStarted,
+    },
 };
 
 pub fn spawn_sonic(mut commands: Commands, game_textures: Res<GameTextures>) {
@@ -38,7 +45,8 @@ pub fn spawn_sonic(mut commands: Commands, game_textures: Res<GameTextures>) {
             .with_scale(Vec3::splat(SONIC_SPRITE_SCALE)),
         run_animation,
         AnimationTimer(Timer::from_seconds(0.04, TimerMode::Repeating)),
-        Sonic,
+        Sonic::new(),
+        Jump::new(),
     ));
 }
 
@@ -64,6 +72,52 @@ pub fn detect_collision_sonic_with_ring(
             spawn_sound(&mut commands, &game_sounds.ring);
             commands.trigger(ScoreUpdated(ring_entity));
             commands.entity(ring_entity).despawn();
+        }
+    }
+}
+
+pub fn trigger_jump(
+    mut commands: Commands,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    sonic: Single<(Entity, &mut Jump), With<Sonic>>,
+) {
+    let (sonic_entity, sonic_jump) = sonic.into_inner();
+
+    if keyboard_input.just_pressed(KeyCode::Space) && !sonic_jump.is_in_progress {
+        commands.trigger(JumpStarted(sonic_entity));
+    }
+}
+
+pub fn start_jump(
+    _: On<JumpStarted>,
+    mut commands: Commands,
+    game_sounds: Res<GameSounds>,
+    sonic_query: Single<&mut Jump, With<Sonic>>,
+) {
+    let mut sonic_jump = sonic_query.into_inner();
+
+    if !sonic_jump.is_in_progress {
+        sonic_jump.is_in_progress = true;
+        spawn_sound(&mut commands, &game_sounds.jump);
+    }
+}
+
+pub fn jump(sonic_query: Single<(&mut Transform, &mut Jump), With<Sonic>>) {
+    let (mut sonic_transform, mut sonic_jump) = sonic_query.into_inner();
+
+    if sonic_jump.is_in_progress {
+        let delta_v = 0.5;
+
+        if sonic_transform.translation.y < SONIC_JUMP_MAX_HIGH {
+            sonic_jump.velocity += delta_v;
+        } else {
+            sonic_jump.velocity -= delta_v;
+        }
+
+        sonic_transform.translation.y += sonic_jump.velocity;
+
+        if sonic_transform.translation.y <= SONIC_POSITION_MAX_LOW {
+            sonic_jump.is_in_progress = false;
         }
     }
 }
