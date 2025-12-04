@@ -7,11 +7,11 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
-    game::GameState,
-    ring::{
+    entities::ring::{
         resources::RingGenerationTimer,
         systems::{despawn_all_rings, despawn_ring_out_of_screen, move_ring, spawn_ring},
     },
+    game::GameState,
 };
 
 pub mod components;

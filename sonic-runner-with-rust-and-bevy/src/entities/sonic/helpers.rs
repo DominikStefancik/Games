@@ -2,8 +2,8 @@ use std::time::Duration;
 
 use bevy::ecs::{entity::Entity, system::Commands};
 
-use crate::{
-    entities::components::{Animation, AnimationTimer},
+use crate::entities::{
+    components::{Animation, AnimationTimer},
     sonic::components::{
         SONIC_JUMP_ANIMATION_DURATION, SONIC_RUN_ANIMATION_DURATION, SonicAnimationKind,
     },

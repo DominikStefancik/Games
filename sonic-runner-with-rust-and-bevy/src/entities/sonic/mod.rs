@@ -10,11 +10,11 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
-    game::GameState,
-    sonic::systems::{
+    entities::sonic::systems::{
         despawn_sonic, detect_collision_sonic_with_ring, jump, reset_sonic_score_text, spawn_sonic,
         start_jump, trigger_jump,
     },
+    game::GameState,
 };
 
 pub mod components;

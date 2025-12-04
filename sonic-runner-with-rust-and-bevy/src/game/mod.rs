@@ -11,11 +11,11 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
+    entities::ring::RingPlugin,
     game::systems::{
         despawn_score_text, pause_background_music, reset_game_settings, spawn_background_music,
         spawn_score_text, toggle_pausing_game, update_game_score_text,
     },
-    ring::RingPlugin,
     scene::systems::{
         despawn_backgrounds, despawn_platforms, scroll_background, scroll_platform,
         spawn_background, spawn_platform,

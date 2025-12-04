@@ -7,9 +7,10 @@ use bevy::{
 };
 
 use crate::{
+    entities::{
+        ring::components::RING_SPRITE_FRAME_SIZE, sonic::components::SONIC_SPRITE_FRAME_SIZE,
+    },
     resources::{GameFonts, GameSounds, GameTextures},
-    ring::components::RING_SPRITE_FRAME_SIZE,
-    sonic::components::SONIC_SPRITE_FRAME_SIZE,
 };
 
 pub fn spawn_camera(mut commands: Commands) {

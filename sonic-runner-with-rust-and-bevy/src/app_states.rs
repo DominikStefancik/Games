@@ -4,7 +4,7 @@ use bevy::{
     state::state::{NextState, State, States},
 };
 
-use crate::sonic::components::Sonic;
+use crate::entities::sonic::components::Sonic;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum AppState {

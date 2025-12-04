@@ -5,11 +5,10 @@ use bevy::{
 
 use crate::{
     app_states::{AppState, move_to_game_over_state, move_to_game_state},
-    entities::systems::run_animations,
+    entities::{sonic::SonicPlugin, systems::run_animations},
     game::GamePlugin,
     main_menu::MainMenuPlugin,
     resources::GameSettings,
-    sonic::SonicPlugin,
     systems::{load_fonts, load_sounds, load_textures, spawn_camera},
 };
 
@@ -19,9 +18,7 @@ mod game;
 mod main_menu;
 mod plugins;
 mod resources;
-mod ring;
 mod scene;
-mod sonic;
 mod systems;
 
 fn main() {

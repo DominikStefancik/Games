@@ -12,13 +12,15 @@ use bevy::{
 };
 
 use crate::{
-    entities::components::{Animation, AnimationTimer},
+    entities::{
+        components::{Animation, AnimationTimer},
+        ring::{
+            components::{RING_SPRITE_SCALE, Ring},
+            resources::RingGenerationTimer,
+        },
+    },
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameSettings, GameTextures},
-    ring::{
-        components::{RING_SPRITE_SCALE, Ring},
-        resources::RingGenerationTimer,
-    },
 };
 
 pub fn spawn_ring(

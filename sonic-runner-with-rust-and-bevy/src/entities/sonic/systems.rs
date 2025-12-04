@@ -21,20 +21,22 @@ use bevy::{
 };
 
 use crate::{
-    entities::components::{Animation, AnimationTimer, ColliderHitBox},
+    entities::{
+        components::{Animation, AnimationTimer, ColliderHitBox},
+        ring::components::Ring,
+        sonic::{
+            components::{
+                Jump, SONIC_JUMP_MAX_HIGH, SONIC_POSITION_MAX_LOW, SONIC_RUN_ANIMATION_DURATION,
+                SONIC_SCORE_FONT_SIZE, SONIC_SPRITE_SCALE, Sonic, SonicAnimationKind,
+                SonicScoreTextTimer, SonicScoreTextUi,
+            },
+            events::JumpStarted,
+            helpers::switch_sonic_animation,
+        },
+    },
     game::{events::GameScoreUpdated, systems::spawn_sound},
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameFonts, GameSettings, GameSounds, GameTextures},
-    ring::components::Ring,
-    sonic::{
-        components::{
-            Jump, SONIC_JUMP_MAX_HIGH, SONIC_POSITION_MAX_LOW, SONIC_RUN_ANIMATION_DURATION,
-            SONIC_SCORE_FONT_SIZE, SONIC_SPRITE_SCALE, Sonic, SonicAnimationKind,
-            SonicScoreTextTimer, SonicScoreTextUi,
-        },
-        events::JumpStarted,
-        helpers::switch_sonic_animation,
-    },
 };
 
 pub fn spawn_sonic(
