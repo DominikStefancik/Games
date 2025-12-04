@@ -1,4 +1,9 @@
-use bevy::{ecs::component::Component, math::primitives::Rectangle, time::Timer};
+use bevy::{
+    ecs::component::Component,
+    math::primitives::Rectangle,
+    prelude::{Deref, DerefMut},
+    time::Timer,
+};
 
 use crate::entities::components::ColliderHitBox;
 
@@ -49,5 +54,5 @@ pub enum SonicAnimationKind {
 #[derive(Component)]
 pub struct SonicScoreTextUi;
 
-#[derive(Component)]
+#[derive(Component, Deref, DerefMut)]
 pub struct SonicScoreTextTimer(pub Timer);

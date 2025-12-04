@@ -14,6 +14,8 @@ pub struct GameTextures {
     pub sonic_atlas: Handle<TextureAtlasLayout>,
     pub ring: Handle<Image>,
     pub ring_atlas: Handle<TextureAtlasLayout>,
+    pub motobug: Handle<Image>,
+    pub motobug_atlas: Handle<TextureAtlasLayout>,
 }
 
 #[derive(Resource)]
@@ -30,20 +32,23 @@ pub struct GameFonts {
 
 #[derive(Resource)]
 pub struct GameSettings {
-    pub speed: f32,
+    pub ring_speed: f32,
+    pub motobug_speed: f32,
     pub score: u32,
     pub score_multiplier: u8,
     pub best_score: u32,
 }
 
-const INITIAL_SPEED: f32 = 10.;
+const RING_SPEED: f32 = 10.;
+const MOTOBUG_INITIAL_SPEED: f32 = 12.;
 
 impl GameSettings {
     pub fn new() -> Self {
         GameSettings {
-            speed: INITIAL_SPEED,
+            ring_speed: 10.,
+            motobug_speed: MOTOBUG_INITIAL_SPEED,
             score: 0,
-            score_multiplier: 0,
+            score_multiplier: 1,
             best_score: 0,
         }
     }
@@ -52,8 +57,8 @@ impl GameSettings {
         self.score += score_increment;
     }
 
-    pub fn increase_speed(&mut self, speed_increment: f32) {
-        self.speed += speed_increment;
+    pub fn increase_motobug_speed(&mut self, speed_increment: f32) {
+        self.motobug_speed += speed_increment;
     }
 
     pub fn increase_score_multiplier(&mut self) {
@@ -61,12 +66,13 @@ impl GameSettings {
     }
 
     pub fn reset_score_multiplier(&mut self) {
-        self.score_multiplier = 0;
+        self.score_multiplier = 1;
     }
 
     pub fn reset(&mut self) {
-        self.speed = INITIAL_SPEED;
+        self.ring_speed = RING_SPEED;
+        self.motobug_speed = MOTOBUG_INITIAL_SPEED;
         self.score = 0;
-        self.score_multiplier = 0;
+        self.score_multiplier = 1;
     }
 }

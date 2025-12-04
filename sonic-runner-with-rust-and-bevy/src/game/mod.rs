@@ -11,7 +11,7 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
-    entities::ring::RingPlugin,
+    entities::{motobug::MotobugPlugin, ring::RingPlugin},
     game::systems::{
         despawn_score_text, pause_background_music, reset_game_settings, spawn_background_music,
         spawn_score_text, toggle_pausing_game, update_game_score_text,
@@ -40,6 +40,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<GameState>() // Alternatively we could use .insert_state(GameState::Running)
             .add_plugins(RingPlugin)
+            .add_plugins(MotobugPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
                 (

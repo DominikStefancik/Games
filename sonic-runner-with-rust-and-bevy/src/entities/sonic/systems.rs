@@ -194,9 +194,9 @@ pub fn reset_sonic_score_text(
 ) {
     let (mut score_text, mut timer) = sonic_score.into_inner();
 
-    timer.0.tick(time.delta());
+    timer.tick(time.delta());
 
-    if timer.0.just_finished() {
+    if timer.just_finished() {
         score_text.0 = "".to_string();
     }
 }

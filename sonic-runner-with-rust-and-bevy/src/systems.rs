@@ -8,7 +8,8 @@ use bevy::{
 
 use crate::{
     entities::{
-        ring::components::RING_SPRITE_FRAME_SIZE, sonic::components::SONIC_SPRITE_FRAME_SIZE,
+        motobug::components::MOTOBUG_SPRITE_FRAME_SIZE, ring::components::RING_SPRITE_FRAME_SIZE,
+        sonic::components::SONIC_SPRITE_FRAME_SIZE,
     },
     resources::{GameFonts, GameSounds, GameTextures},
 };
@@ -53,6 +54,20 @@ pub fn load_textures(
     );
     let ring_atlas = texture_atlas_layouts.add(layout);
 
+    // create motobug texture atlas
+    let motobug = asset_server.load("graphics/motobug.png");
+    let layout = TextureAtlasLayout::from_grid(
+        UVec2::new(
+            MOTOBUG_SPRITE_FRAME_SIZE.0 as u32,
+            MOTOBUG_SPRITE_FRAME_SIZE.1 as u32,
+        ),
+        5,
+        1,
+        None,
+        None,
+    );
+    let motobug_atlas = texture_atlas_layouts.add(layout);
+
     let game_textures = GameTextures {
         background,
         platforms,
@@ -60,6 +75,8 @@ pub fn load_textures(
         sonic_atlas,
         ring,
         ring_atlas,
+        motobug,
+        motobug_atlas,
     };
 
     commands.insert_resource(game_textures);
