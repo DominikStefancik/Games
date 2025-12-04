@@ -12,8 +12,8 @@ use crate::{
     app_states::AppState,
     game::GameState,
     sonic::systems::{
-        despawn_sonic, detect_collision_sonic_with_ring, jump, spawn_sonic, start_jump,
-        trigger_jump,
+        despawn_sonic, detect_collision_sonic_with_ring, jump, reset_sonic_score_text, spawn_sonic,
+        start_jump, trigger_jump,
     },
 };
 
@@ -36,6 +36,7 @@ impl Plugin for SonicPlugin {
                     detect_collision_sonic_with_ring,
                     trigger_jump,
                     jump.after(trigger_jump),
+                    reset_sonic_score_text.after(detect_collision_sonic_with_ring),
                 )
                     .run_if(in_state(AppState::Game))
                     .run_if(in_state(GameState::Running)),

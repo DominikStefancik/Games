@@ -1,8 +1,11 @@
 use bevy::{
+    color::Color,
     ecs::{
+        children,
         entity::{ContainsEntity, Entity},
         observer::On,
         query::With,
+        spawn::SpawnRelated,
         system::{Commands, Query, Res, ResMut, Single},
     },
     image::TextureAtlas,
@@ -11,31 +14,37 @@ use bevy::{
         Vec3, Vec3Swizzles,
         bounding::{Aabb2d, IntersectsVolume},
     },
-    sprite::Sprite,
-    time::{Timer, TimerMode},
+    sprite::{Sprite, Text2d},
+    text::{TextColor, TextFont},
+    time::{Time, Timer, TimerMode},
     transform::components::Transform,
 };
 
 use crate::{
     entities::components::{Animation, AnimationTimer, ColliderHitBox},
-    game::{events::ScoreUpdated, systems::spawn_sound},
+    game::{events::GameScoreUpdated, systems::spawn_sound},
     plugins::default::WINDOW_RESOLUTION,
-    resources::{GameSettings, GameSounds, GameTextures},
+    resources::{GameFonts, GameSettings, GameSounds, GameTextures},
     ring::components::Ring,
     sonic::{
         components::{
             Jump, SONIC_JUMP_MAX_HIGH, SONIC_POSITION_MAX_LOW, SONIC_RUN_ANIMATION_DURATION,
-            SONIC_SPRITE_SCALE, Sonic, SonicAnimationKind,
+            SONIC_SCORE_FONT_SIZE, SONIC_SPRITE_SCALE, Sonic, SonicAnimationKind,
+            SonicScoreTextTimer, SonicScoreTextUi,
         },
         events::JumpStarted,
         helpers::switch_sonic_animation,
     },
 };
 
-pub fn spawn_sonic(mut commands: Commands, game_textures: Res<GameTextures>) {
+pub fn spawn_sonic(
+    mut commands: Commands,
+    game_textures: Res<GameTextures>,
+    game_fonts: Res<GameFonts>,
+) {
     let run_animation = Animation::new(0, 7);
 
-    commands.spawn((
+    let sonic = (
         Sprite::from_atlas_image(
             game_textures.sonic.clone(),
             TextureAtlas {
@@ -52,7 +61,22 @@ pub fn spawn_sonic(mut commands: Commands, game_textures: Res<GameTextures>) {
         )),
         Sonic::new(),
         Jump::new(),
-    ));
+    );
+
+    let score = (
+        SonicScoreTextUi,
+        Text2d::new(""),
+        TextFont {
+            font: game_fonts.mania.clone(),
+            font_size: SONIC_SCORE_FONT_SIZE,
+            ..Default::default()
+        },
+        TextColor(Color::srgb_u8(255, 255, 0)),
+        Transform::from_xyz(30., 10., 1.),
+        SonicScoreTextTimer(Timer::from_seconds(1., TimerMode::Once)),
+    );
+
+    commands.spawn((sonic, children![score]));
 }
 
 pub fn despawn_sonic(mut commands: Commands, sonic: Single<Entity, With<Sonic>>) {
@@ -63,10 +87,12 @@ pub fn detect_collision_sonic_with_ring(
     mut commands: Commands,
     game_sounds: Res<GameSounds>,
     mut game_settings: ResMut<GameSettings>,
-    sonic: Single<(&ColliderHitBox, &Transform), With<Sonic>>,
+    sonic: Single<(Entity, &ColliderHitBox, &Transform), With<Sonic>>,
+    sonic_score: Single<(&mut Text2d, &mut SonicScoreTextTimer), With<SonicScoreTextUi>>,
     ring_query: Query<(Entity, &ColliderHitBox, &Transform), With<Ring>>,
 ) {
-    let (sonic_collider, sonic_transform) = sonic.into_inner();
+    let (sonic_entity, sonic_collider, sonic_transform) = sonic.into_inner();
+    let (mut score_text, mut score_timer) = sonic_score.into_inner();
     let sonic_hit_box = Aabb2d::new(sonic_transform.translation.xy(), sonic_collider.half_size());
 
     for (ring_entity, ring_collider, ring_transform) in ring_query {
@@ -74,8 +100,11 @@ pub fn detect_collision_sonic_with_ring(
 
         if sonic_hit_box.intersects(&ring_hit_box) {
             game_settings.increase_score(1);
+            score_text.0 = "+1".to_string();
+            // reset timet so after 1 second the score text desappears
+            score_timer.0.reset();
             spawn_sound(&mut commands, &game_sounds.ring);
-            commands.trigger(ScoreUpdated(ring_entity));
+            commands.trigger(GameScoreUpdated(sonic_entity));
             commands.entity(ring_entity).despawn();
         }
     }
@@ -154,5 +183,18 @@ pub fn jump(
                 &mut animation_timer,
             );
         }
+    }
+}
+
+pub fn reset_sonic_score_text(
+    time: Res<Time>,
+    sonic_score: Single<(&mut Text2d, &mut SonicScoreTextTimer), With<SonicScoreTextUi>>,
+) {
+    let (mut score_text, mut timer) = sonic_score.into_inner();
+
+    timer.0.tick(time.delta());
+
+    if timer.0.just_finished() {
+        score_text.0 = "".to_string();
     }
 }

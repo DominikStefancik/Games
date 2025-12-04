@@ -18,13 +18,13 @@ use bevy::{
 };
 
 use crate::{
-    game::{GameState, components::ScoreTextUi, events::ScoreUpdated},
+    game::{GameState, components::GameScoreTextUi, events::GameScoreUpdated},
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameFonts, GameSettings, GameSounds},
     scene::components::BackgroundMusic,
 };
 
-const SCORE_FONT_SIZE: f32 = 52.;
+const GAME_SCORE_FONT_SIZE: f32 = 52.;
 
 pub fn reset_game_settings(mut game_settings: ResMut<GameSettings>) {
     game_settings.reset();
@@ -51,11 +51,11 @@ pub fn spawn_score_text(
     };
 
     let score = (
-        ScoreTextUi,
+        GameScoreTextUi,
         Text::new(format!("SCORE: {}", game_settings.score)),
         TextFont {
             font: game_fonts.mania.clone(),
-            font_size: SCORE_FONT_SIZE,
+            font_size: GAME_SCORE_FONT_SIZE,
             ..Default::default()
         },
         TextColor(Color::WHITE),
@@ -73,7 +73,7 @@ pub fn spawn_score_text(
 
 pub fn despawn_score_text(
     mut commands: Commands,
-    text_container: Single<Entity, With<ScoreTextUi>>,
+    text_container: Single<Entity, With<GameScoreTextUi>>,
 ) {
     commands.entity(text_container.entity()).despawn();
 }
@@ -120,10 +120,10 @@ pub fn spawn_sound(commands: &mut Commands, sound: &Handle<AudioSource>) {
     ));
 }
 
-pub fn update_score_text_ui(
-    _: On<ScoreUpdated>,
+pub fn update_game_score_text(
+    _: On<GameScoreUpdated>,
     game_settings: Res<GameSettings>,
-    mut score_text_ui: Single<&mut Text, With<ScoreTextUi>>,
+    mut score_text_ui: Single<&mut Text, With<GameScoreTextUi>>,
 ) {
     if game_settings.is_changed() {
         score_text_ui.0 = format!("SCORE: {}", game_settings.score);

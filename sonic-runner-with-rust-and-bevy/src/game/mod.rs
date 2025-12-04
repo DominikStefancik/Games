@@ -13,7 +13,7 @@ use crate::{
     app_states::AppState,
     game::systems::{
         despawn_score_text, pause_background_music, reset_game_settings, spawn_background_music,
-        spawn_score_text, toggle_pausing_game, update_score_text_ui,
+        spawn_score_text, toggle_pausing_game, update_game_score_text,
     },
     ring::RingPlugin,
     scene::systems::{
@@ -68,6 +68,6 @@ impl Plugin for GamePlugin {
                 ),
             )
             // Global observers
-            .add_observer(update_score_text_ui);
+            .add_observer(update_game_score_text);
     }
 }

@@ -1,4 +1,4 @@
-use bevy::{ecs::component::Component, math::primitives::Rectangle};
+use bevy::{ecs::component::Component, math::primitives::Rectangle, time::Timer};
 
 use crate::entities::components::ColliderHitBox;
 
@@ -12,6 +12,7 @@ pub const SONIC_JUMP_MAX_HIGH: f32 = 40.;
 pub const SONIC_POSITION_MAX_LOW: f32 = -185.;
 pub const SONIC_RUN_ANIMATION_DURATION: f32 = 0.04;
 pub const SONIC_JUMP_ANIMATION_DURATION: f32 = 0.02;
+pub const SONIC_SCORE_FONT_SIZE: f32 = 25.;
 
 #[derive(Component)]
 #[require(ColliderHitBox = ColliderHitBox(SONIC_COLLIDER_SHAPE))]
@@ -44,3 +45,9 @@ pub enum SonicAnimationKind {
     Run,
     Jump,
 }
+
+#[derive(Component)]
+pub struct SonicScoreTextUi;
+
+#[derive(Component)]
+pub struct SonicScoreTextTimer(pub Timer);
