@@ -11,7 +11,7 @@ use crate::{
         resources::RingGenerationTimer,
         systems::{despawn_all_rings, despawn_ring_out_of_screen, move_ring, spawn_ring},
     },
-    game::GameState,
+    scenes::game::GameState,
 };
 
 pub mod components;

@@ -7,7 +7,7 @@ use bevy::{
 
 use crate::{
     entities::components::{Animation, AnimationTimer},
-    game::GameState,
+    scenes::game::GameState,
 };
 
 pub fn run_animations(

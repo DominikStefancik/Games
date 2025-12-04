@@ -18,10 +18,12 @@ use bevy::{
 };
 
 use crate::{
-    game::{GameState, components::GameScoreTextUi, events::GameScoreUpdated},
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameFonts, GameSettings, GameSounds},
-    scene::components::BackgroundMusic,
+    scenes::{
+        components::BackgroundMusic,
+        game::{GameState, components::GameScoreTextUi, events::GameScoreUpdated},
+    },
 };
 
 const GAME_SCORE_FONT_SIZE: f32 = 52.;

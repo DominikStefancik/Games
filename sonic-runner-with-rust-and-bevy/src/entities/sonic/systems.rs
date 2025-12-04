@@ -34,9 +34,9 @@ use crate::{
             helpers::switch_sonic_animation,
         },
     },
-    game::{events::GameScoreUpdated, systems::spawn_sound},
     plugins::default::WINDOW_RESOLUTION,
     resources::{GameFonts, GameSettings, GameSounds, GameTextures},
+    scenes::game::{events::GameScoreUpdated, systems::spawn_sound},
 };
 
 pub fn spawn_sonic(

@@ -14,7 +14,7 @@ use crate::{
         despawn_sonic, detect_collision_sonic_with_ring, jump, reset_sonic_score_text, spawn_sonic,
         start_jump, trigger_jump,
     },
-    game::GameState,
+    scenes::game::GameState,
 };
 
 pub mod components;

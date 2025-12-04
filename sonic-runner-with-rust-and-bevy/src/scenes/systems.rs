@@ -14,7 +14,7 @@ use bevy::{
 use crate::{
     plugins::default::WINDOW_RESOLUTION,
     resources::GameTextures,
-    scene::components::{Background, Platform, Scrollable, ScrollingTimer},
+    scenes::components::{Background, Platform, Scrollable, ScrollingTimer},
 };
 
 const BACKGROUND_SPRITE_WIDTH: f32 = 1920.;

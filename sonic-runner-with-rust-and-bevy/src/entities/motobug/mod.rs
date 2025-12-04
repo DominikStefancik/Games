@@ -12,7 +12,7 @@ use crate::{
             despawn_all_motobugs, despawn_motobug_out_of_screen, move_motobug, spawn_motobug,
         },
     },
-    game::GameState,
+    scenes::game::GameState,
 };
 
 pub struct MotobugPlugin;

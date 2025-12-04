@@ -11,7 +11,7 @@ use bevy::{
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
-use crate::{main_menu::components::MainMenuTextUi, resources::GameFonts};
+use crate::{resources::GameFonts, scenes::main_menu::components::MainMenuTextUi};
 
 const GAME_NAME_FONT_SIZE: f32 = 72.;
 const SUBTEXT_FONT_SIZE: f32 = 30.;
