@@ -26,7 +26,7 @@ impl Plugin for RingPlugin {
             .add_systems(OnExit(AppState::Game), despawn_all_rings)
             .add_systems(
                 FixedUpdate,
-                (move_ring, despawn_ring_out_of_screen, spawn_ring)
+                (spawn_ring, move_ring, despawn_ring_out_of_screen)
                     .run_if(in_state(AppState::Game))
                     .run_if(in_state(GameState::Running)),
             );

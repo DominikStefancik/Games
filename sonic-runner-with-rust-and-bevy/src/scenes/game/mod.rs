@@ -46,11 +46,11 @@ impl Plugin for GamePlugin {
             .add_systems(
                 OnEnter(AppState::Game),
                 (
+                    reset_game_settings,
                     spawn_background,
                     spawn_platform,
-                    spawn_score_text,
+                    spawn_score_text.after(reset_game_settings),
                     spawn_background_music,
-                    reset_game_settings,
                 ),
             )
             .add_systems(

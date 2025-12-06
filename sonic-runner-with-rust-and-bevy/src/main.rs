@@ -7,7 +7,7 @@ use crate::{
     app_states::{AppState, move_to_game_over_state, move_to_game_state},
     entities::{sonic::SonicPlugin, systems::run_animations},
     resources::GameSettings,
-    scenes::{game::GamePlugin, main_menu::MainMenuPlugin},
+    scenes::{game::GamePlugin, game_over::GameOverPlugin, main_menu::MainMenuPlugin},
     systems::{load_fonts, load_sounds, load_textures, spawn_camera},
 };
 
@@ -25,6 +25,7 @@ fn main() {
         .init_state::<AppState>() // Alternatively we could use .insert_state(AppState::MainMenu)
         .add_plugins(MainMenuPlugin)
         .add_plugins(GamePlugin)
+        .add_plugins(GameOverPlugin)
         .add_plugins(SonicPlugin)
         .add_systems(
             Startup,
