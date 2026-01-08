@@ -59,10 +59,10 @@ pub fn spawn_motobug(
 
 pub fn move_motobug(
     game_settings: Res<GameSettings>,
-    ring_query: Query<&mut Transform, With<Motobug>>,
+    motobug_query: Query<&mut Transform, With<Motobug>>,
 ) {
-    for mut ring_tranform in ring_query {
-        ring_tranform.translation.x -= game_settings.motobug_speed;
+    for mut motobug_transform in motobug_query {
+        motobug_transform.translation.x -= game_settings.motobug_speed;
     }
 }
 

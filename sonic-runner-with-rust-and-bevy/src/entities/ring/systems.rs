@@ -58,8 +58,8 @@ pub fn spawn_ring(
 }
 
 pub fn move_ring(game_settings: Res<GameSettings>, ring_query: Query<&mut Transform, With<Ring>>) {
-    for mut ring_tranform in ring_query {
-        ring_tranform.translation.x -= game_settings.ring_speed;
+    for mut ring_transform in ring_query {
+        ring_transform.translation.x -= game_settings.ring_speed;
     }
 }
 

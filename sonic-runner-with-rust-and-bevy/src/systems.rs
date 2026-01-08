@@ -4,6 +4,7 @@ use bevy::{
     ecs::system::{Commands, Res, ResMut},
     image::TextureAtlasLayout,
     math::UVec2,
+    time::Time,
 };
 
 use crate::{
@@ -11,7 +12,7 @@ use crate::{
         motobug::components::MOTOBUG_SPRITE_FRAME_SIZE, ring::components::RING_SPRITE_FRAME_SIZE,
         sonic::components::SONIC_SPRITE_FRAME_SIZE,
     },
-    resources::{GameFonts, GameSounds, GameTextures},
+    resources::{GameFonts, GameSettings, GameSounds, GameSpeedTimer, GameTextures},
 };
 
 pub fn spawn_camera(mut commands: Commands) {
@@ -108,4 +109,17 @@ pub fn load_fonts(mut commands: Commands, asset_server: Res<AssetServer>) {
     let game_fonts = GameFonts { mania };
 
     commands.insert_resource(game_fonts);
+}
+
+pub fn increase_game_speed(
+    time: Res<Time>,
+    mut timer: ResMut<GameSpeedTimer>,
+    mut game_settings: ResMut<GameSettings>,
+) {
+    timer.tick(time.delta());
+
+    if timer.just_finished() {
+        game_settings.increase_platform_speed();
+        game_settings.increase_motobug_speed();
+    }
 }

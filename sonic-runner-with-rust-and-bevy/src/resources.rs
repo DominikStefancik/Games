@@ -3,11 +3,16 @@ use bevy::{
     audio::AudioSource,
     ecs::resource::Resource,
     image::{Image, TextureAtlasLayout},
+    prelude::{Deref, DerefMut},
     text::Font,
+    time::{Timer, TimerMode},
 };
 
 const RING_SPEED: f32 = 10.;
 const MOTOBUG_INITIAL_SPEED: f32 = 12.;
+const PLATFORM_INITIAL_SPEED: f32 = 15.;
+const GAME_SPEED_INCREMENT: f32 = 5.;
+const GAME_SPEED_TIMER_DURATION: f32 = 5.;
 
 #[derive(Resource)]
 pub struct GameTextures {
@@ -79,6 +84,7 @@ impl From<RankGrade> for String {
 pub struct GameSettings {
     pub ring_speed: f32,
     pub motobug_speed: f32,
+    pub platform_speed: f32,
     pub score: u32,
     pub best_score: u32,
     pub score_multiplier: u8,
@@ -89,8 +95,9 @@ pub struct GameSettings {
 impl GameSettings {
     pub fn new() -> Self {
         GameSettings {
-            ring_speed: 10.,
+            ring_speed: RING_SPEED,
             motobug_speed: MOTOBUG_INITIAL_SPEED,
+            platform_speed: PLATFORM_INITIAL_SPEED,
             score: 0,
             best_score: 0,
             score_multiplier: 1,
@@ -103,8 +110,12 @@ impl GameSettings {
         self.score += score_increment;
     }
 
-    pub fn increase_motobug_speed(&mut self, speed_increment: f32) {
-        self.motobug_speed += speed_increment;
+    pub fn increase_motobug_speed(&mut self) {
+        self.motobug_speed += GAME_SPEED_INCREMENT;
+    }
+
+    pub fn increase_platform_speed(&mut self) {
+        self.platform_speed += GAME_SPEED_INCREMENT;
     }
 
     pub fn increment_score_multiplier(&mut self) {
@@ -118,8 +129,21 @@ impl GameSettings {
     pub fn reset(&mut self) {
         self.ring_speed = RING_SPEED;
         self.motobug_speed = MOTOBUG_INITIAL_SPEED;
+        self.platform_speed = PLATFORM_INITIAL_SPEED;
         self.score = 0;
         self.score_multiplier = 1;
         self.rank = RankGrade::F;
+    }
+}
+
+#[derive(Resource, Deref, DerefMut)]
+pub struct GameSpeedTimer(pub Timer);
+
+impl GameSpeedTimer {
+    pub fn new() -> Self {
+        GameSpeedTimer(Timer::from_seconds(
+            GAME_SPEED_TIMER_DURATION,
+            TimerMode::Repeating,
+        ))
     }
 }

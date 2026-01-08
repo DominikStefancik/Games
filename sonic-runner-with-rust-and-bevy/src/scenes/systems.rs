@@ -13,7 +13,7 @@ use bevy::{
 
 use crate::{
     plugins::default::WINDOW_RESOLUTION,
-    resources::GameTextures,
+    resources::{GameSettings, GameTextures},
     scenes::components::{Background, Platform, Scrollable, ScrollingTimer},
 };
 
@@ -62,8 +62,11 @@ pub fn spawn_background(mut commands: Commands, game_textures: Res<GameTextures>
     ));
 }
 
-pub fn spawn_platform(mut commands: Commands, game_textures: Res<GameTextures>) {
-    let pixels_to_scroll = 15.;
+pub fn spawn_platform(
+    mut commands: Commands,
+    game_textures: Res<GameTextures>,
+    game_settings: Res<GameSettings>,
+) {
     let timer = Timer::from_seconds(0.0001, TimerMode::Repeating);
     let vertical_position_value = -200.;
 
@@ -71,7 +74,7 @@ pub fn spawn_platform(mut commands: Commands, game_textures: Res<GameTextures>) 
         Sprite::from_image(game_textures.platforms.clone()),
         Transform::from_xyz(0., vertical_position_value, 1.)
             .with_scale(Vec3::splat(PLATFORM_SPRITE_SCALE)),
-        Scrollable::new(pixels_to_scroll),
+        Scrollable::new(game_settings.platform_speed),
         ScrollingTimer(timer.clone()),
         Platform,
     ));
@@ -86,7 +89,7 @@ pub fn spawn_platform(mut commands: Commands, game_textures: Res<GameTextures>) 
             1.,
         )
         .with_scale(Vec3::splat(PLATFORM_SPRITE_SCALE)),
-        Scrollable::new(pixels_to_scroll),
+        Scrollable::new(game_settings.platform_speed),
         ScrollingTimer(timer),
         Platform,
     ));
@@ -120,16 +123,17 @@ pub fn scroll_background(
 
 pub fn scroll_platform(
     time: Res<Time>,
-    mut query: Query<(&Scrollable, &mut ScrollingTimer, &mut Transform), With<Platform>>,
+    mut query: Query<(&mut ScrollingTimer, &mut Transform), With<Platform>>,
+    game_settings: Res<GameSettings>,
 ) {
     let half_window_width = (WINDOW_RESOLUTION.0 / 2) as f32;
     let half_platform_width = (PLATFORM_SPRITE_WIDTH * PLATFORM_SPRITE_SCALE) / 2.;
 
-    for (scrollable, mut timer, mut transform) in &mut query {
+    for (mut timer, mut transform) in &mut query {
         timer.tick(time.delta());
 
         if timer.just_finished() {
-            transform.translation.x -= scrollable.pixels_to_scroll;
+            transform.translation.x -= game_settings.platform_speed;
 
             // what we do here is to replace the order of the background components
             // the "first" component will become the "second" and the "second" will become the "first"
