@@ -30,6 +30,7 @@
 * [Minesweeper](minesweeper-with-rust-and-macroquad) - classical Windows game Minesweeper implemented with Macroquad
 * [Pong (Bevy)](pong-with-rust-and-bevy) - classical game Pong implemented with Bevy
 * [Pong (Ggez)](pong-with-rust-and-ggez) - classical game Pong implemented with Ggez
+* [Sonic Runner](sonic-runner-with-rust-and-bevy) - runner game based on the famous game Sonic the Hedgedog implemented with Bevy
 * [Space Invaders (simple)](space-invaders-simple-with-rust) - classical Space Invaders game implemented for a terminal
 * [Space Invaders (Bevy)](space-invaders-with-rust-and-bevy) - classical Space Invaders game implemented with Bevy
 
