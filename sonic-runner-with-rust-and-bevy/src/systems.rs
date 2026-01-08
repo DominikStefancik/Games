@@ -86,11 +86,17 @@ pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
     let background = asset_server.load("sounds/City.mp3");
     let ring = asset_server.load("sounds/Ring.wav");
     let jump = asset_server.load("sounds/Jump.wav");
+    let destroy = asset_server.load("sounds/Destroy.wav");
+    let hyper_ring = asset_server.load("sounds/HyperRing.wav");
+    let hurt = asset_server.load("sounds/Hurt.wav");
 
     let game_sounds = GameSounds {
         background,
         ring,
         jump,
+        destroy,
+        hyper_ring,
+        hurt,
     };
 
     commands.insert_resource(game_sounds);

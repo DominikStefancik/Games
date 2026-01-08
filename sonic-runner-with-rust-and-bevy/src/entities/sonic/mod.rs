@@ -11,8 +11,8 @@ use bevy::{
 use crate::{
     app_states::AppState,
     entities::sonic::systems::{
-        despawn_sonic, detect_collision_sonic_with_ring, jump, reset_sonic_score_text, spawn_sonic,
-        start_jump, trigger_jump,
+        despawn_sonic, detect_collision_sonic_with_motobug, detect_collision_sonic_with_ring, jump,
+        reset_sonic_score_text, spawn_sonic, start_jump, trigger_jump,
     },
     scenes::game::GameState,
 };
@@ -33,10 +33,14 @@ impl Plugin for SonicPlugin {
             .add_systems(
                 FixedUpdate,
                 (
-                    detect_collision_sonic_with_ring,
+                    (
+                        detect_collision_sonic_with_ring,
+                        detect_collision_sonic_with_motobug,
+                    )
+                        .before(reset_sonic_score_text),
                     trigger_jump,
                     jump.after(trigger_jump),
-                    reset_sonic_score_text.after(detect_collision_sonic_with_ring),
+                    reset_sonic_score_text,
                 )
                     .run_if(in_state(AppState::Game))
                     .run_if(in_state(GameState::Running)),

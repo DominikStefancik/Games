@@ -42,7 +42,7 @@ pub fn spawn_motobug(
                     index: 0,
                 },
             ),
-            Transform::from_xyz((WINDOW_RESOLUTION.0 as f32) / 2. - 35., -205., 1.)
+            Transform::from_xyz((WINDOW_RESOLUTION.0 as f32) / 2. - 15., -205., 1.)
                 .with_scale(Vec3::splat(MOTOBUG_SPRITE_SCALE)),
             animation,
             AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),

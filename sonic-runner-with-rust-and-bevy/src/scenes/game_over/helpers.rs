@@ -12,7 +12,7 @@ use crate::{
 const GAME_OVER_FONT_SIZE: f32 = 72.;
 const SCORE_FONT_SIZE: f32 = 46.;
 const RANK_TEXT_FONT_SIZE: f32 = 36.;
-const RANK_LETTER_FONT_SIZE: f32 = 72.;
+const RANK_LETTER_FONT_SIZE: f32 = 82.;
 const SUBTEXT_FONT_SIZE: f32 = 30.;
 
 type TextNode = (Text, TextFont, TextColor, TextLayout, Node);
@@ -87,7 +87,7 @@ pub fn create_best_rank_text(game_fonts: &GameFonts) -> TextNode {
         Node {
             position_type: PositionType::Absolute,
             top: px(390.),
-            left: px(320.),
+            left: px(290.),
             ..Default::default()
         },
     )
@@ -106,7 +106,7 @@ pub fn create_current_rank_text(game_fonts: &GameFonts) -> TextNode {
         Node {
             position_type: PositionType::Absolute,
             top: px(390.),
-            left: px((WINDOW_RESOLUTION.0 as f32) / 2. + 240.),
+            left: px((WINDOW_RESOLUTION.0 as f32) / 2. + 210.),
             ..Default::default()
         },
     )
@@ -125,7 +125,7 @@ pub fn create_best_rank_letter(game_fonts: &GameFonts, game_settings: &GameSetti
         Node {
             position_type: PositionType::Absolute,
             top: px(500.),
-            left: px(380.),
+            left: px(350.),
             ..Default::default()
         },
     )
@@ -147,7 +147,7 @@ pub fn create_current_rank_letter(
         Node {
             position_type: PositionType::Absolute,
             top: px(500.),
-            left: px((WINDOW_RESOLUTION.0 as f32) / 2. + 330.),
+            left: px((WINDOW_RESOLUTION.0 as f32) / 2. + 305.),
             ..Default::default()
         },
     )

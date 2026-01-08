@@ -7,7 +7,9 @@ use bevy::{
 
 use crate::{
     app_states::AppState,
-    scenes::game_over::systems::{despawn_game_over_text, spawn_game_over_text, update_best_score},
+    scenes::game_over::systems::{
+        despawn_game_over_text, spawn_game_over_text, update_best_score, update_curent_rank,
+    },
 };
 
 mod components;
@@ -21,8 +23,8 @@ impl Plugin for GameOverPlugin {
         app.add_systems(
             OnEnter(AppState::GameOver),
             (
-                update_best_score,
-                spawn_game_over_text.after(update_best_score),
+                (update_best_score, update_curent_rank).before(spawn_game_over_text),
+                spawn_game_over_text,
             ),
         )
         .add_systems(OnExit(AppState::GameOver), despawn_game_over_text);

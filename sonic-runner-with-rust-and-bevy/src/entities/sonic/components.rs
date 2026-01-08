@@ -13,7 +13,7 @@ const SONIC_COLLIDER_SHAPE: Rectangle = Rectangle::new(
     SONIC_SPRITE_FRAME_SIZE.0 * SONIC_SPRITE_SCALE,
     SONIC_SPRITE_FRAME_SIZE.1 * SONIC_SPRITE_SCALE,
 );
-pub const SONIC_JUMP_MAX_HIGH: f32 = 40.;
+pub const SONIC_JUMP_MAX_VELOCITY: f32 = 15.;
 pub const SONIC_POSITION_MAX_LOW: f32 = -185.;
 pub const SONIC_RUN_ANIMATION_DURATION: f32 = 0.04;
 pub const SONIC_JUMP_ANIMATION_DURATION: f32 = 0.02;
@@ -34,6 +34,9 @@ impl Sonic {
 #[derive(Component)]
 pub struct Jump {
     pub is_in_progress: bool,
+    pub is_going_down: bool,
+    // a jump is "restarted" if Sonic falls down and collides with a motobug
+    pub is_restarted: bool,
     pub velocity: f32,
 }
 
@@ -41,6 +44,8 @@ impl Jump {
     pub fn new() -> Self {
         Jump {
             is_in_progress: false,
+            is_going_down: false,
+            is_restarted: false,
             velocity: 0.,
         }
     }

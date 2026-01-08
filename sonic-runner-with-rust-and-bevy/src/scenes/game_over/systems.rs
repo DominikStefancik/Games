@@ -77,6 +77,10 @@ pub fn despawn_game_over_text(
     commands.entity(text_container.entity()).despawn();
 }
 
+pub fn update_curent_rank(mut game_settings: ResMut<GameSettings>) {
+    game_settings.rank = RankGrade::from(game_settings.score);
+}
+
 pub fn update_best_score(mut game_settings: ResMut<GameSettings>) {
     if game_settings.best_score < game_settings.score {
         game_settings.best_score = game_settings.score;

@@ -26,6 +26,9 @@ pub struct GameSounds {
     pub background: Handle<AudioSource>,
     pub ring: Handle<AudioSource>,
     pub jump: Handle<AudioSource>,
+    pub destroy: Handle<AudioSource>,
+    pub hyper_ring: Handle<AudioSource>,
+    pub hurt: Handle<AudioSource>,
 }
 
 #[derive(Resource)]
@@ -104,7 +107,7 @@ impl GameSettings {
         self.motobug_speed += speed_increment;
     }
 
-    pub fn increase_score_multiplier(&mut self) {
+    pub fn increment_score_multiplier(&mut self) {
         self.score_multiplier += 1;
     }
 
