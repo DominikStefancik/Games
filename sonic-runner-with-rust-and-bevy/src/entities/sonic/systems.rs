@@ -152,10 +152,7 @@ pub fn detect_collision_sonic_with_motobug(
             score_text.0 = format!("+{}", score);
             // reset timet so after 1 second the score text disappears
             score_timer.0.reset();
-
-            if sonic_jump.is_restarted {
-                game_settings.increment_score_multiplier();
-            }
+            game_settings.increment_score_multiplier();
 
             spawn_sound(&mut commands, &game_sounds.hyper_ring);
             spawn_sound(&mut commands, &game_sounds.destroy);
@@ -240,23 +237,29 @@ pub fn jump(
             sonic_jump.velocity -= delta_v;
         }
 
-        sonic_transform.translation.y += sonic_jump.velocity;
-
         /*
          * If "sonic_jump.is_restarted == true" that means Sonic was falling down and collided with a motobug.
          * In that case, we don't want him to land on the platform, but make another jump ("restarted" jump) going up.
          */
         if sonic_jump.is_restarted {
-            sonic_jump.velocity = 0.;
+            /*
+             * Don't set up velocity to 0, otherwise there would be seen that Sonic collided with a motobug,
+             * fell slightly down and after that started to going up again.
+             * With setting the velocity slighty higher than 0, we acchieve the effect that he is going up
+             * immediatelly after collision with the motobug.
+             */
+            sonic_jump.velocity = 2.;
             sonic_jump.is_going_down = false;
-            // we have to immediately set "is_restarted" to false, otherwise the "velocity" would be kept set to 0
+            // we have to immediately set "is_restarted" to false, otherwise the "velocity" would be kept set to 2
             sonic_jump.is_restarted = false;
         }
 
+        sonic_transform.translation.y += sonic_jump.velocity;
+
         if sonic_transform.translation.y < SONIC_POSITION_MAX_LOW {
             /*
-             * after sonic lands, the Y-position of the sprite is lower than the platform
-             * therefore we have to adjust it, so it look it landed on the platform and not slightly below it
+             * After Sonic lands, the Y-position of the sprite is lower than the platform
+             * therefore we have to adjust it, so it looks like he landed on the platform and not slightly below it.
              */
             sonic_transform.translation.y = SONIC_POSITION_MAX_LOW;
             sonic_jump.is_in_progress = false;
