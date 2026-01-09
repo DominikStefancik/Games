@@ -21,7 +21,14 @@ enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
 # Groups functionality is similar to Python's native lists
 enemy_group = pygame.sprite.Group()
 
-enemy = Enemy((200, 300), enemy_image)
+waypoints = [
+    (100, 100),
+    (400, 200),
+    (400, 100),
+    (200, 300),
+]
+
+enemy = Enemy(enemy_image, waypoints)
 enemy_group.add(enemy)
 
 is_running = True
@@ -33,6 +40,9 @@ while is_running:
     # We have to call the "fill" method so we can render over the objects (and their position)
     # which where rendered in a previous loop
     screen.fill("grey100")
+
+    # Draw enemy path
+    pygame.draw.lines(screen, "grey0", False, waypoints)
 
     # Update groups
     #
