@@ -1,6 +1,11 @@
+from __future__ import with_statement
+
+import json
+
 import constants
 import pygame
 from enemy import Enemy
+from world import World
 
 # Initialise PyGame
 pygame.init()
@@ -13,7 +18,16 @@ screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGH
 pygame.display.set_caption("Python Tower Defence")
 
 # Load images
+#
+# The map was created in the program "Tiled", from which the metadata in the form of JSON has been provided
+map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
 enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
+
+# Load JSON data for level. The json file contains waypoints
+with open(constants.MAP_METADATA_PATH) as json_file:
+    world_metadata = json.load(json_file)
+
+world = World(map_image, world_metadata)
 
 # Create groups
 # Groups are provided by PyGame and help us organise objects into groups
@@ -21,14 +35,7 @@ enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
 # Groups functionality is similar to Python's native lists
 enemy_group = pygame.sprite.Group()
 
-waypoints = [
-    (100, 100),
-    (400, 200),
-    (400, 100),
-    (200, 300),
-]
-
-enemy = Enemy(enemy_image, waypoints)
+enemy = Enemy(enemy_image, world.waypoints)
 enemy_group.add(enemy)
 
 is_running = True
@@ -41,8 +48,8 @@ while is_running:
     # which where rendered in a previous loop
     screen.fill("grey100")
 
-    # Draw enemy path
-    pygame.draw.lines(screen, "grey0", False, waypoints)
+    # Draw the level map
+    world.draw(screen)
 
     # Update groups
     #
