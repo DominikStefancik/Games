@@ -2,6 +2,7 @@ import json
 
 import constants
 import pygame
+from button import Button
 from enemy import Enemy
 from helpers import create_turret
 from world import World
@@ -13,8 +14,11 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Create a game window
-screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+screen = pygame.display.set_mode((constants.MAP_WIDTH + constants.SIDE_PANEL_WIDTH, constants.MAP_HEIGHT))
 pygame.display.set_caption("Python Tower Defence")
+
+# Game variables
+is_placing_turrets = False
 
 # Load images
 #
@@ -23,6 +27,8 @@ map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
 # Individual turret image for mouse cursor
 cursor_turret = pygame.image.load(constants.CURSOR_TURRET_PATH).convert_alpha()
 enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
+buy_turret_image = pygame.image.load(constants.BUY_TURRET_PATH).convert_alpha()
+cancel_image = pygame.image.load(constants.CANCEL_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
 with open(constants.MAP_METADATA_PATH) as json_file:
@@ -40,11 +46,28 @@ turret_group = pygame.sprite.Group()
 enemy = Enemy(enemy_image, world.waypoints)
 enemy_group.add(enemy)
 
+buy_turret_button = Button(buy_turret_image, constants.MAP_WIDTH + 30, 120, True)
+cancel_button = Button(cancel_image, constants.MAP_WIDTH + 50, 180, True)
+
 is_running = True
 # Game loop
 while is_running:
     # 60 frames per second
     clock.tick(constants.FPS)
+
+    ########################
+    #   UPDATING SECTION   #
+    ########################
+
+    # Update groups
+    #
+    # The "update()" method calls the "update" method on the enemy objects,
+    # which inherited it from the Sprite superclass and then overwrote it
+    enemy_group.update()
+
+    #######################
+    #   DRAWING SECTION   #
+    #######################
 
     # We have to call the "fill" method so we can render over the objects (and their position)
     # which where rendered in a previous loop
@@ -53,11 +76,7 @@ while is_running:
     # Draw the level map
     world.draw(screen)
 
-    # Update groups
-    #
-    # The "update()" method calls the "update" method on the enemy objects,
-    # which inherited it from the Sprite superclass and then overwrote it
-    enemy_group.update()
+
 
     # Draw groups
     #
@@ -65,6 +84,23 @@ while is_running:
     # It calls the "draw" method on the enemy objects, which inherited it from the Sprite superclass
     enemy_group.draw(screen)
     turret_group.draw(screen)
+
+    if buy_turret_button.draw(screen):
+        is_placing_turrets = True
+
+    # If user is placing turrets, then whow the Cancel button as well
+    if is_placing_turrets:
+        # Show cursor as a turret image
+        cursor_rectangle = cursor_turret.get_rect()
+        cursor_position = pygame.mouse.get_pos()
+        cursor_rectangle.center = cursor_position
+
+        # Show the turret cursor only when the cursor is over the map area
+        if cursor_position[0] < constants.MAP_WIDTH:
+            screen.blit(cursor_turret, cursor_rectangle)
+
+        if cancel_button.draw(screen):
+            is_placing_turrets = False
 
     # Event handler
     # Events in PyGame are "stored" in an vent queue
@@ -80,10 +116,11 @@ while is_running:
             # Check that the click happened when mouse cursor was over the map area
             # as we want to add a turret to the map if the mouse cursor over it
             if (
-                mouse_position[0] < constants.SCREEN_WIDTH
-                and mouse_position[1] < constants.SCREEN_HEIGHT
+                mouse_position[0] < constants.MAP_WIDTH
+                and mouse_position[1] < constants.MAP_HEIGHT
             ):
-                create_turret(cursor_turret, mouse_position, world, turret_group)
+                if is_placing_turrets:
+                    create_turret(cursor_turret, mouse_position, world, turret_group)
 
     # Update display
     # Takes all of the changes from a "queue" and displays them
