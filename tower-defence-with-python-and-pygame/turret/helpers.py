@@ -1,5 +1,5 @@
 import constants
-from turret import Turret
+from .turret import Turret
 
 
 def get_turret_spritesheet_path(index):

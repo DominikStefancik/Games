@@ -1,10 +1,10 @@
 import json
 
 import constants
-import helpers
 import pygame
 from button import Button
 from enemy import Enemy
+from turret.helpers import get_turret_spritesheet_path, create_turret, select_turret, clear_turret_selection
 from world import World
 
 # Initialise PyGame
@@ -30,7 +30,7 @@ cursor_turret = pygame.image.load(constants.CURSOR_TURRET_PATH).convert_alpha()
 
 turret_spritesheets = []
 for x in range(1, len(constants.TURRET_DATA) + 1):
-    file_path = helpers.get_turret_spritesheet_path(x)
+    file_path = get_turret_spritesheet_path(x)
     turret_sheet = pygame.image.load(file_path).convert_alpha()
     turret_spritesheets.append(turret_sheet)
 
@@ -148,11 +148,11 @@ while is_running:
                 and mouse_position[1] < constants.MAP_HEIGHT
             ):
                 selected_turret = None
-                helpers.clear_turret_selection(turret_group)
+                clear_turret_selection(turret_group)
                 if is_placing_turrets:
-                    helpers.create_turret(turret_spritesheets, mouse_position, world, turret_group)
+                    create_turret(turret_spritesheets, mouse_position, world, turret_group)
                 else:
-                    selected_turret = helpers.select_turret(mouse_position, turret_group)
+                    selected_turret = select_turret(mouse_position, turret_group)
 
     # Update display
     # Takes all of the changes from a "queue" and displays them
