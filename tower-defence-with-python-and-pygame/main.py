@@ -26,6 +26,7 @@ is_placing_turrets = False
 map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
 # Individual turret image for mouse cursor
 cursor_turret = pygame.image.load(constants.CURSOR_TURRET_PATH).convert_alpha()
+turret_1_sheet = pygame.image.load(constants.TURRET_1_SHEET_PATH).convert_alpha()
 enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
 buy_turret_image = pygame.image.load(constants.BUY_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(constants.CANCEL_PATH).convert_alpha()
@@ -64,6 +65,7 @@ while is_running:
     # The "update()" method calls the "update" method on the enemy objects,
     # which inherited it from the Sprite superclass and then overwrote it
     enemy_group.update()
+    turret_group.update()
 
     #######################
     #   DRAWING SECTION   #
@@ -120,7 +122,7 @@ while is_running:
                 and mouse_position[1] < constants.MAP_HEIGHT
             ):
                 if is_placing_turrets:
-                    create_turret(cursor_turret, mouse_position, world, turret_group)
+                    create_turret(turret_1_sheet, mouse_position, world, turret_group)
 
     # Update display
     # Takes all of the changes from a "queue" and displays them

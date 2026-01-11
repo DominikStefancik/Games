@@ -2,7 +2,7 @@ import constants
 from turret import Turret
 
 
-def create_turret(image, mouse_position, world, turret_group) -> None:
+def create_turret(turret_sheet, mouse_position, world, turret_group) -> None:
     # "//" is a floor division
     mouse_tile_x = mouse_position[0] // constants.TILE_SIZE
     mouse_tile_y = mouse_position[1] // constants.TILE_SIZE
@@ -22,5 +22,5 @@ def create_turret(image, mouse_position, world, turret_group) -> None:
                 break
 
         if is_space_free:
-            new_turret = Turret(image, mouse_tile_x, mouse_tile_y)
+            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y)
             turret_group.add(new_turret)
