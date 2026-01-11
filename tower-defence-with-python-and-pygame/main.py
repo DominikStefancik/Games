@@ -1,10 +1,10 @@
 import json
 
 import constants
+import helpers
 import pygame
 from button import Button
 from enemy import Enemy
-from helpers import create_turret
 from world import World
 
 # Initialise PyGame
@@ -19,6 +19,7 @@ pygame.display.set_caption("Python Tower Defence")
 
 # Game variables
 is_placing_turrets = False
+selected_turret = None
 
 # Load images
 #
@@ -65,7 +66,11 @@ while is_running:
     # The "update()" method calls the "update" method on the enemy objects,
     # which inherited it from the Sprite superclass and then overwrote it
     enemy_group.update()
-    turret_group.update()
+    turret_group.update(enemy_group)
+
+    # Highlight selected turret
+    if selected_turret:
+        selected_turret.is_selected = True
 
     #######################
     #   DRAWING SECTION   #
@@ -86,6 +91,12 @@ while is_running:
     # It calls the "draw" method on the enemy objects, which inherited it from the Sprite superclass
     enemy_group.draw(screen)
     turret_group.draw(screen)
+
+    # Since we have overwritten the "draw" method in the Turret class, calling "turret_group.draw(screen)" still
+    # calls the "draw" method on each of the turret objects in the group, but only draws the turret image, not the circle.
+    # In order to draw both, we have to loop over each individual object and call the "draw" method manually.
+    for turret in turret_group:
+        turret.draw(screen)
 
     if buy_turret_button.draw(screen):
         is_placing_turrets = True
@@ -121,8 +132,12 @@ while is_running:
                 mouse_position[0] < constants.MAP_WIDTH
                 and mouse_position[1] < constants.MAP_HEIGHT
             ):
+                selected_turret = None
+                helpers.clear_turret_selection(turret_group)
                 if is_placing_turrets:
-                    create_turret(turret_1_sheet, mouse_position, world, turret_group)
+                    helpers.create_turret(turret_1_sheet, mouse_position, world, turret_group)
+                else:
+                    selected_turret = helpers.select_turret(mouse_position, turret_group)
 
     # Update display
     # Takes all of the changes from a "queue" and displays them

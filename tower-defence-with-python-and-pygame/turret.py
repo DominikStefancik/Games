@@ -1,6 +1,7 @@
 import constants
 import pygame
 
+import math
 
 class Turret(pygame.sprite.Sprite):
     def __init__(self, sprite_sheet, tile_x, tile_y) -> None:
@@ -17,6 +18,7 @@ class Turret(pygame.sprite.Sprite):
 
         self.cooldown = 1500
         self.last_fired_shot_time = pygame.time.get_ticks()
+        self.fire_range_radius = 90
 
         # Animation variables
         self.sprite_sheet = sprite_sheet
@@ -25,9 +27,24 @@ class Turret(pygame.sprite.Sprite):
         self.update_animation_time = pygame.time.get_ticks()
 
         # Update image
-        self.image = self.animation_frames[self.animation_frame_index]
+        self.angle = 90
+        self.original_image = self.animation_frames[self.animation_frame_index]
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
+
+        # Create a transparent circle showing fire range
+        self.range_image = pygame.Surface((self.fire_range_radius * 2, self.fire_range_radius * 2))
+        self.range_image.fill((0,0,0))
+        self.range_image.set_colorkey((0,0,0))
+        pygame.draw.circle(self.range_image, "grey100", (self.fire_range_radius, self.fire_range_radius), self.fire_range_radius)
+        self.range_image.set_alpha(100)
+        self.range_rectangle = self.range_image.get_rect()
+        # Position the circle image on top of the turret image
+        self.range_rectangle.center = self.rect.center
+
+        self.is_selected = False
+        self.target = None
 
     # Loads individual frame images out of a sprite sheet
     def load_images(self):
@@ -42,13 +59,28 @@ class Turret(pygame.sprite.Sprite):
 
         return animation_frames
 
-    def update(self):
-        # Search for a new target once the turret cooled down
-        if pygame.time.get_ticks() - self.last_fired_shot_time > self.cooldown:
+    def update(self, enemy_group):
+        # If target is picked, play the firing animation
+        if self.target:
             self.play_animation()
+        # Otherwise search for a new target once the turret cooled down
+        elif pygame.time.get_ticks() - self.last_fired_shot_time > self.cooldown:
+            self.pick_target(enemy_group)
+
+    # We have to ovewrite the "draw" method from Sprite, because that one only draws the turret image,
+    # but not the range cirle we want to be drawn as well
+    def draw(self, surface):
+        # Draw the turret image based on the original image and its rotation
+        # In PyGame coordinate system we have to subtract 90 from the angle in order the turret point up
+        self.image = pygame.transform.rotate(self.original_image, self.angle - 90)
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
+        surface.blit(self.image, self.rect)
+        if self.is_selected:
+            surface.blit(self.range_image, self.range_rectangle)
 
     def play_animation(self):
-        self.image = self.animation_frames[self.animation_frame_index]
+        self.original_image = self.animation_frames[self.animation_frame_index]
 
         # Check if enough time has passed since the last frame update
         if pygame.time.get_ticks() - self.update_animation_time > constants.TURRET_ANIMATION_STEP_INTERVAL:
@@ -60,3 +92,21 @@ class Turret(pygame.sprite.Sprite):
 
                 # When the animation finishes record completed time and clear target so cooldown can begin
                 self.last_fired_shot_time = pygame.time.get_ticks()
+                # and also set target to None, so we can picking a target again
+                self.target = None
+
+    def pick_target(self, enemy_group):
+        # Find enemy to target
+        distance_x = 0
+        distance_y = 0
+
+        # Check distance to each enemy to see if it is in range
+        for enemy in enemy_group:
+            distance_x = enemy.current_position[0] - self.x
+            distance_y = enemy.current_position[1] - self.y
+            distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
+
+            if distance < self.fire_range_radius:
+                self.target = enemy
+                # Calculate angle depending on where the target is
+                self.angle = math.degrees(math.atan2(-distance_y, distance_x))

@@ -3,6 +3,7 @@ from turret import Turret
 
 
 def create_turret(turret_sheet, mouse_position, world, turret_group) -> None:
+    # Convert mouse position into a tile on the map
     # "//" is a floor division
     mouse_tile_x = mouse_position[0] // constants.TILE_SIZE
     mouse_tile_y = mouse_position[1] // constants.TILE_SIZE
@@ -24,3 +25,16 @@ def create_turret(turret_sheet, mouse_position, world, turret_group) -> None:
         if is_space_free:
             new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y)
             turret_group.add(new_turret)
+
+def select_turret(mouse_position, turret_group):
+    mouse_tile_x = mouse_position[0] // constants.TILE_SIZE
+    mouse_tile_y = mouse_position[1] // constants.TILE_SIZE
+
+    # Check if the tile we just clicked on contains a turret
+    for turret in turret_group:
+        if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
+            return turret
+
+def clear_turret_selection(turret_group):
+    for turret in turret_group:
+        turret.is_selected = False
