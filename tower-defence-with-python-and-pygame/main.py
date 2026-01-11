@@ -1,10 +1,9 @@
-from __future__ import with_statement
-
 import json
 
 import constants
 import pygame
 from enemy import Enemy
+from helpers import create_turret
 from world import World
 
 # Initialise PyGame
@@ -21,6 +20,8 @@ pygame.display.set_caption("Python Tower Defence")
 #
 # The map was created in the program "Tiled", from which the metadata in the form of JSON has been provided
 map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
+# Individual turret image for mouse cursor
+cursor_turret = pygame.image.load(constants.CURSOR_TURRET_PATH).convert_alpha()
 enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
@@ -34,6 +35,7 @@ world = World(map_image, world_metadata)
 # Then we can apply functions on all of the objects of a particular group.
 # Groups functionality is similar to Python's native lists
 enemy_group = pygame.sprite.Group()
+turret_group = pygame.sprite.Group()
 
 enemy = Enemy(enemy_image, world.waypoints)
 enemy_group.add(enemy)
@@ -62,6 +64,7 @@ while is_running:
     # The "draw()" method adds objects of a group to something like a queue
     # It calls the "draw" method on the enemy objects, which inherited it from the Sprite superclass
     enemy_group.draw(screen)
+    turret_group.draw(screen)
 
     # Event handler
     # Events in PyGame are "stored" in an vent queue
@@ -69,6 +72,18 @@ while is_running:
         # Quit program
         if event.type == pygame.QUIT:
             is_running = False
+
+        # Handle mouse click event
+        # "event.button == 1" represents the left mose button
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse_position = pygame.mouse.get_pos()
+            # Check that the click happened when mouse cursor was over the map area
+            # as we want to add a turret to the map if the mouse cursor over it
+            if (
+                mouse_position[0] < constants.SCREEN_WIDTH
+                and mouse_position[1] < constants.SCREEN_HEIGHT
+            ):
+                create_turret(cursor_turret, mouse_position, world, turret_group)
 
     # Update display
     # Takes all of the changes from a "queue" and displays them

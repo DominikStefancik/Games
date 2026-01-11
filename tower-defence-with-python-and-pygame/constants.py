@@ -7,6 +7,7 @@ FPS = 60
 
 # Images paths
 MAP_PATH = "assets/levels/level.png"
+CURSOR_TURRET_PATH = "assets/images/turrets/cursor_turret.png"
 ENEMY_1_PATH = "assets/images/enemies/enemy_1.png"
 
 # JSONs paths

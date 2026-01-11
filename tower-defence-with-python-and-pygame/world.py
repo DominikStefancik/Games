@@ -5,13 +5,16 @@ class World:
     def __init__(self, map_image, metadata) -> None:
         self.image = map_image
         self.level_metadata = metadata
+        self.tile_map = []
         self.waypoints = []
         self.process_metadata()
 
     def process_metadata(self):
         # Look through JSON metadata to extract relevant info
         for layer in self.level_metadata["layers"]:
-            if layer["name"] == "waypoints":
+            if layer["name"] == "tilemap":
+                self.tile_map = layer["data"]
+            elif layer["name"] == "waypoints":
                 for object in layer["objects"]:
                     # the "waypoints_data" contains a list coordinates in the form of dictionaries
                     waypoints_data = object["polyline"]
