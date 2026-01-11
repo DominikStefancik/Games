@@ -2,7 +2,10 @@ import constants
 from turret import Turret
 
 
-def create_turret(turret_sheet, mouse_position, world, turret_group) -> None:
+def get_turret_spritesheet_path(index):
+    return f"assets/images/turrets/turret_{index}.png"
+
+def create_turret(turret_spritesheets, mouse_position, world, turret_group) -> None:
     # Convert mouse position into a tile on the map
     # "//" is a floor division
     mouse_tile_x = mouse_position[0] // constants.TILE_SIZE
@@ -23,7 +26,7 @@ def create_turret(turret_sheet, mouse_position, world, turret_group) -> None:
                 break
 
         if is_space_free:
-            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y)
+            new_turret = Turret(turret_spritesheets, mouse_tile_x, mouse_tile_y)
             turret_group.add(new_turret)
 
 def select_turret(mouse_position, turret_group):

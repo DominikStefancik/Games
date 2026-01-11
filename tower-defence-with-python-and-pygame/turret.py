@@ -4,7 +4,7 @@ import pygame
 import math
 
 class Turret(pygame.sprite.Sprite):
-    def __init__(self, sprite_sheet, tile_x, tile_y) -> None:
+    def __init__(self, sprite_sheets, tile_x, tile_y) -> None:
         # We have to call the superclass' init method
         pygame.sprite.Sprite.__init__(self)
 
@@ -16,12 +16,16 @@ class Turret(pygame.sprite.Sprite):
         self.x = (self.tile_x + 0.5) * constants.TILE_SIZE
         self.y = (self.tile_y + 0.5) * constants.TILE_SIZE
 
-        self.cooldown = 1500
+        self.upgrade_level = 1
+        self.fire_range_radius = constants.TURRET_DATA[self.upgrade_level - 1].get("range")
+        self.cooldown_interval = constants.TURRET_DATA[self.upgrade_level - 1].get("cooldown_interval")
         self.last_fired_shot_time = pygame.time.get_ticks()
-        self.fire_range_radius = 90
 
         # Animation variables
-        self.sprite_sheet = sprite_sheet
+        #
+        # The property "sprite_sheets" contains sprites for all possible turret levels
+        # Then, depending on the "upgrade_level" it will load individual frame images from a particular spritesheet
+        self.sprite_sheets = sprite_sheets
         self.animation_frames = self.load_images()
         self.animation_frame_index = 0
         self.update_animation_time = pygame.time.get_ticks()
@@ -33,28 +37,21 @@ class Turret(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
-        # Create a transparent circle showing fire range
-        self.range_image = pygame.Surface((self.fire_range_radius * 2, self.fire_range_radius * 2))
-        self.range_image.fill((0,0,0))
-        self.range_image.set_colorkey((0,0,0))
-        pygame.draw.circle(self.range_image, "grey100", (self.fire_range_radius, self.fire_range_radius), self.fire_range_radius)
-        self.range_image.set_alpha(100)
-        self.range_rectangle = self.range_image.get_rect()
-        # Position the circle image on top of the turret image
-        self.range_rectangle.center = self.rect.center
-
         self.is_selected = False
         self.target = None
 
+        self.create_range_circle()
+
     # Loads individual frame images out of a sprite sheet
     def load_images(self):
-        frame_size = self.sprite_sheet.get_height()
+        sprite_sheet = self.sprite_sheets[self.upgrade_level - 1]
+        frame_size = sprite_sheet.get_height()
         animation_frames = []
 
         for index in range(constants.TURRET_ANIMATION_FRAMES):
             # The "subsurface" method extracts a section of an image
             # We need to pass top-left coordinates where the subsection starts and then wight and height of the section
-            subsection_image = self.sprite_sheet.subsurface(index * frame_size, 0, frame_size, frame_size)
+            subsection_image = sprite_sheet.subsurface(index * frame_size, 0, frame_size, frame_size)
             animation_frames.append(subsection_image)
 
         return animation_frames
@@ -64,7 +61,7 @@ class Turret(pygame.sprite.Sprite):
         if self.target:
             self.play_animation()
         # Otherwise search for a new target once the turret cooled down
-        elif pygame.time.get_ticks() - self.last_fired_shot_time > self.cooldown:
+        elif pygame.time.get_ticks() - self.last_fired_shot_time > self.cooldown_interval:
             self.pick_target(enemy_group)
 
     # We have to ovewrite the "draw" method from Sprite, because that one only draws the turret image,
@@ -79,6 +76,17 @@ class Turret(pygame.sprite.Sprite):
         if self.is_selected:
             surface.blit(self.range_image, self.range_rectangle)
 
+    # Creates a transparent circle showing fire range
+    def create_range_circle(self):
+        self.range_image = pygame.Surface((self.fire_range_radius * 2, self.fire_range_radius * 2))
+        self.range_image.fill((0,0,0))
+        self.range_image.set_colorkey((0,0,0))
+        pygame.draw.circle(self.range_image, "grey100", (self.fire_range_radius, self.fire_range_radius), self.fire_range_radius)
+        self.range_image.set_alpha(100)
+        self.range_rectangle = self.range_image.get_rect()
+        # Position the circle image on top of the turret image
+        self.range_rectangle.center = self.rect.center
+
     def play_animation(self):
         self.original_image = self.animation_frames[self.animation_frame_index]
 
@@ -90,9 +98,9 @@ class Turret(pygame.sprite.Sprite):
             if self.animation_frame_index == len(self.animation_frames):
                 self.animation_frame_index = 1
 
-                # When the animation finishes record completed time and clear target so cooldown can begin
+                # When the animation finishes, record completed time and clear target so cooldown interval can begin
                 self.last_fired_shot_time = pygame.time.get_ticks()
-                # and also set target to None, so we can picking a target again
+                # and also set target to None, so we can start picking a target again
                 self.target = None
 
     def pick_target(self, enemy_group):
@@ -110,3 +118,15 @@ class Turret(pygame.sprite.Sprite):
                 self.target = enemy
                 # Calculate angle depending on where the target is
                 self.angle = math.degrees(math.atan2(-distance_y, distance_x))
+
+    def upgrade(self):
+        self.upgrade_level += 1
+        self.fire_range_radius = constants.TURRET_DATA[self.upgrade_level - 1].get("range")
+        self.cooldown_interval = constants.TURRET_DATA[self.upgrade_level - 1].get("cooldown_interval")
+
+        # Upgrade turret image
+        self.animation_frames = self.load_images()
+        self.original_image = self.animation_frames[self.animation_frame_index]
+
+        # Since we have upgraded the range, we have to recreate the range circle
+        self.create_range_circle()

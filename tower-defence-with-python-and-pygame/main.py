@@ -27,9 +27,16 @@ selected_turret = None
 map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
 # Individual turret image for mouse cursor
 cursor_turret = pygame.image.load(constants.CURSOR_TURRET_PATH).convert_alpha()
-turret_1_sheet = pygame.image.load(constants.TURRET_1_SHEET_PATH).convert_alpha()
+
+turret_spritesheets = []
+for x in range(1, len(constants.TURRET_DATA) + 1):
+    file_path = helpers.get_turret_spritesheet_path(x)
+    turret_sheet = pygame.image.load(file_path).convert_alpha()
+    turret_spritesheets.append(turret_sheet)
+
 enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
 buy_turret_image = pygame.image.load(constants.BUY_TURRET_PATH).convert_alpha()
+upgrade_turret_image = pygame.image.load(constants.UPGRADE_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(constants.CANCEL_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
@@ -50,6 +57,7 @@ enemy_group.add(enemy)
 
 buy_turret_button = Button(buy_turret_image, constants.MAP_WIDTH + 30, 120, True)
 cancel_button = Button(cancel_image, constants.MAP_WIDTH + 50, 180, True)
+upgrade_turret_button = Button(upgrade_turret_image, constants.MAP_WIDTH + 5, 180, True)
 
 is_running = True
 # Game loop
@@ -115,6 +123,13 @@ while is_running:
         if cancel_button.draw(screen):
             is_placing_turrets = False
 
+    # If a turret is selected then show the Upgrade button
+    if selected_turret:
+        # Only if a turret can be upgraded show the Upgrade button
+        if selected_turret.upgrade_level < len(constants.TURRET_DATA):
+            if upgrade_turret_button.draw(screen):
+                selected_turret.upgrade()
+
     # Event handler
     # Events in PyGame are "stored" in an vent queue
     for event in pygame.event.get():
@@ -135,7 +150,7 @@ while is_running:
                 selected_turret = None
                 helpers.clear_turret_selection(turret_group)
                 if is_placing_turrets:
-                    helpers.create_turret(turret_1_sheet, mouse_position, world, turret_group)
+                    helpers.create_turret(turret_spritesheets, mouse_position, world, turret_group)
                 else:
                     selected_turret = helpers.select_turret(mouse_position, turret_group)
 
