@@ -1,13 +1,40 @@
 import json
 
-import constants
 import pygame
 from button import Button
-from enemy.constants import ENEMY_1_PATH, ENEMY_2_PATH, ENEMY_3_PATH, ENEMY_4_PATH, SPAWN_ENEMY_COOLDOWN
+from enemy.constants import (
+    ENEMY_1_PATH,
+    ENEMY_2_PATH,
+    ENEMY_3_PATH,
+    ENEMY_4_PATH,
+    SPAWN_ENEMY_COOLDOWN,
+)
 from enemy.enemy import Enemy
-from turret.constants import BUY_TURRET_PATH, CANCEL_PATH, CURSOR_TURRET_PATH, UPGRADE_TURRET_PATH, TURRET_DATA
-from turret.helpers import get_turret_spritesheet_path, create_turret, select_turret, clear_turret_selection
-from world import World
+from turret.constants import (
+    BUY_TURRET_COST,
+    BUY_TURRET_PATH,
+    CANCEL_PATH,
+    CURSOR_TURRET_PATH,
+    UPGRADE_TURRET_COST,
+    UPGRADE_TURRET_PATH,
+    TURRET_DATA,
+)
+from turret.helpers import (
+    get_turret_spritesheet_path,
+    create_turret,
+    select_turret,
+    clear_turret_selection,
+)
+from world.constants import (
+    FPS,
+    MAP_METADATA_PATH,
+    MAP_PATH,
+    MAP_HEIGHT,
+    MAP_WIDTH,
+    SIDE_PANEL_WIDTH,
+)
+from world.helpers import draw_text
+from world.world import World
 
 # Initialise PyGame
 pygame.init()
@@ -16,7 +43,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Create a game window
-screen = pygame.display.set_mode((constants.MAP_WIDTH + constants.SIDE_PANEL_WIDTH, constants.MAP_HEIGHT))
+screen = pygame.display.set_mode((MAP_WIDTH + SIDE_PANEL_WIDTH, MAP_HEIGHT))
 pygame.display.set_caption("Python Tower Defence")
 
 # Game variables
@@ -27,7 +54,7 @@ selected_turret = None
 # Load images
 #
 # The map was created in the program "Tiled", from which the metadata in the form of JSON has been provided
-map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
+map_image = pygame.image.load(MAP_PATH).convert_alpha()
 # Individual turret image for mouse cursor
 cursor_turret = pygame.image.load(CURSOR_TURRET_PATH).convert_alpha()
 
@@ -41,15 +68,19 @@ enemy_images = {
     "weak": pygame.image.load(ENEMY_1_PATH).convert_alpha(),
     "medium": pygame.image.load(ENEMY_2_PATH).convert_alpha(),
     "strong": pygame.image.load(ENEMY_3_PATH).convert_alpha(),
-    "elite": pygame.image.load(ENEMY_4_PATH).convert_alpha()
+    "elite": pygame.image.load(ENEMY_4_PATH).convert_alpha(),
 }
 buy_turret_image = pygame.image.load(BUY_TURRET_PATH).convert_alpha()
 upgrade_turret_image = pygame.image.load(UPGRADE_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(CANCEL_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
-with open(constants.MAP_METADATA_PATH) as json_file:
+with open(MAP_METADATA_PATH) as json_file:
     world_metadata = json.load(json_file)
+
+# Load fonts for displaying text on the screen
+text_font = pygame.font.SysFont("Consolas", 24, bold=True)
+large_font = pygame.font.SysFont("Consolas", 36)
 
 world = World(map_image, world_metadata)
 
@@ -60,15 +91,15 @@ world = World(map_image, world_metadata)
 enemy_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
 
-buy_turret_button = Button(buy_turret_image, constants.MAP_WIDTH + 30, 120, True)
-cancel_button = Button(cancel_image, constants.MAP_WIDTH + 50, 180, True)
-upgrade_turret_button = Button(upgrade_turret_image, constants.MAP_WIDTH + 5, 180, True)
+buy_turret_button = Button(buy_turret_image, MAP_WIDTH + 30, 120, True)
+cancel_button = Button(cancel_image, MAP_WIDTH + 50, 180, True)
+upgrade_turret_button = Button(upgrade_turret_image, MAP_WIDTH + 5, 180, True)
 
 is_running = True
 # Game loop
 while is_running:
     # 60 frames per second
-    clock.tick(constants.FPS)
+    clock.tick(FPS)
 
     ########################
     #   UPDATING SECTION   #
@@ -78,7 +109,7 @@ while is_running:
     #
     # The "update()" method calls the "update" method on the enemy objects,
     # which inherited it from the Sprite superclass and then overwrote it
-    enemy_group.update()
+    enemy_group.update(world)
     turret_group.update(enemy_group)
 
     # Highlight selected turret
@@ -108,6 +139,9 @@ while is_running:
     for turret in turret_group:
         turret.draw(screen)
 
+    draw_text(screen, str(world.health), text_font, "grey100", 0, 0)
+    draw_text(screen, str(world.money), text_font, "grey100", 0, 30)
+
     # Spawn enemies:
     if pygame.time.get_ticks() - last_enemy_spawn > SPAWN_ENEMY_COOLDOWN:
         if world.spawned_enemies < len(world.enemy_type_list):
@@ -116,7 +150,6 @@ while is_running:
             enemy_group.add(enemy)
             world.spawned_enemies += 1
             last_enemy_spawn = pygame.time.get_ticks()
-
 
     if buy_turret_button.draw(screen):
         is_placing_turrets = True
@@ -129,7 +162,7 @@ while is_running:
         cursor_rectangle.center = cursor_position
 
         # Show the turret cursor only when the cursor is over the map area
-        if cursor_position[0] < constants.MAP_WIDTH:
+        if cursor_position[0] < MAP_WIDTH:
             screen.blit(cursor_turret, cursor_rectangle)
 
         if cancel_button.draw(screen):
@@ -140,7 +173,9 @@ while is_running:
         # Only if a turret can be upgraded show the Upgrade button
         if selected_turret.upgrade_level < len(TURRET_DATA):
             if upgrade_turret_button.draw(screen):
-                selected_turret.upgrade()
+                if world.money >= UPGRADE_TURRET_COST:
+                    selected_turret.upgrade()
+                    world.money -= UPGRADE_TURRET_COST
 
     # Event handler
     # Events in PyGame are "stored" in an vent queue
@@ -155,14 +190,15 @@ while is_running:
             mouse_position = pygame.mouse.get_pos()
             # Check that the click happened when mouse cursor was over the map area
             # as we want to add a turret to the map if the mouse cursor over it
-            if (
-                mouse_position[0] < constants.MAP_WIDTH
-                and mouse_position[1] < constants.MAP_HEIGHT
-            ):
+            if mouse_position[0] < MAP_WIDTH and mouse_position[1] < MAP_HEIGHT:
                 selected_turret = None
                 clear_turret_selection(turret_group)
                 if is_placing_turrets:
-                    create_turret(turret_spritesheets, mouse_position, world, turret_group)
+                    # Check if there is enough money for a turret
+                    if world.money >= BUY_TURRET_COST:
+                        create_turret(
+                            turret_spritesheets, mouse_position, world, turret_group
+                        )
                 else:
                     selected_turret = select_turret(mouse_position, turret_group)
 

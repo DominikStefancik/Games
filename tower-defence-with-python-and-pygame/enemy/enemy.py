@@ -2,6 +2,7 @@ import math
 
 import pygame
 from pygame.math import Vector2
+from turret.constants import KILL_ENEMY_REWARD
 from .constants import ENEMY_DATA
 
 
@@ -20,11 +21,13 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = self.current_position
         self.target_waypoint_index = 1
 
-    def update(self):
-        self.move()
+    # The argument "world" is passed from the enemy group's "update" method
+    def update(self, world):
+        self.move(world)
         self.rotate()
+        self.is_still_alive(world)
 
-    def move(self):
+    def move(self, world):
         # Define a target waypoint
         if self.target_waypoint_index < len(self.waypoints):
             self.target_position = Vector2(self.waypoints[self.target_waypoint_index])
@@ -34,6 +37,9 @@ class Enemy(pygame.sprite.Sprite):
             # The method "kill" is inheriied from the Sprite superclass. It will automatically remove the sprite
             # from the sprite group
             self.kill()
+            # If the enemy gets all the way to thee end of the path, that means turrets didn't kill him
+            # In that case we are loosing health
+            world.health -= 1
 
         # Every step the enemy moves we need to calculate how much distance is left to target
         # so later we can adjust the movement so it doesn't get overshot
@@ -70,3 +76,9 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = self.current_position
+
+    # Checks if an emey is still alive
+    def is_still_alive(self, world):
+        if self.health <= 0:
+            world.money += KILL_ENEMY_REWARD
+            self.kill()

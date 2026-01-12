@@ -1,5 +1,6 @@
 import pygame
 import random
+from .constants import HEALTH, MONEY
 from enemy.constants import ENEMY_SPAWN_DATA
 
 
@@ -7,6 +8,8 @@ class World:
     def __init__(self, map_image, metadata) -> None:
         self.level = 1
         self.level_metadata = metadata
+        self.health = HEALTH
+        self.money = MONEY
         self.image = map_image
         self.tile_map = []
         self.waypoints = []

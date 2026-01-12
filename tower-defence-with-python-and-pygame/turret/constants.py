@@ -29,3 +29,9 @@ TURRET_DATA = [
         "cooldown_interval": 900
     }
 ]
+
+BUY_TURRET_COST = 120
+UPGRADE_TURRET_COST = 100
+KILL_ENEMY_REWARD = 1
+
+TURRET_DAMAGE = 5

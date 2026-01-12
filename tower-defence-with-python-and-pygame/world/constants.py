@@ -11,3 +11,6 @@ MAP_PATH = "assets/levels/level.png"
 
 # JSONs paths
 MAP_METADATA_PATH = "assets/levels/level.tmj"
+
+HEALTH = 100
+MONEY = 650
