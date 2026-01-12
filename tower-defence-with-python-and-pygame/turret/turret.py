@@ -67,13 +67,14 @@ class Turret(pygame.sprite.Sprite):
 
         return animation_frames
 
-    def update(self, enemy_group):
+    def update(self, world, enemy_group):
         # If target is picked, play the firing animation
         if self.target:
             self.play_animation()
         # Otherwise search for a new target once the turret cooled down
         elif (
-            pygame.time.get_ticks() - self.last_fired_shot_time > self.cooldown_interval
+            # The faster the game goes, the lower the cooldown
+            pygame.time.get_ticks() - self.last_fired_shot_time > (self.cooldown_interval / world.game_speed)
         ):
             self.pick_target(enemy_group)
 

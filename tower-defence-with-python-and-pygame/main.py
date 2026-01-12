@@ -29,6 +29,7 @@ from turret.helpers import (
 )
 from world.constants import (
     BEGIN_PATH,
+    FAST_FORWARD_PATH,
     FPS,
     LEVEL_COMPLETED_REWARD,
     MAP_METADATA_PATH,
@@ -83,6 +84,7 @@ upgrade_turret_image = pygame.image.load(UPGRADE_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(CANCEL_PATH).convert_alpha()
 begin_image = pygame.image.load(BEGIN_PATH).convert_alpha()
 restart_image = pygame.image.load(RESTART_PATH).convert_alpha()
+restart_image = pygame.image.load(FAST_FORWARD_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
 with open(MAP_METADATA_PATH) as json_file:
@@ -106,6 +108,8 @@ cancel_button = Button(cancel_image, MAP_WIDTH + 50, 180, True)
 upgrade_turret_button = Button(upgrade_turret_image, MAP_WIDTH + 5, 180, True)
 begin_button = Button(begin_image, MAP_WIDTH + 60, 300, True)
 restart_button = Button(restart_image, 310, 350, True)
+# The "False" value says that the button is not a single click button, but we have to hold the click
+fast_forward_button = Button(restart_image, MAP_WIDTH + 50, 350, False)
 
 is_running = True
 # Game loop
@@ -130,7 +134,7 @@ while is_running:
         # The "update()" method calls the "update" method on the enemy objects,
         # which inherited it from the Sprite superclass and then overwrote it
         enemy_group.update(world)
-        turret_group.update(enemy_group)
+        turret_group.update(world, enemy_group)
 
         # Highlight selected turret
         if selected_turret:
@@ -169,6 +173,11 @@ while is_running:
             if begin_button.draw(screen):
                 level_started = True
         else:
+            # Fast forward option
+            world.game_speed = 1
+            if fast_forward_button.draw(screen):
+                world.game_speed = 2
+
             # Spawn enemies:
             if pygame.time.get_ticks() - time_of_last_spawn_enemy > SPAWN_ENEMY_COOLDOWN:
                 if world.spawned_enemies < len(world.enemy_type_list):

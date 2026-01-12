@@ -10,6 +10,7 @@ FPS = 60
 MAP_PATH = "assets/levels/level.png"
 BEGIN_PATH = "assets/images/buttons/begin.png"
 RESTART_PATH = "assets/images/buttons/restart.png"
+FAST_FORWARD_PATH = "assets/images/buttons/fast_forward.png"
 
 # JSONs paths
 MAP_METADATA_PATH = "assets/levels/level.tmj"

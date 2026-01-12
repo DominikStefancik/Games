@@ -7,6 +7,7 @@ from enemy.enemy_type import EnemyType
 
 class World:
     def __init__(self, map_image, metadata) -> None:
+        self.game_speed = 1
         self.level = 1
         self.level_metadata = metadata
         self.health = HEALTH
