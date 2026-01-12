@@ -40,6 +40,7 @@ class Enemy(pygame.sprite.Sprite):
             # If the enemy gets all the way to thee end of the path, that means turrets didn't kill him
             # In that case we are loosing health
             world.health -= 1
+            world.missed_enemies += 1
 
         # Every step the enemy moves we need to calculate how much distance is left to target
         # so later we can adjust the movement so it doesn't get overshot
@@ -80,5 +81,6 @@ class Enemy(pygame.sprite.Sprite):
     # Checks if an emey is still alive
     def is_still_alive(self, world):
         if self.health <= 0:
+            world.killed_enemies += 1
             world.money += KILL_ENEMY_REWARD
             self.kill()

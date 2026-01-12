@@ -10,6 +10,7 @@ from enemy.constants import (
     SPAWN_ENEMY_COOLDOWN,
 )
 from enemy.enemy import Enemy
+from game_status import GameStatus
 from turret.constants import (
     BUY_TURRET_COST,
     BUY_TURRET_PATH,
@@ -26,12 +27,16 @@ from turret.helpers import (
     clear_turret_selection,
 )
 from world.constants import (
+    BEGIN_PATH,
     FPS,
+    LEVEL_COMPLETED_REWARD,
     MAP_METADATA_PATH,
     MAP_PATH,
     MAP_HEIGHT,
     MAP_WIDTH,
+    RESTART_PATH,
     SIDE_PANEL_WIDTH,
+    TOTAL_LEVELS
 )
 from world.helpers import draw_text
 from world.world import World
@@ -47,7 +52,9 @@ screen = pygame.display.set_mode((MAP_WIDTH + SIDE_PANEL_WIDTH, MAP_HEIGHT))
 pygame.display.set_caption("Python Tower Defence")
 
 # Game variables
-last_enemy_spawn = pygame.time.get_ticks()
+level_started = False
+game_status = GameStatus.RUNNING
+time_of_last_spawn_enemy = pygame.time.get_ticks()
 is_placing_turrets = False
 selected_turret = None
 
@@ -73,6 +80,8 @@ enemy_images = {
 buy_turret_image = pygame.image.load(BUY_TURRET_PATH).convert_alpha()
 upgrade_turret_image = pygame.image.load(UPGRADE_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(CANCEL_PATH).convert_alpha()
+begin_image = pygame.image.load(BEGIN_PATH).convert_alpha()
+restart_image = pygame.image.load(RESTART_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
 with open(MAP_METADATA_PATH) as json_file:
@@ -94,6 +103,8 @@ turret_group = pygame.sprite.Group()
 buy_turret_button = Button(buy_turret_image, MAP_WIDTH + 30, 120, True)
 cancel_button = Button(cancel_image, MAP_WIDTH + 50, 180, True)
 upgrade_turret_button = Button(upgrade_turret_image, MAP_WIDTH + 5, 180, True)
+begin_button = Button(begin_image, MAP_WIDTH + 60, 300, True)
+restart_button = Button(restart_image, 310, 350, True)
 
 is_running = True
 # Game loop
@@ -105,16 +116,24 @@ while is_running:
     #   UPDATING SECTION   #
     ########################
 
-    # Update groups
-    #
-    # The "update()" method calls the "update" method on the enemy objects,
-    # which inherited it from the Sprite superclass and then overwrote it
-    enemy_group.update(world)
-    turret_group.update(enemy_group)
+    if game_status == GameStatus.RUNNING:
+        if world.health <= 0:
+            game_status = GameStatus.LOSS
 
-    # Highlight selected turret
-    if selected_turret:
-        selected_turret.is_selected = True
+        # Check if player has won
+        if world.level > TOTAL_LEVELS:
+            game_status = GameStatus.WON
+
+        # Update groups
+        #
+        # The "update()" method calls the "update" method on the enemy objects,
+        # which inherited it from the Sprite superclass and then overwrote it
+        enemy_group.update(world)
+        turret_group.update(enemy_group)
+
+        # Highlight selected turret
+        if selected_turret:
+            selected_turret.is_selected = True
 
     #######################
     #   DRAWING SECTION   #
@@ -141,41 +160,76 @@ while is_running:
 
     draw_text(screen, str(world.health), text_font, "grey100", 0, 0)
     draw_text(screen, str(world.money), text_font, "grey100", 0, 30)
+    draw_text(screen, str(world.level), text_font, "grey100", 0, 60)
 
-    # Spawn enemies:
-    if pygame.time.get_ticks() - last_enemy_spawn > SPAWN_ENEMY_COOLDOWN:
-        if world.spawned_enemies < len(world.enemy_type_list):
-            enemy_type = world.enemy_type_list[world.spawned_enemies]
-            enemy = Enemy(enemy_type, enemy_images, world.waypoints)
-            enemy_group.add(enemy)
-            world.spawned_enemies += 1
-            last_enemy_spawn = pygame.time.get_ticks()
+    if game_status == GameStatus.RUNNING:
+        # Check if the level has been started or not
+        if level_started == False:
+            if begin_button.draw(screen):
+                level_started = True
+        else:
+            # Spawn enemies:
+            if pygame.time.get_ticks() - time_of_last_spawn_enemy > SPAWN_ENEMY_COOLDOWN:
+                if world.spawned_enemies < len(world.enemy_type_list):
+                    enemy_type = world.enemy_type_list[world.spawned_enemies]
+                    enemy = Enemy(enemy_type, enemy_images, world.waypoints)
+                    enemy_group.add(enemy)
+                    world.spawned_enemies += 1
+                    time_of_last_spawn_enemy = pygame.time.get_ticks()
 
-    if buy_turret_button.draw(screen):
-        is_placing_turrets = True
+        # Check if the level is finished
+        if world.is_level_completed():
+            level_started = False
+            world.level += 1
+            world.money += LEVEL_COMPLETED_REWARD
+            time_of_last_spawn_enemy = pygame.time.get_ticks()
+            world.reset_level()
 
-    # If user is placing turrets, then whow the Cancel button as well
-    if is_placing_turrets:
-        # Show cursor as a turret image
-        cursor_rectangle = cursor_turret.get_rect()
-        cursor_position = pygame.mouse.get_pos()
-        cursor_rectangle.center = cursor_position
+        if buy_turret_button.draw(screen):
+            is_placing_turrets = True
 
-        # Show the turret cursor only when the cursor is over the map area
-        if cursor_position[0] < MAP_WIDTH:
-            screen.blit(cursor_turret, cursor_rectangle)
+        # If user is placing turrets, then whow the Cancel button as well
+        if is_placing_turrets:
+            # Show cursor as a turret image
+            cursor_rectangle = cursor_turret.get_rect()
+            cursor_position = pygame.mouse.get_pos()
+            cursor_rectangle.center = cursor_position
 
-        if cancel_button.draw(screen):
+            # Show the turret cursor only when the cursor is over the map area
+            if cursor_position[0] < MAP_WIDTH:
+                screen.blit(cursor_turret, cursor_rectangle)
+
+            if cancel_button.draw(screen):
+                is_placing_turrets = False
+
+        # If a turret is selected then show the Upgrade button
+        if selected_turret:
+            # Only if a turret can be upgraded show the Upgrade button
+            if selected_turret.upgrade_level < len(TURRET_DATA):
+                if upgrade_turret_button.draw(screen):
+                    if world.money >= UPGRADE_TURRET_COST:
+                        selected_turret.upgrade()
+                        world.money -= UPGRADE_TURRET_COST
+    else: # The game is not running anymore
+        pygame.draw.rect(screen, "dodgerblue", (200, 250, 400, 200), border_radius = 30)
+
+        if game_status == GameStatus.WON:
+            draw_text(screen, "YOU WIN!", large_font, "grey0", 315, 280)
+        elif game_status == GameStatus.LOSS:
+            draw_text(screen, "GAME OVER", large_font, "grey0", 310, 280)
+
+        # Restart game after the restart button was clicked on
+        if restart_button.draw(screen):
+            game_status = GameStatus.RUNNING
+            level_started = False
             is_placing_turrets = False
-
-    # If a turret is selected then show the Upgrade button
-    if selected_turret:
-        # Only if a turret can be upgraded show the Upgrade button
-        if selected_turret.upgrade_level < len(TURRET_DATA):
-            if upgrade_turret_button.draw(screen):
-                if world.money >= UPGRADE_TURRET_COST:
-                    selected_turret.upgrade()
-                    world.money -= UPGRADE_TURRET_COST
+            selected_turret = None
+            time_of_last_spawn_enemy = pygame.time.get_ticks()
+            # After restart, recreate the whole world from scratch
+            world = World(map_image, world_metadata)
+            # We need to empty the groups, so the objects are not in the memory anymore
+            enemy_group.empty()
+            turret_group.empty()
 
     # Event handler
     # Events in PyGame are "stored" in an vent queue

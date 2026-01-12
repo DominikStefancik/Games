@@ -15,6 +15,8 @@ class World:
         self.waypoints = []
         self.enemy_type_list = []
         self.spawned_enemies = 0
+        self.killed_enemies = 0
+        self.missed_enemies = 0
         self.process_metadata()
         self.process_enemies()
 
@@ -46,6 +48,17 @@ class World:
 
         # At the end, randomise the list to shuffle the enemies types
         random.shuffle(self.enemy_type_list)
+
+    def is_level_completed(self):
+        return len(self.enemy_type_list) == self.killed_enemies + self.missed_enemies
+
+    def reset_level(self):
+        # Reset enemy variables
+        self.enemy_type_list = []
+        self.spawned_enemies = 0
+        self.killed_enemies = 0
+        self.missed_enemies = 0
+        self.process_enemies()
 
     def draw(self, surface):
         # the map will be drawn from the top left corner over the whole window
