@@ -3,7 +3,8 @@ import json
 import constants
 import pygame
 from button import Button
-from enemy import Enemy
+from enemy.constants import ENEMY_1_PATH, ENEMY_2_PATH, ENEMY_3_PATH, ENEMY_4_PATH, SPAWN_ENEMY_COOLDOWN
+from enemy.enemy import Enemy
 from turret.helpers import get_turret_spritesheet_path, create_turret, select_turret, clear_turret_selection
 from world import World
 
@@ -18,6 +19,7 @@ screen = pygame.display.set_mode((constants.MAP_WIDTH + constants.SIDE_PANEL_WID
 pygame.display.set_caption("Python Tower Defence")
 
 # Game variables
+last_enemy_spawn = pygame.time.get_ticks()
 is_placing_turrets = False
 selected_turret = None
 
@@ -34,7 +36,12 @@ for x in range(1, len(constants.TURRET_DATA) + 1):
     turret_sheet = pygame.image.load(file_path).convert_alpha()
     turret_spritesheets.append(turret_sheet)
 
-enemy_image = pygame.image.load(constants.ENEMY_1_PATH).convert_alpha()
+enemy_images = {
+    "weak": pygame.image.load(ENEMY_1_PATH).convert_alpha(),
+    "medium": pygame.image.load(ENEMY_2_PATH).convert_alpha(),
+    "strong": pygame.image.load(ENEMY_3_PATH).convert_alpha(),
+    "elite": pygame.image.load(ENEMY_4_PATH).convert_alpha()
+}
 buy_turret_image = pygame.image.load(constants.BUY_TURRET_PATH).convert_alpha()
 upgrade_turret_image = pygame.image.load(constants.UPGRADE_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(constants.CANCEL_PATH).convert_alpha()
@@ -51,9 +58,6 @@ world = World(map_image, world_metadata)
 # Groups functionality is similar to Python's native lists
 enemy_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
-
-enemy = Enemy(enemy_image, world.waypoints)
-enemy_group.add(enemy)
 
 buy_turret_button = Button(buy_turret_image, constants.MAP_WIDTH + 30, 120, True)
 cancel_button = Button(cancel_image, constants.MAP_WIDTH + 50, 180, True)
@@ -91,20 +95,27 @@ while is_running:
     # Draw the level map
     world.draw(screen)
 
-
-
     # Draw groups
     #
     # The "draw()" method adds objects of a group to something like a queue
     # It calls the "draw" method on the enemy objects, which inherited it from the Sprite superclass
     enemy_group.draw(screen)
-    turret_group.draw(screen)
 
     # Since we have overwritten the "draw" method in the Turret class, calling "turret_group.draw(screen)" still
     # calls the "draw" method on each of the turret objects in the group, but only draws the turret image, not the circle.
     # In order to draw both, we have to loop over each individual object and call the "draw" method manually.
     for turret in turret_group:
         turret.draw(screen)
+
+    # Spawn enemies:
+    if pygame.time.get_ticks() - last_enemy_spawn > SPAWN_ENEMY_COOLDOWN:
+        if world.spawned_enemies < len(world.enemy_type_list):
+            enemy_type = world.enemy_type_list[world.spawned_enemies]
+            enemy = Enemy(enemy_type, enemy_images, world.waypoints)
+            enemy_group.add(enemy)
+            world.spawned_enemies += 1
+            last_enemy_spawn = pygame.time.get_ticks()
+
 
     if buy_turret_button.draw(screen):
         is_placing_turrets = True

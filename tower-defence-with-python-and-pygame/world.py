@@ -1,13 +1,19 @@
 import pygame
+import random
+from enemy.constants import ENEMY_SPAWN_DATA
 
 
 class World:
     def __init__(self, map_image, metadata) -> None:
-        self.image = map_image
+        self.level = 1
         self.level_metadata = metadata
+        self.image = map_image
         self.tile_map = []
         self.waypoints = []
+        self.enemy_type_list = []
+        self.spawned_enemies = 0
         self.process_metadata()
+        self.process_enemies()
 
     def process_metadata(self):
         # Look through JSON metadata to extract relevant info
@@ -25,6 +31,18 @@ class World:
         for point in waypoints_data:
             waypoint = (point.get("x"), point.get("y"))
             self.waypoints.append(waypoint)
+
+    def process_enemies(self):
+        enemies = ENEMY_SPAWN_DATA[self.level - 1]
+
+        for enemy_type in enemies:
+            number_of_enemies_to_spawn = enemies[enemy_type]
+
+            for enemy in range(number_of_enemies_to_spawn):
+                self.enemy_type_list.append(enemy_type)
+
+        # At the end, randomise the list to shuffle the enemies types
+        random.shuffle(self.enemy_type_list)
 
     def draw(self, surface):
         # the map will be drawn from the top left corner over the whole window

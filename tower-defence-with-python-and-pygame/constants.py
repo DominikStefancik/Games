@@ -9,7 +9,6 @@ FPS = 60
 # Images paths
 MAP_PATH = "assets/levels/level.png"
 CURSOR_TURRET_PATH = "assets/images/turrets/cursor_turret.png"
-ENEMY_1_PATH = "assets/images/enemies/enemy_1.png"
 BUY_TURRET_PATH = "assets/images/buttons/buy_turret.png"
 UPGRADE_TURRET_PATH = "assets/images/buttons/upgrade_turret.png"
 CANCEL_PATH = "assets/images/buttons/cancel.png"
