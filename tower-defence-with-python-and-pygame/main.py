@@ -10,6 +10,7 @@ from enemy.constants import (
     SPAWN_ENEMY_COOLDOWN,
 )
 from enemy.enemy import Enemy
+from enemy.enemy_type import EnemyType
 from game_status import GameStatus
 from turret.constants import (
     BUY_TURRET_COST,
@@ -72,10 +73,10 @@ for x in range(1, len(TURRET_DATA) + 1):
     turret_spritesheets.append(turret_sheet)
 
 enemy_images = {
-    "weak": pygame.image.load(ENEMY_1_PATH).convert_alpha(),
-    "medium": pygame.image.load(ENEMY_2_PATH).convert_alpha(),
-    "strong": pygame.image.load(ENEMY_3_PATH).convert_alpha(),
-    "elite": pygame.image.load(ENEMY_4_PATH).convert_alpha(),
+    EnemyType.WEAK: pygame.image.load(ENEMY_1_PATH).convert_alpha(),
+    EnemyType.MEDIUM: pygame.image.load(ENEMY_2_PATH).convert_alpha(),
+    EnemyType.STRONG: pygame.image.load(ENEMY_3_PATH).convert_alpha(),
+    EnemyType.ELITE: pygame.image.load(ENEMY_4_PATH).convert_alpha(),
 }
 buy_turret_image = pygame.image.load(BUY_TURRET_PATH).convert_alpha()
 upgrade_turret_image = pygame.image.load(UPGRADE_TURRET_PATH).convert_alpha()

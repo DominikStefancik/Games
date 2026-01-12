@@ -2,6 +2,7 @@ import pygame
 import random
 from .constants import HEALTH, MONEY
 from enemy.constants import ENEMY_SPAWN_DATA
+from enemy.enemy_type import EnemyType
 
 
 class World:
@@ -44,7 +45,8 @@ class World:
             number_of_enemies_to_spawn = enemies[enemy_type]
 
             for enemy in range(number_of_enemies_to_spawn):
-                self.enemy_type_list.append(enemy_type)
+                # We want to have the enum type in the list of types
+                self.enemy_type_list.append(EnemyType.from_str(enemy_type))
 
         # At the end, randomise the list to shuffle the enemies types
         random.shuffle(self.enemy_type_list)

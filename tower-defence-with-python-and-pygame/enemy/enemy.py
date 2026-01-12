@@ -10,8 +10,10 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, enemy_type, images, waypoints) -> None:
         # We have to call the superclass' init method
         pygame.sprite.Sprite.__init__(self)
-        self.health = ENEMY_DATA.get(enemy_type)["health"]
-        self.speed = ENEMY_DATA.get(enemy_type)["speed"]
+        # Since the argument "enemy_type" is of type Enum and the "ENEMY_DATA" dictionary contains keys as strings
+        # we have to use the function "str()"
+        self.health = ENEMY_DATA.get(str(enemy_type))["health"]
+        self.speed = ENEMY_DATA.get(str(enemy_type))["speed"]
         self.angle = 0
         self.waypoints = waypoints
         self.current_position = Vector2(self.waypoints[0])
