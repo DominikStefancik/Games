@@ -2,6 +2,7 @@ import constants
 import pygame
 
 import math
+from .constants import TURRET_ANIMATION_FRAMES, TURRET_ANIMATION_STEP_INTERVAL, TURRET_DATA
 
 class Turret(pygame.sprite.Sprite):
     def __init__(self, sprite_sheets, tile_x, tile_y) -> None:
@@ -17,8 +18,8 @@ class Turret(pygame.sprite.Sprite):
         self.y = (self.tile_y + 0.5) * constants.TILE_SIZE
 
         self.upgrade_level = 1
-        self.fire_range_radius = constants.TURRET_DATA[self.upgrade_level - 1].get("range")
-        self.cooldown_interval = constants.TURRET_DATA[self.upgrade_level - 1].get("cooldown_interval")
+        self.fire_range_radius = TURRET_DATA[self.upgrade_level - 1].get("range")
+        self.cooldown_interval = TURRET_DATA[self.upgrade_level - 1].get("cooldown_interval")
         self.last_fired_shot_time = pygame.time.get_ticks()
 
         # Animation variables
@@ -48,7 +49,7 @@ class Turret(pygame.sprite.Sprite):
         frame_size = sprite_sheet.get_height()
         animation_frames = []
 
-        for index in range(constants.TURRET_ANIMATION_FRAMES):
+        for index in range(TURRET_ANIMATION_FRAMES):
             # The "subsurface" method extracts a section of an image
             # We need to pass top-left coordinates where the subsection starts and then wight and height of the section
             subsection_image = sprite_sheet.subsurface(index * frame_size, 0, frame_size, frame_size)
@@ -91,7 +92,7 @@ class Turret(pygame.sprite.Sprite):
         self.original_image = self.animation_frames[self.animation_frame_index]
 
         # Check if enough time has passed since the last frame update
-        if pygame.time.get_ticks() - self.update_animation_time > constants.TURRET_ANIMATION_STEP_INTERVAL:
+        if pygame.time.get_ticks() - self.update_animation_time > TURRET_ANIMATION_STEP_INTERVAL:
             self.update_animation_time = pygame.time.get_ticks()
             self.animation_frame_index += 1
 
@@ -121,8 +122,8 @@ class Turret(pygame.sprite.Sprite):
 
     def upgrade(self):
         self.upgrade_level += 1
-        self.fire_range_radius = constants.TURRET_DATA[self.upgrade_level - 1].get("range")
-        self.cooldown_interval = constants.TURRET_DATA[self.upgrade_level - 1].get("cooldown_interval")
+        self.fire_range_radius = TURRET_DATA[self.upgrade_level - 1].get("range")
+        self.cooldown_interval = TURRET_DATA[self.upgrade_level - 1].get("cooldown_interval")
 
         # Upgrade turret image
         self.animation_frames = self.load_images()

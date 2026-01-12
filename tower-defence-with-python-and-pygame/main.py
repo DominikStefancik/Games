@@ -5,6 +5,7 @@ import pygame
 from button import Button
 from enemy.constants import ENEMY_1_PATH, ENEMY_2_PATH, ENEMY_3_PATH, ENEMY_4_PATH, SPAWN_ENEMY_COOLDOWN
 from enemy.enemy import Enemy
+from turret.constants import BUY_TURRET_PATH, CANCEL_PATH, CURSOR_TURRET_PATH, UPGRADE_TURRET_PATH, TURRET_DATA
 from turret.helpers import get_turret_spritesheet_path, create_turret, select_turret, clear_turret_selection
 from world import World
 
@@ -28,10 +29,10 @@ selected_turret = None
 # The map was created in the program "Tiled", from which the metadata in the form of JSON has been provided
 map_image = pygame.image.load(constants.MAP_PATH).convert_alpha()
 # Individual turret image for mouse cursor
-cursor_turret = pygame.image.load(constants.CURSOR_TURRET_PATH).convert_alpha()
+cursor_turret = pygame.image.load(CURSOR_TURRET_PATH).convert_alpha()
 
 turret_spritesheets = []
-for x in range(1, len(constants.TURRET_DATA) + 1):
+for x in range(1, len(TURRET_DATA) + 1):
     file_path = get_turret_spritesheet_path(x)
     turret_sheet = pygame.image.load(file_path).convert_alpha()
     turret_spritesheets.append(turret_sheet)
@@ -42,9 +43,9 @@ enemy_images = {
     "strong": pygame.image.load(ENEMY_3_PATH).convert_alpha(),
     "elite": pygame.image.load(ENEMY_4_PATH).convert_alpha()
 }
-buy_turret_image = pygame.image.load(constants.BUY_TURRET_PATH).convert_alpha()
-upgrade_turret_image = pygame.image.load(constants.UPGRADE_TURRET_PATH).convert_alpha()
-cancel_image = pygame.image.load(constants.CANCEL_PATH).convert_alpha()
+buy_turret_image = pygame.image.load(BUY_TURRET_PATH).convert_alpha()
+upgrade_turret_image = pygame.image.load(UPGRADE_TURRET_PATH).convert_alpha()
+cancel_image = pygame.image.load(CANCEL_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
 with open(constants.MAP_METADATA_PATH) as json_file:
@@ -137,7 +138,7 @@ while is_running:
     # If a turret is selected then show the Upgrade button
     if selected_turret:
         # Only if a turret can be upgraded show the Upgrade button
-        if selected_turret.upgrade_level < len(constants.TURRET_DATA):
+        if selected_turret.upgrade_level < len(TURRET_DATA):
             if upgrade_turret_button.draw(screen):
                 selected_turret.upgrade()
 
