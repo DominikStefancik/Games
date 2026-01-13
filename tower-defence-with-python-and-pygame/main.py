@@ -118,7 +118,7 @@ buy_turret_button = Button(buy_turret_image, MAP_WIDTH + 30, 120, True)
 cancel_button = Button(cancel_image, MAP_WIDTH + 50, 180, True)
 upgrade_turret_button = Button(upgrade_turret_image, MAP_WIDTH + 5, 180, True)
 begin_button = Button(begin_image, MAP_WIDTH + 60, 300, True)
-restart_button = Button(restart_image, 310, 300, True)
+restart_button = Button(restart_image, 310, 350, True)
 # The "False" value says that the button is not a single click button, but we have to hold the click
 fast_forward_button = Button(fast_forward_image, MAP_WIDTH + 50, 300, False)
 
@@ -201,7 +201,8 @@ while is_running:
             world.level += 1
             world.money += LEVEL_COMPLETED_REWARD
             time_of_last_spawn_enemy = pygame.time.get_ticks()
-            world.reset_level()
+            if world.level <= TOTAL_LEVELS:
+                world.reset_level()
 
         # For the "buy turret button" show cost of turret and draw the button
         draw_text(
