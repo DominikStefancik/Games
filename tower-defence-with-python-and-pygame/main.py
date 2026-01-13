@@ -29,9 +29,12 @@ from turret.helpers import (
 )
 from world.constants import (
     BEGIN_PATH,
+    COIN_PATH,
     FAST_FORWARD_PATH,
     FPS,
+    HEART_PATH,
     LEVEL_COMPLETED_REWARD,
+    LOGO_PATH,
     MAP_METADATA_PATH,
     MAP_PATH,
     MAP_HEIGHT,
@@ -40,7 +43,7 @@ from world.constants import (
     SIDE_PANEL_WIDTH,
     TOTAL_LEVELS
 )
-from world.helpers import draw_text
+from world.helpers import display_game_data, draw_text
 from world.world import World
 
 # Initialise PyGame
@@ -84,7 +87,10 @@ upgrade_turret_image = pygame.image.load(UPGRADE_TURRET_PATH).convert_alpha()
 cancel_image = pygame.image.load(CANCEL_PATH).convert_alpha()
 begin_image = pygame.image.load(BEGIN_PATH).convert_alpha()
 restart_image = pygame.image.load(RESTART_PATH).convert_alpha()
-restart_image = pygame.image.load(FAST_FORWARD_PATH).convert_alpha()
+fast_forward_image = pygame.image.load(FAST_FORWARD_PATH).convert_alpha()
+coin_image = pygame.image.load(COIN_PATH).convert_alpha()
+heart_image = pygame.image.load(HEART_PATH).convert_alpha()
+logo_image = pygame.image.load(LOGO_PATH).convert_alpha()
 
 # Load JSON data for level. The json file contains waypoints
 with open(MAP_METADATA_PATH) as json_file:
@@ -107,9 +113,9 @@ buy_turret_button = Button(buy_turret_image, MAP_WIDTH + 30, 120, True)
 cancel_button = Button(cancel_image, MAP_WIDTH + 50, 180, True)
 upgrade_turret_button = Button(upgrade_turret_image, MAP_WIDTH + 5, 180, True)
 begin_button = Button(begin_image, MAP_WIDTH + 60, 300, True)
-restart_button = Button(restart_image, 310, 350, True)
+restart_button = Button(restart_image, 310, 300, True)
 # The "False" value says that the button is not a single click button, but we have to hold the click
-fast_forward_button = Button(restart_image, MAP_WIDTH + 50, 350, False)
+fast_forward_button = Button(fast_forward_image, MAP_WIDTH + 50, 300, False)
 
 is_running = True
 # Game loop
@@ -144,10 +150,6 @@ while is_running:
     #   DRAWING SECTION   #
     #######################
 
-    # We have to call the "fill" method so we can render over the objects (and their position)
-    # which where rendered in a previous loop
-    screen.fill("grey100")
-
     # Draw the level map
     world.draw(screen)
 
@@ -163,9 +165,7 @@ while is_running:
     for turret in turret_group:
         turret.draw(screen)
 
-    draw_text(screen, str(world.health), text_font, "grey100", 0, 0)
-    draw_text(screen, str(world.money), text_font, "grey100", 0, 30)
-    draw_text(screen, str(world.level), text_font, "grey100", 0, 60)
+    display_game_data(screen, world, text_font, coin_image, heart_image, logo_image)
 
     if game_status == GameStatus.RUNNING:
         # Check if the level has been started or not
@@ -195,6 +195,9 @@ while is_running:
             time_of_last_spawn_enemy = pygame.time.get_ticks()
             world.reset_level()
 
+        # For the "buy turret button" show cost of turret and draw the button
+        draw_text(screen, str(BUY_TURRET_COST), text_font, "grey100", MAP_WIDTH + 215, 135)
+        screen.blit(coin_image, (MAP_WIDTH + 260, 130))
         if buy_turret_button.draw(screen):
             is_placing_turrets = True
 
@@ -216,6 +219,9 @@ while is_running:
         if selected_turret:
             # Only if a turret can be upgraded show the Upgrade button
             if selected_turret.upgrade_level < len(TURRET_DATA):
+                # For the "upgrade turret button" show cost of upgrade and draw the button
+                draw_text(screen, str(UPGRADE_TURRET_COST), text_font, "grey100", MAP_WIDTH + 215, 195)
+                screen.blit(coin_image, (MAP_WIDTH + 260, 190))
                 if upgrade_turret_button.draw(screen):
                     if world.money >= UPGRADE_TURRET_COST:
                         selected_turret.upgrade()
