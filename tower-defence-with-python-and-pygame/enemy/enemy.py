@@ -52,7 +52,9 @@ class Enemy(pygame.sprite.Sprite):
         if distance >= (self.speed * world.game_speed):
             # The method "normalize()" on the Vector calculates trigonometrically
             # how the enemy should move from his current position to his target position
-            self.current_position += self.movement.normalize() * (self.speed * world.game_speed)
+            self.current_position += self.movement.normalize() * (
+                self.speed * world.game_speed
+            )
         else:
             # Once an enemy gets closer to the waypoint, and it is closer then speed,
             # it means it will move closer just a tiny bit.

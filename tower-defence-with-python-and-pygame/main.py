@@ -42,7 +42,7 @@ from world.constants import (
     MAP_WIDTH,
     RESTART_PATH,
     SIDE_PANEL_WIDTH,
-    TOTAL_LEVELS
+    TOTAL_LEVELS,
 )
 from world.helpers import display_game_data, draw_text
 from world.world import World
@@ -184,7 +184,10 @@ while is_running:
                 world.game_speed = 2
 
             # Spawn enemies:
-            if pygame.time.get_ticks() - time_of_last_spawn_enemy > SPAWN_ENEMY_COOLDOWN:
+            if (
+                pygame.time.get_ticks() - time_of_last_spawn_enemy
+                > SPAWN_ENEMY_COOLDOWN
+            ):
                 if world.spawned_enemies < len(world.enemy_type_list):
                     enemy_type = world.enemy_type_list[world.spawned_enemies]
                     enemy = Enemy(enemy_type, enemy_images, world.waypoints)
@@ -201,7 +204,9 @@ while is_running:
             world.reset_level()
 
         # For the "buy turret button" show cost of turret and draw the button
-        draw_text(screen, str(BUY_TURRET_COST), text_font, "grey100", MAP_WIDTH + 215, 135)
+        draw_text(
+            screen, str(BUY_TURRET_COST), text_font, "grey100", MAP_WIDTH + 215, 135
+        )
         screen.blit(coin_image, (MAP_WIDTH + 260, 130))
         if buy_turret_button.draw(screen):
             is_placing_turrets = True
@@ -225,14 +230,21 @@ while is_running:
             # Only if a turret can be upgraded show the Upgrade button
             if selected_turret.upgrade_level < len(TURRET_DATA):
                 # For the "upgrade turret button" show cost of upgrade and draw the button
-                draw_text(screen, str(UPGRADE_TURRET_COST), text_font, "grey100", MAP_WIDTH + 215, 195)
+                draw_text(
+                    screen,
+                    str(UPGRADE_TURRET_COST),
+                    text_font,
+                    "grey100",
+                    MAP_WIDTH + 215,
+                    195,
+                )
                 screen.blit(coin_image, (MAP_WIDTH + 260, 190))
                 if upgrade_turret_button.draw(screen):
                     if world.money >= UPGRADE_TURRET_COST:
                         selected_turret.upgrade()
                         world.money -= UPGRADE_TURRET_COST
-    else: # The game is not running anymore
-        pygame.draw.rect(screen, "dodgerblue", (200, 250, 400, 200), border_radius = 30)
+    else:  # The game is not running anymore
+        pygame.draw.rect(screen, "dodgerblue", (200, 250, 400, 200), border_radius=30)
 
         if game_status == GameStatus.WON:
             draw_text(screen, "YOU WIN!", large_font, "grey0", 315, 280)
@@ -272,7 +284,11 @@ while is_running:
                     # Check if there is enough money for a turret
                     if world.money >= BUY_TURRET_COST:
                         create_turret(
-                            turret_spritesheets, mouse_position, world, turret_group, shot_sound
+                            turret_spritesheets,
+                            mouse_position,
+                            world,
+                            turret_group,
+                            shot_sound,
                         )
                 else:
                     selected_turret = select_turret(mouse_position, turret_group)

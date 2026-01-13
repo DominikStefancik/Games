@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class EnemyType(Enum):
     WEAK = "weak",
     MEDIUM = "medium",

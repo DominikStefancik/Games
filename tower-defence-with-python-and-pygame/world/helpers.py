@@ -2,6 +2,7 @@ import pygame
 
 from .constants import MAP_HEIGHT, MAP_WIDTH, SIDE_PANEL_WIDTH
 
+
 def draw_text(surface, text, font, text_column, x, y):
     # First we have to turn a text into an image
     image = font.render(text, True, text_column)
@@ -15,7 +16,9 @@ def display_game_data(surface, world, font, coin_image, heart_image, logo_image)
     surface.blit(logo_image, (MAP_WIDTH, 400))
 
     # Display data
-    draw_text(surface, "LEVEL: " + str(world.level), font, "grey100", MAP_WIDTH + 10, 10)
+    draw_text(
+        surface, "LEVEL: " + str(world.level), font, "grey100", MAP_WIDTH + 10, 10
+    )
     surface.blit(heart_image, (MAP_WIDTH + 10, 35))
     draw_text(surface, str(world.health), font, "grey100", MAP_WIDTH + 50, 40)
     surface.blit(coin_image, (MAP_WIDTH + 10, 65))

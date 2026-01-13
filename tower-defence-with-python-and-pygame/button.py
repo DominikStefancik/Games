@@ -1,7 +1,7 @@
 import pygame
 
 
-class Button():
+class Button:
     def __init__(self, image, x, y, is_single_click_type) -> None:
         self.image = image
         self.rect = self.image.get_rect()

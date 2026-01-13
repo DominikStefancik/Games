@@ -76,7 +76,8 @@ class Turret(pygame.sprite.Sprite):
         # Otherwise search for a new target once the turret cooled down
         elif (
             # The faster the game goes, the lower the cooldown
-            pygame.time.get_ticks() - self.last_fired_shot_time > (self.cooldown_interval / world.game_speed)
+            pygame.time.get_ticks() - self.last_fired_shot_time
+            > (self.cooldown_interval / world.game_speed)
         ):
             self.pick_target(enemy_group)
 
