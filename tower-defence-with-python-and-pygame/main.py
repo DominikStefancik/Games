@@ -17,6 +17,7 @@ from turret.constants import (
     BUY_TURRET_PATH,
     CANCEL_PATH,
     CURSOR_TURRET_PATH,
+    SHOT_SOUND_PATH,
     UPGRADE_TURRET_COST,
     UPGRADE_TURRET_PATH,
     TURRET_DATA,
@@ -91,6 +92,10 @@ fast_forward_image = pygame.image.load(FAST_FORWARD_PATH).convert_alpha()
 coin_image = pygame.image.load(COIN_PATH).convert_alpha()
 heart_image = pygame.image.load(HEART_PATH).convert_alpha()
 logo_image = pygame.image.load(LOGO_PATH).convert_alpha()
+
+# Load sounds
+shot_sound = pygame.mixer.Sound(SHOT_SOUND_PATH)
+shot_sound.set_volume(0.5)
 
 # Load JSON data for level. The json file contains waypoints
 with open(MAP_METADATA_PATH) as json_file:
@@ -267,7 +272,7 @@ while is_running:
                     # Check if there is enough money for a turret
                     if world.money >= BUY_TURRET_COST:
                         create_turret(
-                            turret_spritesheets, mouse_position, world, turret_group
+                            turret_spritesheets, mouse_position, world, turret_group, shot_sound
                         )
                 else:
                     selected_turret = select_turret(mouse_position, turret_group)

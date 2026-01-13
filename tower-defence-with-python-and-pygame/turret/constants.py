@@ -4,6 +4,9 @@ BUY_TURRET_PATH = "assets/images/buttons/buy_turret.png"
 UPGRADE_TURRET_PATH = "assets/images/buttons/upgrade_turret.png"
 CANCEL_PATH = "assets/images/buttons/cancel.png"
 
+# Audio paths
+SHOT_SOUND_PATH = "assets/audio/shot.wav"
+
 TURRET_ANIMATION_FRAMES = 8
 TURRET_ANIMATION_STEP_INTERVAL = 15
 

@@ -11,7 +11,7 @@ from .constants import (
 
 
 class Turret(pygame.sprite.Sprite):
-    def __init__(self, sprite_sheets, tile_x, tile_y) -> None:
+    def __init__(self, sprite_sheets, tile_x, tile_y, shot_sound) -> None:
         # We have to call the superclass' init method
         pygame.sprite.Sprite.__init__(self)
 
@@ -48,6 +48,8 @@ class Turret(pygame.sprite.Sprite):
 
         self.is_selected = False
         self.target = None
+
+        self.shot_sound = shot_sound
 
         self.create_range_circle()
 
@@ -146,6 +148,8 @@ class Turret(pygame.sprite.Sprite):
                     self.angle = math.degrees(math.atan2(-distance_y, distance_x))
                     # Cause damage to the enemy
                     self.target.health -= TURRET_DAMAGE
+                    # Play the sound effect
+                    self.shot_sound.play()
                     break
 
     def upgrade(self):
