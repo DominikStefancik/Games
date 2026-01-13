@@ -34,6 +34,9 @@
 * [Space Invaders (simple)](space-invaders-simple-with-rust) - classical Space Invaders game implemented for a terminal
 * [Space Invaders (Bevy)](space-invaders-with-rust-and-bevy) - classical Space Invaders game implemented with Bevy
 
+### Python
+* [Tower Defence](tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
+
 ### Java
 * [Pong](pong-with-javafx) - classical game Pong
 
@@ -50,6 +53,9 @@
 * [Bevy](https://github.com/bevyengine/bevy)
 * [Ggez](https://github.com/ggez/ggez)
 * [Macroquad](https://github.com/not-fl3/macroquad)
+
+### Python
+* [Pygame](https://github.com/pygame/pygame)
 
 ### Java
 * [JavaFx](https://openjfx.io/)
