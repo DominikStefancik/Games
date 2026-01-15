@@ -1,4 +1,5 @@
 import math
+import pygame
 
 from .helpers import rotate_car_image_center
 
@@ -40,3 +41,24 @@ class AbstractCar:
 
         self.x -= horizontal_velocity
         self.y -= vertical_velocity
+
+    # Pixel perfect collision
+    #
+    # Mask is an array of values representing whether or not the pixel of an image is transparent or present
+    # (i.e. whether the pixel exists).
+    # The point of a mask is that rather detecting colision of two objects by using their rectangles
+    # (which represent their hit boxes), we can simply check if the pixels of the image, that are not transparent,
+    # are overlapping in two rectangular regions.
+    #
+    # Calling mask
+    # Mask that is being called on = the mask we want to find an offset on
+    def collide(self, other_mask, other_mask_x=0, other_mask_y=0):
+        car_mask = pygame.mask.from_surface(self.image)
+        # Mask offset has to be an integer value, because we might get a floating value when doing the subtraction
+        # The offset is relative to the calling mask
+        offset = (int(self.x - other_mask_x), int(self.y - other_mask_y))
+        #  The "other_mask" is the calling mask and it will dictate how we calculate the collision overlap
+        point_of_intersection =  other_mask.overlap(car_mask, offset)
+
+        # The point of intersection is None, the two objects didn't collide
+        return point_of_intersection

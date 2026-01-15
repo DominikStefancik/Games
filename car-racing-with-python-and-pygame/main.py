@@ -15,6 +15,9 @@ FINISH_LINE_IMAGE = pygame.image.load(FINISH_LINE_PATH)
 GREEN_CAR_IMAGE = scale_image(pygame.image.load(GREEN_CAR_PATH), 1)
 RED_CAR_IMAGE = scale_image(pygame.image.load(RED_CAR_PATH), CAR_IMAGE_SCALE)
 
+# Create track border mask
+TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER_IMAGE)
+
 # Set up window
 WINDOW_WIDTH, WINDOW_HEIGHT = TRACK_IMAGE.get_width(), TRACK_IMAGE.get_height()
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -42,5 +45,9 @@ while is_running:
             break
 
     move_player_car(player_car)
+
+    # We don't have to draw the track border image, because it has the same parameters as the track image
+    if player_car.collide(TRACK_BORDER_MASK) != None:
+        player_car.bounce()
 
 pygame.quit()
