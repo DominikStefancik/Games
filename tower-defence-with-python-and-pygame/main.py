@@ -212,7 +212,7 @@ while is_running:
         if buy_turret_button.draw(screen):
             is_placing_turrets = True
 
-        # If user is placing turrets, then whow the Cancel button as well
+        # If user is placing turrets, then show the Cancel button as well
         if is_placing_turrets:
             # Show cursor as a turret image
             cursor_rectangle = cursor_turret.get_rect()
@@ -273,7 +273,7 @@ while is_running:
             is_running = False
 
         # Handle mouse click event
-        # "event.button == 1" represents the left mose button
+        # "event.button == 1" represents the left mouse button
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_position = pygame.mouse.get_pos()
             # Check that the click happened when mouse cursor was over the map area

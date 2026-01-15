@@ -39,8 +39,8 @@ class Enemy(pygame.sprite.Sprite):
             # The method "kill" is inheriied from the Sprite superclass. It will automatically remove the sprite
             # from the sprite group
             self.kill()
-            # If the enemy gets all the way to thee end of the path, that means turrets didn't kill him
-            # In that case we are loosing health
+            # If the enemy gets all the way to the end of the path, that means turrets didn't kill him
+            # In that case the player is loosing health
             world.health -= 1
             world.missed_enemies += 1
 
@@ -58,7 +58,7 @@ class Enemy(pygame.sprite.Sprite):
         else:
             # Once an enemy gets closer to the waypoint, and it is closer then speed,
             # it means it will move closer just a tiny bit.
-            # The result will will that the enemy will land exactly on the waypoint
+            # The result will be that the enemy will land exactly on the waypoint
             if distance != 0:
                 self.current_position += self.movement.normalize() * distance
 
@@ -69,7 +69,7 @@ class Enemy(pygame.sprite.Sprite):
 
     # Rotates the enemy depending on which part of the way he is
     #
-    # Note: if we keep rotating the image over and over, we slowly lose the quality of the image.
+    # Note: if we keep rotating the image over and over, we slowly lose its quality.
     # That's why we have declared the property "original_image" which we will use for the rotation
     def rotate(self):
         # Calculate distance to the next waypoint
@@ -82,7 +82,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.current_position
 
-    # Checks if an emey is still alive
+    # Checks if an enemy is still alive
+    # If  not it removes it from the map
     def is_still_alive(self, world):
         if self.health <= 0:
             world.killed_enemies += 1
