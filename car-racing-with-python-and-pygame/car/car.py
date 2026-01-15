@@ -27,6 +27,12 @@ class AbstractCar:
         self.velocity = min(self.velocity + self.acceleration, self.maximum_velocity)
         self.move()
 
+    def move_backward(self):
+        # When going backward, the car's maximum velocity cannot be the same as when the car moves forward
+        # In reality, a car cannot go the same maximum speed when moving in reverse
+        self.velocity = max(self.velocity - self.acceleration, -self.maximum_velocity / 2)
+        self.move()
+
     def move(self):
         radians = math.radians(self.angle)
         vertical_velocity = math.cos(radians) * self.velocity
@@ -34,11 +40,3 @@ class AbstractCar:
 
         self.x -= horizontal_velocity
         self.y -= vertical_velocity
-
-    # The car's speed is reduced by the half of the acceleration
-    def reduce_speed(self):
-        # If reducing the speed produces a negative value, we don't want to use that one
-        # because the car would go backwards while slowing down.
-        # Instead, we want it to stop, that's why we limit it with 0
-        self.velocity = max(self.velocity - self.acceleration / 2, 0)
-        self.move()
