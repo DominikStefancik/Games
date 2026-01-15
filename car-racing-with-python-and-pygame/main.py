@@ -1,6 +1,5 @@
 import pygame
 import time
-import math
 
 from car.player_car import PlayerCar
 from constants import CAR_IMAGE_SCALE, FINISH_LINE_PATH, FPS, GRASS_PATH, GREEN_CAR_PATH, RED_CAR_PATH, TRACK_IMAGE_SCALE, TRACK_PATH, TRACK_BORDER_PATH
@@ -39,5 +38,20 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
             break
+
+    pressed_keys = pygame.key.get_pressed()
+    car_moved = False
+
+    if pressed_keys[pygame.K_LEFT]:
+        player_car.rotate(left=True)
+    if pressed_keys[pygame.K_RIGHT]:
+        player_car.rotate(right=True)
+    if pressed_keys[pygame.K_UP]:
+        car_moved = True
+        player_car.move_forward()
+
+    # If we stopped pressing the "UP" key, the car should be slowing down
+    if not car_moved:
+        player_car.reduce_speed()
 
 pygame.quit()
