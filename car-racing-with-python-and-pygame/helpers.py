@@ -6,7 +6,13 @@ def scale_image(image, scale_factor):
     return pygame.transform.scale(image, new_size)
 
 
-def draw(windows, images):
+def draw(surface, images, player_car):
     for image, position in images:
         # PyGame coordinates for displaying images start at left top corner
-        windows.blit(image, position)
+        surface.blit(image, position)
+
+    player_car.draw(surface)
+
+    # Update display
+    # Takes all of the changes from a "queue" and displays them
+    pygame.display.update()

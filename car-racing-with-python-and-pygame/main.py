@@ -2,6 +2,7 @@ import pygame
 import time
 import math
 
+from car.player_car import PlayerCar
 from constants import CAR_IMAGE_SCALE, FINISH_LINE_PATH, FPS, GRASS_PATH, GREEN_CAR_PATH, RED_CAR_PATH, TRACK_IMAGE_SCALE, TRACK_PATH, TRACK_BORDER_PATH
 from helpers import draw, scale_image
 
@@ -21,6 +22,7 @@ pygame.display.set_caption("Python Car Racing")
 clock = pygame.time.Clock()
 
 images_to_draw = [(GRASS_IMAGE, (0, 0)), (TRACK_IMAGE, (0, 0))]
+player_car = PlayerCar(RED_CAR_IMAGE, (180, 200), 4, 4)
 
 is_running = True
 while is_running:
@@ -30,11 +32,7 @@ while is_running:
     # with slow or fast processors
     clock.tick(FPS)
 
-    draw(WINDOW, images_to_draw)
-
-    # Update display
-    # Takes all of the changes from a "queue" and displays them
-    pygame.display.update()
+    draw(WINDOW, images_to_draw, player_car)
 
     for event in pygame.event.get():
         # Quit program
