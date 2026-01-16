@@ -36,6 +36,7 @@
 
 ### Python
 * [Tower Defence](tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
+* [Car Racing](car-racing-with-python-and-pygame) - a 2D car racing game implemented with Pygame
 
 ### Java
 * [Pong](pong-with-javafx) - classical game Pong
