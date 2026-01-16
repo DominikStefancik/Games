@@ -1,6 +1,7 @@
 import pygame
 
 from constants import FINISH_LINE_POSITION
+from helpers import render_text_center
 
 def rotate_car_image_center(surface, image, top_left, angle):
     # The method "pygame.transform.rotate" will rotate the image around the top left hand corner
@@ -36,13 +37,17 @@ def move_player_car(player_car):
         player_car.reduce_speed()
 
 
-def handle_cars_collision(computer_car, player_car, border_mask, finish_line_mask):
+def handle_cars_collision(surface, font, computer_car, player_car, border_mask, finish_line_mask, game_info):
     if player_car.collide(border_mask) != None:
         player_car.bounce()
 
     computer_car_finish_line_collision_poi = computer_car.collide(finish_line_mask, *FINISH_LINE_POSITION)
 
     if computer_car_finish_line_collision_poi != None:
+        render_text_center(surface, font, "You lost!")
+        pygame.display.update()
+        pygame.time.wait(5000)
+        game_info.reset_game()
         computer_car.reset_position()
         player_car.reset_position()
 
@@ -58,5 +63,6 @@ def handle_cars_collision(computer_car, player_car, border_mask, finish_line_mas
         if player_car_finish_line_collision_poi[1] == 0:
             player_car.bounce()
         else:
-            computer_car.reset_position()
+            game_info.next_level()
+            computer_car.update_parameters(game_info.level)
             player_car.reset_position()

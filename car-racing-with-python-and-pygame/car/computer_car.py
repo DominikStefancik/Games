@@ -59,3 +59,10 @@ class ComputerCar(AbstractCar):
         if rectangle.collidepoint(*target):
             # If the car collided with the target point update index to the next one
             self.current_path_point_index += 1
+
+    def update_parameters(self, level):
+        self.reset_position()
+        # We need to make sure that the computer car's velocity will not be higher than the player's car velocity.
+        # Otherwise the player will not be able to beat the computer, because its car will be simply faster
+        self.velocity = self.maximum_velocity + (level - 1) * 0.2
+        self.current_path_point_index = 0
