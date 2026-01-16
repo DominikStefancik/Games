@@ -14,10 +14,10 @@ def draw(surface, images, computer_car, player_car, game_info, font, window_heig
         # PyGame coordinates for displaying images start at left top corner
         surface.blit(image, position)
 
-    level_text = font.render(f"Level {game_info.level}", 1, (255, 255, 255))
-    surface.blit(level_text, (10, window_height - level_text.get_height() - 70))
+    round_text = font.render(f"Round {game_info.round}", 1, (255, 255, 255))
+    surface.blit(round_text, (10, window_height - round_text.get_height() - 70))
 
-    time_text = font.render(f"Time: {game_info.get_level_time()}s", 1, (255, 255, 255))
+    time_text = font.render(f"Time: {game_info.get_round_time()}s", 1, (255, 255, 255))
     surface.blit(time_text, (10, window_height - time_text.get_height() - 40))
 
     player_car_velocity_text = font.render(

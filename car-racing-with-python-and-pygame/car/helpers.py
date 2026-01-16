@@ -70,6 +70,6 @@ def handle_cars_collision(
         if player_car_finish_line_collision_poi[1] == 0:
             player_car.bounce()
         else:
-            game_info.next_level()
-            computer_car.update_parameters(game_info.level)
+            game_info.next_round()
+            computer_car.update_parameters(game_info.round)
             player_car.reset_position()

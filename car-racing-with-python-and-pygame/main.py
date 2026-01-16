@@ -79,9 +79,9 @@ while is_running:
         WINDOW_HEIGHT,
     )
 
-    while not game_info.level_started:
+    while not game_info.round_started:
         render_text_center(
-            WINDOW, MAIN_FONT, f"Press any key to start level {game_info.level}!"
+            WINDOW, MAIN_FONT, f"Press any key to start round {game_info.round}!"
         )
         pygame.display.update()
 
@@ -91,7 +91,7 @@ while is_running:
                 break
 
             if event.type == pygame.KEYDOWN:
-                game_info.start_level()
+                game_info.start_round()
 
     for event in pygame.event.get():
         # Quit game

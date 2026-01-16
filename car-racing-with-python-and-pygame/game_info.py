@@ -2,31 +2,31 @@ import time
 
 
 class GameInfo:
-    LEVELS = 10
+    ROUNDS = 10
 
-    def __init__(self, level=1):
-        self.level = level
-        self.level_started = False
-        self.level_start_time = 0
+    def __init__(self, round=1):
+        self.round = round
+        self.round_started = False
+        self.round_start_time = 0
 
-    def next_level(self):
-        self.level += 1
-        self.level_started = False
+    def next_round(self):
+        self.round += 1
+        self.round_started = False
 
     def reset_game(self):
-        self.level = 1
-        self.level_started = False
-        self.level_start_time = 0
+        self.round = 1
+        self.round_started = False
+        self.round_start_time = 0
 
     def is_game_finished(self):
-        return self.level > self.LEVELS
+        return self.round > self.ROUNDS
 
-    def start_level(self):
-        self.level_started = True
-        self.level_start_time = time.time()
+    def start_round(self):
+        self.round_started = True
+        self.round_start_time = time.time()
 
-    def get_level_time(self):
-        if not self.level_started:
+    def get_round_time(self):
+        if not self.round_started:
             return 0
 
-        return round(time.time() - self.level_start_time)
+        return round(time.time() - self.round_start_time)

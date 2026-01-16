@@ -21,7 +21,8 @@ class ComputerCar(AbstractCar):
 
     def draw(self, surface):
         super().draw(surface)
-        self.draw_points(surface)
+        # Uncomment drawing points when testing the game
+        # self.draw_points(surface)
 
     def move(self):
         if self.current_path_point_index >= len(self.path):
