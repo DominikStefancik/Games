@@ -1,5 +1,6 @@
 from .car import AbstractCar
 
+
 class PlayerCar(AbstractCar):
     # The car's speed is reduced by the half of the acceleration
     def reduce_speed(self):

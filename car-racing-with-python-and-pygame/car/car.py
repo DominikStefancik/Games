@@ -3,6 +3,7 @@ import pygame
 
 from .helpers import rotate_car_image_center
 
+
 class AbstractCar:
     def __init__(self, image, starting_position, maximum_velocity, rotation_velocity):
         self.image = image
@@ -32,7 +33,9 @@ class AbstractCar:
     def move_backward(self):
         # When going backward, the car's maximum velocity cannot be the same as when the car moves forward
         # In reality, a car cannot go the same maximum speed when moving in reverse
-        self.velocity = max(self.velocity - self.acceleration, -self.maximum_velocity / 2)
+        self.velocity = max(
+            self.velocity - self.acceleration, -self.maximum_velocity / 2
+        )
         self.move()
 
     def move(self):
@@ -59,7 +62,7 @@ class AbstractCar:
         # The offset is relative to the calling mask
         offset = (int(self.x - other_mask_x), int(self.y - other_mask_y))
         #  The "other_mask" is the calling mask and it will dictate how we calculate the collision overlap
-        point_of_intersection =  other_mask.overlap(car_mask, offset)
+        point_of_intersection = other_mask.overlap(car_mask, offset)
 
         # The point of intersection is None, the two objects didn't collide
         return point_of_intersection

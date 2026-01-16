@@ -3,8 +3,11 @@ import pygame
 
 from .car import AbstractCar
 
+
 class ComputerCar(AbstractCar):
-    def  __init__(self, image, starting_position, maximum_velocity, rotation_velocity, path=[]):
+    def __init__(
+        self, image, starting_position, maximum_velocity, rotation_velocity, path=[]
+    ):
         super().__init__(image, starting_position, maximum_velocity, rotation_velocity)
         # The path is a list of coordinates we want the car to move to
         self.path = path
@@ -54,7 +57,9 @@ class ComputerCar(AbstractCar):
 
     def update_path_point_index(self):
         target = self.path[self.current_path_point_index]
-        rectangle = pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        rectangle = pygame.Rect(
+            self.x, self.y, self.image.get_width(), self.image.get_height()
+        )
 
         if rectangle.collidepoint(*target):
             # If the car collided with the target point update index to the next one

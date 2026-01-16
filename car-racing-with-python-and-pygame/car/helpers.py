@@ -3,6 +3,7 @@ import pygame
 from constants import FINISH_LINE_POSITION
 from helpers import render_text_center
 
+
 def rotate_car_image_center(surface, image, top_left, angle):
     # The method "pygame.transform.rotate" will rotate the image around the top left hand corner
     rotated_image = pygame.transform.rotate(image, angle)
@@ -37,11 +38,15 @@ def move_player_car(player_car):
         player_car.reduce_speed()
 
 
-def handle_cars_collision(surface, font, computer_car, player_car, border_mask, finish_line_mask, game_info):
+def handle_cars_collision(
+    surface, font, computer_car, player_car, border_mask, finish_line_mask, game_info
+):
     if player_car.collide(border_mask) != None:
         player_car.bounce()
 
-    computer_car_finish_line_collision_poi = computer_car.collide(finish_line_mask, *FINISH_LINE_POSITION)
+    computer_car_finish_line_collision_poi = computer_car.collide(
+        finish_line_mask, *FINISH_LINE_POSITION
+    )
 
     if computer_car_finish_line_collision_poi != None:
         render_text_center(surface, font, "You lost!")
@@ -53,7 +58,9 @@ def handle_cars_collision(surface, font, computer_car, player_car, border_mask, 
 
     # The expression "*FINISH_LINE_POSITION" splits the tuple into two separate arguments
     # which are then passed to the method
-    player_car_finish_line_collision_poi = player_car.collide(finish_line_mask, *FINISH_LINE_POSITION)
+    player_car_finish_line_collision_poi = player_car.collide(
+        finish_line_mask, *FINISH_LINE_POSITION
+    )
 
     if player_car_finish_line_collision_poi != None:
         # The point of intersection is a touple of X and Y values representing where the collision happened.

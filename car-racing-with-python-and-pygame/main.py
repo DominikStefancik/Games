@@ -5,15 +5,30 @@ pygame.font.init()
 from car.computer_car import ComputerCar
 from car.player_car import PlayerCar
 from car.helpers import handle_cars_collision, move_player_car
-from car.constants import CAR_IMAGE_SCALE, COMPUTER_CAR_PATH, GREEN_CAR_PATH, RED_CAR_PATH
-from constants import FINISH_LINE_PATH, FINISH_LINE_POSITION, FPS, GRASS_PATH, TRACK_IMAGE_SCALE, TRACK_PATH, TRACK_BORDER_PATH
+from car.constants import (
+    CAR_IMAGE_SCALE,
+    COMPUTER_CAR_PATH,
+    GREEN_CAR_PATH,
+    RED_CAR_PATH,
+)
+from constants import (
+    FINISH_LINE_PATH,
+    FINISH_LINE_POSITION,
+    FPS,
+    GRASS_PATH,
+    TRACK_IMAGE_SCALE,
+    TRACK_PATH,
+    TRACK_BORDER_PATH,
+)
 from helpers import draw, render_text_center, scale_image
 from game_info import GameInfo
 
 # Load images
 GRASS_IMAGE = scale_image(pygame.image.load(GRASS_PATH), 2.5)
 TRACK_IMAGE = scale_image(pygame.image.load(TRACK_PATH), TRACK_IMAGE_SCALE)
-TRACK_BORDER_IMAGE = scale_image(pygame.image.load(TRACK_BORDER_PATH), TRACK_IMAGE_SCALE)
+TRACK_BORDER_IMAGE = scale_image(
+    pygame.image.load(TRACK_BORDER_PATH), TRACK_IMAGE_SCALE
+)
 FINISH_LINE_IMAGE = pygame.image.load(FINISH_LINE_PATH)
 GREEN_CAR_IMAGE = scale_image(pygame.image.load(GREEN_CAR_PATH), CAR_IMAGE_SCALE)
 RED_CAR_IMAGE = scale_image(pygame.image.load(RED_CAR_PATH), CAR_IMAGE_SCALE)
@@ -35,7 +50,12 @@ clock = pygame.time.Clock()
 
 # We are using the track border image to overlap the finish line image
 # so it looks that the finish line doesn't go over the track border.
-images_to_draw = [(GRASS_IMAGE, (0, 0)), (TRACK_IMAGE, (0, 0)), (FINISH_LINE_IMAGE, FINISH_LINE_POSITION), (TRACK_BORDER_IMAGE, (0, 0))]
+images_to_draw = [
+    (GRASS_IMAGE, (0, 0)),
+    (TRACK_IMAGE, (0, 0)),
+    (FINISH_LINE_IMAGE, FINISH_LINE_POSITION),
+    (TRACK_BORDER_IMAGE, (0, 0)),
+]
 
 game_info = GameInfo()
 player_car = PlayerCar(RED_CAR_IMAGE, (180, 200), 4, 4)
@@ -49,10 +69,20 @@ while is_running:
     # with slow or fast processors.
     clock.tick(FPS)
 
-    draw(WINDOW, images_to_draw, computer_car, player_car, game_info, GAME_INFO_FONT, WINDOW_HEIGHT)
+    draw(
+        WINDOW,
+        images_to_draw,
+        computer_car,
+        player_car,
+        game_info,
+        GAME_INFO_FONT,
+        WINDOW_HEIGHT,
+    )
 
     while not game_info.level_started:
-        render_text_center(WINDOW, MAIN_FONT, f"Press any key to start level {game_info.level}!")
+        render_text_center(
+            WINDOW, MAIN_FONT, f"Press any key to start level {game_info.level}!"
+        )
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -76,7 +106,15 @@ while is_running:
     move_player_car(player_car)
     computer_car.move()
 
-    handle_cars_collision(WINDOW, MAIN_FONT, computer_car, player_car, TRACK_BORDER_MASK, FINISH_LINE_MASK, game_info)
+    handle_cars_collision(
+        WINDOW,
+        MAIN_FONT,
+        computer_car,
+        player_car,
+        TRACK_BORDER_MASK,
+        FINISH_LINE_MASK,
+        game_info,
+    )
 
     if game_info.is_game_finished():
         render_text_center(WINDOW, MAIN_FONT, "You won the game!")
