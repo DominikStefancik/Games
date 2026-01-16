@@ -1,4 +1,4 @@
-# Tower Defence with Python and PyGame
+# Tower Defence with Python and Pygame
 
 An implementation of the classical game Tower Defence with Python and the game library [Pygame](https://github.com/pygame/pygame).
 

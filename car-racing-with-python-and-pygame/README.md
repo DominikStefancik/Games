@@ -1,4 +1,4 @@
-# Car Racing with Python and PyGame
+# Car Racing with Python and Pygame
 
 An implementation of a car racing game with Python and the game library [Pygame](https://github.com/pygame/pygame).
 
