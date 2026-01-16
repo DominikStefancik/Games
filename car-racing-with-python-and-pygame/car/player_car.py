@@ -12,6 +12,6 @@ class PlayerCar(AbstractCar):
     # The method called when the car hits (i.e. collides with) the track border.
     # When that happens, we want the car to bounce of the track border.
     def bounce(self):
-        # The car will bounce off with the same velocity which it had when it hit the border
-        self.velocity = -self.velocity
+        # The car will bounce off with the half of velocity which it had when it hit the border
+        self.velocity = -self.velocity / 2
         self.move()

@@ -6,12 +6,13 @@ from .helpers import rotate_car_image_center
 class AbstractCar:
     def __init__(self, image, starting_position, maximum_velocity, rotation_velocity):
         self.image = image
+        self.starting_position = starting_position
+        self.x, self.y = self.starting_position
         self.maximum_velocity = maximum_velocity
         # How quickly can a car rotate
         self.rotation_velocity = rotation_velocity
         self.velocity = 0
         self.angle = 0
-        self.x, self.y = starting_position
         self.acceleration = 0.1
 
     def rotate(self, left=False, right=False):
@@ -62,3 +63,8 @@ class AbstractCar:
 
         # The point of intersection is None, the two objects didn't collide
         return point_of_intersection
+
+    def reset_position(self):
+        self.x, self.y = self.starting_position
+        self.angle = 0
+        self.velocity = 0

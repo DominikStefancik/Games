@@ -7,3 +7,4 @@ TRACK_BORDER_PATH = "assets/images/track/track-border.png"
 FINISH_LINE_PATH = "assets/images/track/finish-line.png"
 
 TRACK_IMAGE_SCALE = 0.9
+FINISH_LINE_POSITION = (130, 250)
