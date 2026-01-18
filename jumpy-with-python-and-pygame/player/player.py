@@ -1,7 +1,7 @@
 import pygame
 
-from constants import WHITE, WINDOW_WIDTH
-from .constants import JUMPY_IMAGE_SCALE, JUMPY_MOVEMENT_DISTANCE
+from constants import WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from .constants import GRAVITY, JUMPY_BOUNCE_VELOCITY, JUMPY_IMAGE_SCALE, JUMPY_MOVEMENT_DISTANCE
 
 
 class Player:
@@ -21,6 +21,7 @@ class Player:
         # The collision would be detected, even though the image and an object didn't directly visibly touched.
         self.rectangle = pygame.Rect(0, 0, self.rectangle_width, self.rectangle_height)
         self.rectangle.center = starting_position
+        self.velocity_y = 0
         self.flip_image = False
 
     def move(self):
@@ -38,13 +39,26 @@ class Player:
             delta_x = JUMPY_MOVEMENT_DISTANCE
             self.flip_image = False
 
+        # Every game loop iteration increase the vertical velocity
+        self.velocity_y += GRAVITY
+        delta_y += self.velocity_y
+
         # Make sure that before we update the player's position he doesn't go off the edge of the window
         if self.rectangle.left + delta_x < 0:
             delta_x = -self.rectangle.left
         if self.rectangle.right + delta_x > WINDOW_WIDTH:
             delta_x = WINDOW_WIDTH - self.rectangle.right
 
-        # Update rectangle position
+        # Check collision with the bottom of the window
+        if self.rectangle.bottom + delta_y > WINDOW_HEIGHT:
+            delta_y = 0
+            # If the player reaches the bottom of the window, we want it to jump up
+            # By setting the velocity to a negative number, each loop the "delta_y" will be lower and lower
+            # which in the end will cause the value of the "self.rectangle.y" to decrease and the player image
+            # will go up
+            self.velocity_y = -JUMPY_BOUNCE_VELOCITY
+
+        # Update rectangle position (and with that automatically the image position)
         self.rectangle.x += delta_x
         self.rectangle.y += delta_y
 
