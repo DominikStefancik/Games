@@ -53,7 +53,7 @@ def handle_cars_collision(
         pygame.display.update()
         pygame.time.wait(5000)
         game_info.reset_game()
-        computer_car.reset_position()
+        computer_car.update_parameters(game_info.round)
         player_car.reset_position()
 
     # The expression "*FINISH_LINE_POSITION" splits the tuple into two separate arguments

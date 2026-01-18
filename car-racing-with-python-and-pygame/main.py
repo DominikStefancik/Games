@@ -99,9 +99,10 @@ while is_running:
             is_running = False
             break
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_position = pygame.mouse.get_pos()
-            computer_car.path.append(mouse_position)
+        # Uncomment adding points to the path when testing the game
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     mouse_position = pygame.mouse.get_pos()
+        #     computer_car.path.append(mouse_position)
 
     move_player_car(player_car)
     computer_car.move()
