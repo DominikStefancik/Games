@@ -1,6 +1,8 @@
 import pygame
 
 from constants import BACKGROUND_IMAGE_PATH, WINDOW_HEIGHT, WINDOW_WIDTH
+from player.constants import JUMPY_IMAGE_PATH
+from player.player import Player
 
 # Initialise Pygame
 pygame.init()
@@ -11,6 +13,10 @@ pygame.display.set_caption("Python Jumpy")
 
 # Load images
 background_image = pygame.image.load(BACKGROUND_IMAGE_PATH).convert_alpha()
+jumpy_image = pygame.image.load(JUMPY_IMAGE_PATH).convert_alpha()
+
+# The operator "//" ensures that a number division returns always an integer
+jumpy = Player(jumpy_image, (WINDOW_WIDTH // 2, WINDOW_HEIGHT - 150))
 
 is_running = True
 # Game loop
@@ -19,6 +25,9 @@ while is_running:
     # The second argument is a tuple with coordinates where the top left corner of the image
     # will be placed.
     WINDOW.blit(background_image, (0, 0))
+
+    # Draw sprites
+    jumpy.draw(WINDOW)
 
 
     # Event handler
