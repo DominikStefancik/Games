@@ -24,7 +24,7 @@ class Player:
         self.velocity_y = 0
         self.flip_image = False
 
-    def move(self):
+    def move(self, platform_group):
         # Reset variables
         delta_x = 0
         delta_y = 0
@@ -48,6 +48,24 @@ class Player:
             delta_x = -self.rectangle.left
         if self.rectangle.right + delta_x > WINDOW_WIDTH:
             delta_x = WINDOW_WIDTH - self.rectangle.right
+
+        # Check collision with platforms
+        for platform in platform_group:
+            # We are interested only in collisions in the vertical direction
+            # Check if the platform's rectangle would have collided with the player's rectangle
+            # after we update its position with delta_y
+            if platform.rect.colliderect(self.rectangle.x, self.rectangle.y + delta_y, self.rectangle_width, self.rectangle_height):
+                # Check if the bottom of the player's image has lower value than the platform vertical value
+                # If that is true, it means the player is above the platform
+                # (because in Pygame the Y-coordinate starts at the top left corner and increaces when going to
+                # the bottom of the game window)
+                if self.rectangle.bottom < platform.rect.centery:
+                    # We have to check only if the player is falling
+                    # If the "self.velocity_y" is negative number, that means the player is jumping up
+                    if self.velocity_y > 0:
+                        self.rectangle.bottom = platform.rect.top
+                        delta_y = 0
+                        self.velocity_y = -JUMPY_BOUNCE_VELOCITY
 
         # Check collision with the bottom of the window
         if self.rectangle.bottom + delta_y > WINDOW_HEIGHT:
