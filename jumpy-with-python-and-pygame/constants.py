@@ -7,3 +7,5 @@ BACKGROUND_IMAGE_PATH = "assets/images/background.png"
 
 # Colours
 WHITE = (255, 255, 255)
+
+VERTICAL_SCROLL_THRESSHOLD = 200

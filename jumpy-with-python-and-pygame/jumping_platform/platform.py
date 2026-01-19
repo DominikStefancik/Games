@@ -8,3 +8,7 @@ class Platform(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(image, (width, 10))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position
+
+    def update(self, scroll):
+        # Update platform's vertical position depending on if we scroll the window or not
+        self.rect.y += scroll

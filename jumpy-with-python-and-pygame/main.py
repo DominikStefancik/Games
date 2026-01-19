@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from constants import BACKGROUND_IMAGE_PATH, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import BACKGROUND_IMAGE_PATH, FPS, VERTICAL_SCROLL_THRESSHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
 from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
 from jumping_platform.platform import Platform
 from player.constants import JUMPY_IMAGE_PATH
@@ -13,6 +13,9 @@ pygame.init()
 
 # Create a clock to limit the frame rate
 clock = pygame.time.Clock()
+
+# Game variables
+window_scroll = 0
 
 # Create a game window
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -48,11 +51,16 @@ while is_running:
     # will be placed.
     WINDOW.blit(background_image, (0, 0))
 
+    # Draw temporary scroll threshold
+    pygame.draw.line(WINDOW, WHITE, (0, VERTICAL_SCROLL_THRESSHOLD), (WINDOW_WIDTH, VERTICAL_SCROLL_THRESSHOLD))
+
+    platform_group.update(window_scroll)
+
     # Draw sprites
     platform_group.draw(WINDOW)
     jumpy.draw(WINDOW)
 
-    jumpy.move(platform_group)
+    window_scroll = jumpy.move(platform_group)
 
     # Event handler
     # Events in Pygame are "stored" in an event queue

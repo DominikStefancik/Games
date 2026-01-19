@@ -1,6 +1,6 @@
 import pygame
 
-from constants import WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import VERTICAL_SCROLL_THRESSHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
 from .constants import GRAVITY, JUMPY_BOUNCE_VELOCITY, JUMPY_IMAGE_SCALE, JUMPY_MOVEMENT_DISTANCE
 
 
@@ -28,6 +28,7 @@ class Player:
         # Reset variables
         delta_x = 0
         delta_y = 0
+        scroll = 0
 
         # Process key presses
         key = pygame.key.get_pressed()
@@ -76,9 +77,22 @@ class Player:
             # will go up
             self.velocity_y = -JUMPY_BOUNCE_VELOCITY
 
+        # Check if the player has bounced on the top of the scrolling threshold
+        # If that happens, we need to scroll everything relative to the player's vertical position
+        if self.rectangle.top <= VERTICAL_SCROLL_THRESSHOLD:
+            # Only update the scroll when the player is jumping up
+            if self.velocity_y < 0:
+                # If the player is moving up, everything else is moving down
+                scroll = -delta_y
+
         # Update rectangle position (and with that automatically the image position)
         self.rectangle.x += delta_x
-        self.rectangle.y += delta_y
+        # When the window scroll should happen, we want the player to freze for a moment until the scrolling is done
+        # By adding "delta_y + scroll" we get 0, in case when the window should scroll ->
+        # this is how the "freeze" effect will be achieved
+        self.rectangle.y += delta_y + scroll
+
+        return scroll
 
 
     def draw(self, surface):
