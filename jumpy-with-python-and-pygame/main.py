@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from constants import BACKGROUND_IMAGE_HEIGHT, BACKGROUND_IMAGE_PATH, FPS, VERTICAL_SCROLL_THRESSHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import BACKGROUND_IMAGE_HEIGHT, BACKGROUND_IMAGE_PATH, FPS, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
 from helpers import draw_background
 from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
 from jumping_platform.platform import Platform
@@ -34,13 +34,9 @@ jumpy = Player(jumpy_image, (WINDOW_WIDTH // 2, WINDOW_HEIGHT - 150))
 # Create Sprite groups
 platform_group = pygame.sprite.Group()
 
-# Create temporary platforms
-for index in range(MAX_PLATFORMS_COUNT):
-    width = random.randint(40, 60)
-    x = random.randint(0, WINDOW_WIDTH - width)
-    y = index * random.randint(80, 120)
-    platform = Platform(platform_image, (x, y), width)
-    platform_group.add(platform)
+# Create starting platform
+platform = Platform(platform_image, (WINDOW_WIDTH // 2 - 50, WINDOW_HEIGHT - 50), 100)
+platform_group.add(platform)
 
 is_running = True
 # Game loop
@@ -59,8 +55,15 @@ while is_running:
 
     draw_background(WINDOW, background_image, background_scroll)
 
-    # Draw temporary scroll threshold
-    pygame.draw.line(WINDOW, WHITE, (0, VERTICAL_SCROLL_THRESSHOLD), (WINDOW_WIDTH, VERTICAL_SCROLL_THRESSHOLD))
+    # Generate platforms
+    if len(platform_group) < MAX_PLATFORMS_COUNT:
+        platform_width = random.randint(40, 60)
+        platform_x = random.randint(0, WINDOW_WIDTH - platform_width)
+        # Take the Y-coordinate of the previously created platform
+        # and set the Y-coordinate of the next platform depending on the previous one
+        platform_y = platform.rect.y - random.randint(80, 120)
+        platform = Platform(platform_image, (platform_x, platform_y), platform_width)
+        platform_group.add(platform)
 
     platform_group.update(window_scroll)
 
@@ -77,7 +80,7 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
 
-    # By updating diplay window we tell Pygame to execute all displaying methods, like "blit()"
+    # By updating display window we tell Pygame to execute all displaying methods, like "blit()"
     pygame.display.update()
 
 pygame.quit()
