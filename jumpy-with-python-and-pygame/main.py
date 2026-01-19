@@ -2,8 +2,16 @@ import random
 
 import pygame
 
-from constants import BACKGROUND_IMAGE_HEIGHT, BACKGROUND_IMAGE_PATH, FPS, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
-from helpers import draw_background, draw_text
+from constants import (
+    BACKGROUND_IMAGE_HEIGHT,
+    BACKGROUND_IMAGE_PATH,
+    FPS,
+    WHITE,
+    WINDOW_FADE_COUNTER_TRANSITION,
+    WINDOW_HEIGHT,
+    WINDOW_WIDTH,
+)
+from helpers import draw_background, draw_fading_rectangles, draw_text
 from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
 from jumping_platform.helpers import create_starting_platform
 from jumping_platform.platform import Platform
@@ -21,6 +29,7 @@ window_scroll = 0
 background_scroll = 0
 game_score = 0
 is_game_over = False
+window_fade_counter = 0
 
 # Create a game window
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -71,7 +80,9 @@ while is_running:
             # Take the Y-coordinate of the previously created platform
             # and set the Y-coordinate of the next platform depending on the previous one
             platform_y = platform.rect.y - random.randint(80, 120)
-            platform = Platform(platform_image, (platform_x, platform_y), platform_width)
+            platform = Platform(
+                platform_image, (platform_x, platform_y), platform_width
+            )
             platform_group.add(platform)
 
         platform_group.update(window_scroll)
@@ -85,7 +96,11 @@ while is_running:
         # Check if the game is over
         if jumpy.rectangle.top > WINDOW_HEIGHT:
             is_game_over = True
-    else: # The game is over
+    else:  # The game is over
+        if window_fade_counter < WINDOW_WIDTH:
+            window_fade_counter += WINDOW_FADE_COUNTER_TRANSITION
+            draw_fading_rectangles(WINDOW, window_fade_counter)
+
         draw_text(WINDOW, BIG_FONT, "GAME OVER!", WHITE, (130, 200))
         draw_text(WINDOW, BIG_FONT, f"SCORE: {str(game_score)}", WHITE, (130, 250))
         draw_text(WINDOW, BIG_FONT, "PRESS SPACE TO PLAY AGAIN", WHITE, (60, 300))
@@ -98,6 +113,7 @@ while is_running:
             is_game_over = False
             game_score = 0
             window_scroll = 0
+            window_fade_counter = 0
 
             # Reposition jumpy
             jumpy.rectangle.center = JUMPY_INITIAL_POSITION
@@ -106,8 +122,6 @@ while is_running:
             platform_group.empty()
             platform = create_starting_platform(platform_image)
             platform_group.add(platform)
-
-
 
     # Event handler
     # Events in Pygame are "stored" in an event queue

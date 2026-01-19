@@ -8,6 +8,9 @@ BACKGROUND_IMAGE_PATH = "assets/images/background.png"
 BACKGROUND_IMAGE_HEIGHT = 600
 
 # Colours
+BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 VERTICAL_SCROLL_THRESSHOLD = 200
+WINDOW_FADE_COUNTER_TRANSITION = 5 # the transition will happen by 5 pixels
+WINDOW_FADE_RECTANGLE_COUNT = 6
