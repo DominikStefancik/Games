@@ -3,6 +3,9 @@ import pygame
 from constants import (
     BACKGROUND_IMAGE_HEIGHT,
     BLACK,
+    PANEL_COLOR,
+    SCORE_PANEL_HEIGHT,
+    WHITE,
     WINDOW_FADE_RECTANGLE_COUNT,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
@@ -21,6 +24,12 @@ def draw_text(surface, font, text, colour, position):
     # First we have to convert text into an image
     image = font.render(text, True, colour)
     surface.blit(image, position)
+
+
+def draw_score_panel(surface, font, score):
+    pygame.draw.rect(surface, PANEL_COLOR, (0, 0, WINDOW_WIDTH, SCORE_PANEL_HEIGHT))
+    pygame.draw.line(surface, WHITE, (0, SCORE_PANEL_HEIGHT), (WINDOW_WIDTH, SCORE_PANEL_HEIGHT), 2)
+    draw_text(surface, font, f"SCORE: {score}", WHITE, (10, 3))
 
 
 def draw_fading_rectangles(surface, window_fade_counter):

@@ -1,6 +1,6 @@
 import pygame
 
-from constants import VERTICAL_SCROLL_THRESSHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import VERTICAL_SCROLL_THRESHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
 from .constants import GRAVITY, JUMPY_BOUNCE_VELOCITY, JUMPY_IMAGE_SCALE, JUMPY_MOVEMENT_DISTANCE
 
 
@@ -74,7 +74,7 @@ class Player:
 
         # Check if the player has bounced on the top of the scrolling threshold
         # If that happens, we need to scroll everything relative to the player's vertical position
-        if self.rectangle.top <= VERTICAL_SCROLL_THRESSHOLD:
+        if self.rectangle.top <= VERTICAL_SCROLL_THRESHOLD:
             # Only update the scroll when the player is jumping up
             if self.velocity_y < 0:
                 # If the player is moving up, everything else is moving down

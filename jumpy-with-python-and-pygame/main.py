@@ -1,4 +1,5 @@
 import random
+import os
 
 import pygame
 
@@ -6,12 +7,13 @@ from constants import (
     BACKGROUND_IMAGE_HEIGHT,
     BACKGROUND_IMAGE_PATH,
     FPS,
+    VERTICAL_SCROLL_THRESHOLD,
     WHITE,
     WINDOW_FADE_COUNTER_TRANSITION,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
-from helpers import draw_background, draw_fading_rectangles, draw_text
+from helpers import draw_background, draw_fading_rectangles, draw_score_panel, draw_text
 from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
 from jumping_platform.helpers import create_starting_platform
 from jumping_platform.platform import Platform
@@ -27,9 +29,16 @@ clock = pygame.time.Clock()
 # Game variables
 window_scroll = 0
 background_scroll = 0
-game_score = 0
+current_score = 0
 is_game_over = False
 window_fade_counter = 0
+
+if os.path.exists("best_score.txt"):
+    # Open the file for reading
+    with open("best_score.txt", "r") as file:
+        best_score = int(file.read())
+else:
+    best_score = 0
 
 # Create a game window
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -87,11 +96,36 @@ while is_running:
 
         platform_group.update(window_scroll)
 
+        # Whenever the player hits the threshold and we need to scroll the window, update score
+        if window_scroll > 0:
+            current_score += window_scroll
+
+        # Draw a line where the previous best score was
+        pygame.draw.line(
+            WINDOW,
+            WHITE,
+            (0, current_score - best_score + VERTICAL_SCROLL_THRESHOLD),
+            (WINDOW_WIDTH, current_score - best_score + VERTICAL_SCROLL_THRESHOLD),
+            3,
+        )
+        draw_text(
+            WINDOW,
+            SMALL_FONT,
+            f"BEST SCORE: {best_score}",
+            WHITE,
+            (
+                5,
+                current_score - best_score + VERTICAL_SCROLL_THRESHOLD + 5,
+            ),
+        )
+
         # Draw sprites
         platform_group.draw(WINDOW)
         jumpy.draw(WINDOW)
 
         window_scroll = jumpy.move(platform_group)
+
+        draw_score_panel(WINDOW, SMALL_FONT, current_score)
 
         # Check if the game is over
         if jumpy.rectangle.top > WINDOW_HEIGHT:
@@ -100,28 +134,36 @@ while is_running:
         if window_fade_counter < WINDOW_WIDTH:
             window_fade_counter += WINDOW_FADE_COUNTER_TRANSITION
             draw_fading_rectangles(WINDOW, window_fade_counter)
+        else:  # after the fade effect is complete, show text
+            draw_text(WINDOW, BIG_FONT, "GAME OVER!", WHITE, (130, 200))
+            draw_text(
+                WINDOW, BIG_FONT, f"SCORE: {str(current_score)}", WHITE, (130, 250)
+            )
+            draw_text(WINDOW, BIG_FONT, "PRESS SPACE TO PLAY AGAIN", WHITE, (60, 300))
 
-        draw_text(WINDOW, BIG_FONT, "GAME OVER!", WHITE, (130, 200))
-        draw_text(WINDOW, BIG_FONT, f"SCORE: {str(game_score)}", WHITE, (130, 250))
-        draw_text(WINDOW, BIG_FONT, "PRESS SPACE TO PLAY AGAIN", WHITE, (60, 300))
+            if current_score > best_score:
+                best_score = current_score
+                # Open the file for writting
+                with open("best_score.txt", "w") as file:
+                    file.write(str(best_score))
 
-        # Process key presses
-        key = pygame.key.get_pressed()
+            # Process key presses
+            key = pygame.key.get_pressed()
 
-        if key[pygame.K_SPACE]:
-            # Reset game variables
-            is_game_over = False
-            game_score = 0
-            window_scroll = 0
-            window_fade_counter = 0
+            if key[pygame.K_SPACE]:
+                # Reset game variables
+                is_game_over = False
+                current_score = 0
+                window_scroll = 0
+                window_fade_counter = 0
 
-            # Reposition jumpy
-            jumpy.rectangle.center = JUMPY_INITIAL_POSITION
+                # Reposition jumpy
+                jumpy.rectangle.center = JUMPY_INITIAL_POSITION
 
-            # Reset platforms
-            platform_group.empty()
-            platform = create_starting_platform(platform_image)
-            platform_group.add(platform)
+                # Reset platforms
+                platform_group.empty()
+                platform = create_starting_platform(platform_image)
+                platform_group.add(platform)
 
     # Event handler
     # Events in Pygame are "stored" in an event queue
