@@ -2,7 +2,8 @@ import random
 
 import pygame
 
-from constants import BACKGROUND_IMAGE_PATH, FPS, VERTICAL_SCROLL_THRESSHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import BACKGROUND_IMAGE_HEIGHT, BACKGROUND_IMAGE_PATH, FPS, VERTICAL_SCROLL_THRESSHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from helpers import draw_background
 from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
 from jumping_platform.platform import Platform
 from player.constants import JUMPY_IMAGE_PATH
@@ -16,6 +17,7 @@ clock = pygame.time.Clock()
 
 # Game variables
 window_scroll = 0
+background_scroll = 0
 
 # Create a game window
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -46,10 +48,16 @@ while is_running:
     # 60 frames per second
     clock.tick(FPS)
 
-    # Draw background
-    # The second argument is a tuple with coordinates where the top left corner of the image
-    # will be placed.
-    WINDOW.blit(background_image, (0, 0))
+    # The "background_scroll" will keep increasing, whereas the "window_scroll" will keep reseting to 0
+    background_scroll += window_scroll
+
+    # This ensures that the position of the second image we added in the "draw_background" function
+    # will be reset after it has been scrolled down.
+    # With this we achieve an infinite background scrolling.
+    if background_scroll >= BACKGROUND_IMAGE_HEIGHT:
+        background_scroll = 0
+
+    draw_background(WINDOW, background_image, background_scroll)
 
     # Draw temporary scroll threshold
     pygame.draw.line(WINDOW, WHITE, (0, VERTICAL_SCROLL_THRESSHOLD), (WINDOW_WIDTH, VERTICAL_SCROLL_THRESSHOLD))

@@ -5,6 +5,8 @@ FPS = 60
 # Images paths
 BACKGROUND_IMAGE_PATH = "assets/images/background.png"
 
+BACKGROUND_IMAGE_HEIGHT = 600
+
 # Colours
 WHITE = (255, 255, 255)
 
