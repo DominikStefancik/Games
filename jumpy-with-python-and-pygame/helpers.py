@@ -9,3 +9,8 @@ def draw_background(surface, background_image, scroll):
     surface.blit(background_image, (0, 0 + scroll))
     # We add the same background picture twice to achieve an infinite scrolling effect
     surface.blit(background_image, (0, -BACKGROUND_IMAGE_HEIGHT + scroll))
+
+def draw_text(surface, font, text, colour, position):
+    # First we have to convert text into an image
+    image = font.render(text, True, colour)
+    surface.blit(image, position)

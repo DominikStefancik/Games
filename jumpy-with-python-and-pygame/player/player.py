@@ -66,16 +66,11 @@ class Player:
                     if self.velocity_y > 0:
                         self.rectangle.bottom = platform.rect.top
                         delta_y = 0
+                        # If the player reaches the top of the platform while falling, we want him to jump up.
+                        # By setting the velocity to a negative number, each loop the "delta_y" will be lower
+                        # and lower which in the end will cause the value of the "self.rectangle.y" to decrease
+                        # and the player image will go up
                         self.velocity_y = -JUMPY_BOUNCE_VELOCITY
-
-        # Check collision with the bottom of the window
-        if self.rectangle.bottom + delta_y > WINDOW_HEIGHT:
-            delta_y = 0
-            # If the player reaches the bottom of the window, we want it to jump up
-            # By setting the velocity to a negative number, each loop the "delta_y" will be lower and lower
-            # which in the end will cause the value of the "self.rectangle.y" to decrease and the player image
-            # will go up
-            self.velocity_y = -JUMPY_BOUNCE_VELOCITY
 
         # Check if the player has bounced on the top of the scrolling threshold
         # If that happens, we need to scroll everything relative to the player's vertical position
