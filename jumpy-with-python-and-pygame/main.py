@@ -136,8 +136,21 @@ while is_running:
         draw_score_panel(WINDOW, SMALL_FONT, current_score)
 
         # Check if the game is over
-        if jumpy.rectangle.top > WINDOW_HEIGHT:
+        if jumpy.rect.top > WINDOW_HEIGHT:
             is_game_over = True
+
+        # Check for the collision with birds
+        #
+        # First, check if the collision happened depending on the objects' hit box rectangle.
+        # If the rectangles collide, only then check more precise collision depending on the objects's mask.
+        #
+        # Note: This is done for optimisation, because calculating collision depending on the objects's mask
+        # takes more time, because the detection is checked by each objects' pixels.
+        if pygame.sprite.spritecollide(jumpy, bird_group, False):
+            # If we provide the argument "pygame.sprite.collide_mask",it will calculate collision
+            # depending on the objects' mask.
+            if pygame.sprite.spritecollide(jumpy, bird_group, False, pygame.sprite.collide_mask):
+                is_game_over = True
     else:  # The game is over
         if window_fade_counter < WINDOW_WIDTH:
             window_fade_counter += WINDOW_FADE_COUNTER_TRANSITION
@@ -166,7 +179,7 @@ while is_running:
                 window_fade_counter = 0
 
                 # Reposition jumpy
-                jumpy.rectangle.center = JUMPY_INITIAL_POSITION
+                jumpy.rect.center = JUMPY_INITIAL_POSITION
 
                 # Reset platforms
                 platform_group.empty()
