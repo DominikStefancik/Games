@@ -2,7 +2,14 @@ import random
 import pygame
 
 from constants import BLACK, WINDOW_HEIGHT, WINDOW_WIDTH
-from .constants import BIRD_ANIMATION_COOLDOWM, BIRD_FRAMES_COUNT, BIRD_FRAME_SIZE, BIRD_MOVEMENT_LEFT_TO_RIGHT, BIRD_MOVEMENT_RIGHT_TO_LEFT
+from .constants import (
+    BIRD_ANIMATION_COOLDOWM,
+    BIRD_FRAMES_COUNT,
+    BIRD_FRAME_SIZE,
+    BIRD_MOVEMENT_LEFT_TO_RIGHT,
+    BIRD_MOVEMENT_RIGHT_TO_LEFT,
+)
+
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, sprite_sheet, y_position, scale, is_rotating):
@@ -12,7 +19,9 @@ class Bird(pygame.sprite.Sprite):
         self.frame_index = 0
         self.animation_time = pygame.time.get_ticks()
 
-        self.movement_direction = random.choice([BIRD_MOVEMENT_RIGHT_TO_LEFT, BIRD_MOVEMENT_LEFT_TO_RIGHT])
+        self.movement_direction = random.choice(
+            [BIRD_MOVEMENT_RIGHT_TO_LEFT, BIRD_MOVEMENT_LEFT_TO_RIGHT]
+        )
         self.flip = False
 
         self.process_sprite_sheet(sprite_sheet, scale)
@@ -34,7 +43,9 @@ class Bird(pygame.sprite.Sprite):
 
     def process_sprite_sheet(self, sprite_sheet, scale):
         for animation_frame in range(BIRD_FRAMES_COUNT):
-            frame = sprite_sheet.get_frame_image(animation_frame, BIRD_FRAME_SIZE, BIRD_FRAME_SIZE, scale, BLACK)
+            frame = sprite_sheet.get_frame_image(
+                animation_frame, BIRD_FRAME_SIZE, BIRD_FRAME_SIZE, scale, BLACK
+            )
             frame = pygame.transform.flip(frame, self.flip, False)
             frame.set_colorkey(BLACK)
             self.animation_frame_list.append(frame)
@@ -62,10 +73,11 @@ class Bird(pygame.sprite.Sprite):
         # Update bird's vertical position depending on if we scroll the window or not
         self.rect.y += scroll
 
-
         if self.is_rotating:
             reached_left_edge = self.movement_direction == -1 and self.rect.left < 0
-            reached_right_edge = self.movement_direction == 1 and self.rect.right > WINDOW_WIDTH
+            reached_right_edge = (
+                self.movement_direction == 1 and self.rect.right > WINDOW_WIDTH
+            )
             # Check if the bird has reached the edge with the facing side
             if reached_left_edge or reached_right_edge:
                 self.movement_direction *= -1

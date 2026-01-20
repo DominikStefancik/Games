@@ -28,7 +28,9 @@ def draw_text(surface, font, text, colour, position):
 
 def draw_score_panel(surface, font, score):
     pygame.draw.rect(surface, PANEL_COLOR, (0, 0, WINDOW_WIDTH, SCORE_PANEL_HEIGHT))
-    pygame.draw.line(surface, WHITE, (0, SCORE_PANEL_HEIGHT), (WINDOW_WIDTH, SCORE_PANEL_HEIGHT), 2)
+    pygame.draw.line(
+        surface, WHITE, (0, SCORE_PANEL_HEIGHT), (WINDOW_WIDTH, SCORE_PANEL_HEIGHT), 2
+    )
     draw_text(surface, font, f"SCORE: {score}", WHITE, (10, 3))
 
 

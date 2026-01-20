@@ -1,7 +1,12 @@
 import pygame
 
 from constants import VERTICAL_SCROLL_THRESHOLD, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
-from .constants import GRAVITY, JUMPY_BOUNCE_VELOCITY, JUMPY_IMAGE_SCALE, JUMPY_MOVEMENT_DISTANCE
+from .constants import (
+    GRAVITY,
+    JUMPY_BOUNCE_VELOCITY,
+    JUMPY_IMAGE_SCALE,
+    JUMPY_MOVEMENT_DISTANCE,
+)
 
 
 class Player:
@@ -55,7 +60,9 @@ class Player:
             # We are interested only in collisions in the vertical direction
             # Check if the platform's rectangle would have collided with the player's rectangle
             # after we update its position with delta_y
-            if platform.rect.colliderect(self.rect.x, self.rect.y + delta_y, self.rect_width, self.rect_height):
+            if platform.rect.colliderect(
+                self.rect.x, self.rect.y + delta_y, self.rect_width, self.rect_height
+            ):
                 # Check if the bottom of the player's image has lower value than the platform vertical value
                 # If that is true, it means the player is above the platform
                 # (because in Pygame the Y-coordinate starts at the top left corner and increaces when going to
@@ -93,6 +100,8 @@ class Player:
 
         return scroll
 
-
     def draw(self, surface):
-        surface.blit(pygame.transform.flip(self.image, self.flip_image, False), (self.rect.x - 8, self.rect.y - 5))
+        surface.blit(
+            pygame.transform.flip(self.image, self.flip_image, False),
+            (self.rect.x - 8, self.rect.y - 5),
+        )

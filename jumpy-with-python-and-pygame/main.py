@@ -162,7 +162,9 @@ while is_running:
         if pygame.sprite.spritecollide(jumpy, bird_group, False):
             # If we provide the argument "pygame.sprite.collide_mask",it will calculate collision
             # depending on the objects' mask.
-            if pygame.sprite.spritecollide(jumpy, bird_group, False, pygame.sprite.collide_mask):
+            if pygame.sprite.spritecollide(
+                jumpy, bird_group, False, pygame.sprite.collide_mask
+            ):
                 is_game_over = True
                 death_sound.play()
     else:  # The game is over

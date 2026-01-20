@@ -5,6 +5,7 @@ import pygame
 from constants import WINDOW_HEIGHT, WINDOW_WIDTH
 from .constants import PLATFORM_MOVE_COUNTER_LIMIT
 
+
 class Platform(pygame.sprite.Sprite):
     def __init__(self, image, position, width, is_moving=False):
         pygame.sprite.Sprite.__init__(self)
@@ -25,8 +26,13 @@ class Platform(pygame.sprite.Sprite):
 
         # Change platform's direction if it reached the move limit
         # or it reached the edge of the window
-        if self.move_counter >= PLATFORM_MOVE_COUNTER_LIMIT or self.rect.left < 0 or self.rect.right > WINDOW_WIDTH:
-            self.movement_direction *= -1 # the movement direction changes to the opposite
+        if (
+            self.move_counter >= PLATFORM_MOVE_COUNTER_LIMIT
+            or self.rect.left < 0
+            or self.rect.right > WINDOW_WIDTH
+        ):
+            # The movement direction changes to the opposite
+            self.movement_direction *= -1
             self.move_counter = 0
 
         # Update platform's vertical position depending on if we scroll the window or not
