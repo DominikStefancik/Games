@@ -1,4 +1,3 @@
-import random
 import os
 
 import pygame
@@ -13,12 +12,15 @@ from constants import (
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
+from bird.constants import BIRD_IMAGE_PATH, MAX_BIRDS_COUNT
+from bird.helpers import create_bird
 from helpers import draw_background, draw_fading_rectangles, draw_score_panel, draw_text
-from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH, PLATFORM_START_MOVING_THRESHOLD
-from jumping_platform.helpers import create_starting_platform
+from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
+from jumping_platform.helpers import create_starting_platform, create_platform
 from jumping_platform.platform import Platform
 from player.constants import JUMPY_IMAGE_PATH
 from player.player import Player
+from spritesheet import SpriteSheet
 
 # Initialise Pygame
 pygame.init()
@@ -48,6 +50,8 @@ pygame.display.set_caption("Python Jumpy")
 background_image = pygame.image.load(BACKGROUND_IMAGE_PATH).convert_alpha()
 jumpy_image = pygame.image.load(JUMPY_IMAGE_PATH).convert_alpha()
 platform_image = pygame.image.load(PLATFORM_IMAGE_PATH).convert_alpha()
+bird_image = pygame.image.load(BIRD_IMAGE_PATH).convert_alpha()
+bird_sprite_sheet = SpriteSheet(bird_image)
 
 # Define fonts
 SMALL_FONT = pygame.font.SysFont("Lucida Sans", 20)
@@ -59,6 +63,7 @@ jumpy = Player(jumpy_image, JUMPY_INITIAL_POSITION)
 
 # Create Sprite groups
 platform_group = pygame.sprite.Group()
+bird_group = pygame.sprite.Group()
 
 # Create starting platform
 platform = create_starting_platform(platform_image)
@@ -82,26 +87,21 @@ while is_running:
 
         draw_background(WINDOW, background_image, background_scroll)
 
-        # Generate platforms
+        # Create platforms
         if len(platform_group) < MAX_PLATFORMS_COUNT:
-            platform_width = random.randint(40, 60)
-            platform_x = random.randint(0, WINDOW_WIDTH - platform_width)
-            # Take the Y-coordinate of the previously created platform
-            # and set the Y-coordinate of the next platform depending on the previous one
-            platform_y = platform.rect.y - random.randint(80, 120)
-            platform_type = random.randint(1,2)
-
-            if platform_type == 1 and current_score > PLATFORM_START_MOVING_THRESHOLD:
-                is_moving = True
-            else:
-                is_moving = False
-
-            platform = Platform(
-                platform_image, (platform_x, platform_y), platform_width, is_moving
-            )
+            platform = create_platform(platform_image, platform, current_score)
             platform_group.add(platform)
 
         platform_group.update(window_scroll)
+
+        # Create birds
+        if len(bird_group) < MAX_BIRDS_COUNT:
+            bird = create_bird(bird_sprite_sheet, current_score)
+
+            if bird:
+                bird_group.add(bird)
+
+        bird_group.update(window_scroll)
 
         # Whenever the player hits the threshold and we need to scroll the window, update score
         if window_scroll > 0:
@@ -128,6 +128,7 @@ while is_running:
 
         # Draw sprites
         platform_group.draw(WINDOW)
+        bird_group.draw(WINDOW)
         jumpy.draw(WINDOW)
 
         window_scroll = jumpy.move(platform_group)
@@ -171,6 +172,9 @@ while is_running:
                 platform_group.empty()
                 platform = create_starting_platform(platform_image)
                 platform_group.add(platform)
+
+                # Reset birds
+                bird_group.empty()
 
     # Event handler
     # Events in Pygame are "stored" in an event queue
