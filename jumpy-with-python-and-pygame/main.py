@@ -14,7 +14,7 @@ from constants import (
     WINDOW_WIDTH,
 )
 from helpers import draw_background, draw_fading_rectangles, draw_score_panel, draw_text
-from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
+from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH, PLATFORM_START_MOVING_THRESHOLD
 from jumping_platform.helpers import create_starting_platform
 from jumping_platform.platform import Platform
 from player.constants import JUMPY_IMAGE_PATH
@@ -89,8 +89,15 @@ while is_running:
             # Take the Y-coordinate of the previously created platform
             # and set the Y-coordinate of the next platform depending on the previous one
             platform_y = platform.rect.y - random.randint(80, 120)
+            platform_type = random.randint(1,2)
+
+            if platform_type == 1 and current_score > PLATFORM_START_MOVING_THRESHOLD:
+                is_moving = True
+            else:
+                is_moving = False
+
             platform = Platform(
-                platform_image, (platform_x, platform_y), platform_width
+                platform_image, (platform_x, platform_y), platform_width, is_moving
             )
             platform_group.add(platform)
 
