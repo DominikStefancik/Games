@@ -36,7 +36,7 @@
 
 ### Python
 * [Car Racing](car-racing-with-python-and-pygame) - 2D car racing game implemented with Pygame
-* [Jumpy](car-racing-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
+* [Jumpy](jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
 * [Tower Defence](tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
 
 ### Java
