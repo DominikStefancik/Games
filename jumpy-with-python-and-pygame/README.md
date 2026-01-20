@@ -10,4 +10,4 @@ The goal of the game is to continue jumping up on platforms and gain the highest
 
 The game is enriched with sound effects and background music.
 
-<img src="Python_Jumpy.png" width="75%" height="75%">
+<img src="Python_Jumpy.png" width="50%" height="50%">
