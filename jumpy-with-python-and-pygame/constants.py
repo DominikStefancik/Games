@@ -5,6 +5,9 @@ FPS = 60
 # Images paths
 BACKGROUND_IMAGE_PATH = "assets/images/background.png"
 
+# Sounds paths
+BACKGROUND_MUSIC_SOUND_PATH = "assets/sounds/background_music.mp3"
+
 BACKGROUND_IMAGE_HEIGHT = 600
 SCORE_PANEL_HEIGHT = 20
 

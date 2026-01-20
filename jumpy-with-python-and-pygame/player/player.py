@@ -24,7 +24,7 @@ class Player:
         self.velocity_y = 0
         self.flip_image = False
 
-    def move(self, platform_group):
+    def move(self, platform_group, jump_sound):
         # Reset variables
         delta_x = 0
         delta_y = 0
@@ -71,6 +71,7 @@ class Player:
                         # and lower which in the end will cause the value of the "self.rect.y" to decrease
                         # and the player image will go up
                         self.velocity_y = -JUMPY_BOUNCE_VELOCITY
+                        jump_sound.play()
 
         # Check if the player has bounced on the top of the scrolling threshold
         # If that happens, we need to scroll everything relative to the player's vertical position

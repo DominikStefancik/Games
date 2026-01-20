@@ -5,6 +5,7 @@ import pygame
 from constants import (
     BACKGROUND_IMAGE_HEIGHT,
     BACKGROUND_IMAGE_PATH,
+    BACKGROUND_MUSIC_SOUND_PATH,
     FPS,
     VERTICAL_SCROLL_THRESHOLD,
     WHITE,
@@ -18,7 +19,7 @@ from helpers import draw_background, draw_fading_rectangles, draw_score_panel, d
 from jumping_platform.constants import MAX_PLATFORMS_COUNT, PLATFORM_IMAGE_PATH
 from jumping_platform.helpers import create_starting_platform, create_platform
 from jumping_platform.platform import Platform
-from player.constants import JUMPY_IMAGE_PATH
+from player.constants import DEATH_SOUND_PATH, JUMP_SOUND_PATH, JUMPY_IMAGE_PATH
 from player.player import Player
 from spritesheet import SpriteSheet
 
@@ -52,6 +53,17 @@ jumpy_image = pygame.image.load(JUMPY_IMAGE_PATH).convert_alpha()
 platform_image = pygame.image.load(PLATFORM_IMAGE_PATH).convert_alpha()
 bird_image = pygame.image.load(BIRD_IMAGE_PATH).convert_alpha()
 bird_sprite_sheet = SpriteSheet(bird_image)
+
+# Load sounds
+background_music_sound = pygame.mixer.Sound(BACKGROUND_MUSIC_SOUND_PATH)
+background_music_sound.set_volume(0.6)
+# The first argument says to play the sound in a loop
+# The second argument says at what time (in seconds) the music should start playing
+background_music_sound.play(-1, 0)
+jump_sound = pygame.mixer.Sound(JUMP_SOUND_PATH)
+jump_sound.set_volume(0.5)
+death_sound = pygame.mixer.Sound(DEATH_SOUND_PATH)
+death_sound.set_volume(0.5)
 
 # Define fonts
 SMALL_FONT = pygame.font.SysFont("Lucida Sans", 20)
@@ -131,13 +143,14 @@ while is_running:
         bird_group.draw(WINDOW)
         jumpy.draw(WINDOW)
 
-        window_scroll = jumpy.move(platform_group)
+        window_scroll = jumpy.move(platform_group, jump_sound)
 
         draw_score_panel(WINDOW, SMALL_FONT, current_score)
 
         # Check if the game is over
         if jumpy.rect.top > WINDOW_HEIGHT:
             is_game_over = True
+            death_sound.play()
 
         # Check for the collision with birds
         #
@@ -151,16 +164,17 @@ while is_running:
             # depending on the objects' mask.
             if pygame.sprite.spritecollide(jumpy, bird_group, False, pygame.sprite.collide_mask):
                 is_game_over = True
+                death_sound.play()
     else:  # The game is over
         if window_fade_counter < WINDOW_WIDTH:
             window_fade_counter += WINDOW_FADE_COUNTER_TRANSITION
             draw_fading_rectangles(WINDOW, window_fade_counter)
         else:  # after the fade effect is complete, show text
-            draw_text(WINDOW, BIG_FONT, "GAME OVER!", WHITE, (130, 200))
+            draw_text(WINDOW, BIG_FONT, "GAME OVER!", WHITE, (155, 200))
             draw_text(
-                WINDOW, BIG_FONT, f"SCORE: {str(current_score)}", WHITE, (130, 250)
+                WINDOW, BIG_FONT, f"SCORE: {str(current_score)}", WHITE, (155, 250)
             )
-            draw_text(WINDOW, BIG_FONT, "PRESS SPACE TO PLAY AGAIN", WHITE, (60, 300))
+            draw_text(WINDOW, BIG_FONT, "PRESS SPACE TO PLAY AGAIN", WHITE, (80, 300))
 
             if current_score > best_score:
                 best_score = current_score
