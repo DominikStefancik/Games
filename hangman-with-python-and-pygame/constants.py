@@ -13,3 +13,35 @@ BUTTON_ROWS = 2
 BUTTON_CIRCLE_THICKNESS = 3
 
 LETTER_A_ASCII_CODE = 65
+
+WORDS = [
+    "UMBRELLA",
+    "RAINBOW",
+    "TRAIN",
+    "MUSICAL",
+    "GINGER",
+    "WINDOW",
+    "COMPUTER",
+    "HAPPINESS",
+    "BEAUTIFUL",
+    "DOMESTIC",
+    "DONKEY",
+    "PHENOMENON",
+    "MYSTERY",
+    "PICTURE",
+    "PAINTING",
+    "MELODY",
+    "INSTRUMENT",
+    "FREEDOM",
+    "HYPERBOLICAL",
+    "SAVIOUR",
+    "HEROINE",
+    "GUITAR",
+    "STRATEGY",
+    "BUTTON",
+    "EARTH",
+    "BREATHE",
+    "EXHALE",
+    "HUSBAND",
+    "CHILDREN"
+]
