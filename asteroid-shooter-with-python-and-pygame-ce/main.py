@@ -53,8 +53,9 @@ star_positions = [
     for index in range(30)
 ]
 
-spaceship_direction = pygame.math.Vector2(1, -1)
-spaceship_speed = 200
+# If we don't provide any arguments, the initial Vector2 values will be 0, 0
+spaceship_direction = pygame.math.Vector2()
+spaceship_speed = 300
 
 is_running = True
 
@@ -65,12 +66,43 @@ while is_running:
     #
     # The value of delta time is in miliseconds
     delta_time = clock.tick() / 1000 # convert delta time to seconds
-    print(clock.get_fps())
 
     ## In the event loop we check for keyboard input, mouse input, timers and UI interactions
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             is_running = False
+
+    # The method "get_pressed()" constantly (every frame) checks for pressed buttons
+    # Whereas the method "get_just_pressed()" checks only for most recent button presses
+    keys = pygame.key.get_pressed()
+
+    # The expression "keys[pygame.K_RIGHT]" returns a boolean value
+    # The expression "int(boolean)" returns 1 (for True) or 0 (for False)
+    # Then the direction will be either
+    #   0 (if we didn't press right or left key)
+    #   1 (if we pressed the right key)
+    #   -1 (if we pressed the left key)
+    spaceship_direction.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
+    spaceship_direction.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
+
+    # We cannot normalise the direction vector, if both of its values is 0
+    # The one-liner IF says:
+    #   "if vector is (0,1), (1,0) or (1,1), then call the method normalize, otherwise keep it as it is"
+    spaceship_direction = spaceship_direction.normalize() if spaceship_direction else spaceship_direction
+
+    # With adding the delta time as a multiplier,
+    # we are independent of how many frame rates are defined in the clock's tick method
+    spaceship_rectangle.center += spaceship_direction * spaceship_speed * delta_time
+
+    if spaceship_rectangle.left < 0:
+        spaceship_rectangle.left = 0
+    if spaceship_rectangle.right > WINDOW_WIDTH:
+        spaceship_rectangle.right = WINDOW_WIDTH
+    if spaceship_rectangle.top < 0:
+        spaceship_rectangle.top = 0
+    if spaceship_rectangle.bottom > WINDOW_HEIGHT:
+        spaceship_rectangle.bottom = WINDOW_HEIGHT
+
 
     ## Draw game elements
     DISPLAY_SURFACE.fill("darkgrey")
@@ -79,20 +111,8 @@ while is_running:
         DISPLAY_SURFACE.blit(star_surface, position)
 
     # "blit"  is a shortcut for block-image-transfer, which esssentially means "put one surface on another surface".
-
     DISPLAY_SURFACE.blit(asteroid_surface, asteroid_rectangle)
     DISPLAY_SURFACE.blit(laser_surface, laser_rectangle)
-
-    # With adding the delta time as a multiplier,
-    # we are independent of how many frame rates are defined in the clock's tick method
-    spaceship_rectangle.center += spaceship_direction * spaceship_speed * delta_time
-
-    if spaceship_rectangle.left <= 0 or spaceship_rectangle.right >= WINDOW_WIDTH:
-        spaceship_direction.x *= -1
-
-    if spaceship_rectangle.top <= 0 or spaceship_rectangle.bottom >= WINDOW_HEIGHT:
-        spaceship_direction.y *= -1
-
     DISPLAY_SURFACE.blit(spaceship_surface, spaceship_rectangle)
 
     # The methods "pygame.display.update()" and "pygame.display.flip()" draw game elements on a window screen.
