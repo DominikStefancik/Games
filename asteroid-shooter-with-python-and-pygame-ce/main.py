@@ -2,7 +2,15 @@ import random
 
 import pygame
 
-from constants import FPS, SPACESHIP_IMAGE_PATH, STAR_IMAGE_PATH, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import (
+    ASTEROID_IMAGE_PATH,
+    FPS,
+    LASER_IMAGE_PATH,
+    SPACESHIP_IMAGE_PATH,
+    STAR_IMAGE_PATH,
+    WINDOW_HEIGHT,
+    WINDOW_WIDTH,
+)
 
 # General setup
 pygame.init()
@@ -23,10 +31,28 @@ pygame.display.set_caption("Python Asteroid Shooter")
 # These two methods are called for improving the game performance.
 spaceship_surface = pygame.image.load(SPACESHIP_IMAGE_PATH).convert_alpha()
 star_surface = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
+asteroid_surface = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
+laser_surface = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
+
+# The method "get_frect()" gets "FRect" out of the image.
+# The "FRect" is very similar to the rectangle "Rect". The onl difference is that its sizes are measured
+# in the floating points.
+# The method parameter sasys that the center of the rectangle will be in the middle of the screen
+spaceship_rectangle = spaceship_surface.get_frect(
+    center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+)
+asteroid_rectangle = asteroid_surface.get_frect(
+    center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+)
+laser_rectangle = laser_surface.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
 # One line FOR loop
-star_positions = [(random.randint(0, WINDOW_WIDTH), random.randint(0, WINDOW_HEIGHT)) for index in range(30)]
+star_positions = [
+    (random.randint(0, WINDOW_WIDTH), random.randint(0, WINDOW_HEIGHT))
+    for index in range(30)
+]
 
+spaceship_direction = 1
 
 is_running = True
 
@@ -43,7 +69,16 @@ while is_running:
         DISPLAY_SURFACE.blit(star_surface, position)
 
     # "blit"  is a shortcut for block-image-transfer, which esssentially means "put one surface on another surface".
-    DISPLAY_SURFACE.blit(spaceship_surface, (100, 150))
+
+    DISPLAY_SURFACE.blit(asteroid_surface, asteroid_rectangle)
+    DISPLAY_SURFACE.blit(laser_surface, laser_rectangle)
+
+    spaceship_rectangle.centerx += 0.5 * spaceship_direction
+
+    if spaceship_rectangle.left < 0 or spaceship_rectangle.right > WINDOW_WIDTH:
+        spaceship_direction *= -1
+
+    DISPLAY_SURFACE.blit(spaceship_surface, spaceship_rectangle)
 
     # The methods "pygame.display.update()" and "pygame.display.flip()" draw game elements on a window screen.
     # However, the "update()" draws the entire screen whereas with the "flip" we can specify
