@@ -4,7 +4,6 @@ import pygame
 
 from constants import (
     ASTEROID_IMAGE_PATH,
-    FPS,
     LASER_IMAGE_PATH,
     SPACESHIP_IMAGE_PATH,
     STAR_IMAGE_PATH,
@@ -19,6 +18,8 @@ pygame.init()
 # and there can be ONLY one and it is always visible
 DISPLAY_SURFACE = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Python Asteroid Shooter")
+
+clock = pygame.time.Clock()
 
 # A regular surface is an image of some kind. You can have any nymber of regular surfaces,
 # but they are only visible when attached to the display surface!
@@ -52,11 +53,20 @@ star_positions = [
     for index in range(30)
 ]
 
-spaceship_direction = 1
+spaceship_direction = pygame.math.Vector2(1, -1)
+spaceship_speed = 200
 
 is_running = True
 
 while is_running:
+    # Delta time is the time it took your computer to render the current frame.
+    # It might take different delta time to render each frame depending on how busy your computer is
+    # with processing the game logic and also other programs running on the computer.
+    #
+    # The value of delta time is in miliseconds
+    delta_time = clock.tick() / 1000 # convert delta time to seconds
+    print(clock.get_fps())
+
     ## In the event loop we check for keyboard input, mouse input, timers and UI interactions
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -73,10 +83,15 @@ while is_running:
     DISPLAY_SURFACE.blit(asteroid_surface, asteroid_rectangle)
     DISPLAY_SURFACE.blit(laser_surface, laser_rectangle)
 
-    spaceship_rectangle.centerx += 0.5 * spaceship_direction
+    # With adding the delta time as a multiplier,
+    # we are independent of how many frame rates are defined in the clock's tick method
+    spaceship_rectangle.center += spaceship_direction * spaceship_speed * delta_time
 
-    if spaceship_rectangle.left < 0 or spaceship_rectangle.right > WINDOW_WIDTH:
-        spaceship_direction *= -1
+    if spaceship_rectangle.left <= 0 or spaceship_rectangle.right >= WINDOW_WIDTH:
+        spaceship_direction.x *= -1
+
+    if spaceship_rectangle.top <= 0 or spaceship_rectangle.bottom >= WINDOW_HEIGHT:
+        spaceship_direction.y *= -1
 
     DISPLAY_SURFACE.blit(spaceship_surface, spaceship_rectangle)
 
