@@ -10,6 +10,8 @@ from constants import (
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
+from spaceship import Spaceship
+from star import Star
 
 # General setup
 pygame.init()
@@ -35,27 +37,16 @@ star_surface = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
 asteroid_surface = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
 laser_surface = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
 
-# The method "get_frect()" gets "FRect" out of the image.
-# The "FRect" is very similar to the rectangle "Rect". The onl difference is that its sizes are measured
-# in the floating points.
-# The method parameter sasys that the center of the rectangle will be in the middle of the screen
-spaceship_rectangle = spaceship_surface.get_frect(
-    center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-)
 asteroid_rectangle = asteroid_surface.get_frect(
     center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 )
 laser_rectangle = laser_surface.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 
-# One line FOR loop
-star_positions = [
-    (random.randint(0, WINDOW_WIDTH), random.randint(0, WINDOW_HEIGHT))
-    for index in range(30)
-]
 
-# If we don't provide any arguments, the initial Vector2 values will be 0, 0
-spaceship_direction = pygame.math.Vector2()
-spaceship_speed = 300
+all_sprites_group = pygame.sprite.Group()
+for index in range(30):
+    Star(all_sprites_group, star_surface)
+spaceship = Spaceship(all_sprites_group, spaceship_surface)
 
 is_running = True
 
@@ -72,48 +63,15 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
 
-    # The method "get_pressed()" constantly (every frame) checks for pressed buttons
-    # Whereas the method "get_just_pressed()" checks only for most recent button presses
-    keys = pygame.key.get_pressed()
-
-    # The expression "keys[pygame.K_RIGHT]" returns a boolean value
-    # The expression "int(boolean)" returns 1 (for True) or 0 (for False)
-    # Then the direction will be either
-    #   0 (if we didn't press right or left key)
-    #   1 (if we pressed the right key)
-    #   -1 (if we pressed the left key)
-    spaceship_direction.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
-    spaceship_direction.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
-
-    # We cannot normalise the direction vector, if both of its values is 0
-    # The one-liner IF says:
-    #   "if vector is (0,1), (1,0) or (1,1), then call the method normalize, otherwise keep it as it is"
-    spaceship_direction = spaceship_direction.normalize() if spaceship_direction else spaceship_direction
-
-    # With adding the delta time as a multiplier,
-    # we are independent of how many frame rates are defined in the clock's tick method
-    spaceship_rectangle.center += spaceship_direction * spaceship_speed * delta_time
-
-    if spaceship_rectangle.left < 0:
-        spaceship_rectangle.left = 0
-    if spaceship_rectangle.right > WINDOW_WIDTH:
-        spaceship_rectangle.right = WINDOW_WIDTH
-    if spaceship_rectangle.top < 0:
-        spaceship_rectangle.top = 0
-    if spaceship_rectangle.bottom > WINDOW_HEIGHT:
-        spaceship_rectangle.bottom = WINDOW_HEIGHT
-
+    all_sprites_group.update(delta_time)
 
     ## Draw game elements
     DISPLAY_SURFACE.fill("darkgrey")
 
-    for position in star_positions:
-        DISPLAY_SURFACE.blit(star_surface, position)
-
     # "blit"  is a shortcut for block-image-transfer, which esssentially means "put one surface on another surface".
     DISPLAY_SURFACE.blit(asteroid_surface, asteroid_rectangle)
-    DISPLAY_SURFACE.blit(laser_surface, laser_rectangle)
-    DISPLAY_SURFACE.blit(spaceship_surface, spaceship_rectangle)
+
+    all_sprites_group.draw(DISPLAY_SURFACE)
 
     # The methods "pygame.display.update()" and "pygame.display.flip()" draw game elements on a window screen.
     # However, the "update()" draws the entire screen whereas with the "flip" we can specify
