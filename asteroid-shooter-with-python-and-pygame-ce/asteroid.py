@@ -15,7 +15,7 @@ class Asteroid(pygame.sprite.Sprite):
         # The method "uniform" goes from the starting to the ending value
         self.direction = pygame.Vector2(random.uniform(-0.5, 0.5), 1)
 
-    def update(self, delta_time, _laser_image):
+    def update(self, delta_time):
         self.rect.center += self.direction * self.speed * delta_time
 
         if self.rect.top > WINDOW_HEIGHT:

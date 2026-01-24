@@ -11,6 +11,7 @@ from constants import (
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
+from helpers import handle_collisions
 from spaceship import Spaceship
 from star import Star
 
@@ -39,9 +40,12 @@ ASTEROID_SURFACE = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
 LASER_SURFACE = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
 
 all_sprites_group = pygame.sprite.Group()
+asteroids_group = pygame.sprite.Group()
+lasers_group = pygame.sprite.Group()
+
 for index in range(30):
     Star(all_sprites_group, STAR_SURFACE)
-spaceship = Spaceship(all_sprites_group, SPACESHIP_SURFACE)
+spaceship = Spaceship(all_sprites_group, lasers_group, SPACESHIP_SURFACE, LASER_SURFACE)
 
 # Create an interval timer to create an asteroid every 0.5 seconds.
 # We create a custom event and set a timer for that event. Then we will capture/listen to the event
@@ -66,9 +70,9 @@ while is_running:
 
         if event.type == asteroid_creation_event:
             asteroid_position = random.randint(0, WINDOW_WIDTH), -100
-            Asteroid(all_sprites_group, ASTEROID_SURFACE, asteroid_position)
+            Asteroid((all_sprites_group, asteroids_group), ASTEROID_SURFACE, asteroid_position)
 
-    all_sprites_group.update(delta_time, LASER_SURFACE)
+    all_sprites_group.update(delta_time)
 
     ## Draw game elements
     DISPLAY_SURFACE.fill("darkgrey")
@@ -76,6 +80,8 @@ while is_running:
     # "blit"  is a shortcut for block-image-transfer, which esssentially means "put one surface on another surface".
 
     all_sprites_group.draw(DISPLAY_SURFACE)
+
+    handle_collisions(spaceship, asteroids_group, lasers_group)
 
     # The methods "pygame.display.update()" and "pygame.display.flip()" draw game elements on a window screen.
     # However, the "update()" draws the entire screen whereas with the "flip" we can specify

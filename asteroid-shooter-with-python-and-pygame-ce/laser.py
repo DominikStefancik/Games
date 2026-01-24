@@ -10,7 +10,7 @@ class Laser(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(midbottom = position)
         self.speed = 400
 
-    def update(self, delta_time, _laser_image):
+    def update(self, delta_time):
         self.rect.y -= self.speed * delta_time
 
         if self.rect.bottom < 0:

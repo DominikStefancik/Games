@@ -4,11 +4,13 @@ from constants import WINDOW_HEIGHT, WINDOW_WIDTH
 from laser import Laser
 
 class Spaceship(pygame.sprite.Sprite):
-    def __init__(self, groups, image):
+    def __init__(self, all_groups, lasers_group, image, laser_image):
         # Initialise the parent class
         # When passing sprite groups to the parent class Pygame automatically adds this custom Sprite class to them
-        super().__init__(groups)
-        self.groups = groups
+        super().__init__(all_groups)
+        self.all_groups = all_groups
+        self.lasers_group = lasers_group
+        self.laser_image = laser_image
         self.image = image
         # The method "get_frect()" gets "FRect" out of the image.
         # The "FRect" is very similar to the rectangle "Rect". The onl difference is that its sizes are measured
@@ -25,7 +27,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.laser_shoot_time = 0
         self.cooldown_duration = 400
 
-    def update(self, delta_time, laser_image):
+    def update(self, delta_time):
         # The method "get_pressed()" constantly (every frame) checks for pressed buttons
         # Whereas the method "get_just_pressed()" checks only for most recent button presses
         keys = pygame.key.get_pressed()
@@ -58,7 +60,7 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.bottom = WINDOW_HEIGHT
 
         if keys[pygame.K_SPACE] and self.can_shoot:
-            Laser(self.groups, laser_image, self.rect.midtop)
+            Laser((self.all_groups, self.lasers_group), self.laser_image, self.rect.midtop)
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
 
