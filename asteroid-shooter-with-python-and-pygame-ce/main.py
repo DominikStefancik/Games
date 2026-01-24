@@ -13,7 +13,7 @@ from constants import (
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
-from helpers import display_score, handle_collisions
+from helpers import display_score, get_explosion_image_path, handle_collisions
 from spaceship import Spaceship
 from star import Star
 
@@ -40,6 +40,8 @@ SPACESHIP_SURFACE = pygame.image.load(SPACESHIP_IMAGE_PATH).convert_alpha()
 STAR_SURFACE = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
 ASTEROID_SURFACE = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
 LASER_SURFACE = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
+# One-line FOR loop
+asteroid_explosion_frames = [pygame.image.load(get_explosion_image_path(index)).convert_alpha() for index in range(21)]
 
 # Load fonts
 OXANIUM_BOLD_FONT = pygame.font.Font(OXANIUM_BOLD_FONT_PATH, 40)
@@ -79,7 +81,7 @@ while is_running:
 
     all_sprites_group.update(delta_time)
 
-    handle_collisions(spaceship, asteroids_group, lasers_group)
+    handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames)
 
     ## Draw game elements
     DISPLAY_SURFACE.fill(DISPLAY_SURFACE_COLOR)

@@ -1,9 +1,16 @@
 import pygame
 
+from os.path import join
+
+from asteroid_explosion import AnimatedAsteroidExplosion
 from constants import SCORE_TEXT_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH
 
 
-def handle_collisions(spaceship, asteroids_group, lasers_group):
+def get_explosion_image_path(index):
+    return join("assets", "images", "asteroid_explosion", f"{index}.png")
+
+
+def handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames):
     for laser in lasers_group:
         # Check for collisions with asteroids
         #
@@ -12,6 +19,7 @@ def handle_collisions(spaceship, asteroids_group, lasers_group):
         # The third boolean argument says if the sprite from the group, with which the single sprite collided, should be
         # removed from the group and destroyed.
         if pygame.sprite.spritecollide(laser, asteroids_group, True):
+            AnimatedAsteroidExplosion(all_sprites_group, asteroid_explosion_frames, laser.rect.midtop)
             laser.kill()
 
     # The last argument says that when detecting collisions, use sprites' masks, instead of rectangles. With this
