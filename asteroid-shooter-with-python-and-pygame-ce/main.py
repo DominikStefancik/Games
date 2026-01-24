@@ -2,6 +2,7 @@ import random
 
 import pygame
 
+from asteroid import Asteroid
 from constants import (
     ASTEROID_IMAGE_PATH,
     LASER_IMAGE_PATH,
@@ -21,32 +22,32 @@ pygame.init()
 DISPLAY_SURFACE = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Python Asteroid Shooter")
 
-clock = pygame.time.Clock()
-
 # A regular surface is an image of some kind. You can have any nymber of regular surfaces,
 # but they are only visible when attached to the display surface!
 # We can create regular surfaces either manually or by loading images  and rendering fonts.
+
+clock = pygame.time.Clock()
 
 # Load images
 #
 # If the image we want to load has no transparent pixels, we have to call the "convert()",
 # otherwise we have to call "convert_alpha()".
 # These two methods are called for improving the game performance.
-spaceship_surface = pygame.image.load(SPACESHIP_IMAGE_PATH).convert_alpha()
-star_surface = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
-asteroid_surface = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
-laser_surface = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
-
-asteroid_rectangle = asteroid_surface.get_frect(
-    center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-)
-laser_rectangle = laser_surface.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-
+SPACESHIP_SURFACE = pygame.image.load(SPACESHIP_IMAGE_PATH).convert_alpha()
+STAR_SURFACE = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
+ASTEROID_SURFACE = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
+LASER_SURFACE = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
 
 all_sprites_group = pygame.sprite.Group()
 for index in range(30):
-    Star(all_sprites_group, star_surface)
-spaceship = Spaceship(all_sprites_group, spaceship_surface)
+    Star(all_sprites_group, STAR_SURFACE)
+spaceship = Spaceship(all_sprites_group, SPACESHIP_SURFACE)
+
+# Create an interval timer to create an asteroid every 0.5 seconds.
+# We create a custom event and set a timer for that event. Then we will capture/listen to the event
+# in the event loop.
+asteroid_creation_event = pygame.event.custom_type()
+pygame.time.set_timer(asteroid_creation_event, 500)
 
 is_running = True
 
@@ -63,13 +64,16 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
 
-    all_sprites_group.update(delta_time)
+        if event.type == asteroid_creation_event:
+            asteroid_position = random.randint(0, WINDOW_WIDTH), -100
+            Asteroid(all_sprites_group, ASTEROID_SURFACE, asteroid_position)
+
+    all_sprites_group.update(delta_time, LASER_SURFACE)
 
     ## Draw game elements
     DISPLAY_SURFACE.fill("darkgrey")
 
     # "blit"  is a shortcut for block-image-transfer, which esssentially means "put one surface on another surface".
-    DISPLAY_SURFACE.blit(asteroid_surface, asteroid_rectangle)
 
     all_sprites_group.draw(DISPLAY_SURFACE)
 

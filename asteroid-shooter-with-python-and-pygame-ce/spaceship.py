@@ -1,12 +1,14 @@
 import pygame
 
 from constants import WINDOW_HEIGHT, WINDOW_WIDTH
+from laser import Laser
 
 class Spaceship(pygame.sprite.Sprite):
     def __init__(self, groups, image):
         # Initialise the parent class
         # When passing sprite groups to the parent class Pygame automatically adds this custom Sprite class to them
         super().__init__(groups)
+        self.groups = groups
         self.image = image
         # The method "get_frect()" gets "FRect" out of the image.
         # The "FRect" is very similar to the rectangle "Rect". The onl difference is that its sizes are measured
@@ -17,7 +19,13 @@ class Spaceship(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.speed = 300
 
-    def update(self, delta_time):
+        # Create a custom timer to track time after a certain event happened, i.e a certain key was pressed.
+        # We get a starting point and then measure the time passed since that starting point.
+        self.can_shoot = True
+        self.laser_shoot_time = 0
+        self.cooldown_duration = 400
+
+    def update(self, delta_time, laser_image):
         # The method "get_pressed()" constantly (every frame) checks for pressed buttons
         # Whereas the method "get_just_pressed()" checks only for most recent button presses
         keys = pygame.key.get_pressed()
@@ -48,3 +56,18 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom > WINDOW_HEIGHT:
             self.rect.bottom = WINDOW_HEIGHT
+
+        if keys[pygame.K_SPACE] and self.can_shoot:
+            Laser(self.groups, laser_image, self.rect.midtop)
+            self.can_shoot = False
+            self.laser_shoot_time = pygame.time.get_ticks()
+
+        self.update_laser_timer()
+
+    def update_laser_timer(self):
+        if not self.can_shoot:
+            current_time = pygame.time.get_ticks()
+
+            # Allow shooting a laser only if the cooldown time passed after the last shot
+            if current_time - self.laser_shoot_time > self.cooldown_duration:
+                self.can_shoot = True
