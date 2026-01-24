@@ -10,8 +10,8 @@ class Spaceship(pygame.sprite.Sprite):
         super().__init__(all_groups)
         self.all_groups = all_groups
         self.lasers_group = lasers_group
-        self.laser_image = laser_image
         self.image = image
+        self.laser_image = laser_image
         # The method "get_frect()" gets "FRect" out of the image.
         # The "FRect" is very similar to the rectangle "Rect". The onl difference is that its sizes are measured
         # in the floating points.
