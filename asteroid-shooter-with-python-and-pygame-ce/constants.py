@@ -8,3 +8,10 @@ SPACESHIP_IMAGE_PATH = join("assets", "images", "spaceship.png")
 STAR_IMAGE_PATH = join("assets", "images", "star.png")
 ASTEROID_IMAGE_PATH = join("assets", "images", "asteroid.png")
 LASER_IMAGE_PATH = join("assets", "images", "laser.png")
+
+# Fonts paths
+OXANIUM_BOLD_FONT_PATH = join("assets", "fonts", "Oxanium-Bold.ttf")
+
+# Colours
+DISPLAY_SURFACE_COLOR = "#3a2e3f"
+SCORE_TEXT_COLOR = (240, 240, 240)

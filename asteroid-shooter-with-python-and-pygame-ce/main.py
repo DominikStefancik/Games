@@ -5,13 +5,15 @@ import pygame
 from asteroid import Asteroid
 from constants import (
     ASTEROID_IMAGE_PATH,
+    DISPLAY_SURFACE_COLOR,
     LASER_IMAGE_PATH,
+    OXANIUM_BOLD_FONT_PATH,
     SPACESHIP_IMAGE_PATH,
     STAR_IMAGE_PATH,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
-from helpers import handle_collisions
+from helpers import display_score, handle_collisions
 from spaceship import Spaceship
 from star import Star
 
@@ -38,6 +40,9 @@ SPACESHIP_SURFACE = pygame.image.load(SPACESHIP_IMAGE_PATH).convert_alpha()
 STAR_SURFACE = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
 ASTEROID_SURFACE = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
 LASER_SURFACE = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
+
+# Load fonts
+OXANIUM_BOLD_FONT = pygame.font.Font(OXANIUM_BOLD_FONT_PATH, 40)
 
 all_sprites_group = pygame.sprite.Group()
 asteroids_group = pygame.sprite.Group()
@@ -74,14 +79,12 @@ while is_running:
 
     all_sprites_group.update(delta_time)
 
-    ## Draw game elements
-    DISPLAY_SURFACE.fill("darkgrey")
-
-    # "blit"  is a shortcut for block-image-transfer, which esssentially means "put one surface on another surface".
-
-    all_sprites_group.draw(DISPLAY_SURFACE)
-
     handle_collisions(spaceship, asteroids_group, lasers_group)
+
+    ## Draw game elements
+    DISPLAY_SURFACE.fill(DISPLAY_SURFACE_COLOR)
+    all_sprites_group.draw(DISPLAY_SURFACE)
+    display_score(DISPLAY_SURFACE, OXANIUM_BOLD_FONT)
 
     # The methods "pygame.display.update()" and "pygame.display.flip()" draw game elements on a window screen.
     # However, the "update()" draws the entire screen whereas with the "flip" we can specify
