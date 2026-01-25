@@ -10,7 +10,7 @@ def get_explosion_image_path(index):
     return join("assets", "images", "asteroid_explosion", f"{index}.png")
 
 
-def handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames):
+def handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames, asteroid_explosion_sound, damage_sound):
     for laser in lasers_group:
         # Check for collisions with asteroids
         #
@@ -21,6 +21,7 @@ def handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_grou
         if pygame.sprite.spritecollide(laser, asteroids_group, True):
             AnimatedAsteroidExplosion(all_sprites_group, asteroid_explosion_frames, laser.rect.midtop)
             laser.kill()
+            asteroid_explosion_sound.play()
 
     # The last argument says that when detecting collisions, use sprites' masks, instead of rectangles. With this
     # we can achieve a perfect perfect collision detection which is more precise then the collision detection using
@@ -29,6 +30,7 @@ def handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_grou
     # image/surface. If we don't want that, we can overwrite creating sorite's mask manually.
     if pygame.sprite.spritecollide(spaceship, asteroids_group, True, pygame.sprite.collide_mask):
         spaceship.kill()
+        damage_sound.play()
 
 
 def display_score(surface, score_font):

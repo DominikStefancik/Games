@@ -5,8 +5,12 @@ import pygame
 from asteroid import Asteroid
 from constants import (
     ASTEROID_IMAGE_PATH,
+    ASTEROID_EXPLOSION_SOUND_PATH,
+    DAMAGE_SOUND_PATH,
     DISPLAY_SURFACE_COLOR,
+    GAME_MUSIC_PATH,
     LASER_IMAGE_PATH,
+    LASER_SOUND_PATH,
     OXANIUM_BOLD_FONT_PATH,
     SPACESHIP_IMAGE_PATH,
     STAR_IMAGE_PATH,
@@ -46,13 +50,26 @@ asteroid_explosion_frames = [pygame.image.load(get_explosion_image_path(index)).
 # Load fonts
 OXANIUM_BOLD_FONT = pygame.font.Font(OXANIUM_BOLD_FONT_PATH, 40)
 
+# Load sounds
+LASER_SOUND = pygame.mixer.Sound(LASER_SOUND_PATH)
+LASER_SOUND.set_volume(0.3)
+ASTEROID_EXPLOSION_SOUND = pygame.mixer.Sound(ASTEROID_EXPLOSION_SOUND_PATH)
+ASTEROID_EXPLOSION_SOUND.set_volume(0.3)
+DAMAGE_SOUND = pygame.mixer.Sound(DAMAGE_SOUND_PATH)
+DAMAGE_SOUND.set_volume(0.3)
+GAME_MUSIC = pygame.mixer.Sound(GAME_MUSIC_PATH)
+GAME_MUSIC.set_volume(0.3)
+# When setting the parameter "loops" we say how many times we want the sound to play.
+# The value -1 means we want the sound to play indefinitely
+GAME_MUSIC.play(loops = -1)
+
 all_sprites_group = pygame.sprite.Group()
 asteroids_group = pygame.sprite.Group()
 lasers_group = pygame.sprite.Group()
 
 for index in range(30):
     Star(all_sprites_group, STAR_SURFACE)
-spaceship = Spaceship(all_sprites_group, lasers_group, SPACESHIP_SURFACE, LASER_SURFACE)
+spaceship = Spaceship(all_sprites_group, lasers_group, SPACESHIP_SURFACE, LASER_SURFACE, LASER_SOUND)
 
 # Create an interval timer to create an asteroid every 0.5 seconds.
 # We create a custom event and set a timer for that event. Then we will capture/listen to the event
@@ -81,7 +98,7 @@ while is_running:
 
     all_sprites_group.update(delta_time)
 
-    handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames)
+    handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames, ASTEROID_EXPLOSION_SOUND, DAMAGE_SOUND)
 
     ## Draw game elements
     DISPLAY_SURFACE.fill(DISPLAY_SURFACE_COLOR)

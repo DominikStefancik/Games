@@ -12,6 +12,12 @@ LASER_IMAGE_PATH = join("assets", "images", "laser.png")
 # Fonts paths
 OXANIUM_BOLD_FONT_PATH = join("assets", "fonts", "Oxanium-Bold.ttf")
 
+# Sound paths
+DAMAGE_SOUND_PATH = join("assets", "audio", "damage.ogg")
+ASTEROID_EXPLOSION_SOUND_PATH = join("assets", "audio", "explosion.wav")
+GAME_MUSIC_PATH = join("assets", "audio", "game_music.wav")
+LASER_SOUND_PATH = join("assets", "audio", "laser.wav")
+
 # Colours
 DISPLAY_SURFACE_COLOR = "#3a2e3f"
 SCORE_TEXT_COLOR = (240, 240, 240)

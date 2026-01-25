@@ -4,7 +4,7 @@ from constants import WINDOW_HEIGHT, WINDOW_WIDTH
 from laser import Laser
 
 class Spaceship(pygame.sprite.Sprite):
-    def __init__(self, all_groups, lasers_group, image, laser_image):
+    def __init__(self, all_groups, lasers_group, image, laser_image, laser_sound):
         # Initialise the parent class
         # When passing sprite groups to the parent class Pygame automatically adds this custom Sprite class to them
         super().__init__(all_groups)
@@ -12,6 +12,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.lasers_group = lasers_group
         self.image = image
         self.laser_image = laser_image
+        self.laser_sound = laser_sound
         # The method "get_frect()" gets "FRect" out of the image.
         # The "FRect" is very similar to the rectangle "Rect". The onl difference is that its sizes are measured
         # in the floating points.
@@ -63,6 +64,7 @@ class Spaceship(pygame.sprite.Sprite):
             Laser((self.all_groups, self.lasers_group), self.laser_image, self.rect.midtop)
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
+            self.laser_sound.play()
 
         self.update_laser_timer()
 
