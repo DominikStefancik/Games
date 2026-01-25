@@ -11,7 +11,7 @@ class AnimatedAsteroidExplosion(pygame.sprite.Sprite):
         self.frame_list = frame_list
         self.frame_index = 0
         self.image = self.frame_list[self.frame_index]
-        self.rect = self.image.get_frect(center = position)
+        self.rect = self.image.get_frect(center=position)
         self.animation_speed = 20
 
     def update(self, delta_time):

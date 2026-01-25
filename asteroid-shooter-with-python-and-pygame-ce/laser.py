@@ -7,7 +7,7 @@ class Laser(pygame.sprite.Sprite):
         # When passing sprite groups to the parent class Pygame automatically adds this custom Sprite class to them
         super().__init__(groups)
         self.image = image
-        self.rect = self.image.get_frect(midbottom = position)
+        self.rect = self.image.get_frect(midbottom=position)
         self.speed = 400
 
     def update(self, delta_time):

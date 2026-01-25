@@ -3,6 +3,7 @@ import pygame
 from constants import WINDOW_HEIGHT, WINDOW_WIDTH
 from laser import Laser
 
+
 class Spaceship(pygame.sprite.Sprite):
     def __init__(self, all_groups, lasers_group, image, laser_image, laser_sound):
         # Initialise the parent class
@@ -45,7 +46,9 @@ class Spaceship(pygame.sprite.Sprite):
         # We cannot normalise the direction vector, if both of its values is 0
         # The one-liner IF says:
         #   "if vector is (0,1), (1,0) or (1,1), then call the method normalize, otherwise keep it as it is"
-        self.direction = self.direction.normalize() if self.direction else self.direction
+        self.direction = (
+            self.direction.normalize() if self.direction else self.direction
+        )
 
         # With adding the delta time as a multiplier,
         # we are independent of how many frame rates are defined in the clock's tick method
@@ -61,7 +64,9 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.bottom = WINDOW_HEIGHT
 
         if keys[pygame.K_SPACE] and self.can_shoot:
-            Laser((self.all_groups, self.lasers_group), self.laser_image, self.rect.midtop)
+            Laser(
+                (self.all_groups, self.lasers_group), self.laser_image, self.rect.midtop
+            )
             self.can_shoot = False
             self.laser_shoot_time = pygame.time.get_ticks()
             self.laser_sound.play()

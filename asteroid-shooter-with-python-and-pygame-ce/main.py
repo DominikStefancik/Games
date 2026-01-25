@@ -45,7 +45,10 @@ STAR_SURFACE = pygame.image.load(STAR_IMAGE_PATH).convert_alpha()
 ASTEROID_SURFACE = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
 LASER_SURFACE = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
 # One-line FOR loop
-asteroid_explosion_frames = [pygame.image.load(get_explosion_image_path(index)).convert_alpha() for index in range(21)]
+asteroid_explosion_frames = [
+    pygame.image.load(get_explosion_image_path(index)).convert_alpha()
+    for index in range(21)
+]
 
 # Load fonts
 OXANIUM_BOLD_FONT = pygame.font.Font(OXANIUM_BOLD_FONT_PATH, 40)
@@ -60,8 +63,8 @@ DAMAGE_SOUND.set_volume(0.3)
 GAME_MUSIC = pygame.mixer.Sound(GAME_MUSIC_PATH)
 GAME_MUSIC.set_volume(0.3)
 # When setting the parameter "loops" we say how many times we want the sound to play.
-# The value -1 means we want the sound to play indefinitely
-GAME_MUSIC.play(loops = -1)
+# The value -1 means we want the sound to play indefinitely.
+GAME_MUSIC.play(loops=-1)
 
 all_sprites_group = pygame.sprite.Group()
 asteroids_group = pygame.sprite.Group()
@@ -69,7 +72,9 @@ lasers_group = pygame.sprite.Group()
 
 for index in range(30):
     Star(all_sprites_group, STAR_SURFACE)
-spaceship = Spaceship(all_sprites_group, lasers_group, SPACESHIP_SURFACE, LASER_SURFACE, LASER_SOUND)
+spaceship = Spaceship(
+    all_sprites_group, lasers_group, SPACESHIP_SURFACE, LASER_SURFACE, LASER_SOUND
+)
 
 # Create an interval timer to create an asteroid every 0.5 seconds.
 # We create a custom event and set a timer for that event. Then we will capture/listen to the event
@@ -85,7 +90,7 @@ while is_running:
     # with processing the game logic and also other programs running on the computer.
     #
     # The value of delta time is in miliseconds
-    delta_time = clock.tick() / 1000 # convert delta time to seconds
+    delta_time = clock.tick() / 1000  # convert delta time to seconds
 
     ## In the event loop we check for keyboard input, mouse input, timers and UI interactions
     for event in pygame.event.get():
@@ -94,11 +99,23 @@ while is_running:
 
         if event.type == asteroid_creation_event:
             asteroid_position = random.randint(0, WINDOW_WIDTH), -100
-            Asteroid((all_sprites_group, asteroids_group), ASTEROID_SURFACE, asteroid_position)
+            Asteroid(
+                (all_sprites_group, asteroids_group),
+                ASTEROID_SURFACE,
+                asteroid_position,
+            )
 
     all_sprites_group.update(delta_time)
 
-    handle_collisions(spaceship, all_sprites_group, asteroids_group, lasers_group, asteroid_explosion_frames, ASTEROID_EXPLOSION_SOUND, DAMAGE_SOUND)
+    handle_collisions(
+        spaceship,
+        all_sprites_group,
+        asteroids_group,
+        lasers_group,
+        asteroid_explosion_frames,
+        ASTEROID_EXPLOSION_SOUND,
+        DAMAGE_SOUND,
+    )
 
     ## Draw game elements
     DISPLAY_SURFACE.fill(DISPLAY_SURFACE_COLOR)
