@@ -4,6 +4,7 @@ import pygame
 
 from asteroid import Asteroid
 from constants import (
+    ASTEROID_CREATION_INTERVAL,
     ASTEROID_IMAGE_PATH,
     ASTEROID_EXPLOSION_SOUND_PATH,
     DAMAGE_SOUND_PATH,
@@ -14,6 +15,7 @@ from constants import (
     OXANIUM_BOLD_FONT_PATH,
     SPACESHIP_IMAGE_PATH,
     STAR_IMAGE_PATH,
+    STARS_COUNT,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
@@ -70,7 +72,7 @@ all_sprites_group = pygame.sprite.Group()
 asteroids_group = pygame.sprite.Group()
 lasers_group = pygame.sprite.Group()
 
-for index in range(30):
+for index in range(STARS_COUNT):
     Star(all_sprites_group, STAR_SURFACE)
 spaceship = Spaceship(
     all_sprites_group, lasers_group, SPACESHIP_SURFACE, LASER_SURFACE, LASER_SOUND
@@ -80,7 +82,7 @@ spaceship = Spaceship(
 # We create a custom event and set a timer for that event. Then we will capture/listen to the event
 # in the event loop.
 asteroid_creation_event = pygame.event.custom_type()
-pygame.time.set_timer(asteroid_creation_event, 500)
+pygame.time.set_timer(asteroid_creation_event, ASTEROID_CREATION_INTERVAL)
 
 is_running = True
 

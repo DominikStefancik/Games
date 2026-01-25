@@ -21,3 +21,6 @@ LASER_SOUND_PATH = join("assets", "audio", "laser.wav")
 # Colours
 DISPLAY_SURFACE_COLOR = "#3a2e3f"
 SCORE_TEXT_COLOR = (240, 240, 240)
+
+ASTEROID_CREATION_INTERVAL = 500
+STARS_COUNT = 30
