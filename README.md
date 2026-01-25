@@ -31,17 +31,18 @@
 * [Pong (Bevy)](pong-with-rust-and-bevy) - classical game Pong implemented with Bevy
 * [Pong (Ggez)](pong-with-rust-and-ggez) - classical game Pong implemented with Ggez
 * [Sonic Runner](sonic-runner-with-rust-and-bevy) - runner game based on the famous game Sonic the Hedgedog implemented with Bevy
-* [Space Invaders (simple)](space-invaders-simple-with-rust) - classical Space Invaders game implemented for a terminal
-* [Space Invaders (Bevy)](space-invaders-with-rust-and-bevy) - classical Space Invaders game implemented with Bevy
+* [Space Invaders (simple)](space-invaders-simple-with-rust) - classical game Space Invaders implemented for a terminal
+* [Space Invaders (Bevy)](space-invaders-with-rust-and-bevy) - classical game Space Invaders implemented with Bevy
 
 ### Python
+* [Asteroid Shooter](asteroid-shooter-with-python-and-pygame-ce) - asteroid shooter game implemented with Pygame-ce
 * [Car Racing](car-racing-with-python-and-pygame) - 2D car racing game implemented with Pygame
 * [Hangman](hangman-with-python-and-pygame) - classical game Hangman implemented with Pygame
 * [Jumpy](jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
 * [Tower Defence](tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
 
 ### Java
-* [Pong](pong-with-javafx) - classical game Pong
+* [Pong](pong-with-javafx) - classical game Pong implemented with JavaFx
 
 -----
 
@@ -59,6 +60,7 @@
 
 ### Python
 * [Pygame](https://github.com/pygame/pygame)
+* [Pygame-ce](https://github.com/pygame-community/pygame-ce)
 
 ### Java
 * [JavaFx](https://openjfx.io/)
