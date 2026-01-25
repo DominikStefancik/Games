@@ -6,7 +6,7 @@ from asteroid_explosion import AnimatedAsteroidExplosion
 from constants import SCORE_TEXT_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH
 
 
-def get_explosion_image_path(index):
+def get_explosion_frame_path(index):
     return join("assets", "images", "asteroid_explosion", f"{index}.png")
 
 
@@ -43,6 +43,7 @@ def handle_collisions(
     ):
         spaceship.kill()
         damage_sound.play()
+        return True
 
 
 def display_score(surface, score_font):

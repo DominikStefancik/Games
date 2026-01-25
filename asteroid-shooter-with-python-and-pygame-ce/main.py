@@ -17,7 +17,7 @@ from constants import (
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
 )
-from helpers import display_score, get_explosion_image_path, handle_collisions
+from helpers import display_score, get_explosion_frame_path, handle_collisions
 from spaceship import Spaceship
 from star import Star
 
@@ -46,7 +46,7 @@ ASTEROID_SURFACE = pygame.image.load(ASTEROID_IMAGE_PATH).convert_alpha()
 LASER_SURFACE = pygame.image.load(LASER_IMAGE_PATH).convert_alpha()
 # One-line FOR loop
 asteroid_explosion_frames = [
-    pygame.image.load(get_explosion_image_path(index)).convert_alpha()
+    pygame.image.load(get_explosion_frame_path(index)).convert_alpha()
     for index in range(21)
 ]
 
@@ -107,7 +107,7 @@ while is_running:
 
     all_sprites_group.update(delta_time)
 
-    handle_collisions(
+    is_spaceship_destroyed = handle_collisions(
         spaceship,
         all_sprites_group,
         asteroids_group,
@@ -126,6 +126,10 @@ while is_running:
     # However, the "update()" draws the entire screen whereas with the "flip" we can specify
     # which part of the screen we want to be drawn.
     pygame.display.update()
+
+    if is_spaceship_destroyed:
+        pygame.time.delay(700)
+        is_running = False
 
 # Close the game properly
 pygame.quit()
