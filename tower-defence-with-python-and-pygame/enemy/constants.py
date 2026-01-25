@@ -1,8 +1,10 @@
+from os.path import join
+
 # Images paths
-ENEMY_1_PATH = "assets/images/enemies/enemy_1.png"
-ENEMY_2_PATH = "assets/images/enemies/enemy_2.png"
-ENEMY_3_PATH = "assets/images/enemies/enemy_3.png"
-ENEMY_4_PATH = "assets/images/enemies/enemy_4.png"
+ENEMY_1_PATH = join("assets", "images", "enemies", "enemy_1.png")
+ENEMY_2_PATH = join("assets", "images", "enemies", "enemy_2.png")
+ENEMY_3_PATH = join("assets", "images", "enemies", "enemy_3.png")
+ENEMY_4_PATH = join("assets", "images", "enemies", "enemy_4.png")
 
 SPAWN_ENEMY_COOLDOWN = 400
 

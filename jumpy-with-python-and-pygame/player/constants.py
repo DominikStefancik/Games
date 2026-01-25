@@ -1,9 +1,11 @@
+from os.path import join
+
 # Images paths
-JUMPY_IMAGE_PATH = "assets/images/jumpy.png"
+JUMPY_IMAGE_PATH = join("assets", "images", "jumpy.png")
 
 # Sounds paths
-DEATH_SOUND_PATH = "assets/sounds/death.mp3"
-JUMP_SOUND_PATH = "assets/sounds/jump.mp3"
+DEATH_SOUND_PATH = join("assets", "sounds", "death.mp3")
+JUMP_SOUND_PATH = join("assets", "sounds", "jump.mp3")
 
 JUMPY_IMAGE_SCALE = (45, 45) # the numbers represent width and height in pixels
 JUMPY_MOVEMENT_DISTANCE = 10

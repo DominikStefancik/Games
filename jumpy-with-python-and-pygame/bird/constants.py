@@ -1,5 +1,7 @@
+from os.path import join
+
 # Images paths
-BIRD_IMAGE_PATH = "assets/images/bird.png"
+BIRD_IMAGE_PATH = join("assets", "images", "bird.png")
 
 BIRD_FRAME_SIZE = 32
 BIRD_FRAME_SCALE = 1.5

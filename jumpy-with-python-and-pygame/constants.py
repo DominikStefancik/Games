@@ -1,12 +1,14 @@
+from os.path import join
+
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 600
 FPS = 60
 
 # Images paths
-BACKGROUND_IMAGE_PATH = "assets/images/background.png"
+BACKGROUND_IMAGE_PATH = join("assets", "images", "background.png")
 
 # Sounds paths
-BACKGROUND_MUSIC_SOUND_PATH = "assets/sounds/background_music.mp3"
+BACKGROUND_MUSIC_SOUND_PATH = join("assets", "sounds", "background_music.mp3")
 
 BACKGROUND_IMAGE_HEIGHT = 600
 SCORE_PANEL_HEIGHT = 20

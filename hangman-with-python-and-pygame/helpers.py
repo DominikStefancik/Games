@@ -1,3 +1,5 @@
+from os.path import join
+
 import pygame
 
 from constants import (
@@ -12,7 +14,7 @@ from constants import (
 
 
 def get_hangman_image_path(index):
-    return f"assets/images/hangman_{index}.png"
+    return join("assets", "images", f"hangman_{index}.png")
 
 
 def draw(

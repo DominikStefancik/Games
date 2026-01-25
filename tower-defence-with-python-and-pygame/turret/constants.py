@@ -1,11 +1,14 @@
+from os.path import join
+
 # Images paths
-CURSOR_TURRET_PATH = "assets/images/turrets/cursor_turret.png"
-BUY_TURRET_PATH = "assets/images/buttons/buy_turret.png"
-UPGRADE_TURRET_PATH = "assets/images/buttons/upgrade_turret.png"
-CANCEL_PATH = "assets/images/buttons/cancel.png"
+CURSOR_TURRET_PATH = join("assets", "images", "turrets", "cursor_turret.png")
+BUY_TURRET_PATH = join("assets", "images", "buttons", "buy_turret.png")
+UPGRADE_TURRET_PATH = join("assets", "images", "buttons", "upgrade_turret.png")
+CANCEL_PATH = join("assets", "images", "buttons", "cancel.png")
 
 # Audio paths
-SHOT_SOUND_PATH = "assets/audio/shot.wav"
+SHOT_SOUND_PATH = join("assets", "audio", "shot.wav")
+
 
 TURRET_ANIMATION_FRAMES = 8
 TURRET_ANIMATION_STEP_INTERVAL = 15

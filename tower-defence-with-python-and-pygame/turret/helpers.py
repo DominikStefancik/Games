@@ -1,10 +1,12 @@
+from os.path import join
+
 from world.constants import TILE_SIZE, TILES_COLUMNS
 from .constants import BUY_TURRET_COST
 from .turret import Turret
 
 
 def get_turret_spritesheet_path(index):
-    return f"assets/images/turrets/turret_{index}.png"
+    return join("assets", "images", "turrets", f"turret_{index}.png")
 
 
 def create_turret(

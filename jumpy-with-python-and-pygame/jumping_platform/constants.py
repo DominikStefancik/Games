@@ -1,5 +1,7 @@
+from os.path import join
+
 # Images paths
-PLATFORM_IMAGE_PATH = "assets/images/wood.png"
+PLATFORM_IMAGE_PATH = join("assets", "images", "wood.png")
 
 MAX_PLATFORMS_COUNT = 10
 PLATFORM_MOVE_COUNTER_LIMIT = 100
