@@ -4,5 +4,10 @@ from os.path import join
 OMNI_PATH = join("assets", "map_data", "levels", "omni.tmx")
 
 LEVEL_LAYER = {
+    "Objects": "Objects",
     "Terrain": "Terrain"
+}
+
+LEVEL_OBJECT = {
+    "player": "player"
 }

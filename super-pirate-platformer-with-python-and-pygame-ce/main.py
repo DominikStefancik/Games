@@ -15,6 +15,7 @@ class Game:
         pygame.init()
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Python Super Pirate Platformer")
+        self.clock = pygame.time.Clock()
 
         self.level_maps = {0: load_pygame(OMNI_PATH)}
 
@@ -22,12 +23,14 @@ class Game:
 
     def run(self):
         while True:
+            delta_time = self.clock.tick() / 1000
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-            self.current_stage.run()
+            self.current_stage.run(delta_time)
 
             pygame.display.update()
 
