@@ -1,13 +1,12 @@
 from os.path import join
+from enum import Enum
 
 # Map data paths
 OMNI_PATH = join("assets", "map_data", "levels", "omni.tmx")
 
-LEVEL_LAYER = {
-    "Objects": "Objects",
-    "Terrain": "Terrain"
-}
+class LevelLayer(Enum):
+    OBJECTS = "Objects"
+    TERRAIN = "Terrain"
 
-LEVEL_OBJECT = {
-    "player": "player"
-}
+class LevelObject(Enum):
+    PLAYER = "player"
