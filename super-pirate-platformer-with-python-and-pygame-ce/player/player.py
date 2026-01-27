@@ -31,6 +31,8 @@ class Player(pygame.sprite.Sprite):
         }
 
         self.collision_sprites = collision_sprites
+        # Represents a possible moving platform the player might be standing during the game
+        self.moving_platform = None
 
         self.timers = {
             PlayerTimerType.WALL_JUMP: Timer(500),
@@ -98,11 +100,21 @@ class Player(pygame.sprite.Sprite):
                 self.timers[PlayerTimerType.WALL_SLIDE_BLOCK].activate()
             if is_on_wall and not self.timers[PlayerTimerType.WALL_SLIDE_BLOCK].active:
                 self.timers[PlayerTimerType.WALL_JUMP].activate()
+                self.direction.y = -PLAYER_JUMP_HEIGHT
                 self.direction.x = 1 if self.is_on_surface[SurfaceContact.LEFT] else -1
 
             self.is_jumping = False
 
+    # Updates the player's position if he stands on a moving platform
+    def move_with_platform(self, delta_time):
+        if self.moving_platform:
+            self.rect.topleft += self.moving_platform.direction * self.moving_platform.speed * delta_time
+
+            if self.rect.bottom >= self.moving_platform.rect.top:
+                self.rect.bottom = self.moving_platform.rect.top
+
     def check_contact_with_surface(self):
+        # Create tiny invisible rectangles on the player's sides which will be used for collision detection
         floor_rectangle = pygame.Rect(self.rect.bottomleft, (self.rect.width, 2))
         left_rectangle = pygame.Rect(
             self.rect.topleft + vector(-2, self.rect.height / 4),
@@ -126,6 +138,13 @@ class Player(pygame.sprite.Sprite):
         self.is_on_surface[SurfaceContact.RIGHT] = (
             right_rectangle.collidelist(collision_rectangles) >= 0
         )
+
+        self.moving_platform = None
+        # Check if the player landed on a moving platform
+        # We iterate through collision sprites but are interested only in those which are moving
+        for sprite in [sprite for sprite in self.collision_sprites.sprites() if sprite.is_moving]:
+            if sprite.rect.colliderect(floor_rectangle):
+                self.moving_platform = sprite
 
     def detect_collision(self, collision_axis):
         # For processing collisions we want to separate horizontal and vertical axes
@@ -180,4 +199,5 @@ class Player(pygame.sprite.Sprite):
         self.update_timers()
         self.process_key_input()
         self.move(delta_time)
+        self.move_with_platform(delta_time)
         self.check_contact_with_surface()
