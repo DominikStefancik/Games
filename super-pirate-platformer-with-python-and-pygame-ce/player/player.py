@@ -170,7 +170,7 @@ class Player(pygame.sprite.Sprite):
                     # where the player was on the right side of the sprite before the collision
                     if (
                         self.hitbox_rect.left <= sprite.rect.right
-                        and int(self.previous_rect.left) >= sprite.previous_rect.right
+                        and int(self.previous_rect.left) >= int(sprite.previous_rect.right)
                     ):
                         self.hitbox_rect.left = sprite.rect.right
 
@@ -178,7 +178,7 @@ class Player(pygame.sprite.Sprite):
                     # where the player was on the left side of the sprite before the collision
                     if (
                         self.hitbox_rect.right >= sprite.rect.left
-                        and int(self.previous_rect.right) <= sprite.previous_rect.left
+                        and int(self.previous_rect.right) <= int(sprite.previous_rect.left)
                     ):
                         self.hitbox_rect.right = sprite.rect.left
 
@@ -187,7 +187,7 @@ class Player(pygame.sprite.Sprite):
                     # where the player was on the bottom side of the sprite before the collision
                     if (
                         self.hitbox_rect.top <= sprite.rect.bottom
-                        and int(self.previous_rect.top) >= sprite.previous_rect.bottom
+                        and int(self.previous_rect.top) >= int(sprite.previous_rect.bottom)
                     ):
                         self.hitbox_rect.top = sprite.rect.bottom
 
@@ -200,7 +200,7 @@ class Player(pygame.sprite.Sprite):
                     # where the player was on the top side of the sprite before the collision
                     if (
                         self.hitbox_rect.bottom >= sprite.rect.top
-                        and int(self.previous_rect.bottom) <= sprite.previous_rect.top
+                        and int(self.previous_rect.bottom) <= int(sprite.previous_rect.top)
                     ):
                         self.hitbox_rect.bottom = sprite.rect.top
 
@@ -217,7 +217,7 @@ class Player(pygame.sprite.Sprite):
                     # before the collision.
                     if (
                         self.hitbox_rect.bottom >= sprite.rect.top
-                        and int(self.previous_rect.bottom) <= sprite.previous_rect.top
+                        and int(self.previous_rect.bottom) <= int(sprite.previous_rect.top)
                     ):
                         self.hitbox_rect.bottom = sprite.rect.top
 

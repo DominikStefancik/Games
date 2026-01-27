@@ -1,3 +1,4 @@
+from all_sprites_group import AllSpritesGroup
 from player.player import Player
 from settings import pygame, TILE_SIZE
 from sprites.constants import MovingDirection
@@ -13,7 +14,7 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         # Groups
-        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites = AllSpritesGroup()
         # Represents all sprites with which the player object can collide
         self.collision_sprite = pygame.sprite.Group()
         # Represents all sprites with which the player object can collide but only with his bottom part
@@ -45,9 +46,9 @@ class Level:
         for object in tmx_map.get_layer_by_name(LevelLayer.OBJECTS.value):
             if object.name == LevelObject.PLAYER.value:
                 # "x" and "y" are already in pixels position
-                Player(self.all_sprites, (object.x, object.y), self.collision_sprite, self.semi_collision_sprite)
+                self.player = Player(self.all_sprites, (object.x, object.y), self.collision_sprite, self.semi_collision_sprite)
 
     def run(self, delta_time):
         self.display_surface.fill("black")
         self.all_sprites.update(delta_time)
-        self.all_sprites.draw(self.display_surface)
+        self.all_sprites.draw(self.player.hitbox_rect.center)
