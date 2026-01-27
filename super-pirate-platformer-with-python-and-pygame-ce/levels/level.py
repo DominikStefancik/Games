@@ -16,6 +16,8 @@ class Level:
         self.all_sprites = pygame.sprite.Group()
         # Represents all sprites with which the player object can collide
         self.collision_sprite = pygame.sprite.Group()
+        # Represents all sprites with which the player object can collide but only with his bottom part
+        self.semi_collision_sprite = pygame.sprite.Group()
 
         self.process_level_layers(tmx_map)
 
@@ -38,12 +40,12 @@ class Level:
                     ending_position = (object.x + object.width / 2, object.y + object.height)
 
                 speed = object.properties["speed"]
-                MovingSprite((self.all_sprites, self.collision_sprite), pygame.Surface((200, 50)), starting_position, ending_position, moving_direction, speed)
+                MovingSprite((self.all_sprites, self.semi_collision_sprite), pygame.Surface((200, 50)), starting_position, ending_position, moving_direction, speed)
 
         for object in tmx_map.get_layer_by_name(LevelLayer.OBJECTS.value):
             if object.name == LevelObject.PLAYER.value:
                 # "x" and "y" are already in pixels position
-                Player(self.all_sprites, (object.x, object.y), self.collision_sprite)
+                Player(self.all_sprites, (object.x, object.y), self.collision_sprite, self.semi_collision_sprite)
 
     def run(self, delta_time):
         self.display_surface.fill("black")

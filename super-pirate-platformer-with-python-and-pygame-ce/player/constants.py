@@ -14,5 +14,6 @@ class SurfaceContact(Enum):
     RIGHT = "right"
 
 class PlayerTimerType(Enum):
-    WALL_JUMP = "wall_jump"
-    WALL_SLIDE_BLOCK = "wall_slide_block"
+    WALL_JUMP = "wall jump"
+    WALL_SLIDE_BLOCK = "wall slide block"
+    PLATFORM_FALL_DOWN = "platform fall down"
