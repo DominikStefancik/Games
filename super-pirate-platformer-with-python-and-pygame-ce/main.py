@@ -34,6 +34,27 @@ class Game:
             LevelObjectAssetGroup.FLOOR_SPIKE.value: import_folder(
                 "assets", "graphics", "enemies", "floor_spikes"
             ),
+            LevelObjectAssetGroup.PALM.value: import_subfolders_as_dict(
+                "assets", "graphics", "level", "palms"
+            ),
+            LevelObjectAssetGroup.CANDLE.value: import_folder(
+                "assets", "graphics", "level", "candle"
+            ),
+            LevelObjectAssetGroup.WINDOW.value: import_folder(
+                "assets", "graphics", "level", "window"
+            ),
+            LevelObjectAssetGroup.BIG_CHAIN.value: import_folder(
+                "assets", "graphics", "level", "big_chains"
+            ),
+            LevelObjectAssetGroup.SMALL_CHAIN.value: import_folder(
+                "assets", "graphics", "level", "small_chains"
+            ),
+            LevelObjectAssetGroup.CANDLE_LIGHT.value: import_folder(
+                "assets", "graphics", "level", "candle_light"
+            ),
+            LevelObjectAssetGroup.PLAYER.value: import_subfolders_as_dict(
+                "assets", "graphics", "player"
+            ),
         }
 
     def run(self):

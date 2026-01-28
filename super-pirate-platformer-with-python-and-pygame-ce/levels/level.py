@@ -51,7 +51,12 @@ class Level:
                     groups.append(self.semi_collision_sprites)
 
                 # "x" and "y" are the position coordinates in a Tiles grid. We have to transform them into pixels position
-                Sprite(groups, surface, (x * TILE_SIZE, y * TILE_SIZE), z_index)
+                Sprite(
+                    groups=groups,
+                    surface=surface,
+                    position=(x * TILE_SIZE, y * TILE_SIZE),
+                    z_index=z_index,
+                )
 
         for object in tmx_map.get_layer_by_name(LevelLayer.MOVING_OBJECTS.value):
             if object.name == LevelObject.HELICOPTER.value:
@@ -72,34 +77,40 @@ class Level:
 
                 speed = object.properties["speed"]
                 MovingSprite(
-                    (self.all_sprites, self.semi_collision_sprites),
-                    pygame.Surface((200, 50)),
-                    starting_position,
-                    ending_position,
-                    moving_direction,
-                    speed,
+                    groups=(self.all_sprites, self.semi_collision_sprites),
+                    surface=pygame.Surface((200, 50)),
+                    start_position=starting_position,
+                    end_position=ending_position,
+                    moving_direction=moving_direction,
+                    speed=speed,
                 )
 
         for object in tmx_map.get_layer_by_name(LevelLayer.OBJECTS.value):
             if object.name == LevelObject.PLAYER.value:
+                animation_frames = level_frames[object.name]
                 # "x" and "y" are already in pixels position
                 self.player = Player(
-                    self.all_sprites,
-                    (object.x, object.y),
-                    self.collision_sprites,
-                    self.semi_collision_sprites,
+                    groups=self.all_sprites,
+                    position=(object.x, object.y),
+                    collision_sprites=self.collision_sprites,
+                    semi_collision_sprites=self.semi_collision_sprites,
+                    animation_frames=animation_frames,
                 )
             else:
                 if object.name in [LevelObject.BARREL.value, LevelObject.CRATE.value]:
                     Sprite(
-                        (self.all_sprites, self.collision_sprites),
-                        object.image,
-                        (object.x, object.y),
+                        groups=(self.all_sprites, self.collision_sprites),
+                        surface=object.image,
+                        position=(object.x, object.y),
                     )
                 else:
                     if not LevelObject.PALM.value in object.name:
                         frames = level_frames[object.name]
-                        AnimatedSprite(self.all_sprites, (object.x, object.y), frames)
+                        AnimatedSprite(
+                            groups=self.all_sprites,
+                            position=(object.x, object.y),
+                            animation_frames=frames,
+                        )
 
     def run(self, delta_time):
         self.display_surface.fill("black")

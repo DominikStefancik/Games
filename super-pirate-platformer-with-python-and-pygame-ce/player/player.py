@@ -1,10 +1,11 @@
 from os.path import join
 
-from settings import pygame, vector, TILE_SIZE, Z_Layer
+from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
 
 from .constants import (
     Collision,
+    PlayerAnimation,
     PLAYER_GRAVITY,
     PLAYER_JUMP_HEIGHT,
     PLAYER_SPEED,
@@ -14,11 +15,21 @@ from .constants import (
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, groups, position, collision_sprites, semi_collision_sprites):
+    def __init__(
+        self,
+        groups,
+        position,
+        collision_sprites,
+        semi_collision_sprites,
+        animation_frames,
+    ):
         super().__init__(groups)
-        self.image = pygame.image.load(
-            join("assets", "graphics", "player", "idle", "0.png")
-        )
+
+        self.animation_frames = animation_frames
+        self.frame_index = 0
+        self.animation = PlayerAnimation.IDLE
+        self.flip = False
+        self.image = self.animation_frames[self.animation.value][self.frame_index]
         # Represents a rectangle to figure out where the player will be drawn in a current frame
         self.rect = self.image.get_frect(topleft=position)
         # The method "inflate" takes a rectangle and resizes it with keeping its origin center point
@@ -36,6 +47,7 @@ class Player(pygame.sprite.Sprite):
             SurfaceContact.LEFT: False,
             SurfaceContact.RIGHT: False,
         }
+        self.is_attacking = False
 
         self.collision_sprites = collision_sprites
         self.semi_collision_sprites = semi_collision_sprites
@@ -47,6 +59,7 @@ class Player(pygame.sprite.Sprite):
             # Timer for allowing a wall jump after a short time interval
             PlayerTimerType.WALL_SLIDE_BLOCK: Timer(250),
             PlayerTimerType.PLATFORM_FALL_DOWN: Timer(300),
+            PlayerTimerType.ATTACK_BLOCK: Timer(500),
         }
 
     def process_key_input(self):
@@ -56,10 +69,14 @@ class Player(pygame.sprite.Sprite):
         if not self.timers[PlayerTimerType.WALL_JUMP].active:
             if keys[pygame.K_LEFT]:
                 input_vector.x -= 1
+                self.flip = True
             if keys[pygame.K_RIGHT]:
                 input_vector.x += 1
+                self.flip = False
             if keys[pygame.K_DOWN]:
                 self.timers[PlayerTimerType.PLATFORM_FALL_DOWN].activate()
+            if keys[pygame.K_SPACE]:
+                self.attack()
 
             # Normalise the vector only if one of its values is not zero
             self.direction.x = (
@@ -74,7 +91,7 @@ class Player(pygame.sprite.Sprite):
             ]
         )
 
-        if keys[pygame.K_SPACE] and is_on_surface:
+        if keys[pygame.K_UP] and is_on_surface:
             self.is_jumping = True
 
     def move(self, delta_time):
@@ -231,6 +248,61 @@ class Player(pygame.sprite.Sprite):
                         if self.direction.y > 0:
                             self.direction.y = 0
 
+    def attack(self):
+        if not self.timers[PlayerTimerType.ATTACK_BLOCK].active:
+            self.is_attacking = True
+            # When attacking, we have to set the frame index to zero, otherwise the attacking animation
+            # would start from the frame index set up by the animation played by the attack
+            self.frame_index = 0
+            self.timers[PlayerTimerType.ATTACK_BLOCK].activate()
+
+    def update_animation(self):
+        if self.is_on_surface[SurfaceContact.FLOOR]:
+            if self.is_attacking:
+                self.animation = PlayerAnimation.ATTACK
+            else:
+                self.animation = (
+                    PlayerAnimation.IDLE
+                    if self.direction.x == 0
+                    else PlayerAnimation.RUN
+                )
+        else:
+            if self.is_attacking:
+                self.animation = PlayerAnimation.AIR_ATTACK
+            else:
+                is_on_wall = any(
+                    [
+                        self.is_on_surface[SurfaceContact.LEFT],
+                        self.is_on_surface[SurfaceContact.RIGHT],
+                    ]
+                )
+
+                if is_on_wall:
+                    self.animation = PlayerAnimation.WALL
+                else:  # the player is in the air, but not touching the wall
+                    self.animation = (
+                        PlayerAnimation.JUMP
+                        if self.direction.y < 0
+                        else PlayerAnimation.FALL
+                    )
+
+    def animate(self, delta_time):
+        animation_frames = self.animation_frames[self.animation.value]
+        self.frame_index += ANIMATION_SPEED * delta_time
+
+        # If the player is attacking, we want to play the animation only once.
+        # After it played, we immediatelly change the animation to "idle"
+        if self.animation == PlayerAnimation.ATTACK and self.frame_index >= len(
+            animation_frames
+        ):
+            self.animation = PlayerAnimation.IDLE
+
+        self.image = animation_frames[int(self.frame_index % len(animation_frames))]
+        self.image = pygame.transform.flip(self.image, self.flip, False)
+
+        if self.is_attacking and self.frame_index > len(animation_frames):
+            self.is_attacking = False
+
     def update_timers(self):
         for timer in self.timers.values():
             timer.update()
@@ -240,7 +312,11 @@ class Player(pygame.sprite.Sprite):
         # This will be then used for a collision detection
         self.previous_rect = self.hitbox_rect.copy()
         self.update_timers()
+
         self.process_key_input()
         self.move(delta_time)
         self.move_with_platform(delta_time)
         self.check_contact_with_surface()
+
+        self.update_animation()
+        self.animate(delta_time)
