@@ -6,7 +6,12 @@ from sprites.constants import MovingDirection
 from sprites.moving_sprite import MovingSprite
 from sprites.sprite import Sprite
 
-from .constants import LevelLayer, LevelObject
+from .constants import (
+    LevelLayer,
+    LevelObject,
+    LevelObjectAssetGroup,
+    LevelObjectProperty,
+)
 
 
 class Level:
@@ -20,6 +25,7 @@ class Level:
         self.collision_sprites = pygame.sprite.Group()
         # Represents all sprites with which the player object can collide but only with his bottom part
         self.semi_collision_sprites = pygame.sprite.Group()
+        self.damage_sprites = pygame.sprite.Group()
 
         self.process_level_layers(tmx_map, level_frames)
 
@@ -36,11 +42,8 @@ class Level:
                 groups = [self.all_sprites]
 
                 match layer:
-                    case LevelLayer.BACKGROUND:
+                    case LevelLayer.BACKGROUND | LevelLayer.FOREGROUND:
                         z_index = Z_Layer.BACKGROUND_TILES.value
-                        break
-                    case LevelLayer.FOREGROUND:
-                        z_index = Z_Layer.FOREGROUND.value
                         break
                     case _:
                         z_index = Z_Layer.MAIN.value
@@ -59,7 +62,16 @@ class Level:
                 )
 
         for object in tmx_map.get_layer_by_name(LevelLayer.MOVING_OBJECTS.value):
-            if object.name == LevelObject.HELICOPTER.value:
+            if object.name == LevelObject.SPIKE.value:
+                pass
+            else:
+                animation_frames = level_frames[object.name]
+                groups = (
+                    (self.all_sprites, self.semi_collision_sprites)
+                    if object.properties[LevelObjectProperty.PLATFORM.value]
+                    else (self.all_sprites, self.damage_sprites)
+                )
+
                 if object.width > object.height:
                     moving_direction = MovingDirection.HORIZONTAL
                     starting_position = (object.x, object.y + object.height / 2)
@@ -77,13 +89,40 @@ class Level:
 
                 speed = object.properties["speed"]
                 MovingSprite(
-                    groups=(self.all_sprites, self.semi_collision_sprites),
-                    surface=pygame.Surface((200, 50)),
+                    groups=groups,
                     start_position=starting_position,
                     end_position=ending_position,
                     moving_direction=moving_direction,
                     speed=speed,
+                    animation_frames=animation_frames,
+                    flip=object.properties[LevelObjectProperty.FLIP.value],
                 )
+
+                if object.name == LevelObject.SAW.value:
+                    surface = level_frames[LevelObjectAssetGroup.SAW_CHAIN.value]
+
+                    if moving_direction == MovingDirection.HORIZONTAL:
+                        top = starting_position[1] - surface.get_height() / 2
+                        left, right = int(starting_position[0]), int(ending_position[0])
+
+                        for index in range(left, right, 20):
+                            Sprite(
+                                groups=self.all_sprites,
+                                surface=surface,
+                                position=(index, top),
+                                z_index=Z_Layer.BACKGROUND_DETAILS.value,
+                            )
+                    else:
+                        left = starting_position[0] - surface.get_width() / 2
+                        top, bottom = int(starting_position[1]), int(ending_position[1])
+
+                        for index in range(top, bottom, 20):
+                            Sprite(
+                                groups=self.all_sprites,
+                                surface=surface,
+                                position=(left, index),
+                                z_index=Z_Layer.BACKGROUND_DETAILS.value,
+                            )
 
         for object in tmx_map.get_layer_by_name(LevelLayer.OBJECTS.value):
             if object.name == LevelObject.PLAYER.value:

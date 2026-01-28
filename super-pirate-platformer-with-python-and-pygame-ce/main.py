@@ -31,6 +31,9 @@ class Game:
             LevelObjectAssetGroup.SAW.value: import_folder(
                 "assets", "graphics", "enemies", "saw", "animation"
             ),
+            LevelObjectAssetGroup.SAW_CHAIN.value: import_image(
+                "assets", "graphics", "enemies", "saw", "saw_chain"
+            ),
             LevelObjectAssetGroup.FLOOR_SPIKE.value: import_folder(
                 "assets", "graphics", "enemies", "floor_spikes"
             ),
@@ -54,6 +57,12 @@ class Game:
             ),
             LevelObjectAssetGroup.PLAYER.value: import_subfolders_as_dict(
                 "assets", "graphics", "player"
+            ),
+            LevelObjectAssetGroup.HELICOPTER.value: import_folder(
+                "assets", "graphics", "level", "helicopter"
+            ),
+            LevelObjectAssetGroup.BOAT.value: import_folder(
+                "assets", "graphics", "objects", "boat"
             ),
         }
 
