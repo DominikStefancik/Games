@@ -5,10 +5,21 @@ from enum import Enum
 OMNI_PATH = join("assets", "map_data", "levels", "omni.tmx")
 
 class LevelLayer(Enum):
+    BACKGROUND = "BG"
+    FOREGROUND = "FG"
     OBJECTS = "Objects"
-    TERRAIN = "Terrain"
+    PLATFORMS = "Platforms"
     MOVING_OBJECTS = "Moving Objects"
+    TERRAIN = "Terrain"
 
 class LevelObject(Enum):
     PLAYER = "player"
-    HELICOPTER = "helicopter"
+    HELICOPTER = "helicopter",
+    BARREL = "barrel"
+    CRATE = "crate"
+    PALM = "palm"
+
+class LevelObjectAssetGroup(Enum):
+    FLAG = "flag"
+    SAW = "saw"
+    FLOOR_SPIKE = "floor_spike"

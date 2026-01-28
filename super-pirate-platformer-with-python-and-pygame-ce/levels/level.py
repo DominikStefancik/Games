@@ -1,6 +1,7 @@
 from all_sprites_group import AllSpritesGroup
 from player.player import Player
-from settings import pygame, TILE_SIZE
+from settings import pygame, TILE_SIZE, Z_Layer
+from sprites.animated_sprite import AnimatedSprite
 from sprites.constants import MovingDirection
 from sprites.moving_sprite import MovingSprite
 from sprites.sprite import Sprite
@@ -9,44 +10,96 @@ from .constants import LevelLayer, LevelObject
 
 
 class Level:
-    def __init__(self, tmx_map):
+    def __init__(self, tmx_map, level_frames):
         # The main surface on which we will be drawing level elements
         self.display_surface = pygame.display.get_surface()
 
         # Groups
         self.all_sprites = AllSpritesGroup()
         # Represents all sprites with which the player object can collide
-        self.collision_sprite = pygame.sprite.Group()
+        self.collision_sprites = pygame.sprite.Group()
         # Represents all sprites with which the player object can collide but only with his bottom part
-        self.semi_collision_sprite = pygame.sprite.Group()
+        self.semi_collision_sprites = pygame.sprite.Group()
 
-        self.process_level_layers(tmx_map)
+        self.process_level_layers(tmx_map, level_frames)
 
     # Gets objects from the level map layers and creates related game objects
-    def process_level_layers(self, tmx_map):
-        # Get tiles from one specific layer inside the map
-        for x, y, surface in tmx_map.get_layer_by_name(str(LevelLayer.TERRAIN.value)).tiles():
-            # "x" and "y" are the position coordinates in a Tiles grid. We have to transform them into pixels position
-            Sprite((self.all_sprites, self.collision_sprite), pygame.Surface((TILE_SIZE, TILE_SIZE)), (x * TILE_SIZE, y * TILE_SIZE))
+    def process_level_layers(self, tmx_map, level_frames):
+        for layer in [
+            LevelLayer.BACKGROUND,
+            LevelLayer.TERRAIN,
+            LevelLayer.FOREGROUND,
+            LevelLayer.PLATFORMS,
+        ]:
+            # Get tiles from one specific layer inside the map
+            for x, y, surface in tmx_map.get_layer_by_name(layer.value).tiles():
+                groups = [self.all_sprites]
+
+                match layer:
+                    case LevelLayer.BACKGROUND:
+                        z_index = Z_Layer.BACKGROUND_TILES.value
+                        break
+                    case LevelLayer.FOREGROUND:
+                        z_index = Z_Layer.FOREGROUND.value
+                        break
+                    case _:
+                        z_index = Z_Layer.MAIN.value
+
+                if layer == LevelLayer.TERRAIN:
+                    groups.append(self.collision_sprites)
+                if layer == LevelLayer.PLATFORMS:
+                    groups.append(self.semi_collision_sprites)
+
+                # "x" and "y" are the position coordinates in a Tiles grid. We have to transform them into pixels position
+                Sprite(groups, surface, (x * TILE_SIZE, y * TILE_SIZE), z_index)
 
         for object in tmx_map.get_layer_by_name(LevelLayer.MOVING_OBJECTS.value):
             if object.name == LevelObject.HELICOPTER.value:
                 if object.width > object.height:
                     moving_direction = MovingDirection.HORIZONTAL
                     starting_position = (object.x, object.y + object.height / 2)
-                    ending_position = (object.x + object.width, object.y + object.height / 2)
+                    ending_position = (
+                        object.x + object.width,
+                        object.y + object.height / 2,
+                    )
                 else:
                     moving_direction = MovingDirection.VERTICAL
                     starting_position = (object.x + object.width / 2, object.y)
-                    ending_position = (object.x + object.width / 2, object.y + object.height)
+                    ending_position = (
+                        object.x + object.width / 2,
+                        object.y + object.height,
+                    )
 
                 speed = object.properties["speed"]
-                MovingSprite((self.all_sprites, self.semi_collision_sprite), pygame.Surface((200, 50)), starting_position, ending_position, moving_direction, speed)
+                MovingSprite(
+                    (self.all_sprites, self.semi_collision_sprites),
+                    pygame.Surface((200, 50)),
+                    starting_position,
+                    ending_position,
+                    moving_direction,
+                    speed,
+                )
 
         for object in tmx_map.get_layer_by_name(LevelLayer.OBJECTS.value):
             if object.name == LevelObject.PLAYER.value:
                 # "x" and "y" are already in pixels position
-                self.player = Player(self.all_sprites, (object.x, object.y), self.collision_sprite, self.semi_collision_sprite)
+                self.player = Player(
+                    self.all_sprites,
+                    (object.x, object.y),
+                    self.collision_sprites,
+                    self.semi_collision_sprites,
+                )
+            else:
+                if object.name in [LevelObject.BARREL.value, LevelObject.CRATE.value]:
+                    Sprite(
+                        (self.all_sprites, self.collision_sprites),
+                        object.image,
+                        (object.x, object.y),
+                    )
+                else:
+                    if not LevelObject.PALM.value in object.name:
+                        frames = level_frames[object.name]
+                        AnimatedSprite(self.all_sprites, (object.x, object.y), frames)
 
     def run(self, delta_time):
         self.display_surface.fill("black")

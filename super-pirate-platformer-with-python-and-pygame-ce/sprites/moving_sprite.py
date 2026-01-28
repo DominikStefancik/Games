@@ -1,11 +1,13 @@
-from settings import pygame, TILE_SIZE, vector
+from settings import vector
 
 from .constants import MovingDirection
 from .sprite import Sprite
 
 
 class MovingSprite(Sprite):
-    def __init__(self, groups, surface, start_position, end_position, moving_direction, speed):
+    def __init__(
+        self, groups, surface, start_position, end_position, moving_direction, speed
+    ):
         super().__init__(groups, surface, start_position)
         self.is_moving = True
         self.moving_direction = moving_direction
@@ -18,7 +20,11 @@ class MovingSprite(Sprite):
         self.start_position = start_position
         self.end_position = end_position
         self.speed = speed
-        self.direction = vector(1, 0) if self.moving_direction == MovingDirection.HORIZONTAL else vector(0, 1)
+        self.direction = (
+            vector(1, 0)
+            if self.moving_direction == MovingDirection.HORIZONTAL
+            else vector(0, 1)
+        )
 
     def check_moving_distance(self):
         if self.moving_direction == MovingDirection.HORIZONTAL:

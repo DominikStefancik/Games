@@ -1,6 +1,6 @@
 from os.path import join
 
-from settings import pygame, vector, TILE_SIZE
+from settings import pygame, vector, TILE_SIZE, Z_Layer
 from timer import Timer
 
 from .constants import (
@@ -16,7 +16,9 @@ from .constants import (
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups, position, collision_sprites, semi_collision_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load(join("assets", "graphics", "player", "idle", "0.png"))
+        self.image = pygame.image.load(
+            join("assets", "graphics", "player", "idle", "0.png")
+        )
         # Represents a rectangle to figure out where the player will be drawn in a current frame
         self.rect = self.image.get_frect(topleft=position)
         # The method "inflate" takes a rectangle and resizes it with keeping its origin center point
@@ -24,6 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.hitbox_rect = self.rect.inflate(-76, -36)
         # Represents a rectangle to figure out where the player was drawn in a previous frame
         self.previous_rect = self.hitbox_rect.copy()
+        self.z_index = Z_Layer.MAIN.value
 
         self.direction = vector()
         self.speed = PLAYER_SPEED
@@ -121,14 +124,18 @@ class Player(pygame.sprite.Sprite):
     # Updates the player's position if he stands on a moving platform
     def move_with_platform(self, delta_time):
         if self.moving_platform:
-            self.hitbox_rect.topleft += self.moving_platform.direction * self.moving_platform.speed * delta_time
+            self.hitbox_rect.topleft += (
+                self.moving_platform.direction * self.moving_platform.speed * delta_time
+            )
 
             if self.hitbox_rect.bottom >= self.moving_platform.rect.top:
                 self.hitbox_rect.bottom = self.moving_platform.rect.top
 
     def check_contact_with_surface(self):
         # Create tiny invisible rectangles on the player's sides which will be used for collision detection
-        floor_rectangle = pygame.Rect(self.hitbox_rect.bottomleft, (self.hitbox_rect.width, 2))
+        floor_rectangle = pygame.Rect(
+            self.hitbox_rect.bottomleft, (self.hitbox_rect.width, 2)
+        )
         left_rectangle = pygame.Rect(
             self.hitbox_rect.topleft + vector(-2, self.hitbox_rect.height / 4),
             (2, self.hitbox_rect.height / 2),
@@ -138,13 +145,16 @@ class Player(pygame.sprite.Sprite):
             (2, self.hitbox_rect.height / 2),
         )
         collision_rectangles = [sprite.rect for sprite in self.collision_sprites]
-        semi_collision_rectangles = [sprite.rect for sprite in self.semi_collision_sprites]
+        semi_collision_rectangles = [
+            sprite.rect for sprite in self.semi_collision_sprites
+        ]
 
         # The method "collidelist()" checks if the given rectangle collides with any of sprites provided
         # in the list argument. Returns an index of the sprite with which the given rectangle collides.
         # If the return value is -1, it doesn't collide with any of the sprites from the list.
         self.is_on_surface[SurfaceContact.FLOOR] = (
-            floor_rectangle.collidelist(collision_rectangles) >= 0 or floor_rectangle.collidelist(semi_collision_rectangles) >= 0
+            floor_rectangle.collidelist(collision_rectangles) >= 0
+            or floor_rectangle.collidelist(semi_collision_rectangles) >= 0
         )
         self.is_on_surface[SurfaceContact.LEFT] = (
             left_rectangle.collidelist(collision_rectangles) >= 0
@@ -154,7 +164,9 @@ class Player(pygame.sprite.Sprite):
         )
 
         self.moving_platform = None
-        collidable_sprites = self.collision_sprites.sprites() + self.semi_collision_sprites.sprites()
+        collidable_sprites = (
+            self.collision_sprites.sprites() + self.semi_collision_sprites.sprites()
+        )
         # Check if the player landed on a moving platform
         # We iterate through collision sprites but are interested only in those which are moving
         for sprite in [sprite for sprite in collidable_sprites if sprite.is_moving]:
@@ -168,27 +180,24 @@ class Player(pygame.sprite.Sprite):
                 if collision_axis == Collision.HORIZONTAL:
                     # Collision happened from the left side of the player to the right side of the sprite
                     # where the player was on the right side of the sprite before the collision
-                    if (
-                        self.hitbox_rect.left <= sprite.rect.right
-                        and int(self.previous_rect.left) >= int(sprite.previous_rect.right)
-                    ):
+                    if self.hitbox_rect.left <= sprite.rect.right and int(
+                        self.previous_rect.left
+                    ) >= int(sprite.previous_rect.right):
                         self.hitbox_rect.left = sprite.rect.right
 
                     # Collision happened from the right side of the player to the left side of the sprite
                     # where the player was on the left side of the sprite before the collision
-                    if (
-                        self.hitbox_rect.right >= sprite.rect.left
-                        and int(self.previous_rect.right) <= int(sprite.previous_rect.left)
-                    ):
+                    if self.hitbox_rect.right >= sprite.rect.left and int(
+                        self.previous_rect.right
+                    ) <= int(sprite.previous_rect.left):
                         self.hitbox_rect.right = sprite.rect.left
 
                 if collision_axis == Collision.VERTICAL:
                     # Collision happened from the top side of the player to the bottom side of the sprite
                     # where the player was on the bottom side of the sprite before the collision
-                    if (
-                        self.hitbox_rect.top <= sprite.rect.bottom
-                        and int(self.previous_rect.top) >= int(sprite.previous_rect.bottom)
-                    ):
+                    if self.hitbox_rect.top <= sprite.rect.bottom and int(
+                        self.previous_rect.top
+                    ) >= int(sprite.previous_rect.bottom):
                         self.hitbox_rect.top = sprite.rect.bottom
 
                         # In the case of the moving platform going down and the player jumping up
@@ -198,10 +207,9 @@ class Player(pygame.sprite.Sprite):
 
                     # Collision happened from the bottom side of the player to the top side of the sprite
                     # where the player was on the top side of the sprite before the collision
-                    if (
-                        self.hitbox_rect.bottom >= sprite.rect.top
-                        and int(self.previous_rect.bottom) <= int(sprite.previous_rect.top)
-                    ):
+                    if self.hitbox_rect.bottom >= sprite.rect.top and int(
+                        self.previous_rect.bottom
+                    ) <= int(sprite.previous_rect.top):
                         self.hitbox_rect.bottom = sprite.rect.top
 
                     # If a vertical collision happened, we want to reset the vertical direction
@@ -215,10 +223,9 @@ class Player(pygame.sprite.Sprite):
                     # We are only interested in collision which happened from the bottom side of the player
                     # to the top side of the sprite where the player was on the top side of the sprite
                     # before the collision.
-                    if (
-                        self.hitbox_rect.bottom >= sprite.rect.top
-                        and int(self.previous_rect.bottom) <= int(sprite.previous_rect.top)
-                    ):
+                    if self.hitbox_rect.bottom >= sprite.rect.top and int(
+                        self.previous_rect.bottom
+                    ) <= int(sprite.previous_rect.top):
                         self.hitbox_rect.bottom = sprite.rect.top
 
                         if self.direction.y > 0:
