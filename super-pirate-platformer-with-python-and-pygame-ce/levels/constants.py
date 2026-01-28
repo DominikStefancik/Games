@@ -27,6 +27,10 @@ class LevelObject(Enum):
 class LevelObjectProperty(Enum):
     PLATFORM = "platform"
     FLIP = "flip"
+    RADIUS = "radius"
+    SPEED = "speed"
+    START_ANGLE = "start_angle"
+    END_ANGLE = "end_angle"
 
 
 class LevelObjectAssetGroup(Enum):
@@ -43,3 +47,5 @@ class LevelObjectAssetGroup(Enum):
     PLAYER = "player"
     HELICOPTER = "helicopter"
     BOAT = "boat"
+    SPIKED_BALL = "spiked_ball"
+    SPIKED_CHAIN = "spiked_chain"

@@ -64,6 +64,12 @@ class Game:
             LevelObjectAssetGroup.BOAT.value: import_folder(
                 "assets", "graphics", "objects", "boat"
             ),
+            LevelObjectAssetGroup.SPIKED_BALL.value: import_image(
+                "assets", "graphics", "enemies", "spiked_ball", "spiked_ball"
+            ),
+            LevelObjectAssetGroup.SPIKED_CHAIN.value: import_image(
+                "assets", "graphics", "enemies", "spiked_ball", "spiked_chain"
+            ),
         }
 
     def run(self):

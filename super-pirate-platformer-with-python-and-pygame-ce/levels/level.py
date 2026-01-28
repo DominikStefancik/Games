@@ -4,6 +4,8 @@ from settings import pygame, TILE_SIZE, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
 from sprites.constants import MovingDirection
 from sprites.moving_sprite import MovingSprite
+from sprites.spiked_ball import SpikedBall
+from sprites.spiked_chain import SpikedChain
 from sprites.sprite import Sprite
 
 from .constants import (
@@ -63,7 +65,41 @@ class Level:
 
         for object in tmx_map.get_layer_by_name(LevelLayer.MOVING_OBJECTS.value):
             if object.name == LevelObject.SPIKE.value:
-                pass
+                radius = object.properties[LevelObjectProperty.RADIUS.value]
+
+                SpikedBall(
+                    groups=(self.all_sprites, self.damage_sprites),
+                    surface=level_frames[LevelObjectAssetGroup.SPIKED_BALL.value],
+                    position=(
+                        object.x + object.width / 2,
+                        object.y + object.height / 2,
+                    ),
+                    radius=radius,
+                    start_angle=object.properties[
+                        LevelObjectProperty.START_ANGLE.value
+                    ],
+                    end_angle=object.properties[LevelObjectProperty.END_ANGLE.value],
+                    speed=object.properties[LevelObjectProperty.SPEED.value],
+                )
+                for radius in range(0, radius, 20):
+                    SpikedChain(
+                        groups=self.all_sprites,
+                        surface=level_frames[LevelObjectAssetGroup.SPIKED_CHAIN.value],
+                        position=(
+                            object.x + object.width / 2,
+                            object.y + object.height / 2,
+                        ),
+                        radius=radius,
+                        start_angle=object.properties[
+                            LevelObjectProperty.START_ANGLE.value
+                        ],
+                        end_angle=object.properties[
+                            LevelObjectProperty.END_ANGLE.value
+                        ],
+                        speed=object.properties[LevelObjectProperty.SPEED.value],
+                        z_index=Z_Layer.BACKGROUND_DETAILS.value,
+                    )
+
             else:
                 animation_frames = level_frames[object.name]
                 groups = (
@@ -87,7 +123,7 @@ class Level:
                         object.y + object.height,
                     )
 
-                speed = object.properties["speed"]
+                speed = object.properties[LevelObjectProperty.SPEED.value]
                 MovingSprite(
                     groups=groups,
                     start_position=starting_position,
