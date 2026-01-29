@@ -34,6 +34,7 @@ class Pearl(pygame.sprite.Sprite):
             self.kill()
 
         if self.rect.colliderect(self.player.hitbox_rect):
+            self.player.get_damage()
             self.kill()
 
     def update_timers(self):

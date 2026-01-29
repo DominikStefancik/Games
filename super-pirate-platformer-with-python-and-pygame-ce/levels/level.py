@@ -23,8 +23,7 @@ class Level:
         # Represents all sprites with which the player object can collide but only with his bottom part
         self.semi_collision_sprites = pygame.sprite.Group()
         self.damage_sprites = pygame.sprite.Group()
-        self.tooth_sprites = pygame.sprite.Group()
-        self.pearl_sprites = pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
 
         # The player object will be assigned during processing level layers
         self.player = None

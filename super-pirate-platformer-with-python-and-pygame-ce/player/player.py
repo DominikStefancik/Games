@@ -1,4 +1,5 @@
 from os.path import join
+from math import sin
 
 from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
@@ -22,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         collision_sprites,
         semi_collision_sprites,
         attackable_sprites,
+        damage_sprites,
         animation_frames,
     ):
         super().__init__(groups)
@@ -53,6 +55,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
         self.semi_collision_sprites = semi_collision_sprites
         self.attackable_sprites = attackable_sprites
+        self.damage_sprites = damage_sprites
 
         # Represents a possible moving platform the player might be standing during the game
         self.moving_platform = None
@@ -63,6 +66,7 @@ class Player(pygame.sprite.Sprite):
             PlayerTimerType.WALL_SLIDE_BLOCK: Timer(250),
             PlayerTimerType.PLATFORM_FALL_DOWN: Timer(300),
             PlayerTimerType.ATTACK_BLOCK: Timer(500),
+            PlayerTimerType.GET_DAMAGE: Timer(400),
         }
 
     def process_key_input(self):
@@ -255,11 +259,7 @@ class Player(pygame.sprite.Sprite):
 
     def detect_attack_collision(self):
         if self.is_attacking:
-            all_attackable_sprites = []
-            for group in self.attackable_sprites:
-                all_attackable_sprites += group.sprites()
-
-            for target in all_attackable_sprites:
+            for target in self.attackable_sprites:
                 is_facing_target_from_left = (
                     self.rect.centerx > target.rect.centerx  # and self.flip
                 )
@@ -274,6 +274,11 @@ class Player(pygame.sprite.Sprite):
                 ):
                     target.reverse_direction()
 
+    def detect_hit_by_enemy_collision(self):
+        for sprite in self.damage_sprites:
+            if sprite.rect.colliderect(self.hitbox_rect):
+                self.get_damage()
+
     def attack(self):
         if not self.timers[PlayerTimerType.ATTACK_BLOCK].active:
             self.is_attacking = True
@@ -281,6 +286,22 @@ class Player(pygame.sprite.Sprite):
             # would start from the frame index set up by the animation played by the attack
             self.frame_index = 0
             self.timers[PlayerTimerType.ATTACK_BLOCK].activate()
+
+    def get_damage(self):
+        if not self.timers[PlayerTimerType.GET_DAMAGE].active:
+            self.timers[PlayerTimerType.GET_DAMAGE].activate()
+
+    def show_flicker_effect(self):
+        # By adding the "sin" function to the condition, we achieve the flickering effect
+        if (
+            self.timers[PlayerTimerType.GET_DAMAGE].active
+            and sin(pygame.time.get_ticks() * 200) >= 0
+        ):
+            white_mask = pygame.mask.from_surface(self.image)
+            white_surface = white_mask.to_surface()
+            # The method "set_colorkey()" gets rid of the black pixes from the mask
+            white_surface.set_colorkey("black")
+            self.image = white_surface
 
     def update_animation(self):
         if self.is_on_surface[SurfaceContact.FLOOR]:
@@ -345,6 +366,8 @@ class Player(pygame.sprite.Sprite):
         self.check_contact_with_surface()
 
         self.detect_attack_collision()
+        self.detect_hit_by_enemy_collision()
 
         self.update_animation()
         self.animate(delta_time)
+        self.show_flicker_effect()

@@ -21,6 +21,7 @@ class PlayerTimerType(Enum):
     WALL_SLIDE_BLOCK = "wall slide block"
     PLATFORM_FALL_DOWN = "platform fall down"
     ATTACK_BLOCK = "attack block"
+    GET_DAMAGE = "get_damage"
 
 
 class PlayerAnimation(Enum):
