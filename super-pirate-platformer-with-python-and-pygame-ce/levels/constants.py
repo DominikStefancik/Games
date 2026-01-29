@@ -13,6 +13,7 @@ class LevelLayer(Enum):
     MOVING_OBJECTS = "Moving Objects"
     TERRAIN = "Terrain"
     ENEMIES = "Enemies"
+    ITEMS = "Items"
 
 
 class LevelObject(Enum):
@@ -63,3 +64,5 @@ class LevelObjectAssetGroup(Enum):
     PALM_RIGHT = "palm_right"
     PALM_SMALL = "palm_small"
     PALM_LARGE = "palm_large"
+    ITEMS = "items"
+    PARTICLE = "particle"

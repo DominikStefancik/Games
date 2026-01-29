@@ -11,7 +11,8 @@ class Shell(pygame.sprite.Sprite):
         groups,
         position,
         animation_frames,
-        reverse, player,
+        reverse,
+        player,
         pearl_groups,
         pearl_animation_frames,
         collision_sprites

@@ -80,4 +80,10 @@ def load_game_graphics():
         LevelObjectAssetGroup.PALM_LARGE.value: import_folder(
             "assets", "graphics", "level", "palms", "palm_large"
         ),
+        LevelObjectAssetGroup.ITEMS.value: import_subfolders_as_dict(
+            "assets", "graphics", "items"
+        ),
+        LevelObjectAssetGroup.PARTICLE.value: import_folder(
+            "assets", "graphics", "effects", "particle"
+        ),
     }

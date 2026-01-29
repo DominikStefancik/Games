@@ -4,6 +4,7 @@ from player.player import Player
 from settings import TILE_SIZE, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
 from sprites.constants import MovingDirection
+from sprites.item import Item
 from sprites.moving_sprite import MovingSprite
 from sprites.spiked_ball import SpikedBall
 from sprites.spiked_chain import SpikedChain
@@ -180,3 +181,17 @@ def create_enemies_layer(level, level_frames, object):
             pearl_animation_frames=level_frames[LevelObjectAssetGroup.PEARL.value],
             collision_sprites=level.collision_sprites,
         )
+
+
+def create_items_layer(level, level_frames, object):
+    Item(
+        groups=level.all_sprites,
+        item_type=object.name,
+        position=(object.x + TILE_SIZE / 2, object.y + TILE_SIZE / 2),
+        animation_frames=level_frames[LevelObjectAssetGroup.ITEMS.value][object.name],
+        particle_groups=level.all_sprites,
+        particle_effect_animation_frames=level_frames[
+            LevelObjectAssetGroup.PARTICLE.value
+        ],
+        player=level.player,
+    )
