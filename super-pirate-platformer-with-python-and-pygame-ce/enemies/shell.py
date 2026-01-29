@@ -2,11 +2,19 @@ from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
 
 from .constants import ShellAnimation
+from .pearl import Pearl
 
 
 class Shell(pygame.sprite.Sprite):
     def __init__(
-        self, groups, position, animation_frames, reverse, player, create_pearl_function
+        self,
+        groups,
+        position,
+        animation_frames,
+        reverse, player,
+        pearl_groups,
+        pearl_animation_frames,
+        collision_sprites
     ):
         super().__init__(groups)
 
@@ -33,7 +41,11 @@ class Shell(pygame.sprite.Sprite):
         self.vertical_level_proximity = 30
         self.shoot_timer = Timer(3000)
         self.has_fired = False
-        self.create_pearl = create_pearl_function
+
+        # Pearl related properties
+        self.pearl_groups = pearl_groups
+        self.pearl_animation_frames = pearl_animation_frames
+        self.collision_sprites = collision_sprites
 
     def update_animation(self):
         player_position, shell_position = vector(self.player.rect.center), vector(
@@ -73,7 +85,14 @@ class Shell(pygame.sprite.Sprite):
                 and int(self.frame_index) == 3
                 and not self.has_fired
             ):
-                self.create_pearl(self.rect.center, self.bullet_direction)
+                Pearl(
+                    groups=self.pearl_groups,
+                    position=self.rect.center,
+                    surface=self.pearl_animation_frames,
+                    direction=self.bullet_direction,
+                    collision_sprites=self.collision_sprites,
+                    player=self.player,
+                )
                 self.has_fired = True
         else:
             self.frame_index = 0

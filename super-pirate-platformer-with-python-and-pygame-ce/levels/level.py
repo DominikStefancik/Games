@@ -1,5 +1,4 @@
 from all_sprites_group import AllSpritesGroup
-from enemies.pearl import Pearl
 from enemies.shell import Shell
 from enemies.tooth import Tooth
 from player.player import Player
@@ -34,8 +33,6 @@ class Level:
         self.tooth_sprites = pygame.sprite.Group()
 
         self.process_level_layers(tmx_map, level_frames)
-
-        self.pearl_frames = level_frames[LevelObjectAssetGroup.PEARL.value]
 
     # Gets objects from the level map layers and creates related game objects
     def process_level_layers(self, tmx_map, level_frames):
@@ -210,18 +207,10 @@ class Level:
                     animation_frames=animation_frames,
                     reverse=object.properties[LevelObjectProperty.REVERSE.value],
                     player=self.player,
-                    create_pearl_function=self.create_pearl,
+                    pearl_groups=(self.all_sprites, self.damage_sprites),
+                    pearl_animation_frames=level_frames[LevelObjectAssetGroup.PEARL.value],
+                    collision_sprites=self.collision_sprites,
                 )
-
-    def create_pearl(self, position, direction):
-        Pearl(
-            groups=(self.all_sprites, self.damage_sprites),
-            position=position,
-            surface=self.pearl_frames,
-            direction=direction,
-            collision_sprites=self.collision_sprites,
-            player=self.player,
-        )
 
     def run(self, delta_time):
         self.display_surface.fill("black")
