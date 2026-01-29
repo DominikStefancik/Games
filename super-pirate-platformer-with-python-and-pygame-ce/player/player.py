@@ -186,7 +186,9 @@ class Player(pygame.sprite.Sprite):
         )
         # Check if the player landed on a moving platform
         # We iterate through collision sprites but are interested only in those which are moving
-        for sprite in [sprite for sprite in collidable_sprites if sprite.is_moving]:
+        for sprite in [
+            sprite for sprite in collidable_sprites if hasattr(sprite, "is_moving")
+        ]:
             if sprite.rect.colliderect(floor_rectangle):
                 self.moving_platform = sprite
 
@@ -219,7 +221,7 @@ class Player(pygame.sprite.Sprite):
 
                         # In the case of the moving platform going down and the player jumping up
                         # we want to give him some offset, otherwise he is stuck to the bottom part of the platform.
-                        if sprite.is_moving:
+                        if hasattr(sprite, "is_moving") and sprite.is_moving:
                             self.hitbox_rect.top += 20
 
                     # Collision happened from the bottom side of the player to the top side of the sprite

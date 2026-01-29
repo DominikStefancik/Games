@@ -1,4 +1,7 @@
 from all_sprites_group import AllSpritesGroup
+from enemies.pearl import Pearl
+from enemies.shell import Shell
+from enemies.tooth import Tooth
 from player.player import Player
 from settings import pygame, TILE_SIZE, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
@@ -28,8 +31,11 @@ class Level:
         # Represents all sprites with which the player object can collide but only with his bottom part
         self.semi_collision_sprites = pygame.sprite.Group()
         self.damage_sprites = pygame.sprite.Group()
+        self.tooth_sprites = pygame.sprite.Group()
 
         self.process_level_layers(tmx_map, level_frames)
+
+        self.pearl_frames = level_frames[LevelObjectAssetGroup.PEARL.value]
 
     # Gets objects from the level map layers and creates related game objects
     def process_level_layers(self, tmx_map, level_frames):
@@ -186,6 +192,36 @@ class Level:
                             position=(object.x, object.y),
                             animation_frames=frames,
                         )
+
+        for object in tmx_map.get_layer_by_name(LevelLayer.ENEMIES.value):
+            animation_frames = level_frames[object.name]
+
+            if object.name == LevelObject.TOOTH.value:
+                Tooth(
+                    groups=(self.all_sprites, self.damage_sprites, self.tooth_sprites),
+                    position=(object.x, object.y),
+                    collision_sprites=self.collision_sprites,
+                    animation_frames=animation_frames,
+                )
+            elif object.name == LevelObject.SHELL.value:
+                Shell(
+                    groups=(self.all_sprites, self.collision_sprites),
+                    position=(object.x, object.y),
+                    animation_frames=animation_frames,
+                    reverse=object.properties[LevelObjectProperty.REVERSE.value],
+                    player=self.player,
+                    create_pearl_function=self.create_pearl,
+                )
+
+    def create_pearl(self, position, direction):
+        Pearl(
+            groups=(self.all_sprites, self.damage_sprites),
+            position=position,
+            surface=self.pearl_frames,
+            direction=direction,
+            collision_sprites=self.collision_sprites,
+            player=self.player,
+        )
 
     def run(self, delta_time):
         self.display_surface.fill("black")

@@ -7,5 +7,4 @@ class Sprite(pygame.sprite.Sprite):
         self.image = surface
         self.rect = self.image.get_frect(topleft=position)
         self.previous_rect = self.rect.copy()
-        self.is_moving = False
         self.z_index = z_index

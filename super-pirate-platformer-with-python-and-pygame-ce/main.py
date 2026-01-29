@@ -70,6 +70,15 @@ class Game:
             LevelObjectAssetGroup.SPIKED_CHAIN.value: import_image(
                 "assets", "graphics", "enemies", "spiked_ball", "spiked_chain"
             ),
+            LevelObjectAssetGroup.TOOTH.value: import_folder(
+                "assets", "graphics", "enemies", "tooth", "run"
+            ),
+            LevelObjectAssetGroup.SHELL.value: import_subfolders_as_dict(
+                "assets", "graphics", "enemies", "shell"
+            ),
+            LevelObjectAssetGroup.PEARL.value: import_image(
+                "assets", "graphics", "enemies", "bullets", "pearl"
+            ),
         }
 
     def run(self):

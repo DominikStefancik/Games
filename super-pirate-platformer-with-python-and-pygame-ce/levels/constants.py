@@ -12,6 +12,7 @@ class LevelLayer(Enum):
     PLATFORMS = "Platforms"
     MOVING_OBJECTS = "Moving Objects"
     TERRAIN = "Terrain"
+    ENEMIES = "Enemies"
 
 
 class LevelObject(Enum):
@@ -22,6 +23,8 @@ class LevelObject(Enum):
     PALM = "palm"
     SPIKE = "spike"
     SAW = "saw"
+    TOOTH = "tooth"
+    SHELL = "shell"
 
 
 class LevelObjectProperty(Enum):
@@ -31,6 +34,7 @@ class LevelObjectProperty(Enum):
     SPEED = "speed"
     START_ANGLE = "start_angle"
     END_ANGLE = "end_angle"
+    REVERSE = "reverse"
 
 
 class LevelObjectAssetGroup(Enum):
@@ -49,3 +53,6 @@ class LevelObjectAssetGroup(Enum):
     BOAT = "boat"
     SPIKED_BALL = "spiked_ball"
     SPIKED_CHAIN = "spiked_chain"
+    TOOTH = "tooth"
+    SHELL = "shell"
+    PEARL = "pearl"
