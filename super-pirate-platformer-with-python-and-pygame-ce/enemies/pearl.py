@@ -15,11 +15,19 @@ class Pearl(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
         self.player = player
 
-        self.timers = {PearlTimerType.LIFETIME: Timer(5000)}
+        self.timers = {
+            PearlTimerType.LIFETIME: Timer(5000),
+            PearlTimerType.REVERSE: Timer(250),
+        }
         self.timers[PearlTimerType.LIFETIME].activate()
 
     def move(self, delta_time):
         self.rect.x += self.direction * self.speed * delta_time
+
+    def reverse_direction(self):
+        if not self.timers[PearlTimerType.REVERSE].active:
+            self.direction *= -1
+            self.timers[PearlTimerType.REVERSE].activate()
 
     def detect_collision(self):
         if len(pygame.sprite.spritecollide(self, self.collision_sprites, False)) > 0:

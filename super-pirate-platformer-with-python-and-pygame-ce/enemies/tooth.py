@@ -1,6 +1,7 @@
 import random
 
 from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
+from timer import Timer
 
 
 class Tooth(pygame.sprite.Sprite):
@@ -15,9 +16,16 @@ class Tooth(pygame.sprite.Sprite):
         self.speed = 100
         self.collision_rectangles = [sprite.rect for sprite in collision_sprites]
 
+        self.reverse_timer = Timer(250)
+
     def move(self, delta_time):
         self.has_reached_surface_edge()
         self.rect.x += self.direction * self.speed * delta_time
+
+    def reverse_direction(self):
+        if not self.reverse_timer.active:
+            self.direction *= -1
+            self.reverse_timer.activate()
 
     def has_reached_surface_edge(self):
         # Create tiny invisible rectangles on the Tooth's sides which will be used to detect
@@ -54,5 +62,6 @@ class Tooth(pygame.sprite.Sprite):
         )
 
     def update(self, delta_time):
+        self.reverse_timer.update()
         self.animate(delta_time)
         self.move(delta_time)

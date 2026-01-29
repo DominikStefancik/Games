@@ -8,3 +8,4 @@ class ShellAnimation(Enum):
 
 class PearlTimerType(Enum):
     LIFETIME = "lifetime"
+    REVERSE = "reverse"

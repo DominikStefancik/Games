@@ -24,6 +24,7 @@ class Level:
         self.semi_collision_sprites = pygame.sprite.Group()
         self.damage_sprites = pygame.sprite.Group()
         self.tooth_sprites = pygame.sprite.Group()
+        self.pearl_sprites = pygame.sprite.Group()
 
         # The player object will be assigned during processing level layers
         self.player = None
@@ -53,6 +54,7 @@ class Level:
 
         for object in tmx_map.get_layer_by_name(LevelLayer.ITEMS.value):
             create_items_layer(self, level_frames, object)
+
     def run(self, delta_time):
         self.display_surface.fill("black")
         self.all_sprites.update(delta_time)

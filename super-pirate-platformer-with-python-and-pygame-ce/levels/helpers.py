@@ -44,12 +44,14 @@ def create_scenery_layer(level, layer, surface, x, y):
 def create_objects_layer(level, level_frames, object):
     if object.name == LevelObject.PLAYER.value:
         animation_frames = level_frames[object.name]
+
         # "x" and "y" are already in pixels position
         level.player = Player(
             groups=level.all_sprites,
             position=(object.x, object.y),
             collision_sprites=level.collision_sprites,
             semi_collision_sprites=level.semi_collision_sprites,
+            attackable_sprites=(level.pearl_sprites, level.tooth_sprites),
             animation_frames=animation_frames,
         )
     else:
@@ -165,7 +167,11 @@ def create_enemies_layer(level, level_frames, object):
 
     if object.name == LevelObject.TOOTH.value:
         Tooth(
-            groups=(level.all_sprites, level.damage_sprites, level.tooth_sprites),
+            groups=(
+                level.all_sprites,
+                level.tooth_sprites,
+                level.damage_sprites,
+            ),
             position=(object.x, object.y),
             collision_sprites=level.collision_sprites,
             animation_frames=animation_frames,
@@ -177,7 +183,7 @@ def create_enemies_layer(level, level_frames, object):
             animation_frames=animation_frames,
             reverse=object.properties[LevelObjectProperty.REVERSE.value],
             player=level.player,
-            pearl_groups=(level.all_sprites, level.damage_sprites),
+            pearl_groups=(level.all_sprites, level.pearl_sprites, level.damage_sprites),
             pearl_animation_frames=level_frames[LevelObjectAssetGroup.PEARL.value],
             collision_sprites=level.collision_sprites,
         )

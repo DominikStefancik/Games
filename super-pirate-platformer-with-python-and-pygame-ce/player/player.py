@@ -21,6 +21,7 @@ class Player(pygame.sprite.Sprite):
         position,
         collision_sprites,
         semi_collision_sprites,
+        attackable_sprites,
         animation_frames,
     ):
         super().__init__(groups)
@@ -51,6 +52,8 @@ class Player(pygame.sprite.Sprite):
 
         self.collision_sprites = collision_sprites
         self.semi_collision_sprites = semi_collision_sprites
+        self.attackable_sprites = attackable_sprites
+
         # Represents a possible moving platform the player might be standing during the game
         self.moving_platform = None
 
@@ -250,6 +253,27 @@ class Player(pygame.sprite.Sprite):
                         if self.direction.y > 0:
                             self.direction.y = 0
 
+    def detect_attack_collision(self):
+        if self.is_attacking:
+            all_attackable_sprites = []
+            for group in self.attackable_sprites:
+                all_attackable_sprites += group.sprites()
+
+            for target in all_attackable_sprites:
+                is_facing_target_from_left = (
+                    self.rect.centerx > target.rect.centerx  # and self.flip
+                )
+                is_facing_target_from_right = (
+                    self.rect.centerx < target.rect.centerx  # and not self.flip
+                )
+
+                # We want to use "self.rect" and NOT "self.hitbox_rect", because we want to include
+                # the sword when checking the attack collision
+                if target.rect.colliderect(self.rect) and (
+                    is_facing_target_from_left or is_facing_target_from_right
+                ):
+                    target.reverse_direction()
+
     def attack(self):
         if not self.timers[PlayerTimerType.ATTACK_BLOCK].active:
             self.is_attacking = True
@@ -319,6 +343,8 @@ class Player(pygame.sprite.Sprite):
         self.move(delta_time)
         self.move_with_platform(delta_time)
         self.check_contact_with_surface()
+
+        self.detect_attack_collision()
 
         self.update_animation()
         self.animate(delta_time)
