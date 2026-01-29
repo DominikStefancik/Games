@@ -79,6 +79,27 @@ class Game:
             LevelObjectAssetGroup.PEARL.value: import_image(
                 "assets", "graphics", "enemies", "bullets", "pearl"
             ),
+            LevelObjectAssetGroup.PALM_BACKGROUND.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_bg"
+            ),
+            LevelObjectAssetGroup.PALM_BACKGROUND_LEFT.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_bg_left"
+            ),
+            LevelObjectAssetGroup.PALM_BACKGROUND_RIGHT.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_bg_right"
+            ),
+            LevelObjectAssetGroup.PALM_LEFT.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_left"
+            ),
+            LevelObjectAssetGroup.PALM_RIGHT.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_right"
+            ),
+            LevelObjectAssetGroup.PALM_SMALL.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_small"
+            ),
+            LevelObjectAssetGroup.PALM_LARGE.value: import_folder(
+                "assets", "graphics", "level", "palms", "palm_large"
+            ),
         }
 
     def run(self):

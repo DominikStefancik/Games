@@ -1,20 +1,12 @@
 from all_sprites_group import AllSpritesGroup
-from enemies.shell import Shell
-from enemies.tooth import Tooth
-from player.player import Player
-from settings import pygame, TILE_SIZE, Z_Layer
-from sprites.animated_sprite import AnimatedSprite
-from sprites.constants import MovingDirection
-from sprites.moving_sprite import MovingSprite
-from sprites.spiked_ball import SpikedBall
-from sprites.spiked_chain import SpikedChain
-from sprites.sprite import Sprite
+from settings import pygame
 
-from .constants import (
-    LevelLayer,
-    LevelObject,
-    LevelObjectAssetGroup,
-    LevelObjectProperty,
+from .constants import LevelLayer
+from .helpers import (
+    create_enemies_layer,
+    create_moving_objects_layer,
+    create_objects_layer,
+    create_scenery_layer,
 )
 
 
@@ -31,6 +23,8 @@ class Level:
         self.semi_collision_sprites = pygame.sprite.Group()
         self.damage_sprites = pygame.sprite.Group()
         self.tooth_sprites = pygame.sprite.Group()
+        # The player object will be assigned during processing level layers
+        self.player = None
 
         self.process_level_layers(tmx_map, level_frames)
 
@@ -44,173 +38,16 @@ class Level:
         ]:
             # Get tiles from one specific layer inside the map
             for x, y, surface in tmx_map.get_layer_by_name(layer.value).tiles():
-                groups = [self.all_sprites]
-
-                match layer:
-                    case LevelLayer.BACKGROUND | LevelLayer.FOREGROUND:
-                        z_index = Z_Layer.BACKGROUND_TILES.value
-                        break
-                    case _:
-                        z_index = Z_Layer.MAIN.value
-
-                if layer == LevelLayer.TERRAIN:
-                    groups.append(self.collision_sprites)
-                if layer == LevelLayer.PLATFORMS:
-                    groups.append(self.semi_collision_sprites)
-
-                # "x" and "y" are the position coordinates in a Tiles grid. We have to transform them into pixels position
-                Sprite(
-                    groups=groups,
-                    surface=surface,
-                    position=(x * TILE_SIZE, y * TILE_SIZE),
-                    z_index=z_index,
-                )
+                create_scenery_layer(self, layer, surface, x, y)
 
         for object in tmx_map.get_layer_by_name(LevelLayer.MOVING_OBJECTS.value):
-            if object.name == LevelObject.SPIKE.value:
-                radius = object.properties[LevelObjectProperty.RADIUS.value]
-
-                SpikedBall(
-                    groups=(self.all_sprites, self.damage_sprites),
-                    surface=level_frames[LevelObjectAssetGroup.SPIKED_BALL.value],
-                    position=(
-                        object.x + object.width / 2,
-                        object.y + object.height / 2,
-                    ),
-                    radius=radius,
-                    start_angle=object.properties[
-                        LevelObjectProperty.START_ANGLE.value
-                    ],
-                    end_angle=object.properties[LevelObjectProperty.END_ANGLE.value],
-                    speed=object.properties[LevelObjectProperty.SPEED.value],
-                )
-                for radius in range(0, radius, 20):
-                    SpikedChain(
-                        groups=self.all_sprites,
-                        surface=level_frames[LevelObjectAssetGroup.SPIKED_CHAIN.value],
-                        position=(
-                            object.x + object.width / 2,
-                            object.y + object.height / 2,
-                        ),
-                        radius=radius,
-                        start_angle=object.properties[
-                            LevelObjectProperty.START_ANGLE.value
-                        ],
-                        end_angle=object.properties[
-                            LevelObjectProperty.END_ANGLE.value
-                        ],
-                        speed=object.properties[LevelObjectProperty.SPEED.value],
-                        z_index=Z_Layer.BACKGROUND_DETAILS.value,
-                    )
-
-            else:
-                animation_frames = level_frames[object.name]
-                groups = (
-                    (self.all_sprites, self.semi_collision_sprites)
-                    if object.properties[LevelObjectProperty.PLATFORM.value]
-                    else (self.all_sprites, self.damage_sprites)
-                )
-
-                if object.width > object.height:
-                    moving_direction = MovingDirection.HORIZONTAL
-                    starting_position = (object.x, object.y + object.height / 2)
-                    ending_position = (
-                        object.x + object.width,
-                        object.y + object.height / 2,
-                    )
-                else:
-                    moving_direction = MovingDirection.VERTICAL
-                    starting_position = (object.x + object.width / 2, object.y)
-                    ending_position = (
-                        object.x + object.width / 2,
-                        object.y + object.height,
-                    )
-
-                speed = object.properties[LevelObjectProperty.SPEED.value]
-                MovingSprite(
-                    groups=groups,
-                    start_position=starting_position,
-                    end_position=ending_position,
-                    moving_direction=moving_direction,
-                    speed=speed,
-                    animation_frames=animation_frames,
-                    flip=object.properties[LevelObjectProperty.FLIP.value],
-                )
-
-                if object.name == LevelObject.SAW.value:
-                    surface = level_frames[LevelObjectAssetGroup.SAW_CHAIN.value]
-
-                    if moving_direction == MovingDirection.HORIZONTAL:
-                        top = starting_position[1] - surface.get_height() / 2
-                        left, right = int(starting_position[0]), int(ending_position[0])
-
-                        for index in range(left, right, 20):
-                            Sprite(
-                                groups=self.all_sprites,
-                                surface=surface,
-                                position=(index, top),
-                                z_index=Z_Layer.BACKGROUND_DETAILS.value,
-                            )
-                    else:
-                        left = starting_position[0] - surface.get_width() / 2
-                        top, bottom = int(starting_position[1]), int(ending_position[1])
-
-                        for index in range(top, bottom, 20):
-                            Sprite(
-                                groups=self.all_sprites,
-                                surface=surface,
-                                position=(left, index),
-                                z_index=Z_Layer.BACKGROUND_DETAILS.value,
-                            )
+            create_moving_objects_layer(self, level_frames, object)
 
         for object in tmx_map.get_layer_by_name(LevelLayer.OBJECTS.value):
-            if object.name == LevelObject.PLAYER.value:
-                animation_frames = level_frames[object.name]
-                # "x" and "y" are already in pixels position
-                self.player = Player(
-                    groups=self.all_sprites,
-                    position=(object.x, object.y),
-                    collision_sprites=self.collision_sprites,
-                    semi_collision_sprites=self.semi_collision_sprites,
-                    animation_frames=animation_frames,
-                )
-            else:
-                if object.name in [LevelObject.BARREL.value, LevelObject.CRATE.value]:
-                    Sprite(
-                        groups=(self.all_sprites, self.collision_sprites),
-                        surface=object.image,
-                        position=(object.x, object.y),
-                    )
-                else:
-                    if not LevelObject.PALM.value in object.name:
-                        frames = level_frames[object.name]
-                        AnimatedSprite(
-                            groups=self.all_sprites,
-                            position=(object.x, object.y),
-                            animation_frames=frames,
-                        )
+            create_objects_layer(self, level_frames, object)
 
         for object in tmx_map.get_layer_by_name(LevelLayer.ENEMIES.value):
-            animation_frames = level_frames[object.name]
-
-            if object.name == LevelObject.TOOTH.value:
-                Tooth(
-                    groups=(self.all_sprites, self.damage_sprites, self.tooth_sprites),
-                    position=(object.x, object.y),
-                    collision_sprites=self.collision_sprites,
-                    animation_frames=animation_frames,
-                )
-            elif object.name == LevelObject.SHELL.value:
-                Shell(
-                    groups=(self.all_sprites, self.collision_sprites),
-                    position=(object.x, object.y),
-                    animation_frames=animation_frames,
-                    reverse=object.properties[LevelObjectProperty.REVERSE.value],
-                    player=self.player,
-                    pearl_groups=(self.all_sprites, self.damage_sprites),
-                    pearl_animation_frames=level_frames[LevelObjectAssetGroup.PEARL.value],
-                    collision_sprites=self.collision_sprites,
-                )
+            create_enemies_layer(self, level_frames, object)
 
     def run(self, delta_time):
         self.display_surface.fill("black")
