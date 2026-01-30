@@ -15,6 +15,7 @@ class LevelLayer(Enum):
     ENEMIES = "Enemies"
     ITEMS = "Items"
     WATER = "Water"
+    DATA = "Data"
 
 
 class LevelObject(Enum):
@@ -27,6 +28,7 @@ class LevelObject(Enum):
     SAW = "saw"
     TOOTH = "tooth"
     SHELL = "shell"
+    FLAG = "flag"
 
 
 class LevelObjectProperty(Enum):
@@ -37,3 +39,9 @@ class LevelObjectProperty(Enum):
     START_ANGLE = "start_angle"
     END_ANGLE = "end_angle"
     REVERSE = "reverse"
+
+
+class LevelDataProperty(Enum):
+    BACKGROUND = "bg"
+    TOP_LIMIT = "top_limit"
+    HORIZON_LINE = "horizon_line"

@@ -1,7 +1,15 @@
 from enum import Enum
 
+
+class CameraBorder(Enum):
+    LEFT = "left"
+    RIGHT = "right"
+    TOP = "top"
+    BOTTOM = "bottom"
+
+
 class MovingDirection(Enum):
-    VERTICAL = "vertical",
+    VERTICAL = "vertical"
     HORIZONTAL = "horizontal"
 
 

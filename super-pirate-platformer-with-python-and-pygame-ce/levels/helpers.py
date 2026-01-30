@@ -2,7 +2,7 @@ from asset_manager.constants import ImageAssetGroup
 from enemies.shell import Shell
 from enemies.tooth import Tooth
 from player.player import Player
-from settings import TILE_SIZE, Z_Layer
+from settings import pygame, TILE_SIZE, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
 from sprites.constants import MovingDirection
 from sprites.item import Item
@@ -69,6 +69,11 @@ def create_objects_layer(level, level_frames, object):
                 position=(object.x, object.y),
                 animation_frames=frames,
             )
+
+    if object.name == LevelObject.FLAG.value:
+        level.level_finish_rect = pygame.FRect(
+            (object.x, object.y), (object.width, object.height)
+        )
 
 
 def create_moving_objects_layer(level, level_frames, object):
@@ -197,9 +202,7 @@ def create_items_layer(level, level_frames, object):
         position=(object.x + TILE_SIZE / 2, object.y + TILE_SIZE / 2),
         animation_frames=level_frames[ImageAssetGroup.ITEMS.value][object.name],
         particle_groups=level.all_sprites,
-        particle_effect_animation_frames=level_frames[
-            ImageAssetGroup.PARTICLE.value
-        ],
+        particle_effect_animation_frames=level_frames[ImageAssetGroup.PARTICLE.value],
         player=level.player,
     )
 
@@ -219,12 +222,12 @@ def create_water_layer(level, level_frames, object):
                     groups=level.all_sprites,
                     position=(x, y),
                     animation_frames=level_frames[ImageAssetGroup.WATER_TOP.value],
-                    z_index=Z_Layer.WATER.value
+                    z_index=Z_Layer.WATER.value,
                 )
             else:
                 Sprite(
                     groups=level.all_sprites,
                     surface=level_frames[ImageAssetGroup.WATER_BODY.value],
                     position=(x, y),
-                    z_index=Z_Layer.WATER.value
+                    z_index=Z_Layer.WATER.value,
                 )

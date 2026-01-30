@@ -38,3 +38,6 @@ class ImageAssetGroup(Enum):
     COIN = "coin"
     WATER_TOP = "water_top"
     WATER_BODY = "water_body"
+    BACKGROUND_TILES = "bg_tiles"
+    CLOUD_SMALL = "cloud_small"
+    CLOUD_LARGE = "cloud_large"
