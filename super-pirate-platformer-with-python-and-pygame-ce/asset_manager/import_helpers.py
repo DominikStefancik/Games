@@ -1,6 +1,8 @@
 from os import walk
 from os.path import join
-from settings import pygame, FileFormat
+from settings import pygame
+
+from .constants import FileFormat
 
 
 def import_image(*path, alpha=True, file_format=FileFormat.PNG):

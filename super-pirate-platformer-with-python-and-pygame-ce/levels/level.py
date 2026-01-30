@@ -1,4 +1,5 @@
 from all_sprites_group import AllSpritesGroup
+from asset_manager.asset_manager import get_asset_manager
 from settings import pygame
 
 from .constants import LevelLayer
@@ -12,7 +13,7 @@ from .helpers import (
 
 
 class Level:
-    def __init__(self, tmx_map, level_frames):
+    def __init__(self, tmx_map):
         # The main surface on which we will be drawing level elements
         self.display_surface = pygame.display.get_surface()
 
@@ -28,7 +29,8 @@ class Level:
         # The player object will be assigned during processing level layers
         self.player = None
 
-        self.process_level_layers(tmx_map, level_frames)
+        asset_manager = get_asset_manager()
+        self.process_level_layers(tmx_map, asset_manager.level_graphics)
 
     # Gets objects from the level map layers and creates related game objects
     def process_level_layers(self, tmx_map, level_frames):

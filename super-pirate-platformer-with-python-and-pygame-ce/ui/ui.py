@@ -1,19 +1,27 @@
+from asset_manager.asset_manager import get_asset_manager
+from game_state import get_game_state
 from levels.constants import LevelObjectAssetGroup
 from settings import pygame
 from timer import Timer
 
 from .heart import Heart
 
+
 class Ui:
-    def __init__(self, font, frames):
+    def __init__(self):
+        asset_manager = get_asset_manager()
+
         # The main surface on which we will be drawing UI elements
         self.display_surface = pygame.display.get_surface()
-        self.font = font
+        self.font = asset_manager.font
         self.sprites = pygame.sprite.Group()
-        self.heart_frames = frames[LevelObjectAssetGroup.HEART.value]
+        self.heart_frames = asset_manager.ui_graphics[LevelObjectAssetGroup.HEART.value]
 
-        self.coin_surface = frames[LevelObjectAssetGroup.COIN.value]
+        self.coin_surface = asset_manager.ui_graphics[LevelObjectAssetGroup.COIN.value]
         self.coins = 0
+
+        game_state = get_game_state()
+        game_state.subscribe(self)
 
     def create_hearts(self, amount):
         for sprite in self.sprites:

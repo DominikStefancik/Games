@@ -1,6 +1,6 @@
 from os.path import join
 
-from import_helpers import *
+from .import_helpers import *
 from levels.constants import LevelObjectAssetGroup
 from settings import pygame
 
