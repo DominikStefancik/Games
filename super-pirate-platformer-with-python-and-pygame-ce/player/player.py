@@ -1,6 +1,7 @@
 from os.path import join
 from math import sin
 
+from game_state import get_game_state
 from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
 
@@ -289,13 +290,15 @@ class Player(pygame.sprite.Sprite):
 
     def get_damage(self):
         if not self.timers[PlayerTimerType.GET_DAMAGE].active:
+            game_state = get_game_state()
+            game_state.player_health -= 1
             self.timers[PlayerTimerType.GET_DAMAGE].activate()
 
     def show_flicker_effect(self):
         # By adding the "sin" function to the condition, we achieve the flickering effect
         if (
             self.timers[PlayerTimerType.GET_DAMAGE].active
-            and sin(pygame.time.get_ticks() * 200) >= 0
+            and sin(pygame.time.get_ticks() * 100) >= 0
         ):
             white_mask = pygame.mask.from_surface(self.image)
             white_surface = white_mask.to_surface()

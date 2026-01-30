@@ -3,6 +3,7 @@ from enum import Enum
 PLAYER_SPEED = 200
 PLAYER_GRAVITY = 300
 PLAYER_JUMP_HEIGHT = 400
+PLAYER_START_HEALTH = 5
 
 
 class Collision(Enum):

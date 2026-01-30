@@ -5,10 +5,12 @@
 # The module allows us to load map data as Pygame surfaces
 from pytmx.util_pygame import load_pygame
 
-from loader import load_game_graphics
+from game_state import get_game_state
+from loaders import load_font, load_level_graphics, load_ui_graphics
 from levels.constants import OMNI_PATH
 from levels.level import Level
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
+from ui.ui import Ui
 
 
 class Game:
@@ -19,12 +21,18 @@ class Game:
         pygame.display.set_caption("Python Super Pirate Platformer")
         self.clock = pygame.time.Clock()
         self.import_assets()
+        self.ui = Ui(self.font, self.ui_frames)
         self.level_maps = {0: load_pygame(OMNI_PATH)}
 
         self.current_stage = Level(self.level_maps[0], self.level_frames)
 
+        game_state = get_game_state()
+        game_state.subscribe(self.ui)
+
     def import_assets(self):
-        self.level_frames = load_game_graphics()
+        self.level_frames = load_level_graphics()
+        self.ui_frames = load_ui_graphics()
+        self.font = load_font()
 
     def run(self):
         while True:
@@ -36,6 +44,7 @@ class Game:
                     sys.exit()
 
             self.current_stage.run(delta_time)
+            self.ui.update(delta_time)
 
             pygame.display.update()
 

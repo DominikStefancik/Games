@@ -66,3 +66,5 @@ class LevelObjectAssetGroup(Enum):
     PALM_LARGE = "palm_large"
     ITEMS = "items"
     PARTICLE = "particle"
+    HEART = "heart"
+    COIN = "coin"

@@ -1,9 +1,11 @@
-from levels.constants import LevelObjectAssetGroup
+from os.path import join
 
 from import_helpers import *
+from levels.constants import LevelObjectAssetGroup
+from settings import pygame
 
 
-def load_game_graphics():
+def load_level_graphics():
     return {
         LevelObjectAssetGroup.FLAG.value: import_folder(
             "assets", "graphics", "level", "flag"
@@ -86,4 +88,24 @@ def load_game_graphics():
         LevelObjectAssetGroup.PARTICLE.value: import_folder(
             "assets", "graphics", "effects", "particle"
         ),
+        LevelObjectAssetGroup.HEART.value: import_folder(
+            "assets", "graphics", "ui", "heart"
+        ),
     }
+
+
+def load_ui_graphics():
+    return {
+        LevelObjectAssetGroup.HEART.value: import_folder(
+            "assets", "graphics", "ui", "heart"
+        ),
+        LevelObjectAssetGroup.COIN.value: import_image(
+            "assets", "graphics", "ui", "coin"
+        ),
+    }
+
+
+def load_font():
+    full_path = join("assets", "graphics", "ui", "runescape_uf.ttf")
+
+    return pygame.font.Font(full_path, 40)
