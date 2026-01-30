@@ -1,4 +1,4 @@
-from settings import ANIMATION_SPEED
+from settings import ANIMATION_SPEED, Z_Layer
 
 from .constants import MovingDirection
 from .sprite import Sprite
@@ -6,11 +6,11 @@ from .sprite import Sprite
 
 class AnimatedSprite(Sprite):
     def __init__(
-        self, groups, position, animation_frames, animation_speed=ANIMATION_SPEED
+        self, groups, position, animation_frames, animation_speed=ANIMATION_SPEED, z_index=Z_Layer.MAIN.value
     ):
         self.frames = animation_frames
         self.frame_index = 0
-        super().__init__(groups, self.frames[self.frame_index], position)
+        super().__init__(groups, self.frames[self.frame_index], position, z_index)
         self.animation_speed = animation_speed
 
     def animate(self, delta_time):

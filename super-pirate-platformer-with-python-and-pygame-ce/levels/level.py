@@ -9,6 +9,7 @@ from .helpers import (
     create_moving_objects_layer,
     create_objects_layer,
     create_scenery_layer,
+    create_water_layer
 )
 
 
@@ -55,6 +56,9 @@ class Level:
 
         for object in tmx_map.get_layer_by_name(LevelLayer.ITEMS.value):
             create_items_layer(self, level_frames, object)
+
+        for object in tmx_map.get_layer_by_name(LevelLayer.WATER.value):
+            create_water_layer(self, level_frames, object)
 
     def run(self, delta_time):
         self.display_surface.fill("black")

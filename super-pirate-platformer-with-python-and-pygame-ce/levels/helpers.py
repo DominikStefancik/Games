@@ -1,3 +1,4 @@
+from asset_manager.constants import ImageAssetGroup
 from enemies.shell import Shell
 from enemies.tooth import Tooth
 from player.player import Player
@@ -13,7 +14,6 @@ from sprites.sprite import Sprite
 from .constants import (
     LevelLayer,
     LevelObject,
-    LevelObjectAssetGroup,
     LevelObjectProperty,
 )
 
@@ -77,7 +77,7 @@ def create_moving_objects_layer(level, level_frames, object):
 
         SpikedBall(
             groups=(level.all_sprites, level.damage_sprites),
-            surface=level_frames[LevelObjectAssetGroup.SPIKED_BALL.value],
+            surface=level_frames[ImageAssetGroup.SPIKED_BALL.value],
             position=(
                 object.x + object.width / 2,
                 object.y + object.height / 2,
@@ -90,7 +90,7 @@ def create_moving_objects_layer(level, level_frames, object):
         for radius in range(0, radius, 20):
             SpikedChain(
                 groups=level.all_sprites,
-                surface=level_frames[LevelObjectAssetGroup.SPIKED_CHAIN.value],
+                surface=level_frames[ImageAssetGroup.SPIKED_CHAIN.value],
                 position=(
                     object.x + object.width / 2,
                     object.y + object.height / 2,
@@ -137,7 +137,7 @@ def create_moving_objects_layer(level, level_frames, object):
         )
 
         if object.name == LevelObject.SAW.value:
-            surface = level_frames[LevelObjectAssetGroup.SAW_CHAIN.value]
+            surface = level_frames[ImageAssetGroup.SAW_CHAIN.value]
 
             if moving_direction == MovingDirection.HORIZONTAL:
                 top = starting_position[1] - surface.get_height() / 2
@@ -185,7 +185,7 @@ def create_enemies_layer(level, level_frames, object):
                 level.damage_sprites,
                 level.attackable_sprites,
             ),
-            pearl_animation_frames=level_frames[LevelObjectAssetGroup.PEARL.value],
+            pearl_animation_frames=level_frames[ImageAssetGroup.PEARL.value],
             collision_sprites=level.collision_sprites,
         )
 
@@ -195,10 +195,36 @@ def create_items_layer(level, level_frames, object):
         groups=level.all_sprites,
         item_type=object.name,
         position=(object.x + TILE_SIZE / 2, object.y + TILE_SIZE / 2),
-        animation_frames=level_frames[LevelObjectAssetGroup.ITEMS.value][object.name],
+        animation_frames=level_frames[ImageAssetGroup.ITEMS.value][object.name],
         particle_groups=level.all_sprites,
         particle_effect_animation_frames=level_frames[
-            LevelObjectAssetGroup.PARTICLE.value
+            ImageAssetGroup.PARTICLE.value
         ],
         player=level.player,
     )
+
+
+def create_water_layer(level, level_frames, object):
+    rows = int(object.height / TILE_SIZE)
+    columns = int(object.width / TILE_SIZE)
+
+    for row in range(rows):
+        for column in range(columns):
+            x = object.x + column * TILE_SIZE
+            y = object.y + row * TILE_SIZE
+
+            # Only the first row of water tiles will be animated waves
+            if row == 0:
+                AnimatedSprite(
+                    groups=level.all_sprites,
+                    position=(x, y),
+                    animation_frames=level_frames[ImageAssetGroup.WATER_TOP.value],
+                    z_index=Z_Layer.WATER.value
+                )
+            else:
+                Sprite(
+                    groups=level.all_sprites,
+                    surface=level_frames[ImageAssetGroup.WATER_BODY.value],
+                    position=(x, y),
+                    z_index=Z_Layer.WATER.value
+                )

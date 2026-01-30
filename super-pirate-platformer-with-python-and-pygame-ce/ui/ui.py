@@ -1,6 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import ImageAssetGroup
 from game_state import get_game_state
-from levels.constants import LevelObjectAssetGroup
 from settings import pygame
 from timer import Timer
 
@@ -15,9 +15,9 @@ class Ui:
         self.display_surface = pygame.display.get_surface()
         self.font = asset_manager.font
         self.sprites = pygame.sprite.Group()
-        self.heart_frames = asset_manager.ui_graphics[LevelObjectAssetGroup.HEART.value]
+        self.heart_frames = asset_manager.ui_graphics[ImageAssetGroup.HEART.value]
 
-        self.coin_surface = asset_manager.ui_graphics[LevelObjectAssetGroup.COIN.value]
+        self.coin_surface = asset_manager.ui_graphics[ImageAssetGroup.COIN.value]
         self.coins = 0
 
         game_state = get_game_state()
