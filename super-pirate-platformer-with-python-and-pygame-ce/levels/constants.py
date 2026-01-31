@@ -29,6 +29,10 @@ class LevelObject(Enum):
     TOOTH = "tooth"
     SHELL = "shell"
     FLAG = "flag"
+    PALM_LEFT = "palm_left"
+    PALM_RIGHT = "palm_right"
+    PALM_SMALL = "palm_small"
+    PALM_LARGE = "palm_large"
 
 
 class LevelObjectProperty(Enum):

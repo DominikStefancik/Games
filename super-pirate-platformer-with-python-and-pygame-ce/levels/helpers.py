@@ -56,7 +56,24 @@ def create_objects_layer(level, level_frames, object):
             animation_frames=animation_frames,
         )
     else:
-        if object.name in [LevelObject.BARREL.value, LevelObject.CRATE.value]:
+        if "palm" in object.name:
+            animation_frames = level_frames[ImageAssetGroup.PALMS.value][object.name]
+            groups = [level.all_sprites]
+
+            if object.name in [
+                LevelObject.PALM_LEFT.value,
+                LevelObject.PALM_RIGHT.value,
+                LevelObject.PALM_SMALL.value,
+                LevelObject.PALM_LARGE.value
+            ]:
+                groups.append(level.semi_collision_sprites)
+
+            AnimatedSprite(
+                groups=groups,
+                position=(object.x, object.y),
+                animation_frames=animation_frames,
+            )
+        elif object.name in [LevelObject.BARREL.value, LevelObject.CRATE.value]:
             Sprite(
                 groups=(level.all_sprites, level.collision_sprites),
                 surface=object.image,

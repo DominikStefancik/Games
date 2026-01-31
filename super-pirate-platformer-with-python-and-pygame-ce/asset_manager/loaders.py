@@ -19,7 +19,7 @@ def load_level_graphics():
         ImageAssetGroup.FLOOR_SPIKE.value: import_folder_as_list(
             "assets", "graphics", "enemies", "floor_spikes"
         ),
-        ImageAssetGroup.PALM.value: import_subfolders_as_dict(
+        ImageAssetGroup.PALMS.value: import_subfolders_as_dict(
             "assets", "graphics", "level", "palms"
         ),
         ImageAssetGroup.CANDLE.value: import_folder_as_list(
@@ -60,27 +60,6 @@ def load_level_graphics():
         ),
         ImageAssetGroup.PEARL.value: import_image(
             "assets", "graphics", "enemies", "bullets", "pearl"
-        ),
-        ImageAssetGroup.PALM_BACKGROUND.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_bg"
-        ),
-        ImageAssetGroup.PALM_BACKGROUND_LEFT.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_bg_left"
-        ),
-        ImageAssetGroup.PALM_BACKGROUND_RIGHT.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_bg_right"
-        ),
-        ImageAssetGroup.PALM_LEFT.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_left"
-        ),
-        ImageAssetGroup.PALM_RIGHT.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_right"
-        ),
-        ImageAssetGroup.PALM_SMALL.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_small"
-        ),
-        ImageAssetGroup.PALM_LARGE.value: import_folder_as_list(
-            "assets", "graphics", "level", "palms", "palm_large"
         ),
         ImageAssetGroup.ITEMS.value: import_subfolders_as_dict(
             "assets", "graphics", "items"
