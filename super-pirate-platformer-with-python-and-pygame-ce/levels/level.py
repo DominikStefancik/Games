@@ -6,6 +6,7 @@ from sprites.background import Background
 
 from .constants import LevelLayer, LevelDataProperty
 from .helpers import (
+    create_background_details_layer,
     create_enemies_layer,
     create_items_layer,
     create_moving_objects_layer,
@@ -81,6 +82,9 @@ class Level:
             # Get tiles from one specific layer inside the map
             for x, y, surface in tmx_map.get_layer_by_name(layer.value).tiles():
                 create_scenery_layer(self, layer, surface, x, y)
+
+        for object in tmx_map.get_layer_by_name(LevelLayer.BACKGROUND_DETAILS.value):
+            create_background_details_layer(self, level_frames, object)
 
         for object in tmx_map.get_layer_by_name(LevelLayer.MOVING_OBJECTS.value):
             create_moving_objects_layer(self, level_frames, object)

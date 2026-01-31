@@ -25,6 +25,9 @@ def load_level_graphics():
         ImageAssetGroup.CANDLE.value: import_folder_as_list(
             "assets", "graphics", "level", "candle"
         ),
+        ImageAssetGroup.CANDLE_LIGHT.value: import_folder_as_list(
+            "assets", "graphics", "level", "candle_light"
+        ),
         ImageAssetGroup.WINDOW.value: import_folder_as_list(
             "assets", "graphics", "level", "window"
         ),
@@ -33,9 +36,6 @@ def load_level_graphics():
         ),
         ImageAssetGroup.SMALL_CHAIN.value: import_folder_as_list(
             "assets", "graphics", "level", "small_chains"
-        ),
-        ImageAssetGroup.CANDLE_LIGHT.value: import_folder_as_list(
-            "assets", "graphics", "level", "candle_light"
         ),
         ImageAssetGroup.PLAYER.value: import_subfolders_as_dict(
             "assets", "graphics", "player"

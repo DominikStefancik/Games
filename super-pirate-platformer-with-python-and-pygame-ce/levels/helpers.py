@@ -13,7 +13,7 @@ from sprites.sprite import Sprite
 
 from .constants import (
     LevelLayer,
-    LevelObject,
+    LevelObjectName,
     LevelObjectProperty,
 )
 
@@ -41,8 +41,24 @@ def create_scenery_layer(level, layer, surface, x, y):
     )
 
 
+def create_background_details_layer(level, level_frames, object):
+    if object.name == LevelObjectName.STATIC.value:
+        Sprite(
+            groups=level.all_sprites,
+            surface=object.image,
+            position=(object.x, object.y),
+        )
+    else:
+        frames = level_frames[object.name]
+        AnimatedSprite(
+            groups=level.all_sprites,
+            position=(object.x, object.y),
+            animation_frames=frames,
+        )
+
+
 def create_objects_layer(level, level_frames, object):
-    if object.name == LevelObject.PLAYER.value:
+    if object.name == LevelObjectName.PLAYER.value:
         animation_frames = level_frames[object.name]
 
         # "x" and "y" are already in pixels position
@@ -61,10 +77,10 @@ def create_objects_layer(level, level_frames, object):
             groups = [level.all_sprites]
 
             if object.name in [
-                LevelObject.PALM_LEFT.value,
-                LevelObject.PALM_RIGHT.value,
-                LevelObject.PALM_SMALL.value,
-                LevelObject.PALM_LARGE.value
+                LevelObjectName.PALM_LEFT.value,
+                LevelObjectName.PALM_RIGHT.value,
+                LevelObjectName.PALM_SMALL.value,
+                LevelObjectName.PALM_LARGE.value
             ]:
                 groups.append(level.semi_collision_sprites)
 
@@ -73,7 +89,7 @@ def create_objects_layer(level, level_frames, object):
                 position=(object.x, object.y),
                 animation_frames=animation_frames,
             )
-        elif object.name in [LevelObject.BARREL.value, LevelObject.CRATE.value]:
+        elif object.name in [LevelObjectName.BARREL.value, LevelObjectName.CRATE.value]:
             Sprite(
                 groups=(level.all_sprites, level.collision_sprites),
                 surface=object.image,
@@ -87,14 +103,14 @@ def create_objects_layer(level, level_frames, object):
                 animation_frames=frames,
             )
 
-    if object.name == LevelObject.FLAG.value:
+    if object.name == LevelObjectName.FLAG.value:
         level.level_finish_rect = pygame.FRect(
             (object.x, object.y), (object.width, object.height)
         )
 
 
 def create_moving_objects_layer(level, level_frames, object):
-    if object.name == LevelObject.SPIKE.value:
+    if object.name == LevelObjectName.SPIKE.value:
         radius = object.properties[LevelObjectProperty.RADIUS.value]
 
         SpikedBall(
@@ -158,7 +174,7 @@ def create_moving_objects_layer(level, level_frames, object):
             flip=object.properties[LevelObjectProperty.FLIP.value],
         )
 
-        if object.name == LevelObject.SAW.value:
+        if object.name == LevelObjectName.SAW.value:
             surface = level_frames[ImageAssetGroup.SAW_CHAIN.value]
 
             if moving_direction == MovingDirection.HORIZONTAL:
@@ -188,14 +204,14 @@ def create_moving_objects_layer(level, level_frames, object):
 def create_enemies_layer(level, level_frames, object):
     animation_frames = level_frames[object.name]
 
-    if object.name == LevelObject.TOOTH.value:
+    if object.name == LevelObjectName.TOOTH.value:
         Tooth(
             groups=(level.all_sprites, level.damage_sprites, level.attackable_sprites),
             position=(object.x, object.y),
             collision_sprites=level.collision_sprites,
             animation_frames=animation_frames,
         )
-    elif object.name == LevelObject.SHELL.value:
+    elif object.name == LevelObjectName.SHELL.value:
         Shell(
             groups=(level.all_sprites, level.collision_sprites),
             position=(object.x, object.y),

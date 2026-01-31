@@ -7,6 +7,7 @@ OMNI_PATH = join("assets", "map_data", "levels", "omni.tmx")
 
 class LevelLayer(Enum):
     BACKGROUND = "BG"
+    BACKGROUND_DETAILS = "BG details"
     FOREGROUND = "FG"
     OBJECTS = "Objects"
     PLATFORMS = "Platforms"
@@ -18,7 +19,7 @@ class LevelLayer(Enum):
     DATA = "Data"
 
 
-class LevelObject(Enum):
+class LevelObjectName(Enum):
     PLAYER = "player"
     HELICOPTER = "helicopter"
     BARREL = "barrel"
@@ -33,6 +34,7 @@ class LevelObject(Enum):
     PALM_RIGHT = "palm_right"
     PALM_SMALL = "palm_small"
     PALM_LARGE = "palm_large"
+    STATIC = "static"
 
 
 class LevelObjectProperty(Enum):
