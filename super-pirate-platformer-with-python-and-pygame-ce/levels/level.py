@@ -56,10 +56,10 @@ class Level:
             all_sprites_group=self.all_sprites,
             level_width=tmx_map.width,
             level_height=tmx_map.height,
-            small_clouds=asset_manager.level_graphics[
+            small_cloud_surfaces=asset_manager.level_graphics[
                 ImageAssetGroup.CLOUD_SMALL.value
             ],
-            large_cloud=asset_manager.level_graphics[ImageAssetGroup.CLOUD_LARGE.value],
+            large_cloud_surface=asset_manager.level_graphics[ImageAssetGroup.CLOUD_LARGE.value],
             horizon_line=tmx_level_properties[LevelDataProperty.HORIZON_LINE.value],
             level_background_tile=level_background_tile,
             top_limit=tmx_level_properties[LevelDataProperty.TOP_LIMIT.value],

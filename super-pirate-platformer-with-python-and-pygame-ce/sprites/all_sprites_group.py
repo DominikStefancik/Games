@@ -12,17 +12,32 @@ class AllSpritesGroup(pygame.sprite.Group):
         self.offset = vector()
         self.camera_border = {
             CameraBorder.LEFT: 0,
+            # The "level_width" has to be negative, because the further right the player goes,
+            # the bigger left offset the camera will have
+            # When dealing with the right border we want to mirror the entire camera.
+            #
+            # When moving the camera, we want the player to be in the middle of the screen.
+            # But when he reaches one of the edges, the camera will show the rendered edge of the map
+            # and also the black part of the screen which is not covered by the background.
+            # We don't want to show it, that's why we have to add the WINDOW_WIDTH
+            #
+            # The same reasoning is for using negative value of "level_height" and adding WINDOW_HEIGHT
+            # for the bottom border below.
             CameraBorder.RIGHT: -level_width + WINDOW_WIDTH,
             CameraBorder.TOP: top_limit,
             CameraBorder.BOTTOM: -level_height + WINDOW_HEIGHT,
         }
 
+    # We want to constraint updating the camera for cases when the player comes close enough to the level map edges.
+    # In that case we want the camera to stop moving
     def constraint_camera(self):
+        # If the player is close to the left edge, the camera should stay on the left edge
         self.offset.x = (
             self.offset.x
             if self.offset.x < self.camera_border[CameraBorder.LEFT]
             else self.camera_border[CameraBorder.LEFT]
         )
+        # If the player is close to the right edge, the camera should stay on the right edge
         self.offset.x = (
             self.offset.x
             if self.offset.x > self.camera_border[CameraBorder.RIGHT]
