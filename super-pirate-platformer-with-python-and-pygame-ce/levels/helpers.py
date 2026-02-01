@@ -73,14 +73,16 @@ def create_objects_layer(level, level_frames, object):
         )
     else:
         if "palm" in object.name:
-            animation_frames = level_frames[ImageAssetGroup.PALMS.value][object.name]
+            animation_frames = level_frames[ImageAssetGroup.LEVEL_PALMS.value][
+                object.name
+            ]
             groups = [level.all_sprites]
 
             if object.name in [
                 LevelObjectName.PALM_LEFT.value,
                 LevelObjectName.PALM_RIGHT.value,
                 LevelObjectName.PALM_SMALL.value,
-                LevelObjectName.PALM_LARGE.value
+                LevelObjectName.PALM_LARGE.value,
             ]:
                 groups.append(level.semi_collision_sprites)
 

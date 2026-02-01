@@ -1,9 +1,9 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
 from settings import pygame, TILE_SIZE
-from sprites.all_sprites_group import AllSpritesGroup
-from sprites.background import Background
 
+from .all_sprites_group import AllSpritesGroup
+from .background import Background
 from .constants import LevelLayer, LevelDataProperty
 from .helpers import (
     create_background_details_layer,

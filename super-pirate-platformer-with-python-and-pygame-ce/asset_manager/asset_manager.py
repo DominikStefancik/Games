@@ -1,10 +1,16 @@
 from .import_helpers import *
-from .loaders import load_font, load_level_graphics, load_ui_graphics
+from .loaders import (
+    load_font,
+    load_level_graphics,
+    load_overworld_graphics,
+    load_ui_graphics,
+)
 
 
 class AssetManager:
     def __init__(self):
         self._level_graphics = None
+        self._overworld_graphics = None
         self._ui_graphics = None
         self._font = None
 
@@ -14,6 +20,13 @@ class AssetManager:
             self._level_graphics = load_level_graphics()
 
         return self._level_graphics
+
+    @property
+    def overworld_graphics(self):
+        if self._overworld_graphics == None:
+            self._overworld_graphics = load_overworld_graphics()
+
+        return self._overworld_graphics
 
     @property
     def ui_graphics(self):

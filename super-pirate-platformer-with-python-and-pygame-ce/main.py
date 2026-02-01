@@ -7,6 +7,8 @@ from pytmx.util_pygame import load_pygame
 
 from levels.constants import OMNI_PATH
 from levels.level import Level
+from overworld.constants import OVERWORLD_MAP_PATH
+from overworld.overworld import Overworld
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 from ui.ui import Ui
 
@@ -20,8 +22,10 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ui = Ui()
         self.level_maps = {0: load_pygame(OMNI_PATH)}
+        self.overworld_map = load_pygame(OVERWORLD_MAP_PATH)
 
-        self.current_stage = Level(self.level_maps[0])
+        # self.current_stage = Level(self.level_maps[0])
+        self.current_stage = Overworld(self.overworld_map)
 
     def run(self):
         while True:

@@ -19,7 +19,7 @@ def load_level_graphics():
         ImageAssetGroup.FLOOR_SPIKE.value: import_folder_as_list(
             "assets", "graphics", "enemies", "floor_spikes"
         ),
-        ImageAssetGroup.PALMS.value: import_subfolders_as_dict(
+        ImageAssetGroup.LEVEL_PALMS.value: import_subfolders_as_dict(
             "assets", "graphics", "level", "palms"
         ),
         ImageAssetGroup.CANDLE.value: import_folder_as_list(
@@ -84,6 +84,20 @@ def load_level_graphics():
         ),
         ImageAssetGroup.CLOUD_LARGE.value: import_image(
             "assets", "graphics", "level", "clouds", "large_cloud"
+        ),
+    }
+
+
+def load_overworld_graphics():
+    return {
+        ImageAssetGroup.OVERWORLD_PALM.value: import_folder_as_list(
+            "assets", "graphics", "overworld", "palm"
+        ),
+        ImageAssetGroup.OVERWORLD_WATER.value: import_folder_as_list(
+            "assets", "graphics", "overworld", "water"
+        ),
+        ImageAssetGroup.STONE.value: import_image(
+            "assets", "graphics", "overworld", "objects", "stone"
         ),
     }
 
