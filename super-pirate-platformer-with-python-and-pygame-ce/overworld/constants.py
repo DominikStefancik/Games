@@ -9,8 +9,14 @@ class OverworldLayer(Enum):
     MAIN = "main"
     TOP = "top"
     OBJECTS = "Objects"
+    NODES = "Nodes"
 
 
 class OverworldObjectName(Enum):
     PALM = "palm"
     GRASS = "grass"
+    NODE = "Node"
+
+
+class OverworldObjectProperty(Enum):
+    STAGE = "stage"

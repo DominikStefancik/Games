@@ -99,6 +99,12 @@ def load_overworld_graphics():
         ImageAssetGroup.STONE.value: import_image(
             "assets", "graphics", "overworld", "objects", "stone"
         ),
+        ImageAssetGroup.PATH.value: import_folder_as_dict(
+            "assets", "graphics", "overworld", "path"
+        ),
+        ImageAssetGroup.ICON.value: import_subfolders_as_dict(
+            "assets", "graphics", "overworld", "icon"
+        ),
     }
 
 

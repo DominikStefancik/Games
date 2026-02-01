@@ -27,3 +27,11 @@ class ItemType(Enum):
             return ItemType.SKULL
         else:
             raise NotImplementedError
+
+
+class PlayerIconAnimation(Enum):
+    IDLE = "idle"
+    LEFT = "left"
+    RIGHT = "right"
+    UP = "up"
+    DOWN = "down"

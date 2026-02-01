@@ -3,9 +3,11 @@ from random import randint
 from asset_manager.constants import ImageAssetGroup
 from settings import pygame, TILE_SIZE, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
+from sprites.node import Node
+from sprites.player_icon import PlayerIcon
 from sprites.sprite import Sprite
 
-from .constants import OverworldObjectName
+from .constants import OverworldObjectName, OverworldObjectProperty
 
 
 def create_main_layer(overworld, surface, x, y):
@@ -53,4 +55,29 @@ def create_objects_layer(overworld, overworld_frames, object):
             surface=object.image,
             position=(object.x, object.y),
             z_index=z_index,
+        )
+
+
+def create_nodes_layer(overworld, overworld_frames, object, game_state):
+    if (
+        object.name == OverworldObjectName.NODE.value
+        and object.properties[OverworldObjectProperty.STAGE.value]
+        == game_state.current_level
+    ):
+        overworld.player_icon = PlayerIcon(
+            groups=overworld.all_sprites,
+            position=(object.x + TILE_SIZE / 2, object.y + TILE_SIZE / 2),
+            animation_frames=overworld_frames[ImageAssetGroup.ICON.value],
+        )
+
+    if object.name == OverworldObjectName.NODE.value:
+        surface = overworld_frames[ImageAssetGroup.PATH.value][
+            OverworldObjectName.NODE.value.lower()
+        ]
+
+        Node(
+            groups=overworld.all_sprites,
+            surface=surface,
+            position=(object.x, object.y),
+            level=object.properties[OverworldObjectProperty.STAGE.value],
         )

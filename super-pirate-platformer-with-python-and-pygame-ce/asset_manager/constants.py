@@ -37,3 +37,5 @@ class ImageAssetGroup(Enum):
     OVERWORLD_PALM = "palm"
     OVERWORLD_WATER = "water"
     STONE = "stone"
+    PATH = "path"
+    ICON = "icon"

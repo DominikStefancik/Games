@@ -3,9 +3,11 @@ from player.constants import PLAYER_START_HEALTH
 
 class GameState:
     def __init__(self):
-        self.subscribers = []
+        self._subscribers = []
         self._collected_coins = 0
         self._player_health = PLAYER_START_HEALTH
+        self._current_level = 0
+        self._unlocked_level = 0
 
     @property
     def collected_coins(self):
@@ -30,11 +32,19 @@ class GameState:
         self._player_health = value
         self.notify_all()
 
+    @property
+    def current_level(self):
+        return self._current_level
+
+    @property
+    def unlocked_level(self):
+        return self._unlocked_level
+
     def subscribe(self, subscriber):
-        self.subscribers.append(subscriber)
+        self._subscribers.append(subscriber)
 
     def notify_all(self):
-        for subscriber in self.subscribers:
+        for subscriber in self._subscribers:
             subscriber.refresh(self)
 
 
