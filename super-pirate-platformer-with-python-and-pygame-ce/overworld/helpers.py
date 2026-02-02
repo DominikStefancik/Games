@@ -83,6 +83,8 @@ def create_nodes_layer(overworld, overworld_frames, object, game_state):
             groups=overworld.all_sprites,
             position=(object.x + TILE_SIZE / 2, object.y + TILE_SIZE / 2),
             animation_frames=overworld_frames[ImageAssetGroup.ICON.value],
+            node_sprites=overworld.node_sprites,
+            paths=overworld.paths,
         )
 
     if object.name == OverworldObjectName.NODE.value:
