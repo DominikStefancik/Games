@@ -1,8 +1,7 @@
 from random import randint
 
 from settings import pygame, Z_Layer
-
-from .sprite import Sprite
+from sprites.sprite import Sprite
 
 
 class Cloud(Sprite):

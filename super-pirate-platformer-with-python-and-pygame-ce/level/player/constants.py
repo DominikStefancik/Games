@@ -12,7 +12,7 @@ class Collision(Enum):
 
 
 class SurfaceContact(Enum):
-    FLOOR = ("floor",)
+    FLOOR = "floor"
     LEFT = "left"
     RIGHT = "right"
 

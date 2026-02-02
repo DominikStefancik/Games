@@ -3,9 +3,6 @@ from random import randint
 from asset_manager.constants import ImageAssetGroup
 from settings import pygame, TILE_SIZE, vector, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
-from sprites.node import Node
-from sprites.path_sprite import PathSprite
-from sprites.player_icon import PlayerIcon
 from sprites.sprite import Sprite
 
 from .constants import (
@@ -15,6 +12,9 @@ from .constants import (
     OverworldPathImage,
     OverworldPathProperty,
 )
+from .sprites.node import Node
+from .sprites.path_sprite import PathSprite
+from .sprites.player_icon import PlayerIcon
 
 
 def create_main_layer(overworld, surface, x, y):

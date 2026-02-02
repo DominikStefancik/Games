@@ -1,6 +1,5 @@
 from settings import pygame, Z_Layer
-
-from .animated_sprite import AnimatedSprite
+from sprites.animated_sprite import AnimatedSprite
 
 
 class ParticleEffectSprite(AnimatedSprite):

@@ -1,4 +1,4 @@
-from player.constants import PLAYER_START_HEALTH
+from level.player.constants import PLAYER_START_HEALTH
 
 from .constants import GameStage
 

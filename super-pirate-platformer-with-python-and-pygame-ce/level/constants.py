@@ -1,13 +1,6 @@
 from enum import Enum
 
 
-class CameraBorder(Enum):
-    LEFT = "left"
-    RIGHT = "right"
-    TOP = "top"
-    BOTTOM = "bottom"
-
-
 class LevelLayer(Enum):
     BACKGROUND = "BG"
     BACKGROUND_DETAILS = "BG details"

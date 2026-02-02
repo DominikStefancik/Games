@@ -1,7 +1,7 @@
 from game_state.game_state import get_game_state
 from settings import pygame, Z_Layer
+from sprites.animated_sprite import AnimatedSprite
 
-from .animated_sprite import AnimatedSprite
 from .constants import ItemType
 from .particle_effect_sprite import ParticleEffectSprite
 

@@ -1,11 +1,6 @@
 from enum import Enum
 
 
-class MovingDirection(Enum):
-    VERTICAL = "vertical"
-    HORIZONTAL = "horizontal"
-
-
 class PlayerIconAnimation(Enum):
     IDLE = "idle"
     LEFT = "left"

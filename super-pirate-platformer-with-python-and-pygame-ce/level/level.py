@@ -4,7 +4,7 @@ from game_state.constants import GameStage
 from game_state.game_state import get_game_state
 from settings import pygame, TILE_SIZE
 
-from .all_sprites_group import AllSpritesGroup
+from .sprites.all_sprites_group import AllSpritesGroup
 from .background import Background
 from .constants import LevelLayer, LevelDataProperty
 from .helpers import (

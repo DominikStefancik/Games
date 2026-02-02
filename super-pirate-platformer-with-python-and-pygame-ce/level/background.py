@@ -1,11 +1,11 @@
 from random import choice, randint
 
 from settings import pygame, TILE_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH
-from sprites.cloud import Cloud
 from sprites.sprite import Sprite
 from timer import Timer
 
-from .constants import CameraBorder
+from .sprites.cloud import Cloud
+from .sprites.constants import CameraBorder
 
 
 class Background:

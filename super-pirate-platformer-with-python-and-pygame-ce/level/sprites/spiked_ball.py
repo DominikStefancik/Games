@@ -1,8 +1,7 @@
 from math import sin, cos, radians
 
 from settings import pygame, Z_Layer
-
-from .sprite import Sprite
+from sprites.sprite import Sprite
 
 
 class SpikedBall(Sprite):

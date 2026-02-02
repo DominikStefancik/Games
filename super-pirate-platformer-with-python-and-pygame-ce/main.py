@@ -1,7 +1,7 @@
 from asset_manager.asset_manager import get_asset_manager
 from game_state.constants import GameStage
 from game_state.game_state import get_game_state
-from levels.level import Level
+from level.level import Level
 from overworld.overworld import Overworld
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 from ui.ui import Ui
@@ -29,7 +29,7 @@ class Game:
         match stage:
             case GameStage.LEVEL:
                 self.current_stage = Level(
-                    self.level_maps[self.game_state.current_level]
+                    self.level_maps[self.game_state.unlocked_level]
                 )
             case GameStage.OVERWORLD:
                 self.current_stage = Overworld(self.overworld_map)

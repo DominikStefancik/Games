@@ -1,14 +1,9 @@
 from asset_manager.constants import ImageAssetGroup
-from enemies.shell import Shell
-from enemies.tooth import Tooth
-from player.player import Player
+
 from settings import pygame, TILE_SIZE, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
 from sprites.constants import MovingDirection
-from sprites.item import Item
 from sprites.moving_sprite import MovingSprite
-from sprites.spiked_ball import SpikedBall
-from sprites.spiked_chain import SpikedChain
 from sprites.sprite import Sprite
 
 from .constants import (
@@ -16,6 +11,12 @@ from .constants import (
     LevelObjectName,
     LevelObjectProperty,
 )
+from .enemies.shell import Shell
+from .enemies.tooth import Tooth
+from .player.player import Player
+from .sprites.item import Item
+from .sprites.spiked_ball import SpikedBall
+from .sprites.spiked_chain import SpikedChain
 
 
 def create_scenery_layer(level, layer, surface, x, y):

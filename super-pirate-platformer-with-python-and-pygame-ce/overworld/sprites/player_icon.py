@@ -1,9 +1,9 @@
 from game_state.constants import GameStage
 from game_state.game_state import get_game_state
-from overworld.constants import OverworldPathProperty
 from settings import ANIMATION_SPEED, pygame, TILE_SIZE, vector, Z_Layer
 
 from .constants import NodePathDirection, PlayerIconAnimation
+from ..constants import OverworldPathProperty
 
 
 class PlayerIcon(pygame.sprite.Sprite):
