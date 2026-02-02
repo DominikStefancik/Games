@@ -1,4 +1,5 @@
-from game_state import get_game_state
+from game_state.constants import GameStage
+from game_state.game_state import get_game_state
 from overworld.constants import OverworldPathProperty
 from settings import ANIMATION_SPEED, pygame, TILE_SIZE, vector, Z_Layer
 
@@ -43,6 +44,10 @@ class PlayerIcon(pygame.sprite.Sprite):
                 NodePathDirection.DOWN.value
             ):
                 self.move(NodePathDirection.DOWN.value)
+            if keys[pygame.K_RETURN]:
+                game_state = get_game_state()
+                game_state.current_level = self.current_node.level
+                game_state.switch_stage(GameStage.LEVEL)
 
     def move(self, direction):
         # In Tiled, the value can contain letter "r" which means reverse.

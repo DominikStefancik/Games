@@ -1,8 +1,4 @@
-from os.path import join
 from enum import Enum
-
-# Map data paths
-OMNI_PATH = join("assets", "map_data", "levels", "omni.tmx")
 
 
 class CameraBorder(Enum):
@@ -58,3 +54,4 @@ class LevelDataProperty(Enum):
     BACKGROUND = "bg"
     TOP_LIMIT = "top_limit"
     HORIZON_LINE = "horizon_line"
+    LEVEL_UNLOCK = "level_unlock"

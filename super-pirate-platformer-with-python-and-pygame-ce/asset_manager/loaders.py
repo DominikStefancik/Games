@@ -1,5 +1,12 @@
 from os.path import join
 
+# PyTMX is a map loader for python/pygame designed for games.
+# It provides smart tile loading with a fast and efficient storage base.
+# It supports Pygame, Pyglet and Pysdl2
+#
+# The module allows us to load map data as Pygame surfaces
+from pytmx.util_pygame import load_pygame
+
 from .import_helpers import *
 from asset_manager.constants import ImageAssetGroup
 from settings import pygame
@@ -121,3 +128,19 @@ def load_font():
     full_path = join("assets", "graphics", "ui", "runescape_uf.ttf")
 
     return pygame.font.Font(full_path, 40)
+
+
+def load_level_maps():
+    level_maps = {}
+
+    for index in range(6):
+        level_map_path = join("assets", "map_data", "levels", f"level_{index}.tmx")
+        level_maps[index] = load_pygame(level_map_path)
+
+    return level_maps
+
+
+def load_overworld_map():
+    overworld_map_path = join("assets", "map_data", "overworld", "overworld.tmx")
+
+    return load_pygame(overworld_map_path)

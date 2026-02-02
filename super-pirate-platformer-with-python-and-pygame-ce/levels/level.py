@@ -1,5 +1,7 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
+from game_state.constants import GameStage
+from game_state.game_state import get_game_state
 from settings import pygame, TILE_SIZE
 
 from .all_sprites_group import AllSpritesGroup
@@ -32,6 +34,7 @@ class Level:
         tmx_level_properties = tmx_map.get_layer_by_name(LevelLayer.DATA.value)[
             0
         ].properties
+        self.level_unlock = tmx_level_properties[LevelDataProperty.LEVEL_UNLOCK.value]
 
         # Groups
         self.all_sprites = AllSpritesGroup(
@@ -60,7 +63,9 @@ class Level:
             small_cloud_surfaces=asset_manager.level_graphics[
                 ImageAssetGroup.CLOUD_SMALL.value
             ],
-            large_cloud_surface=asset_manager.level_graphics[ImageAssetGroup.CLOUD_LARGE.value],
+            large_cloud_surface=asset_manager.level_graphics[
+                ImageAssetGroup.CLOUD_LARGE.value
+            ],
             horizon_line=tmx_level_properties[LevelDataProperty.HORIZON_LINE.value],
             level_background_tile=level_background_tile,
             top_limit=tmx_level_properties[LevelDataProperty.TOP_LIMIT.value],
@@ -106,17 +111,20 @@ class Level:
             self.player.hitbox_rect.left = 0
         if self.player.hitbox_rect.right >= self.level_map_width:
             self.player.hitbox_rect.right = self.level_map_width
-        if self.player.hitbox_rect.bottom >= self.level_map_width:
-            print("Player died")
 
-    def check_level_finish(self):
+        if self.player.hitbox_rect.bottom >= self.level_map_bottom:
+            game_state = get_game_state()
+            game_state.switch_stage(GameStage.OVERWORLD)
+
+    def check_level_finished(self):
         if self.player.hitbox_rect.colliderect(self.level_finish_rect):
-            print("Player reached the end of the level")
+            game_state = get_game_state()
+            game_state.switch_stage(GameStage.OVERWORLD, self.level_unlock)
 
     def run(self, delta_time):
         self.display_surface.fill("black")
         self.all_sprites.update(self.player.hitbox_rect.center, delta_time)
         self.check_map_boundaries()
-        self.check_level_finish()
+        self.check_level_finished()
         self.background.draw(delta_time)
         self.all_sprites.draw()

@@ -1,6 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
-from game_state import get_game_state
+from game_state.game_state import get_game_state
 from settings import pygame
 from timer import Timer
 
@@ -21,7 +21,7 @@ class Ui:
         self.coins = 0
 
         game_state = get_game_state()
-        game_state.subscribe(self)
+        game_state.subscribe_ui(self)
 
     def create_hearts(self, amount):
         for sprite in self.sprites:

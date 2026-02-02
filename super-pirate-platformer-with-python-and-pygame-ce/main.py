@@ -1,13 +1,7 @@
-# PyTMX is a map loader for python/pygame designed for games.
-# It provides smart tile loading with a fast and efficient storage base.
-# It supports Pygame, Pyglet and Pysdl2
-#
-# The module allows us to load map data as Pygame surfaces
-from pytmx.util_pygame import load_pygame
-
-from levels.constants import OMNI_PATH
+from asset_manager.asset_manager import get_asset_manager
+from game_state.constants import GameStage
+from game_state.game_state import get_game_state
 from levels.level import Level
-from overworld.constants import OVERWORLD_MAP_PATH
 from overworld.overworld import Overworld
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 from ui.ui import Ui
@@ -20,12 +14,25 @@ class Game:
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Python Super Pirate Platformer")
         self.clock = pygame.time.Clock()
-        self.ui = Ui()
-        self.level_maps = {0: load_pygame(OMNI_PATH)}
-        self.overworld_map = load_pygame(OVERWORLD_MAP_PATH)
 
-        # self.current_stage = Level(self.level_maps[0])
-        self.current_stage = Overworld(self.overworld_map)
+        asset_manager = get_asset_manager()
+        self.level_maps = asset_manager.level_maps
+        self.overworld_map = asset_manager.overworld_map
+
+        self.game_state = get_game_state()
+        self.game_state.subscribe_stage(self)
+        self.update_stage(GameStage.LEVEL)
+
+        self.ui = Ui()
+
+    def update_stage(self, stage):
+        match stage:
+            case GameStage.LEVEL:
+                self.current_stage = Level(
+                    self.level_maps[self.game_state.current_level]
+                )
+            case GameStage.OVERWORLD:
+                self.current_stage = Overworld(self.overworld_map)
 
     def run(self):
         while True:

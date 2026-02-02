@@ -1,4 +1,4 @@
-from game_state import get_game_state
+from game_state.game_state import get_game_state
 from settings import pygame, TILE_SIZE, Z_Layer
 
 

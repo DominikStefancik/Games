@@ -1,7 +1,7 @@
 from os.path import join
 from math import sin
 
-from game_state import get_game_state
+from game_state.game_state import get_game_state
 from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
 

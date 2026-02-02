@@ -1,6 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
-from game_state import get_game_state
+from game_state.game_state import get_game_state
 from settings import pygame
 
 from .all_sprites_group import AllSpritesGroup

@@ -1,4 +1,4 @@
-from game_state import get_game_state
+from game_state.game_state import get_game_state
 from settings import pygame, vector, WINDOW_HEIGHT, WINDOW_WIDTH, Z_Layer
 
 

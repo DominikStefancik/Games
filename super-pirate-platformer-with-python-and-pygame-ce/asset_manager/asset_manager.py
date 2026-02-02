@@ -2,17 +2,35 @@ from .import_helpers import *
 from .loaders import (
     load_font,
     load_level_graphics,
+    load_level_maps,
     load_overworld_graphics,
+    load_overworld_map,
     load_ui_graphics,
 )
 
 
 class AssetManager:
     def __init__(self):
+        self._level_maps = None
+        self._overworld_map = None
         self._level_graphics = None
         self._overworld_graphics = None
         self._ui_graphics = None
         self._font = None
+
+    @property
+    def level_maps(self):
+        if self._level_maps == None:
+            self._level_maps = load_level_maps()
+
+        return self._level_maps
+
+    @property
+    def overworld_map(self):
+        if self._overworld_map == None:
+            self._overworld_map = load_overworld_map()
+
+        return self._overworld_map
 
     @property
     def level_graphics(self):
