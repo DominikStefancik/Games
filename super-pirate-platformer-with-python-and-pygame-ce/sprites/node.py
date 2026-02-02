@@ -15,6 +15,11 @@ class Node(pygame.sprite.Sprite):
         self.level = level
         self.available_paths = available_paths
         self.game_state = get_game_state()
+        self.grid_position = (int(position[0] / TILE_SIZE), int(position[1] / TILE_SIZE))
 
     def has_path_in_direction(self, direction):
-        return direction in list(self.available_paths.keys())
+        return (
+            direction in list(self.available_paths.keys())
+            and int(self.available_paths[direction][0][0])
+            <= self.game_state.unlocked_level
+        )

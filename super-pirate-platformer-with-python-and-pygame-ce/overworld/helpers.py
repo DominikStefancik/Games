@@ -1,13 +1,20 @@
 from random import randint
 
 from asset_manager.constants import ImageAssetGroup
-from settings import pygame, TILE_SIZE, Z_Layer
+from settings import pygame, TILE_SIZE, vector, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
 from sprites.node import Node
+from sprites.path_sprite import PathSprite
 from sprites.player_icon import PlayerIcon
 from sprites.sprite import Sprite
 
-from .constants import OverworldObjectName, OverworldNodeProperty, OverworldPathProperty
+from .constants import (
+    OVERWORLD_NODE_NAME,
+    OverworldObjectName,
+    OverworldNodeProperty,
+    OverworldPathImage,
+    OverworldPathProperty,
+)
 
 
 def create_main_layer(overworld, surface, x, y):
@@ -75,7 +82,7 @@ def create_paths_layer(overworld, overworld_frames, object):
 
 def create_nodes_layer(overworld, overworld_frames, object, game_state):
     if (
-        object.name == OverworldObjectName.NODE.value
+        object.name == OVERWORLD_NODE_NAME
         and object.properties[OverworldNodeProperty.STAGE.value]
         == game_state.current_level
     ):
@@ -87,9 +94,9 @@ def create_nodes_layer(overworld, overworld_frames, object, game_state):
             paths=overworld.paths,
         )
 
-    if object.name == OverworldObjectName.NODE.value:
+    if object.name == OVERWORLD_NODE_NAME:
         surface = overworld_frames[ImageAssetGroup.PATH.value][
-            OverworldObjectName.NODE.value.lower()
+            OVERWORLD_NODE_NAME.lower()
         ]
         # Represents all available paths that lead from a node to another node.
         #
@@ -114,3 +121,108 @@ def create_nodes_layer(overworld, overworld_frames, object, game_state):
             level=object.properties[OverworldNodeProperty.STAGE.value],
             available_paths=available_paths,
         )
+
+
+def create_path_sprites(overworld, overworld_frames):
+    nodes = {node.level: vector(node.grid_position) for node in overworld.node_sprites}
+    path_tiles = {}
+
+     # Get tiles from path
+    for path_id, data in overworld.paths.items():
+        path = data[OverworldPathProperty.POSITION_POINT]
+        start_node = nodes[data[OverworldPathProperty.START]]
+        end_node = nodes[path_id]
+        path_tiles[path_id] = [start_node]
+
+        # Get points of all tiles which will be between start node and end node
+        for index, points in enumerate(path):
+            if index < len(path) - 1:
+                start = vector(points)
+                end = vector(path[index + 1])
+                # The "path_direction" says how many tiles are on the path between start and end point
+                path_direction = (end - start) / TILE_SIZE
+                start_tile = vector(
+                    int(start[0] / TILE_SIZE), int(start[1] / TILE_SIZE)
+                )
+
+                if path_direction.x:
+                    direction_x = 1 if path_direction.x > 0 else -1
+                    for x in range(direction_x, int(path_direction.x) + direction_x, direction_x):
+                        path_tiles[path_id].append(start_tile + vector(x, 0))
+
+                if path_direction.y:
+                    direction_y = 1 if path_direction.y > 0 else -1
+                    for y in range(direction_y, int(path_direction.y) + direction_y, direction_y):
+                        path_tiles[path_id].append(start_tile + vector(0, y))
+
+        path_tiles[path_id].append(end_node)
+
+    # Create sprites for each of the tile on the path
+    for key, path in path_tiles.items():
+        for index, tile in enumerate(path):
+            if index > 0 and index < len(path) - 1:
+                # Using "path[index - 1] - tile" gives us the relationship between the tiles
+                # more precisely, if a previous tile is left, right, above or below the next tile
+                previous_tile = path[index - 1] - tile
+                next_tile = path[index + 1] - tile
+
+                # Tiles are both on the vertical axis
+                if previous_tile.x == next_tile.x:
+                    surface = overworld_frames[ImageAssetGroup.PATH.value][
+                        OverworldPathImage.VERTICAL.value
+                    ]
+                # Tiles are both on the horizontal axis
+                elif previous_tile.y == next_tile.y:
+                    surface = overworld_frames[ImageAssetGroup.PATH.value][
+                        OverworldPathImage.HORIZONTAL.value
+                    ]
+                else:
+                    # One tile is on vertical and one on horizontal axis
+                    # We have to figure out which one is where, so we can draw a correct "turn" tile
+                    if (
+                        previous_tile.x == -1
+                        and next_tile.y == -1
+                        or previous_tile.y == -1
+                        and next_tile.x == -1
+                    ):
+                        surface = overworld_frames[ImageAssetGroup.PATH.value][
+                            OverworldPathImage.TOP_LEFT.value
+                        ]
+                    elif (
+                        previous_tile.x == 1
+                        and next_tile.y == -1
+                        or previous_tile.y == -1
+                        and next_tile.x == 1
+                    ):
+                        surface = overworld_frames[ImageAssetGroup.PATH.value][
+                            OverworldPathImage.TOP_RIGHT.value
+                        ]
+                    elif (
+                        previous_tile.x == -1
+                        and next_tile.y == 1
+                        or previous_tile.y == 1
+                        and next_tile.x == -1
+                    ):
+                        surface = overworld_frames[ImageAssetGroup.PATH.value][
+                            OverworldPathImage.BOTTOM_LEFT.value
+                        ]
+                    elif (
+                        previous_tile.x == 1
+                        and next_tile.y == 1
+                        or previous_tile.y == 1
+                        and next_tile.x == 1
+                    ):
+                        surface = overworld_frames[ImageAssetGroup.PATH.value][
+                            OverworldPathImage.BOTTOM_RIGHT.value
+                        ]
+                    else:
+                        surface = overworld_frames[ImageAssetGroup.PATH.value][
+                            OverworldPathImage.HORIZONTAL.value
+                        ]
+
+                PathSprite(
+                    groups=overworld.all_sprites,
+                    surface=surface,
+                    position=(tile.x * TILE_SIZE, tile.y * TILE_SIZE),
+                    level=key,
+                )

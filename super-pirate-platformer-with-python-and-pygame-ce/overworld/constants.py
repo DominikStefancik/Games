@@ -16,7 +16,8 @@ class OverworldLayer(Enum):
 class OverworldObjectName(Enum):
     PALM = "palm"
     GRASS = "grass"
-    NODE = "Node"
+
+OVERWORLD_NODE_NAME = "Node"
 
 
 class OverworldNodeProperty(Enum):
@@ -32,3 +33,12 @@ class OverworldNodeProperty(Enum):
 class OverworldPathProperty(Enum):
     POSITION_POINT = "position_point"
     START = "start"
+
+
+class OverworldPathImage(Enum):
+    BOTTOM_LEFT = "bl"
+    BOTTOM_RIGHT = "br"
+    TOP_LEFT = "tl"
+    TOP_RIGHT = "tr"
+    HORIZONTAL = "horizontal"
+    VERTICAL = "vertical"

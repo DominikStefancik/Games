@@ -8,6 +8,7 @@ from .constants import OverworldLayer
 from .helpers import (
     create_main_layer,
     create_nodes_layer,
+    create_path_sprites,
     create_paths_layer,
     create_objects_layer,
     create_water,
@@ -22,14 +23,16 @@ class Overworld:
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = AllSpritesGroup()
         self.node_sprites = pygame.sprite.Group()
+        # The path dictionary will be filled during processing overworld Paths layers
         self.paths = {}
-
-        # The player icon object will be assigned during processing overworld layers
+        # The player icon object will be assigned during processing overworld Nodes layers
         self.player_icon = None
 
         self.process_overworld_layers(
             tmx_map, asset_manager.overworld_graphics, game_state
         )
+
+        create_path_sprites(self, asset_manager.overworld_graphics)
 
     # Gets objects from the overworld map layers and creates related game objects
     def process_overworld_layers(self, tmx_map, overworld_frames, game_state):
