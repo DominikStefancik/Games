@@ -3,7 +3,7 @@ from settings import pygame, TILE_SIZE, Z_Layer
 
 
 class Node(pygame.sprite.Sprite):
-    def __init__(self, groups, surface, position, level):
+    def __init__(self, groups, surface, position, level, available_paths):
         super().__init__(groups)
 
         self.image = surface
@@ -13,4 +13,8 @@ class Node(pygame.sprite.Sprite):
         self.previous_rect = self.rect.copy()
         self.z_index = Z_Layer.PATH.value
         self.level = level
+        self.available_paths = available_paths
         self.game_state = get_game_state()
+
+    def has_path_in_direction(self, direction):
+        return direction in list(self.available_paths.keys())

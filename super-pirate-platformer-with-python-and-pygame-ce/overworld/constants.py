@@ -10,6 +10,7 @@ class OverworldLayer(Enum):
     TOP = "top"
     OBJECTS = "Objects"
     NODES = "Nodes"
+    PATHS = "Paths"
 
 
 class OverworldObjectName(Enum):
@@ -18,5 +19,16 @@ class OverworldObjectName(Enum):
     NODE = "Node"
 
 
-class OverworldObjectProperty(Enum):
+class OverworldNodeProperty(Enum):
     STAGE = "stage"
+    START = "start"
+    END = "end"
+    LEFT = "left"
+    RIGHT = "right"
+    UP = "up"
+    DOWN = "down"
+
+
+class OverworldPathProperty(Enum):
+    POSITION_POINT = "position_point"
+    START = "start"

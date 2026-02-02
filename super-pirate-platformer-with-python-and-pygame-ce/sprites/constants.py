@@ -35,3 +35,10 @@ class PlayerIconAnimation(Enum):
     RIGHT = "right"
     UP = "up"
     DOWN = "down"
+
+
+class NodePathDirection(Enum):
+    LEFT = "left"
+    RIGHT = "right"
+    UP = "up"
+    DOWN = "down"
