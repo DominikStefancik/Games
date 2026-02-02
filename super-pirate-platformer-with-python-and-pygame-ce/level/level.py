@@ -112,6 +112,7 @@ class Level:
         if self.player.hitbox_rect.right >= self.level_map_width:
             self.player.hitbox_rect.right = self.level_map_width
 
+        # Player fell down into the water
         if self.player.hitbox_rect.bottom >= self.level_map_bottom:
             game_state = get_game_state()
             game_state.switch_stage(GameStage.OVERWORLD)

@@ -1,3 +1,5 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAssetFile
 from game_state.game_state import get_game_state
 from settings import pygame, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
@@ -36,6 +38,9 @@ class Item(AnimatedSprite):
                 animation_frames=self.particle_effect_animation_frames,
             )
             self.kill()
+
+            asset_manager = get_asset_manager()
+            asset_manager.audio_files[AudioAssetFile.COIN].play()
 
     def activate(self):
         game_state = get_game_state()

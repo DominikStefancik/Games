@@ -1,4 +1,5 @@
 from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAssetFile
 from game_state.constants import GameStage
 from game_state.game_state import get_game_state
 from level.level import Level
@@ -24,6 +25,7 @@ class Game:
         self.update_stage(GameStage.LEVEL)
 
         self.ui = Ui()
+        asset_manager.audio_files[AudioAssetFile.BACKGROUND_MUSIC].play(loops=-1)
 
     def update_stage(self, stage):
         match stage:
@@ -34,6 +36,11 @@ class Game:
             case GameStage.OVERWORLD:
                 self.current_stage = Overworld(self.overworld_map)
 
+    def check_game_over(self):
+        if self.game_state.player_health <= 0:
+            pygame.quit()
+            sys.exit()
+
     def run(self):
         while True:
             delta_time = self.clock.tick() / 1000
@@ -43,6 +50,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+            self.check_game_over()
             self.current_stage.run(delta_time)
             self.ui.update(delta_time)
 

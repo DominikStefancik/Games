@@ -1,5 +1,6 @@
 from .import_helpers import *
 from .loaders import (
+    load_audio_files,
     load_font,
     load_level_graphics,
     load_level_maps,
@@ -17,6 +18,7 @@ class AssetManager:
         self._overworld_graphics = None
         self._ui_graphics = None
         self._font = None
+        self._audio_files = None
 
     @property
     def level_maps(self):
@@ -59,6 +61,17 @@ class AssetManager:
             self._font = load_font()
 
         return self._font
+
+    @property
+    def audio_files(self):
+        if self._audio_files == None:
+            self._audio_files = load_audio_files()
+
+            # Update volume of the sounds
+            for key, _ in self._audio_files.items():
+                self._audio_files[key].set_volume(0.4)
+
+        return self._audio_files
 
 
 ASSET_MANAGER = AssetManager()

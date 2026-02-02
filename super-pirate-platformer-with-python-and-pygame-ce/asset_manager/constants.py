@@ -39,3 +39,13 @@ class ImageAssetGroup(Enum):
     STONE = "stone"
     PATH = "path"
     ICON = "icon"
+
+
+class AudioAssetFile(Enum):
+    ATTACK = "attack"
+    COIN = "coin"
+    DAMAGE = "damage"
+    HIT = "hit"
+    JUMP = "jump"
+    PEARL = "pearl"
+    BACKGROUND_MUSIC = "background_music"

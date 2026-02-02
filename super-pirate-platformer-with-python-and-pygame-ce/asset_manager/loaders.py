@@ -7,9 +7,10 @@ from os.path import join
 # The module allows us to load map data as Pygame surfaces
 from pytmx.util_pygame import load_pygame
 
-from .import_helpers import *
-from asset_manager.constants import ImageAssetGroup
 from settings import pygame
+
+from .import_helpers import *
+from .constants import AudioAssetFile, ImageAssetGroup
 
 
 def load_level_graphics():
@@ -144,3 +145,21 @@ def load_overworld_map():
     overworld_map_path = join("assets", "map_data", "overworld", "overworld.tmx")
 
     return load_pygame(overworld_map_path)
+
+
+def load_audio_files():
+    return {
+        AudioAssetFile.ATTACK: pygame.mixer.Sound(
+            join("assets", "audio", "attack.wav")
+        ),
+        AudioAssetFile.COIN: pygame.mixer.Sound(join("assets", "audio", "coin.wav")),
+        AudioAssetFile.DAMAGE: pygame.mixer.Sound(
+            join("assets", "audio", "damage.wav")
+        ),
+        AudioAssetFile.HIT: pygame.mixer.Sound(join("assets", "audio", "hit.wav")),
+        AudioAssetFile.JUMP: pygame.mixer.Sound(join("assets", "audio", "jump.wav")),
+        AudioAssetFile.PEARL: pygame.mixer.Sound(join("assets", "audio", "pearl.wav")),
+        AudioAssetFile.BACKGROUND_MUSIC: pygame.mixer.Sound(
+            join("assets", "audio", "starlight_city.mp3")
+        ),
+    }

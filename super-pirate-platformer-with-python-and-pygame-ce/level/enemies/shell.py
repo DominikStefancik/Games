@@ -1,3 +1,5 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAssetFile
 from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
 
@@ -15,7 +17,7 @@ class Shell(pygame.sprite.Sprite):
         player,
         pearl_groups,
         pearl_animation_frames,
-        collision_sprites
+        collision_sprites,
     ):
         super().__init__(groups)
 
@@ -95,6 +97,9 @@ class Shell(pygame.sprite.Sprite):
                     player=self.player,
                 )
                 self.has_fired = True
+
+                asset_manager = get_asset_manager()
+                asset_manager.audio_files[AudioAssetFile.PEARL].play()
         else:
             self.frame_index = 0
 

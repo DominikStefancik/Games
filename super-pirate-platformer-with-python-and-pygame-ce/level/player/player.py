@@ -1,6 +1,8 @@
 from os.path import join
 from math import sin
 
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAssetFile
 from game_state.game_state import get_game_state
 from settings import ANIMATION_SPEED, pygame, vector, Z_Layer
 from timer import Timer
@@ -131,14 +133,18 @@ class Player(pygame.sprite.Sprite):
         self.detect_semi_collision()
 
         if self.is_jumping:
+            asset_manager = get_asset_manager()
+
             if self.is_on_surface[SurfaceContact.FLOOR]:
                 self.direction.y = -PLAYER_JUMP_HEIGHT
                 # After the player jumps of the floor, he should not be able to immediately jump of the wall
                 self.timers[PlayerTimerType.WALL_SLIDE_BLOCK].activate()
+                asset_manager.audio_files[AudioAssetFile.JUMP].play()
             if is_on_wall and not self.timers[PlayerTimerType.WALL_SLIDE_BLOCK].active:
                 self.timers[PlayerTimerType.WALL_JUMP].activate()
                 self.direction.y = -PLAYER_JUMP_HEIGHT
                 self.direction.x = 1 if self.is_on_surface[SurfaceContact.LEFT] else -1
+                asset_manager.audio_files[AudioAssetFile.JUMP].play()
 
             self.is_jumping = False
 
@@ -288,11 +294,17 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
             self.timers[PlayerTimerType.ATTACK_BLOCK].activate()
 
+            asset_manager = get_asset_manager()
+            asset_manager.audio_files[AudioAssetFile.ATTACK].play()
+
     def get_damage(self):
         if not self.timers[PlayerTimerType.GET_DAMAGE].active:
             game_state = get_game_state()
             game_state.player_health -= 1
             self.timers[PlayerTimerType.GET_DAMAGE].activate()
+
+            asset_manager = get_asset_manager()
+            asset_manager.audio_files[AudioAssetFile.HIT].play()
 
     def show_flicker_effect(self):
         # By adding the "sin" function to the condition, we achieve the flickering effect
