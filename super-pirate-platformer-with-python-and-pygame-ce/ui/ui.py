@@ -23,6 +23,7 @@ class Ui:
 
         self.game_state = get_game_state()
         self.game_state.subscribe_ui(self)
+        self.refresh()
 
     def create_hearts(self, amount):
         for sprite in self.sprites:
@@ -45,9 +46,9 @@ class Ui:
         coins_rect = self.coin_surface.get_frect(center=text_rect.midleft).move(-20, -3)
         self.display_surface.blit(self.coin_surface, coins_rect)
 
-    def refresh(self, game_state):
-        self.create_hearts(game_state.player_health)
-        self.update_coins(game_state.collected_coins)
+    def refresh(self):
+        self.create_hearts(self.game_state.player_health)
+        self.update_coins(self.game_state.collected_coins)
 
     def update(self, delta_time):
         self.sprites.update(delta_time)

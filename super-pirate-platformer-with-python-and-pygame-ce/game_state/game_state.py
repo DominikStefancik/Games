@@ -71,7 +71,7 @@ class GameState:
 
     def notify_all_ui(self):
         for subscriber in self._ui_subscribers:
-            subscriber.refresh(self)
+            subscriber.refresh()
 
     def subscribe_stage(self, subscriber):
         self._stage_subscribers.append(subscriber)
