@@ -78,7 +78,7 @@ class GameState:
 
     def notify_all_stage(self):
         for subscriber in self._stage_subscribers:
-            subscriber.update_stage(self._current_stage)
+            subscriber.update_stage()
 
 
 GAME_STATE = GameState()

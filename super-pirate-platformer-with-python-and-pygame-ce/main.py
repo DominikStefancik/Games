@@ -22,19 +22,24 @@ class Game:
 
         self.game_state = get_game_state()
         self.game_state.subscribe_stage(self)
-        self.update_stage(GameStage.LEVEL)
+        self.update_stage()
 
         self.ui = Ui()
-        asset_manager.audio_files[AudioAssetFile.BACKGROUND_MUSIC].play(loops=-1)
 
-    def update_stage(self, stage):
-        match stage:
+    def update_stage(self):
+        asset_manager = get_asset_manager()
+
+        match self.game_state.current_stage:
             case GameStage.LEVEL:
                 self.current_stage = Level(
-                    self.level_maps[self.game_state.unlocked_level]
+                    self.level_maps[self.game_state.current_level]
+                )
+                asset_manager.audio_files[AudioAssetFile.BACKGROUND_MUSIC].play(
+                    loops=-1
                 )
             case GameStage.OVERWORLD:
                 self.current_stage = Overworld(self.overworld_map)
+                asset_manager.audio_files[AudioAssetFile.BACKGROUND_MUSIC].stop()
 
     def check_game_over(self):
         if self.game_state.player_health <= 0:

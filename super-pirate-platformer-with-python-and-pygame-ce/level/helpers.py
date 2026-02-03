@@ -104,7 +104,7 @@ def create_objects_layer(level, level_frames, object):
             is_inverted = object.properties[LevelObjectProperty.INVERTED.value]
 
             FloorSpike(
-                groups=level.all_sprites,
+                groups=(level.all_sprites, level.damage_sprites),
                 position=(object.x, object.y),
                 animation_frames=frames,
                 is_inverted=is_inverted,

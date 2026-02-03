@@ -5,9 +5,8 @@ from settings import pygame, TILE_SIZE, vector, Z_Layer
 from sprites.animated_sprite import AnimatedSprite
 from sprites.sprite import Sprite
 
-from .constants import (
-    OVERWORLD_NODE_NAME,
-    OverworldObjectName,
+from .constants import OVERWORLD_NODE_NAME, OverworldObjectName
+from .sprites.constants import (
     OverworldNodeProperty,
     OverworldPathImage,
     OverworldPathProperty,
@@ -127,7 +126,7 @@ def create_path_sprites(overworld, overworld_frames):
     nodes = {node.level: vector(node.grid_position) for node in overworld.node_sprites}
     path_tiles = {}
 
-     # Get tiles from path
+    # Get tiles from path
     for path_id, data in overworld.paths.items():
         path = data[OverworldPathProperty.POSITION_POINT]
         start_node = nodes[data[OverworldPathProperty.START]]
@@ -147,12 +146,16 @@ def create_path_sprites(overworld, overworld_frames):
 
                 if path_direction.x:
                     direction_x = 1 if path_direction.x > 0 else -1
-                    for x in range(direction_x, int(path_direction.x) + direction_x, direction_x):
+                    for x in range(
+                        direction_x, int(path_direction.x) + direction_x, direction_x
+                    ):
                         path_tiles[path_id].append(start_tile + vector(x, 0))
 
                 if path_direction.y:
                     direction_y = 1 if path_direction.y > 0 else -1
-                    for y in range(direction_y, int(path_direction.y) + direction_y, direction_y):
+                    for y in range(
+                        direction_y, int(path_direction.y) + direction_y, direction_y
+                    ):
                         path_tiles[path_id].append(start_tile + vector(0, y))
 
         path_tiles[path_id].append(end_node)
