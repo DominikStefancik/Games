@@ -47,7 +47,7 @@ class Tooth(pygame.sprite.Sprite):
 
         if (reached_left_edge or did_hit_wall) and self.direction == -1:
             self.direction = 1
-        if (reached_right_edge or did_hit_wall) and self.direction == 1:
+        elif (reached_right_edge or did_hit_wall) and self.direction == 1:
             self.direction = -1
 
     def animate(self, delta_time):
