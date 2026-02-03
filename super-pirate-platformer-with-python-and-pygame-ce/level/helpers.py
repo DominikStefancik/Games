@@ -11,12 +11,13 @@ from .constants import (
     LevelObjectName,
     LevelObjectProperty,
 )
+from .enemies.floor_spike import FloorSpike
 from .enemies.shell import Shell
+from .enemies.spiked_ball import SpikedBall
+from .enemies.spiked_chain import SpikedChain
 from .enemies.tooth import Tooth
 from .player.player import Player
 from .sprites.item import Item
-from .sprites.spiked_ball import SpikedBall
-from .sprites.spiked_chain import SpikedChain
 
 
 def create_scenery_layer(level, layer, surface, x, y):
@@ -73,7 +74,13 @@ def create_objects_layer(level, level_frames, object):
             animation_frames=animation_frames,
         )
     else:
-        if "palm" in object.name:
+        if object.name in [LevelObjectName.BARREL.value, LevelObjectName.CRATE.value]:
+            Sprite(
+                groups=(level.all_sprites, level.collision_sprites),
+                surface=object.image,
+                position=(object.x, object.y),
+            )
+        elif "palm" in object.name:
             animation_frames = level_frames[ImageAssetGroup.LEVEL_PALMS.value][
                 object.name
             ]
@@ -92,11 +99,15 @@ def create_objects_layer(level, level_frames, object):
                 position=(object.x, object.y),
                 animation_frames=animation_frames,
             )
-        elif object.name in [LevelObjectName.BARREL.value, LevelObjectName.CRATE.value]:
-            Sprite(
-                groups=(level.all_sprites, level.collision_sprites),
-                surface=object.image,
+        elif object.name == LevelObjectName.FLOOR_SPIKE.value:
+            frames = level_frames[object.name]
+            is_inverted = object.properties[LevelObjectProperty.INVERTED.value]
+
+            FloorSpike(
+                groups=level.all_sprites,
                 position=(object.x, object.y),
+                animation_frames=frames,
+                is_inverted=is_inverted,
             )
         else:
             frames = level_frames[object.name]

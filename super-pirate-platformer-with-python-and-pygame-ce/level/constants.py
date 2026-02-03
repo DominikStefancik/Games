@@ -18,6 +18,7 @@ class LevelLayer(Enum):
 class LevelObjectName(Enum):
     PLAYER = "player"
     HELICOPTER = "helicopter"
+    FLOOR_SPIKE = "floor_spike"
     BARREL = "barrel"
     CRATE = "crate"
     PALM = "palm"
@@ -41,6 +42,7 @@ class LevelObjectProperty(Enum):
     START_ANGLE = "start_angle"
     END_ANGLE = "end_angle"
     REVERSE = "reverse"
+    INVERTED = "inverted"
 
 
 class LevelDataProperty(Enum):

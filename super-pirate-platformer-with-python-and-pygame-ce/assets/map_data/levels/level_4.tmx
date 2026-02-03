@@ -208,14 +208,14 @@
     <property name="inverted" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="192" name="floor_spike" gid="1073742063" x="512" y="576" width="64" height="64">
+  <object id="192" name="floor_spike" gid="1073742063" x="320" y="768" width="64" height="64">
    <properties>
     <property name="inverted" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="193" name="floor_spike" gid="1073742063" x="640" y="384" width="64" height="64">
+  <object id="193" name="floor_spike" gid="1073742063" x="640" y="320" width="64" height="64">
    <properties>
-    <property name="inverted" type="bool" value="true"/>
+    <property name="inverted" type="bool" value="false"/>
    </properties>
   </object>
   <object id="232" name="saw" x="320" y="1472" width="64" height="64">
