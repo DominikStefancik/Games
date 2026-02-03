@@ -19,7 +19,7 @@
 * [Escape the Factory](escape-the-factory-metroidvania-with-typescript-and-kaplay) - game based on Metroidvania style games implemented with Kaplay
 * [Fighting Game](fighting-game-with-typescript-and-kaplay) - fighting game in the style of Mortal Kombat implemented with Kaplay
 * [Sonic Runner](sonic-runner-with-javascript-and-kaplay) - runner game based on the famous game Sonic the Hedgedog implemented with Kaplay
-* [Super Mango](super-mango-platformer-with-typescript-and-kaplay) - game based on the classic Nintendo game Super Mario Bros implemented with Kaplay
+* [Super Mango](super-mango-platformer-with-typescript-and-kaplay) - platformer game based on the classic Nintendo game Super Mario Bros implemented with Kaplay
 * [Tetris](tetris-with-react) - classical game Tetris implemented with React
 * [Tic Tac Toe](tic-tac-toe-with-react) - classical game Tic Tac Toe implemented with React
 
@@ -39,6 +39,7 @@
 * [Car Racing](car-racing-with-python-and-pygame) - 2D car racing game implemented with Pygame
 * [Hangman](hangman-with-python-and-pygame) - classical game Hangman implemented with Pygame
 * [Jumpy](jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
+* [Super Pirate](super-pirate-platformer-with-python-and-pygame-ce) - platformer game based on the classic Nintendo game Super Mario Bros implemented with Pygame-ce
 * [Tower Defence](tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
 
 ### Java
