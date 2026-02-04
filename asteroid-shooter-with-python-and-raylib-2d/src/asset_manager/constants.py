@@ -7,3 +7,7 @@ class ImageAsset(Enum):
     LASER = "laser"
     ASTEROID = "asteroid"
     EXPLOSION = "explosion"
+
+
+class FontAsset(Enum):
+    STORMFAZE = "stormfaze"

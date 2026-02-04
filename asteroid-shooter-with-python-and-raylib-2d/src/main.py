@@ -1,12 +1,18 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import FontAsset
 from settings import (
     BACKGROUND_COLOR,
     begin_drawing,
     clear_background,
     close_window,
+    draw_text_ex,
     end_drawing,
+    FONT_SIZE,
+    get_time,
     init_window,
+    measure_text_ex,
+    Vector2,
+    WHITE,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
     window_should_close,
@@ -19,7 +25,21 @@ class Game:
         # The "init_window" function is imported from "settings.py" where there is "from pyray import *" statement
         init_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Python Asteroid Shooter 2D")
 
+        self.asset_manager = get_asset_manager()
         self.sprite_manager = SpriteManager()
+
+    def draw_score(self):
+        score = int(get_time())
+        font = self.asset_manager.fonts[FontAsset.STORMFAZE]
+        text_size = measure_text_ex(font, str(score), FONT_SIZE, 0)
+        draw_text_ex(
+            font,
+            str(score),
+            Vector2(WINDOW_WIDTH / 2 - text_size.x / 2, 100),
+            FONT_SIZE,
+            0,
+            WHITE,
+        )
 
     def update(self):
         self.sprite_manager.update()
@@ -27,6 +47,7 @@ class Game:
     def draw(self):
         begin_drawing()
         clear_background(BACKGROUND_COLOR)
+        self.draw_score()
         self.sprite_manager.draw()
         end_drawing()
 

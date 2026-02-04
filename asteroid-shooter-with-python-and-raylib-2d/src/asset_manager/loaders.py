@@ -1,8 +1,8 @@
 from os.path import join
 
-from settings import load_texture
+from settings import ffi, FONT_SIZE, load_font_ex, load_texture
 
-from .constants import ImageAsset
+from .constants import FontAsset, ImageAsset
 
 
 def load_textures():
@@ -15,4 +15,12 @@ def load_textures():
             load_texture(join("assets", "images", "explosion", f"{index}.png"))
             for index in range(1, 29)
         ],
+    }
+
+
+def load_fonts():
+    return {
+        FontAsset.STORMFAZE: load_font_ex(
+            join("assets", "fonts", "Stormfaze.otf"), FONT_SIZE, ffi.NULL, 0
+        ),
     }
