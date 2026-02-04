@@ -11,4 +11,8 @@ def load_textures():
         ImageAsset.STAR: load_texture(join("assets", "images", "star.png")),
         ImageAsset.LASER: load_texture(join("assets", "images", "laser.png")),
         ImageAsset.ASTEROID: load_texture(join("assets", "images", "asteroid.png")),
+        ImageAsset.EXPLOSION: [
+            load_texture(join("assets", "images", "explosion", f"{index}.png"))
+            for index in range(1, 29)
+        ],
     }

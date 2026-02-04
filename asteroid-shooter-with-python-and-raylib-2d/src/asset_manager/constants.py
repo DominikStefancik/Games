@@ -6,3 +6,4 @@ class ImageAsset(Enum):
     STAR = "star"
     LASER = "laser"
     ASTEROID = "asteroid"
+    EXPLOSION = "explosion"

@@ -9,12 +9,13 @@ from settings import (
     Vector2,
     WHITE,
     WINDOW_HEIGHT,
-    WINDOW_WIDTH,
+    WINDOW_WIDTH  ,
 )
 from timer import Timer
 
 from .constants import ASTEROID_CREATION_TIMER_DURATION
-from helpers import create_asteroid, create_stars_data
+from .explosion_animation import ExplosionAnimation
+from .helpers import create_asteroid, create_stars_data
 from .spaceship import Spaceship
 
 
@@ -23,6 +24,7 @@ class SpriteManager:
         self.asset_manager = get_asset_manager()
         self.asteroid_sprites = []
         self.laser_sprites = []
+        self.explosion_sprites = []
         self.spaceship = Spaceship(
             group=[],
             texture=self.asset_manager.textures[ImageAsset.SPACESHIP],
@@ -46,7 +48,12 @@ class SpriteManager:
             )
 
     def get_all_sprites(self):
-        return [self.spaceship] + self.asteroid_sprites + self.laser_sprites
+        return (
+            [self.spaceship]
+            + self.asteroid_sprites
+            + self.laser_sprites
+            + self.explosion_sprites
+        )
 
     def update(self):
         delta_time = get_frame_time()
@@ -67,6 +74,7 @@ class SpriteManager:
     def remove_sprites(self):
         self.remove_sprites_from_group(self.asteroid_sprites)
         self.remove_sprites_from_group(self.laser_sprites)
+        self.remove_sprites_from_group(self.explosion_sprites)
 
     def remove_sprites_from_group(self, group):
         for index, sprite in enumerate(group):
@@ -94,3 +102,8 @@ class SpriteManager:
                 ):
                     laser.to_be_removed = True
                     asteroid.to_be_removed = True
+                    explosion = ExplosionAnimation(
+                        self.asset_manager.textures[ImageAsset.EXPLOSION],
+                        asteroid.position,
+                    )
+                    self.explosion_sprites.append(explosion)

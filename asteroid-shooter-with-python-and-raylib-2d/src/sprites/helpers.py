@@ -18,7 +18,4 @@ def create_stars_data():
 
 def create_asteroid(group):
     asset_manager = get_asset_manager()
-    Asteroid(
-        group=group,
-        texture=asset_manager.textures[ImageAsset.ASTEROID]
-    )
+    Asteroid(group=group, texture=asset_manager.textures[ImageAsset.ASTEROID])
