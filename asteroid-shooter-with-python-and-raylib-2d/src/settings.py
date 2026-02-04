@@ -1,5 +1,5 @@
 from pyray import *
 from raylib import *
 
-WINDOW_WIDTH, WINDOW_HEIGHT = 1920, 1080
+WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 BACKGROUND_COLOR = (15, 10, 25, 255)
