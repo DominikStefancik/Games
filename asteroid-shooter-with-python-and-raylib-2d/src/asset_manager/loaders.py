@@ -9,4 +9,5 @@ def load_textures():
     return {
         ImageAsset.SPACESHIP: load_texture(join("assets", "images", "spaceship.png")),
         ImageAsset.STAR: load_texture(join("assets", "images", "star.png")),
+        ImageAsset.LASER: load_texture(join("assets", "images", "laser.png")),
     }
