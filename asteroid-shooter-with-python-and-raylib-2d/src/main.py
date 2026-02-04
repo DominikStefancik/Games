@@ -1,6 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
-from helpers import create_stars_data
+from helpers import create_asteroid, create_stars_data
 from settings import (
     BACKGROUND_COLOR,
     begin_drawing,
@@ -16,7 +16,9 @@ from settings import (
     WINDOW_WIDTH,
     window_should_close,
 )
+from sprites.constants import ASTEROID_CREATION_TIMER_DURATION
 from sprites.spaceship import Spaceship
+from timer import Timer
 
 
 class Game:
@@ -32,6 +34,12 @@ class Game:
             position=Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
         )
         self.star_data = create_stars_data()
+        self.meteor_timer = Timer(
+            duration=ASTEROID_CREATION_TIMER_DURATION,
+            repeat=True,
+            autostart=True,
+            function=lambda: create_asteroid(self.all_sprites)
+        )
 
     def draw_stars(self):
         for star in self.star_data:
@@ -42,6 +50,7 @@ class Game:
 
     def update(self):
         delta_time = get_frame_time()
+        self.meteor_timer.update()
 
         for sprite in self.all_sprites:
             sprite.update(delta_time)
