@@ -18,6 +18,9 @@ class Asteroid(Sprite):
         self.rotation_speed = randint(*ASTEROID_ROTATION_SPEED_RANGE)
         self.rectangle = Rectangle(0, 0, self.size.x, self.size.y)
 
+    def get_center(self):
+        return self.position
+
     def update(self, delta_time):
         super().update(delta_time)
         self.rotation += self.rotation_direction * self.rotation_speed * delta_time

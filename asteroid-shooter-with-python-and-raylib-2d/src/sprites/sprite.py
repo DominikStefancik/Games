@@ -12,7 +12,16 @@ class Sprite:
         self.size = Vector2(texture.width, texture.height)
         self.to_be_removed = False
 
+        # For a collision detection, we will not use rectangle derived from the Sprite's texture,
+        # but rather a circle with the centet where the texture's center is
+        self.collision_radius = self.size.y / 2
+
         group.append(self)
+
+    def get_center(self):
+        return Vector2(
+            self.position.x + self.size.x / 2, self.position.y + self.size.y / 2
+        )
 
     def move(self, delta_time):
         self.position.x += self.direction.x * self.speed * delta_time
@@ -20,8 +29,8 @@ class Sprite:
 
     def check_to_be_removed(self):
         self.to_be_removed = (
-            -SPRITE_REMOVE_THRESHOLD > self.position.y or
-            self.position.y > (WINDOW_HEIGHT + SPRITE_REMOVE_THRESHOLD)
+            -SPRITE_REMOVE_THRESHOLD > self.position.y
+            or self.position.y > (WINDOW_HEIGHT + SPRITE_REMOVE_THRESHOLD)
         )
 
     def update(self, delta_time):
