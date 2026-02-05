@@ -1,21 +1,19 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import FontAsset, SoundAsset
+from game_state.game_state import GameState
+from game_state.game_state_manager import get_game_state_manager
 from settings import (
     BACKGROUND_COLOR,
     begin_drawing,
     clear_background,
     close_audio_device,
     close_window,
-    draw_rectangle_rounded_lines_ex,
-    draw_text_ex,
     end_drawing,
-    FONT_SIZE,
-    get_time,
     init_audio_device,
     init_window,
-    measure_text_ex,
+    is_key_pressed,
+    KEY_SPACE,
     play_music_stream,
-    Rectangle,
     unload_music_stream,
     update_music_stream,
     Vector2,
@@ -25,6 +23,7 @@ from settings import (
     window_should_close,
 )
 from sprites.sprite_manager import SpriteManager
+from text_manager import TextManager
 
 
 class Game:
@@ -34,45 +33,33 @@ class Game:
         init_audio_device()
 
         self.asset_manager = get_asset_manager()
+        self.game_state_manager = get_game_state_manager()
         self.sprite_manager = SpriteManager()
+        self.text_manager = TextManager()
         play_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
 
-    def draw_score(self):
-        score = int(get_time())
-        font = self.asset_manager.fonts[FontAsset.STORMFAZE]
-        text_size = measure_text_ex(font, str(score), FONT_SIZE, 0)
-        draw_text_ex(
-            font,
-            str(score),
-            Vector2(WINDOW_WIDTH / 2 - text_size.x / 2, 100),
-            FONT_SIZE,
-            0,
-            WHITE,
-        )
-
-        draw_rectangle_rounded_lines_ex(
-            Rectangle(
-                WINDOW_WIDTH / 2 - text_size.x / 2 - 10, 95, text_size.x + 20, 80
-            ),
-            0.3,
-            0,
-            8,
-            WHITE,
-        )
-
     def update(self):
+        if self.game_state_manager.game_state == GameState.RUNNING:
+            self.game_state_manager.update_score()
+
         self.sprite_manager.update()
         update_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
 
     def draw(self):
         begin_drawing()
         clear_background(BACKGROUND_COLOR)
-        self.draw_score()
+        self.text_manager.draw()
         self.sprite_manager.draw()
         end_drawing()
 
     def run(self):
         while not window_should_close():
+            if (
+                self.game_state_manager.game_state != GameState.RUNNING
+                and is_key_pressed(KEY_SPACE)
+            ):
+                self.game_state_manager.game_state = GameState.RUNNING
+
             self.update()
             self.draw()
 
