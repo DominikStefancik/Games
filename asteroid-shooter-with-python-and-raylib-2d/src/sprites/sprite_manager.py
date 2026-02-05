@@ -16,8 +16,7 @@ from timer import Timer
 
 from .constants import ASTEROID_CREATION_TIMER_DURATION
 from .explosion_animation import ExplosionAnimation
-from .helpers import create_asteroid, create_stars_data
-from .laser import Laser
+from .helpers import create_asteroid, create_laser, create_stars_data
 from .spaceship import Spaceship
 
 
@@ -31,7 +30,9 @@ class SpriteManager:
             group=[],
             texture=self.asset_manager.textures[ImageAsset.SPACESHIP],
             position=Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
-            create_laser_function=self.create_laser,
+            create_laser_function=lambda position: create_laser(
+                self.laser_sprites, position
+            ),
         )
         self.asteroid_timer = Timer(
             duration=ASTEROID_CREATION_TIMER_DURATION,
@@ -41,14 +42,6 @@ class SpriteManager:
         )
 
         self.star_data = create_stars_data()
-
-    def create_laser(self, position):
-        Laser(
-            group=self.laser_sprites,
-            texture=self.asset_manager.textures[ImageAsset.LASER],
-            position=position,
-        )
-        play_sound(self.asset_manager.sounds[SoundAsset.LASER])
 
     def draw_stars(self):
         for star in self.star_data:
