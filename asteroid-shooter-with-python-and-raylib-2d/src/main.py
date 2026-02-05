@@ -6,16 +6,18 @@ from settings import (
     clear_background,
     close_audio_device,
     close_window,
+    draw_rectangle_rounded_lines_ex,
     draw_text_ex,
     end_drawing,
     FONT_SIZE,
     get_time,
     init_audio_device,
     init_window,
+    measure_text_ex,
+    play_music_stream,
+    Rectangle,
     unload_music_stream,
     update_music_stream,
-    play_music_stream,
-    measure_text_ex,
     Vector2,
     WHITE,
     WINDOW_HEIGHT,
@@ -45,6 +47,16 @@ class Game:
             Vector2(WINDOW_WIDTH / 2 - text_size.x / 2, 100),
             FONT_SIZE,
             0,
+            WHITE,
+        )
+
+        draw_rectangle_rounded_lines_ex(
+            Rectangle(
+                WINDOW_WIDTH / 2 - text_size.x / 2 - 10, 95, text_size.x + 20, 80
+            ),
+            0.3,
+            0,
+            8,
             WHITE,
         )
 

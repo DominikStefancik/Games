@@ -17,6 +17,7 @@ from timer import Timer
 from .constants import ASTEROID_CREATION_TIMER_DURATION
 from .explosion_animation import ExplosionAnimation
 from .helpers import create_asteroid, create_stars_data
+from .laser import Laser
 from .spaceship import Spaceship
 
 
@@ -30,7 +31,7 @@ class SpriteManager:
             group=[],
             texture=self.asset_manager.textures[ImageAsset.SPACESHIP],
             position=Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
-            laser_sprites=self.laser_sprites,
+            create_laser_function=self.create_laser,
         )
         self.asteroid_timer = Timer(
             duration=ASTEROID_CREATION_TIMER_DURATION,
@@ -40,6 +41,14 @@ class SpriteManager:
         )
 
         self.star_data = create_stars_data()
+
+    def create_laser(self, position):
+        Laser(
+            group=self.laser_sprites,
+            texture=self.asset_manager.textures[ImageAsset.LASER],
+            position=position,
+        )
+        play_sound(self.asset_manager.sounds[SoundAsset.LASER])
 
     def draw_stars(self):
         for star in self.star_data:
@@ -73,14 +82,15 @@ class SpriteManager:
             sprite.draw()
 
     def remove_sprites(self):
-        self.remove_sprites_from_group(self.asteroid_sprites)
-        self.remove_sprites_from_group(self.laser_sprites)
-        self.remove_sprites_from_group(self.explosion_sprites)
-
-    def remove_sprites_from_group(self, group):
-        for index, sprite in enumerate(group):
-            if sprite.to_be_removed:
-                group.pop(index)
+        self.asteroid_sprites = [
+            sprite for sprite in self.asteroid_sprites if not sprite.to_be_removed
+        ]
+        self.laser_sprites = [
+            sprite for sprite in self.laser_sprites if not sprite.to_be_removed
+        ]
+        self.explosion_sprites = [
+            sprite for sprite in self.explosion_sprites if not sprite.to_be_removed
+        ]
 
     def detect_collisions(self):
         # Spaceship and asteroids
