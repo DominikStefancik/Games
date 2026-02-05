@@ -35,7 +35,8 @@
 * [Space Invaders (Bevy)](space-invaders-with-rust-and-bevy) - classical game Space Invaders implemented with Bevy
 
 ### Python
-* [Asteroid Shooter](asteroid-shooter-with-python-and-pygame-ce) - asteroid shooter game implemented with Pygame-ce
+* [Asteroid Shooter (Pygame)](asteroid-shooter-with-python-and-pygame-ce) - asteroid shooter game implemented with Pygame-ce
+* [Asteroid Shooter (Raylib)](asteroid-shooter-with-python-and-raylib-2d) - asteroid shooter game implemented with Raylib
 * [Car Racing](car-racing-with-python-and-pygame) - 2D car racing game implemented with Pygame
 * [Hangman](hangman-with-python-and-pygame) - classical game Hangman implemented with Pygame
 * [Jumpy](jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
@@ -62,6 +63,7 @@
 ### Python
 * [Pygame](https://github.com/pygame/pygame)
 * [Pygame-ce](https://github.com/pygame-community/pygame-ce)
+* [Raylib](https://github.com/electronstudio/raylib-python-cffi)
 
 ### Java
 * [JavaFx](https://openjfx.io/)
