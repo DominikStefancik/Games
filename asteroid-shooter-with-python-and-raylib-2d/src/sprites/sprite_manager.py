@@ -94,6 +94,9 @@ class SpriteManager:
                 ):
                     self.spaceship = None
                     self.game_state_manager.game_state = GameState.GAME_OVER
+                    play_sound(
+                        self.asset_manager.sounds[SoundAsset.SPACESHIP_EXPLOSION]
+                    )
                     # After we detect a collision, we "destroy" spaceship and then we have to
                     # break from the FOR loop, because otherwise we will continue checking for possible
                     # collisions with other asteroids when the "self.spaceship" is set to None
@@ -114,7 +117,7 @@ class SpriteManager:
                         asteroid.position,
                     )
                     self.explosion_sprites.append(explosion)
-                    play_sound(self.asset_manager.sounds[SoundAsset.EXPLOSION])
+                    play_sound(self.asset_manager.sounds[SoundAsset.ASTEROID_EXPLOSION])
 
     def update_items(self):
         self.asteroid_sprites = []

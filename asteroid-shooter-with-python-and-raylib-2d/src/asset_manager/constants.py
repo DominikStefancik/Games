@@ -15,5 +15,6 @@ class FontAsset(Enum):
 
 class SoundAsset(Enum):
     LASER = "laser"
-    EXPLOSION = "explosion"
+    ASTEROID_EXPLOSION = "asteroid_explosion"
+    SPACESHIP_EXPLOSION = "spaceship_explosion"
     BACKGROUND_MUSIC = "background_music"

@@ -36,7 +36,12 @@ def load_fonts():
 def load_sounds():
     return {
         SoundAsset.LASER: load_sound(join("assets", "audio", "laser.wav")),
-        SoundAsset.EXPLOSION: load_sound(join("assets", "audio", "explosion.wav")),
+        SoundAsset.ASTEROID_EXPLOSION: load_sound(
+            join("assets", "audio", "asteroid_explosion.wav")
+        ),
+        SoundAsset.SPACESHIP_EXPLOSION: load_sound(
+            join("assets", "audio", "spaceship_explosion.mp3")
+        ),
         SoundAsset.BACKGROUND_MUSIC: load_music_stream(
             join("assets", "audio", "music.wav")
         ),
