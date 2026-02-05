@@ -11,3 +11,9 @@ class ImageAsset(Enum):
 
 class FontAsset(Enum):
     STORMFAZE = "stormfaze"
+
+
+class SoundAsset(Enum):
+    LASER = "laser"
+    EXPLOSION = "explosion"
+    BACKGROUND_MUSIC = "background_music"

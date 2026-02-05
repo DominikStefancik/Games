@@ -1,15 +1,16 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import ImageAsset, SoundAsset
 from settings import (
     check_collision_circles,
     check_collision_circle_rec,
     close_window,
     draw_texture_ex,
     get_frame_time,
+    play_sound,
     Vector2,
     WHITE,
     WINDOW_HEIGHT,
-    WINDOW_WIDTH  ,
+    WINDOW_WIDTH,
 )
 from timer import Timer
 
@@ -107,3 +108,4 @@ class SpriteManager:
                         asteroid.position,
                     )
                     self.explosion_sprites.append(explosion)
+                    play_sound(self.asset_manager.sounds[SoundAsset.EXPLOSION])

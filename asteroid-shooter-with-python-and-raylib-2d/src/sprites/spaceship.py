@@ -1,5 +1,5 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import ImageAsset, SoundAsset
 from settings import (
     is_key_down,
     is_key_pressed,
@@ -8,6 +8,7 @@ from settings import (
     KEY_RIGHT,
     KEY_SPACE,
     KEY_UP,
+    play_sound,
     Vector2,
     Vector2Normalize,
     WINDOW_HEIGHT,
@@ -45,6 +46,7 @@ class Spaceship(Sprite):
             texture=asset_manager.textures[ImageAsset.LASER],
             position=Vector2(self.position.x + self.size.x / 2, self.position.y - 60),
         )
+        play_sound(asset_manager.sounds[SoundAsset.LASER])
 
     def update(self, delta_time):
         self.process_key_input()
