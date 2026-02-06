@@ -11,6 +11,7 @@ from settings import (
     KEY_SPACE,
     KEY_UP,
     Vector3,
+    Vector3Add,
     WHITE,
 )
 
@@ -21,13 +22,17 @@ from .model import Model
 
 
 class Spaceship(Model):
-    def __init__(self, group, model):
+    def __init__(self, group, model, create_laser_function):
         super().__init__(group, model, Vector3(), SPACESHIP_SPEED)
+        self.create_laser = create_laser_function
         self.rotation_angle = 0
 
     def process_key_input(self):
         self.direction.x = int(is_key_down(KEY_RIGHT)) - int(is_key_down(KEY_LEFT))
         self.direction.z = int(is_key_down(KEY_DOWN)) - int(is_key_down(KEY_UP))
+
+        if is_key_pressed(KEY_SPACE):
+            self.create_laser(Vector3Add(self.position, Vector3(0, 0.25, -1)))
 
     def constraint_movement(self):
         self.position.x = max(-6, min(self.position.x, 10))
