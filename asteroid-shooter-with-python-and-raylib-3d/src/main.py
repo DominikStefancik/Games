@@ -37,7 +37,7 @@ class Game:
         self.model_manager = ModelManager()
 
     def update(self):
-        pass
+        self.model_manager.update()
 
     def draw(self):
         clear_background(BACKGROUND_COLOR)

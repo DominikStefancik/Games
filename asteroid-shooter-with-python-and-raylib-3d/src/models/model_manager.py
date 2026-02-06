@@ -1,19 +1,29 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import TextureAsset
+from asset_manager.constants import ModelAsset, TextureAsset
+from settings import get_frame_time
 
 from .floor import Floor
+from .spaceship import Spaceship
 
 
 class ModelManager:
     def __init__(self):
         self.asset_manager = get_asset_manager()
-        self.floor = Floor([], self.asset_manager.textures[TextureAsset.DARK])
+        self.single_models = []
+        Floor(self.single_models, self.asset_manager.textures[TextureAsset.DARK])
+        self.spaceship = Spaceship(
+            group=self.single_models,
+            model=self.asset_manager.models[ModelAsset.SPACESHIP],
+        )
 
     def get_all_models(self):
-        return [self.floor]
+        return self.single_models
 
     def update(self):
         delta_time = get_frame_time()
+
+        for model in self.get_all_models():
+            model.update(delta_time)
 
     def draw(self):
         for model in self.get_all_models():

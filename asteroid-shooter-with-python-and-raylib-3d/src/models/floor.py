@@ -6,6 +6,7 @@ from settings import (
     Vector3,
 )
 
+from .constants import FLOOR_VERTICAL_VALUE
 from .model import Model
 
 
@@ -15,4 +16,4 @@ class Floor(Model):
         set_material_texture(model.materials[0], MATERIAL_MAP_ALBEDO, texture)
 
         # The floor doesn't suppose to move, so the speed is 0
-        super().__init__(group, model, Vector3(6.5, -2, -8), 0)
+        super().__init__(group, model, Vector3(6.5, FLOOR_VERTICAL_VALUE, -8), 0)

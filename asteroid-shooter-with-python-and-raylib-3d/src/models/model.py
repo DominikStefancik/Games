@@ -8,6 +8,8 @@ class Model:
         self.speed = speed
         self.direction = direction
 
+        group.append(self)
+
     def move(self, delta_time):
         self.position.x += self.direction.x * self.speed * delta_time
         self.position.y += self.direction.y * self.speed * delta_time
