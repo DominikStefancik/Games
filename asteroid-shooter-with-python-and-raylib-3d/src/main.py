@@ -1,3 +1,4 @@
+from models.model_manager import ModelManager
 from settings import (
     BACKGROUND_COLOR,
     begin_drawing,
@@ -33,6 +34,8 @@ class Game:
         self.camera.fovy = 45.0
         self.camera.projection = CAMERA_PERSPECTIVE
 
+        self.model_manager = ModelManager()
+
     def update(self):
         pass
 
@@ -42,6 +45,7 @@ class Game:
 
         # We need "begin_mode_3d" and "end_mode_3d" to display 3D objects
         begin_mode_3d(self.camera)
+        self.model_manager.draw()
         end_mode_3d()
 
         end_drawing()
