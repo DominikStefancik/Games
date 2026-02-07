@@ -1,5 +1,7 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import SoundAsset
+from game_state.game_state import GameState
+from game_state.game_state_manager import get_game_state_manager
 from models.model_manager import ModelManager
 from settings import (
     BACKGROUND_COLOR,
@@ -14,6 +16,8 @@ from settings import (
     end_mode_3d,
     init_audio_device,
     init_window,
+    is_key_pressed,
+    KEY_SPACE,
     play_music_stream,
     unload_music_stream,
     update_music_stream,
@@ -44,11 +48,15 @@ class Game:
         self.camera.projection = CAMERA_PERSPECTIVE
 
         self.asset_manager = get_asset_manager()
+        self.game_state_manager = get_game_state_manager()
         self.model_manager = ModelManager()
         self.text_manager = TextManager()
         play_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
 
     def update(self):
+        if self.game_state_manager.game_state == GameState.RUNNING:
+            self.game_state_manager.update_score()
+
         self.model_manager.update()
         update_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
 
@@ -66,6 +74,12 @@ class Game:
 
     def run(self):
         while not window_should_close():
+            if (
+                self.game_state_manager.game_state != GameState.RUNNING
+                and is_key_pressed(KEY_SPACE)
+            ):
+                self.game_state_manager.game_state = GameState.RUNNING
+
             self.update()
             self.draw()
 

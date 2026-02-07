@@ -1,12 +1,16 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import FontAsset
+from game_state.game_state import GameState
+from game_state.game_state_manager import get_game_state_manager
 from settings import (
+    BIGGER_FONT_SIZE,
     draw_rectangle_rounded_lines_ex,
     draw_text_ex,
     FONT_SIZE,
     FONT_SPACING,
     get_time,
     Rectangle,
+    SMALLER_FONT_SIZE,
     Vector2,
     WHITE,
     WINDOW_HEIGHT,
@@ -15,9 +19,12 @@ from settings import (
 
 
 class TextManager:
+    def __init__(self):
+        self.game_state_manager = get_game_state_manager()
+
     def draw_score(self):
         asset_manager = get_asset_manager()
-        score = str(int(get_time()))
+        score = str(self.game_state_manager.score)
         font = asset_manager.fonts[FontAsset.STORMFAZE]
 
         draw_text_ex(
@@ -42,8 +49,63 @@ class TextManager:
             WHITE,
         )
 
+    def draw_game_start_text(self):
+        asset_manager = get_asset_manager()
+
+        font = asset_manager.fonts[FontAsset.STORMFAZE]
+        text = "ASTEROID SHOOTER"
+        draw_text_ex(
+            font,
+            text,
+            Vector2(WINDOW_WIDTH / 2 - 450, WINDOW_HEIGHT / 2 - 120),
+            BIGGER_FONT_SIZE,
+            FONT_SPACING,
+            WHITE,
+        )
+
+        text = "PRESS SPACE TO START"
+        draw_text_ex(
+            font,
+            text,
+            Vector2(WINDOW_WIDTH / 2 - 335, WINDOW_HEIGHT / 2 + 30),
+            SMALLER_FONT_SIZE,
+            FONT_SPACING,
+            WHITE,
+        )
+
+    def draw_game_over_text(self):
+        asset_manager = get_asset_manager()
+
+        font = asset_manager.fonts[FontAsset.STORMFAZE]
+        text = "GAME OVER!"
+        draw_text_ex(
+            font,
+            text,
+            Vector2(WINDOW_WIDTH / 2 - 250, WINDOW_HEIGHT / 2 - 120),
+            BIGGER_FONT_SIZE,
+            FONT_SPACING,
+            WHITE,
+        )
+
+        text = "PRESS SPACE TO PLAY AGAIN"
+        draw_text_ex(
+            font,
+            text,
+            Vector2(WINDOW_WIDTH / 2 - 400, WINDOW_HEIGHT / 2 + 30),
+            SMALLER_FONT_SIZE,
+            FONT_SPACING,
+            WHITE,
+        )
+
     def draw(self):
-        self.draw_score()
+        match self.game_state_manager.game_state:
+            case GameState.WAITING_TO_START:
+                self.draw_game_start_text()
+            case GameState.RUNNING:
+                self.draw_score()
+            case GameState.GAME_OVER:
+                self.draw_score()
+                self.draw_game_over_text()
 
     # This is an ugly hack to calculate the width of the rounded rectangle manually
     # because calling the Raylib function "measure_text_ex" on the score text somehow returns

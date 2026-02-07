@@ -1,5 +1,7 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ModelAsset, SoundAsset, TextureAsset
+from game_state.game_state import GameState
+from game_state.game_state_manager import get_game_state_manager
 from settings import (
     BoundingBox,
     check_collision_box_sphere,
@@ -24,13 +26,7 @@ class ModelManager:
         self.asteroid_models = []
         self.laser_models = []
         Floor(self.single_models, self.asset_manager.textures[TextureAsset.DARK])
-        self.spaceship = Spaceship(
-            group=self.single_models,
-            model=self.asset_manager.models[ModelAsset.SPACESHIP],
-            create_laser_function=lambda position: create_laser(
-                self.laser_models, position
-            ),
-        )
+        self.spaceship = None
         self.asteroid_timer = Timer(
             duration=ASTEROID_CREATION_TIMER_DURATION,
             repeat=True,
@@ -38,8 +34,16 @@ class ModelManager:
             function=lambda: create_asteroid(self.asteroid_models),
         )
 
+        self.game_state_manager = get_game_state_manager()
+        self.game_state_manager.subscribe(self)
+
     def get_all_models(self):
-        return self.single_models + self.laser_models + self.asteroid_models
+        return (
+            ([self.spaceship] if self.spaceship else [])
+            + self.single_models
+            + self.laser_models
+            + self.asteroid_models
+        )
 
     def update(self):
         delta_time = get_frame_time()
@@ -74,6 +78,7 @@ class ModelManager:
                     asteroid.radius,
                 ):
                     self.spaceship = None
+                    self.game_state_manager.game_state = GameState.GAME_OVER
                     play_sound(
                         self.asset_manager.sounds[SoundAsset.SPACESHIP_EXPLOSION]
                     )
@@ -101,3 +106,14 @@ class ModelManager:
                     asteroid.is_hit = True
                     asteroid.destruction_timer.activate()
                     play_sound(self.asset_manager.sounds[SoundAsset.ASTEROID_EXPLOSION])
+
+    def update_items(self):
+        self.asteroid_models = []
+        self.laser_models = []
+        self.spaceship = Spaceship(
+            group=[],
+            model=self.asset_manager.models[ModelAsset.SPACESHIP],
+            create_laser_function=lambda position: create_laser(
+                self.laser_models, position
+            ),
+        )
