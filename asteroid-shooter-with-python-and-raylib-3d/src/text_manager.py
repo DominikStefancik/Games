@@ -8,7 +8,6 @@ from settings import (
     draw_text_ex,
     FONT_SIZE,
     FONT_SPACING,
-    get_time,
     Rectangle,
     SMALLER_FONT_SIZE,
     Vector2,
