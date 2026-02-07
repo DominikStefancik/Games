@@ -1,4 +1,4 @@
-from .loaders import load_fonts, load_models, load_textures
+from .loaders import load_fonts, load_models, load_sounds, load_textures
 
 
 class AssetManager:
@@ -6,6 +6,7 @@ class AssetManager:
         self._textures = None
         self._models = None
         self._fonts = None
+        self._sounds = None
 
     @property
     def textures(self):
@@ -27,6 +28,13 @@ class AssetManager:
             self._fonts = load_fonts()
 
         return self._fonts
+
+    @property
+    def sounds(self):
+        if self._sounds == None:
+            self._sounds = load_sounds()
+
+        return self._sounds
 
 
 ASSET_MANAGER = AssetManager()

@@ -1,3 +1,5 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import SoundAsset
 from models.model_manager import ModelManager
 from settings import (
     BACKGROUND_COLOR,
@@ -6,10 +8,15 @@ from settings import (
     Camera3D,
     CAMERA_PERSPECTIVE,
     clear_background,
+    close_audio_device,
     close_window,
     end_drawing,
     end_mode_3d,
+    init_audio_device,
     init_window,
+    play_music_stream,
+    unload_music_stream,
+    update_music_stream,
     Vector3,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
@@ -22,6 +29,7 @@ class Game:
     def __init__(self):
         # The "init_window" function is imported from "settings.py" where there is "from pyray import *" statement
         init_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Python Asteroid Shooter 3D")
+        init_audio_device()
 
         # Camera setup
         self.camera = Camera3D()
@@ -35,11 +43,14 @@ class Game:
         self.camera.fovy = 45.0
         self.camera.projection = CAMERA_PERSPECTIVE
 
+        self.asset_manager = get_asset_manager()
         self.model_manager = ModelManager()
         self.text_manager = TextManager()
+        play_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
 
     def update(self):
         self.model_manager.update()
+        update_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
 
     def draw(self):
         clear_background(BACKGROUND_COLOR)
@@ -58,6 +69,8 @@ class Game:
             self.update()
             self.draw()
 
+        unload_music_stream(self.asset_manager.sounds[SoundAsset.BACKGROUND_MUSIC])
+        close_audio_device()
         close_window()
 
 

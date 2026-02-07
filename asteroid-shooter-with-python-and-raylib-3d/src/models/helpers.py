@@ -1,7 +1,8 @@
 from random import choice
 
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ModelAsset, TextureAsset
+from asset_manager.constants import ModelAsset, SoundAsset, TextureAsset
+from settings import play_sound
 
 from .asteroid import Asteroid
 from .laser import Laser
@@ -28,3 +29,4 @@ def create_laser(group, position):
         texture=asset_manager.textures[TextureAsset.RED],
         position=position,
     )
+    play_sound(asset_manager.sounds[SoundAsset.LASER])

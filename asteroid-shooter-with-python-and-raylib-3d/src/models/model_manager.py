@@ -1,11 +1,12 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ModelAsset, TextureAsset
+from asset_manager.constants import ModelAsset, SoundAsset, TextureAsset
 from settings import (
     BoundingBox,
     check_collision_box_sphere,
     check_collision_spheres,
     get_frame_time,
     get_mesh_bounding_box,
+    play_sound,
     Vector3Add,
 )
 from timer import Timer
@@ -73,6 +74,9 @@ class ModelManager:
                     asteroid.radius,
                 ):
                     self.spaceship = None
+                    play_sound(
+                        self.asset_manager.sounds[SoundAsset.SPACESHIP_EXPLOSION]
+                    )
                     # After we detect a collision, we "destroy" spaceship and then we have to
                     # break from the FOR loop, because otherwise we will continue checking for possible
                     # collisions with other asteroids when the "self.spaceship" is set to None
@@ -96,3 +100,4 @@ class ModelManager:
                     laser.to_be_removed = True
                     asteroid.is_hit = True
                     asteroid.destruction_timer.activate()
+                    play_sound(self.asset_manager.sounds[SoundAsset.ASTEROID_EXPLOSION])
