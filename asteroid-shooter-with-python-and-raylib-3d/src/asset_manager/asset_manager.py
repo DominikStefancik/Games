@@ -1,10 +1,11 @@
-from .loaders import load_models, load_textures
+from .loaders import load_fonts, load_models, load_textures
 
 
 class AssetManager:
     def __init__(self):
         self._textures = None
         self._models = None
+        self._fonts = None
 
     @property
     def textures(self):
@@ -19,6 +20,13 @@ class AssetManager:
             self._models = load_models()
 
         return self._models
+
+    @property
+    def fonts(self):
+        if self._fonts == None:
+            self._fonts = load_fonts()
+
+        return self._fonts
 
 
 ASSET_MANAGER = AssetManager()

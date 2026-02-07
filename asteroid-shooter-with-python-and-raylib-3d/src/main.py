@@ -15,6 +15,7 @@ from settings import (
     WINDOW_WIDTH,
     window_should_close,
 )
+from text_manager import TextManager
 
 
 class Game:
@@ -35,6 +36,7 @@ class Game:
         self.camera.projection = CAMERA_PERSPECTIVE
 
         self.model_manager = ModelManager()
+        self.text_manager = TextManager()
 
     def update(self):
         self.model_manager.update()
@@ -47,6 +49,7 @@ class Game:
         begin_mode_3d(self.camera)
         self.model_manager.draw()
         end_mode_3d()
+        self.text_manager.draw()
 
         end_drawing()
 

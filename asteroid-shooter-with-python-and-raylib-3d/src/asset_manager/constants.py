@@ -13,3 +13,7 @@ class TextureAsset(Enum):
 class ModelAsset(Enum):
     SPACESHIP = "spaceship"
     LASER = "laser"
+
+
+class FontAsset(Enum):
+    STORMFAZE = "stormfaze"
