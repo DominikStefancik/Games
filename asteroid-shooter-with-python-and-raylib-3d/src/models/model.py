@@ -7,6 +7,7 @@ class Model:
         self.position = position
         self.speed = speed
         self.direction = direction
+        self.to_be_removed = False
 
         group.append(self)
 

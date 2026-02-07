@@ -1,16 +1,24 @@
+from os.path import join
 from random import choice, uniform
 
 from settings import (
     draw_cylinder,
+    ffi,
     gen_mesh_sphere,
+    get_shader_location,
     load_model_from_mesh,
+    load_shader,
     MATERIAL_MAP_ALBEDO,
     matrix_rotate_xyz,
     set_material_texture,
+    set_shader_value,
+    SHADER_UNIFORM_VEC2,
     Vector3,
 )
+from timer import Timer
 
 from .constants import (
+    ASTEROID_DESTRUCTION_TIMER_DURATION,
     ASTEROID_MOVEMENT_SPEED_RANGE,
     ASTEROID_ROTATION_RANGE,
     ASTEROID_ROTATION_SPEED_RANGE,
@@ -41,13 +49,35 @@ class Asteroid(Model):
             uniform(*ASTEROID_ROTATION_SPEED_RANGE),
             uniform(*ASTEROID_ROTATION_SPEED_RANGE),
         )
+        self.is_hit = False
+        self.destruction_timer = Timer(
+            duration=ASTEROID_DESTRUCTION_TIMER_DURATION,
+            repeat=False,
+            autostart=False,
+            function=self.destroy,
+        )
+
+        # We have to load the shader separately in every instance of the Asteroid class.
+        # If we loaded it in the AssetManager and then updated it, it would updated all shaders
+        # in all asteroids and it would flash all the meteors at once, which we don't want.
+        # We want the shader of each asteroid to be updated independently.
+        self.shader = load_shader(ffi.NULL, join("assets", "shaders", "flash.fs"))
+        self.flash_location = get_shader_location(self.shader, "flash")
+        self.flash_amount = ffi.new("struct Vector2 *", [1, 0])
+        model.materials[0].shader = self.shader
 
     def update(self, delta_time):
-        super().update(delta_time)
-        self.rotation.x += self.rotation_speed.x * delta_time
-        self.rotation.y += self.rotation_speed.y * delta_time
-        self.rotation.z += self.rotation_speed.z * delta_time
-        self.model.transform = matrix_rotate_xyz(self.rotation)
+        self.destruction_timer.update()
+
+        # If an asteroid is hit, stop moving it and apply flash effect
+        if self.is_hit:
+            self.flash()
+        else:
+            super().update(delta_time)
+            self.rotation.x += self.rotation_speed.x * delta_time
+            self.rotation.y += self.rotation_speed.y * delta_time
+            self.rotation.z += self.rotation_speed.z * delta_time
+            self.model.transform = matrix_rotate_xyz(self.rotation)
 
     def draw(self):
         super().draw()
@@ -63,4 +93,12 @@ class Asteroid(Model):
             0.1,
             20,
             SHADOW_COLOR,
+        )
+
+    def destroy(self):
+        self.to_be_removed = True
+
+    def flash(self):
+        set_shader_value(
+            self.shader, self.flash_location, self.flash_amount, SHADER_UNIFORM_VEC2
         )

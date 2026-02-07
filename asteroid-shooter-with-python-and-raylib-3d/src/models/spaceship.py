@@ -26,6 +26,7 @@ class Spaceship(Model):
         super().__init__(group, model, Vector3(), SPACESHIP_SPEED)
         self.create_laser = create_laser_function
         self.rotation_angle = 0
+        self.collision_radius = 0.8
 
     def process_key_input(self):
         self.direction.x = int(is_key_down(KEY_RIGHT)) - int(is_key_down(KEY_LEFT))
