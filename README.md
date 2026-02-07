@@ -36,7 +36,8 @@
 
 ### Python
 * [Asteroid Shooter (Pygame)](asteroid-shooter-with-python-and-pygame-ce) - asteroid shooter game implemented with Pygame-ce
-* [Asteroid Shooter (Raylib)](asteroid-shooter-with-python-and-raylib-2d) - asteroid shooter game implemented with Raylib
+* [Asteroid Shooter 2D (Raylib)](asteroid-shooter-with-python-and-raylib-2d) - asteroid shooter game implemented with Raylib
+* [Asteroid Shooter 3D (Raylib)](asteroid-shooter-with-python-and-raylib-3d) - asteroid shooter game in 3D implemented with Raylib
 * [Car Racing](car-racing-with-python-and-pygame) - 2D car racing game implemented with Pygame
 * [Hangman](hangman-with-python-and-pygame) - classical game Hangman implemented with Pygame
 * [Jumpy](jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame

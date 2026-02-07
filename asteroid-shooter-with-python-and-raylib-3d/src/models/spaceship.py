@@ -1,5 +1,3 @@
-from math import sin
-
 from settings import (
     draw_cylinder,
     draw_model_ex,
@@ -42,7 +40,6 @@ class Spaceship(Model):
 
     def update(self, delta_time):
         self.process_key_input()
-        self.position.y += sin(delta_time * 10) * delta_time * 0.2
         self.rotation_angle -= self.direction.x * 10 * delta_time
         self.constraint_movement()
         self.move(delta_time)
