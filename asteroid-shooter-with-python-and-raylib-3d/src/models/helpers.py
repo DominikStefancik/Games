@@ -1,6 +1,23 @@
+from random import choice
+
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ModelAsset, TextureAsset
+
+from .asteroid import Asteroid
 from .laser import Laser
+
+
+def create_asteroid(group):
+    asset_manager = get_asset_manager()
+    texture_asset = choice(
+        [
+            TextureAsset.GREEN,
+            TextureAsset.LIGHT,
+            TextureAsset.ORANGE,
+            TextureAsset.PURPLE,
+        ]
+    )
+    Asteroid(group=group, texture=asset_manager.textures[texture_asset])
 
 
 def create_laser(group, position):

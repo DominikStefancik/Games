@@ -15,7 +15,7 @@ from settings import (
     WHITE,
 )
 
-from .constants import FLOOR_VERTICAL_VALUE
+from .constants import FLOOR_VERTICAL_VALUE, SHADOW_COLOR
 
 from .constants import SPACESHIP_SPEED
 from .model import Model
@@ -56,9 +56,9 @@ class Spaceship(Model):
             Vector3(1, 1, 1),
             WHITE,
         )
-        self.draw_shadows()
+        self.draw_shadow()
 
-    def draw_shadows(self):
+    def draw_shadow(self):
         shadow_radius = 0.5 + self.position.y
         # Position the shadow above the floor (Y-coordinate) and follow the spaceship's
         # position (X and Z coordinates)
@@ -68,5 +68,5 @@ class Spaceship(Model):
             shadow_radius,
             0.1,
             20,
-            (0, 0, 0, 50),
+            SHADOW_COLOR,
         )

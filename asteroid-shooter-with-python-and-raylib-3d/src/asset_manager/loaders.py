@@ -8,6 +8,10 @@ from .constants import ModelAsset, TextureAsset
 def load_textures():
     return {
         TextureAsset.DARK: load_texture(join("assets", "textures", "dark.png")),
+        TextureAsset.GREEN: load_texture(join("assets", "textures", "green.png")),
+        TextureAsset.LIGHT: load_texture(join("assets", "textures", "light.png")),
+        TextureAsset.ORANGE: load_texture(join("assets", "textures", "orange.png")),
+        TextureAsset.PURPLE: load_texture(join("assets", "textures", "purple.png")),
         TextureAsset.RED: load_texture(join("assets", "textures", "red.png")),
     }
 
