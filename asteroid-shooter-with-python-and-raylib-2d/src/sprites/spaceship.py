@@ -1,4 +1,3 @@
-from asset_manager.asset_manager import get_asset_manager
 from settings import (
     is_key_down,
     is_key_pressed,

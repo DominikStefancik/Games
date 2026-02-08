@@ -1,6 +1,6 @@
 from random import choice, randint, uniform
 
-from settings import draw_texture_pro, Rectangle, Vector2, WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import draw_texture_pro, Rectangle, Vector2, WHITE, WINDOW_WIDTH
 
 from .constants import ASTEROID_MOVEMENT_SPEED_RANGE, ASTEROID_ROTATION_SPEED_RANGE
 from .sprite import Sprite

@@ -13,7 +13,7 @@ class Sprite:
         self.to_be_removed = False
 
         # For a collision detection, we will not use rectangle derived from the Sprite's texture,
-        # but rather a circle with the centet where the texture's center is
+        # but rather a circle with the center where the texture's center is
         self.collision_radius = self.size.y / 2
 
         group.append(self)

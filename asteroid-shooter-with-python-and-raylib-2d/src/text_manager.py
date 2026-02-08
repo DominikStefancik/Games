@@ -7,7 +7,6 @@ from settings import (
     draw_rectangle_rounded_lines_ex,
     draw_text_ex,
     FONT_SIZE,
-    get_time,
     measure_text_ex,
     Rectangle,
     Vector2,

@@ -1,5 +1,5 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import FontAsset, SoundAsset
+from asset_manager.constants import SoundAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import (
@@ -16,8 +16,6 @@ from settings import (
     play_music_stream,
     unload_music_stream,
     update_music_stream,
-    Vector2,
-    WHITE,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
     window_should_close,
