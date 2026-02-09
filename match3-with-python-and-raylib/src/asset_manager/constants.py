@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class TextureAsset(Enum):
-    LIGHT = "light"
+    BACKGROUND = "background"
 
 
 class ModelAsset(Enum):

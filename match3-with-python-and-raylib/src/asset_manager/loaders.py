@@ -7,7 +7,7 @@ from .constants import ModelAsset, TextureAsset
 
 def load_textures():
     return {
-        TextureAsset.LIGHT: load_texture(join("assets", "textures", "light.png")),
+        TextureAsset.BACKGROUND: load_texture(join("assets", "textures", "background.jpg")),
     }
 
 

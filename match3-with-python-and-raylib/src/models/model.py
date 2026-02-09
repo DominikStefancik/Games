@@ -1,5 +1,7 @@
 from settings import draw_model_ex, Vector3, WHITE
 
+from .constants import MODEL_SCALE
+
 
 class Model:
     def __init__(
@@ -9,7 +11,7 @@ class Model:
         position,
         rotation_axis=Vector3(),
         rotation_angle=0,
-        scale=Vector3(2, 2, 2),
+        scale=Vector3(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE),
     ):
         self.model = model
         self.position = position

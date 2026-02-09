@@ -10,6 +10,7 @@ from settings import (
     Vector3Add,
 )
 
+from .board import Board
 from .floor import Floor
 
 
@@ -17,7 +18,8 @@ class ModelManager:
     def __init__(self):
         self.asset_manager = get_asset_manager()
         self.all_models = []
-        Floor(self.all_models, self.asset_manager.textures[TextureAsset.LIGHT])
+        Board(self.all_models)
+        Floor(self.all_models, self.asset_manager.textures[TextureAsset.BACKGROUND])
 
     def update(self):
         self.remove_sprites()

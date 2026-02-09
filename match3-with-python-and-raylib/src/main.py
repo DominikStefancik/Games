@@ -12,6 +12,7 @@ from settings import (
     end_drawing,
     end_mode_3d,
     init_window,
+    set_target_fps,
     Vector3,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
@@ -26,7 +27,7 @@ class Game:
 
         # Camera setup
         self.camera = Camera3D()
-        self.camera.position = Vector3(0.0, 12.0, -8.0)
+        self.camera.position = Vector3(0.0, 16.0, -16.0)
         self.camera.target = Vector3(0.0, 0.0, -1.0)
         self.camera.up = Vector3(0.0, 1.0, 0.0)
         self.camera.fovy = 90.0
@@ -34,6 +35,8 @@ class Game:
 
         self.asset_manager = get_asset_manager()
         self.model_manager = ModelManager()
+
+        set_target_fps(60)
 
     def update(self):
         self.model_manager.update()
