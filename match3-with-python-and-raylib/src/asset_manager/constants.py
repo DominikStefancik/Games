@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class ModelAsset(Enum):
+    # Baked Goods
     BAGUETTE = "baguette"
     BAGUETTE_HALF = "baguette_half"
     BAGUETTE_SLICE = "baguette_slice"
@@ -34,3 +35,34 @@ class ModelAsset(Enum):
     PIE_CHERRY_SLICE = "pie_cherry_slice"
     WAFFLE = "waffle"
     WAFFLE_STACKED = "waffle_stacked"
+
+    # Picnic set
+    APPLE = "apple"
+    APPLE_CUT = "apple_cut"
+    APPLE_PIECE = "apple_piece"
+    BOWL = "bowl"
+    CHEESE_A = "cheese_a"
+    CHEESE_B = "cheese_b"
+    COOLER = "cooler"
+    DRINK_CAN = "drink_can"
+    FORK = "fork"
+    FRISBEE = "frisbee"
+    GRAPES = "grapes"
+    GRAPES_BOWL = "grapes_bowl"
+    JAM = "jam"
+    KNIFE = "knife"
+    MUG = "mug"
+    PICNIC_BASKET_ROUND = "picnic_basket_round"
+    PICNIC_BASKET_SQUARE = "picnic_basket_square"
+    PILLOW_SMALL_BLUE = "pillow_small_blue"
+    PILLOW_SMALL_GREEN = "pillow_small_green"
+    PILLOW_SMALL_RED = "pillow_small_red"
+    PLATE_A = "plate_a"
+    PLATE_B = "plate_b"
+    RADIO = "radio"
+    SANDWICH = "sandwich"
+    SPOON = "spoon"
+    TEAPOT = "teapot"
+    THERMOS = "thermos"
+    WINE_BOTTLE = "wine_bottle"
+    WINE_GLASS = "wine_glass"
