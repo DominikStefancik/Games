@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+class TextureAsset(Enum):
+    LIGHT = "light"
+
+
 class ModelAsset(Enum):
     # Baked Goods
     BAGUETTE = "baguette"

@@ -1,5 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ModelAsset
+from models.model_manager import ModelManager
 from settings import (
     BACKGROUND_COLOR,
     begin_drawing,
@@ -32,17 +33,25 @@ class Game:
         self.camera.projection = CAMERA_PERSPECTIVE
 
         self.asset_manager = get_asset_manager()
+        self.model_manager = ModelManager()
 
+    def update(self):
+        self.model_manager.update()
+
+    def draw(self):
+        clear_background(BACKGROUND_COLOR)
+        begin_drawing()
+
+        begin_mode_3d(self.camera)
+        self.model_manager.draw()
+        end_mode_3d()
+
+        end_drawing()
 
     def run(self):
         while not window_should_close():
-            clear_background(BACKGROUND_COLOR)
-            begin_drawing()
-
-            begin_mode_3d(self.camera)
-            end_mode_3d()
-
-            end_drawing()
+            self.update()
+            self.draw()
 
         close_window()
 

@@ -1,9 +1,17 @@
-from .loaders import load_models
+from .loaders import load_models, load_textures
 
 
 class AssetManager:
     def __init__(self):
+        self._textures = None
         self._models = None
+
+    @property
+    def textures(self):
+        if self._textures == None:
+            self._textures = load_textures()
+
+        return self._textures
 
     @property
     def models(self):
