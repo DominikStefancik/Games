@@ -7,6 +7,7 @@ from settings import (
     begin_mode_3d,
     Camera3D,
     CAMERA_PERSPECTIVE,
+    CAMERA_POSITION,
     clear_background,
     close_window,
     end_drawing,
@@ -27,7 +28,7 @@ class Game:
 
         # Camera setup
         self.camera = Camera3D()
-        self.camera.position = Vector3(0.0, 16.0, -16.0)
+        self.camera.position = CAMERA_POSITION
         self.camera.target = Vector3(0.0, 0.0, -1.0)
         self.camera.up = Vector3(0.0, 1.0, 0.0)
         self.camera.fovy = 90.0
