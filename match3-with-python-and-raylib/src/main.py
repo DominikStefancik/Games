@@ -1,20 +1,17 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ModelAsset
+from camera import get_camera
 from models.model_manager import ModelManager
 from settings import (
     BACKGROUND_COLOR,
     begin_drawing,
     begin_mode_3d,
-    Camera3D,
-    CAMERA_PERSPECTIVE,
-    CAMERA_POSITION,
     clear_background,
     close_window,
     end_drawing,
     end_mode_3d,
     init_window,
     set_target_fps,
-    Vector3,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
     window_should_close,
@@ -26,14 +23,7 @@ class Game:
         # The "init_window" function is imported from "settings.py" where there is "from pyray import *" statement
         init_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Python Match3")
 
-        # Camera setup
-        self.camera = Camera3D()
-        self.camera.position = CAMERA_POSITION
-        self.camera.target = Vector3(0.0, 0.0, -1.0)
-        self.camera.up = Vector3(0.0, 1.0, 0.0)
-        self.camera.fovy = 90.0
-        self.camera.projection = CAMERA_PERSPECTIVE
-
+        self.camera = get_camera()
         self.asset_manager = get_asset_manager()
         self.model_manager = ModelManager()
 
