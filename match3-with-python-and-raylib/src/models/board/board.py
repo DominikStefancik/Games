@@ -21,6 +21,7 @@ from settings import (
 from .constants import (
     BOARD_OFFSET,
     BOARD_SIZE,
+    Match,
     TILE_SIZE,
     TILE_TYPES_COUNT,
 )
@@ -32,9 +33,11 @@ class Board:
     def __init__(self, group):
         asset_manager = get_asset_manager()
         self.models_in_board = sample(
-            list(asset_manager.models.values()), TILE_TYPES_COUNT
+            list(asset_manager.models.items()), TILE_TYPES_COUNT
         )
         self.grid = self.create_grid(group)
+        self.selected_item = None
+        self.found_three_matches = False
 
     def create_grid(self, group):
         board = []
@@ -42,10 +45,13 @@ class Board:
         for row_index in range(BOARD_SIZE):
             row = []
             for column_index in range(BOARD_SIZE):
+                model_pick = choice(self.models_in_board)
+
                 row.append(
                     Model(
                         group=group,
-                        model=choice(self.models_in_board),
+                        model=model_pick[1],
+                        type=model_pick[0],
                         position=Vector3(
                             BOARD_OFFSET.x + (row_index * TILE_SIZE),
                             MODEL_VERTICAL_VALUE,
@@ -58,7 +64,7 @@ class Board:
 
         return board
 
-    def check_selected(self):
+    def check_selected_item(self):
         if is_mouse_button_pressed(MOUSE_LEFT_BUTTON):
             camera = get_camera()
             ray = get_screen_to_world_ray(get_mouse_position(), camera)
@@ -102,5 +108,40 @@ class Board:
                         )
 
                         if mesh_hit.hit:
+                            # Deselect item which was previously selected
+                            if self.selected_item:
+                                self.selected_item.is_selected = False
+
                             item.is_selected = True
+                            self.selected_item = item
                             break
+
+    def find_matches(self):
+        # Check horizontal metches
+        for y_index in range(BOARD_SIZE):
+            for x_index in range(BOARD_SIZE - 2):
+                self.check_matched_items(x_index, y_index, Match.HORIZONTAL)
+
+        # Check vertical metches
+        for x_index in range(BOARD_SIZE):
+            for y_index in range(BOARD_SIZE - 2):
+                    self.check_matched_items(x_index, y_index, Match.VERTICAL)
+
+    def check_matched_items(self, x_index, y_index, match):
+        items = []
+
+        for add_on in range(3):
+            item = self.grid[x_index + add_on if match == Match.HORIZONTAL else x_index][y_index + add_on if match == Match.VERTICAL else y_index]
+            items.append(item)
+
+        item1, item2, item3 = items
+
+        if item1.type == item2.type and item1.type == item3.type:
+            item1.is_matched = True
+            item2.is_matched = True
+            item3.is_matched = True
+            self.found_three_matches = True
+
+    def update(self):
+        self.check_selected_item()
+        self.find_matches()

@@ -70,3 +70,6 @@ class ModelAsset(Enum):
     THERMOS = "thermos"
     WINE_BOTTLE = "wine_bottle"
     WINE_GLASS = "wine_glass"
+
+
+FLOOR_MODEL = "floor"
