@@ -27,7 +27,7 @@ class ModelManager:
         ]
 
     def update(self):
-        self.board.update()
+        self.board.update(self.all_models)
         self.remove_sprites()
 
     def draw(self):

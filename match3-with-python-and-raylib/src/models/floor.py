@@ -16,4 +16,6 @@ class Floor(Model):
         model = load_model_from_mesh(gen_mesh_cube(32, 1, 32))
         set_material_texture(model.materials[0], MATERIAL_MAP_ALBEDO, texture)
 
-        super().__init__(group, model, FLOOR_MODEL, Vector3(6.5, FLOOR_VERTICAL_VALUE, -8))
+        super().__init__(
+            group, model, FLOOR_MODEL, Vector3(6.5, FLOOR_VERTICAL_VALUE, -8)
+        )

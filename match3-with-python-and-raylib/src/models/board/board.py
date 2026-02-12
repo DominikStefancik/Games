@@ -1,4 +1,4 @@
-from random import choice, sample
+from random import sample
 
 from asset_manager.asset_manager import get_asset_manager
 from camera import get_camera
@@ -9,7 +9,9 @@ from settings import (
     get_ray_collision_box,
     get_ray_collision_mesh,
     get_screen_to_world_ray,
+    is_key_pressed,
     is_mouse_button_pressed,
+    KEY_SPACE,
     matrix_multiply,
     matrix_scale,
     matrix_translate,
@@ -18,26 +20,19 @@ from settings import (
     Vector3Add,
 )
 
-from .constants import (
-    BOARD_OFFSET,
-    BOARD_SIZE,
-    Match,
-    TILE_SIZE,
-    TILE_TYPES_COUNT,
-)
+from .constants import BOARD_OFFSET, BOARD_SIZE, TILE_SIZE, TILE_TYPES_COUNT
 from ..constants import MODEL_VERTICAL_VALUE
-from ..model import Model
+from .helpers import create_random_item, find_matches
 
 
 class Board:
     def __init__(self, group):
         asset_manager = get_asset_manager()
-        self.models_in_board = sample(
+        self.models_selection = sample(
             list(asset_manager.models.items()), TILE_TYPES_COUNT
         )
         self.grid = self.create_grid(group)
         self.selected_item = None
-        self.found_three_matches = False
 
     def create_grid(self, group):
         board = []
@@ -45,20 +40,10 @@ class Board:
         for row_index in range(BOARD_SIZE):
             row = []
             for column_index in range(BOARD_SIZE):
-                model_pick = choice(self.models_in_board)
-
-                row.append(
-                    Model(
-                        group=group,
-                        model=model_pick[1],
-                        type=model_pick[0],
-                        position=Vector3(
-                            BOARD_OFFSET.x + (row_index * TILE_SIZE),
-                            MODEL_VERTICAL_VALUE,
-                            BOARD_OFFSET.y + (column_index * TILE_SIZE),
-                        ),
-                    )
+                model = create_random_item(
+                    group=group, models_selection=self.models_selection, row=row_index, column=column_index
                 )
+                row.append(model)
 
             board.append(row)
 
@@ -116,32 +101,32 @@ class Board:
                             self.selected_item = item
                             break
 
-    def find_matches(self):
-        # Check horizontal metches
-        for y_index in range(BOARD_SIZE):
-            for x_index in range(BOARD_SIZE - 2):
-                self.check_matched_items(x_index, y_index, Match.HORIZONTAL)
-
-        # Check vertical metches
+    def resolve_matches(self, group):
         for x_index in range(BOARD_SIZE):
-            for y_index in range(BOARD_SIZE - 2):
-                    self.check_matched_items(x_index, y_index, Match.VERTICAL)
+            move_y = 0
+            for y_index in range(0, BOARD_SIZE):
+                item = self.grid[y_index][x_index]
+                if item.is_matched:
+                    item.to_be_removed = True
+                else:
+                    item.position = Vector3(
+                        BOARD_OFFSET.x + (x_index * TILE_SIZE),
+                        MODEL_VERTICAL_VALUE,
+                        BOARD_OFFSET.z + (move_y * TILE_SIZE),
+                    )
+                    self.grid[move_y][x_index] = item
+                    move_y += 1
 
-    def check_matched_items(self, x_index, y_index, match):
-        items = []
+            # Fill empty spots with new items
+            while move_y < BOARD_SIZE:
+                self.grid[move_y][x_index] = create_random_item(
+                    group=group, models_selection=self.models_selection, row=move_y, column=x_index
+                )
+                move_y += 1
 
-        for add_on in range(3):
-            item = self.grid[x_index + add_on if match == Match.HORIZONTAL else x_index][y_index + add_on if match == Match.VERTICAL else y_index]
-            items.append(item)
-
-        item1, item2, item3 = items
-
-        if item1.type == item2.type and item1.type == item3.type:
-            item1.is_matched = True
-            item2.is_matched = True
-            item3.is_matched = True
-            self.found_three_matches = True
-
-    def update(self):
+    def update(self, group):
         self.check_selected_item()
-        self.find_matches()
+        find_matches(self.grid)
+
+        if is_key_pressed(KEY_SPACE):
+            self.resolve_matches(group)
