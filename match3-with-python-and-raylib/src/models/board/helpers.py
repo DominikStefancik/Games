@@ -21,9 +21,9 @@ def create_random_item(group, models_selection, row, column, fall_position_z=Non
         model=model_pick[1],
         type=model_pick[0],
         position=Vector3(
-            BOARD_OFFSET.x + (column * TILE_SIZE),
+            BOARD_OFFSET.x - (column * TILE_SIZE),
             ITEM_VERTICAL_VALUE,
-            BOARD_OFFSET.z + (row * TILE_SIZE),
+            BOARD_OFFSET.z - (row * TILE_SIZE),
         ),
         fall_position_z=fall_position_z,
     )
@@ -35,13 +35,23 @@ def clear_matched_items(grid):
             grid[row][column] = 0
 
 
+def get_matched_items_count(grid, column_index):
+    count = 0
+
+    for row in range(BOARD_SIZE):
+        if grid[row][column_index] == 1:
+            count += 1
+
+    return count
+
+
 def check_matched_items(grid, x_index, y_index, match):
     found_three_matches = False
     items = []
 
     for add_on in range(3):
-        item = grid[x_index + add_on if match == Match.HORIZONTAL else x_index][
-            y_index + add_on if match == Match.VERTICAL else y_index
+        item = grid[y_index + add_on if match == Match.VERTICAL else y_index][
+            x_index + add_on if match == Match.HORIZONTAL else x_index
         ]
         items.append(item)
 

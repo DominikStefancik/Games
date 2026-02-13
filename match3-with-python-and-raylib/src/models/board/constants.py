@@ -5,7 +5,7 @@ from settings import Vector3
 from ..constants import FLOOR_VERTICAL_VALUE
 
 BOARD_SIZE = 10
-BOARD_OFFSET = Vector3(-20, 0, -10)
+BOARD_OFFSET = Vector3(25, 0, 35)
 ITEM_VERTICAL_VALUE = FLOOR_VERTICAL_VALUE + 3
 ITEM_SCALE = 3
 OUTLINE_SCALE = ITEM_SCALE + 0.7

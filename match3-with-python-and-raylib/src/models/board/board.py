@@ -32,6 +32,7 @@ from .helpers import (
     check_matched_items,
     clear_matched_items,
     create_random_item,
+    get_matched_items_count,
     get_state,
 )
 
@@ -152,26 +153,26 @@ class Board:
         self.state = BoardState.UPDATING
 
         for x_index in range(BOARD_SIZE):
-            move_y = 0
-            for y_index in range(0, BOARD_SIZE):
+            move_y = BOARD_SIZE - 1
+            for y_index in range(BOARD_SIZE - 1, -1, -1):
                 item = self.grid[y_index][x_index]
                 if item.is_matched:
                     item.to_be_removed = True
                 else:
-                    item.fall_position_z = BOARD_OFFSET.z + (move_y * TILE_SIZE)
+                    item.fall_position_z = BOARD_OFFSET.z - (move_y * TILE_SIZE)
                     self.grid[move_y][x_index] = item
-                    move_y += 1
+                    move_y -= 1
 
             # Fill empty spots with new items
-            while move_y < BOARD_SIZE:
+            while move_y >= 0:
                 self.grid[move_y][x_index] = create_random_item(
                     group=group,
                     models_selection=self.models_selection,
-                    row=move_y + 3,
+                    row=move_y - get_matched_items_count(self.matched_items, x_index),
                     column=x_index,
-                    fall_position_z=BOARD_OFFSET.z + (move_y * TILE_SIZE),
+                    fall_position_z=BOARD_OFFSET.z - (move_y * TILE_SIZE),
                 )
-                move_y += 1
+                move_y -= 1
 
     def update(self, group):
         self.state = get_state(self)
