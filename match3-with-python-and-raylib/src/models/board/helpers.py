@@ -19,8 +19,14 @@ def create_random_item(group, models_selection, row, column, fall_position_z=Non
             MODEL_VERTICAL_VALUE,
             BOARD_OFFSET.z + (row * TILE_SIZE),
         ),
-        fall_position_z=fall_position_z
+        fall_position_z=fall_position_z,
     )
+
+
+def clear_matched_items(grid):
+    for row in range(BOARD_SIZE):
+        for column in range(BOARD_SIZE):
+            grid[row][column] = 0
 
 
 def check_matched_items(grid, x_index, y_index, match):

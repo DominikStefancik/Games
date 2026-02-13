@@ -20,8 +20,20 @@ from settings import (
     Vector3Add,
 )
 
-from .constants import BoardState, BOARD_OFFSET, BOARD_SIZE, Match, TILE_SIZE, TILE_TYPES_COUNT
-from .helpers import check_matched_items, create_random_item, get_state
+from .constants import (
+    BoardState,
+    BOARD_OFFSET,
+    BOARD_SIZE,
+    Match,
+    TILE_SIZE,
+    TILE_TYPES_COUNT,
+)
+from .helpers import (
+    check_matched_items,
+    clear_matched_items,
+    create_random_item,
+    get_state,
+)
 
 
 class Board:
@@ -33,8 +45,7 @@ class Board:
         self.grid = self.create_grid(group)
         self.selected_item = None
         self.state = BoardState.IDLE
-        self.horizontal_matches_count = 0
-        self.vertical_matches_count = 0
+        self.matched_items = self.create_matched_grid()
 
     def create_grid(self, group):
         board = []
@@ -43,9 +54,24 @@ class Board:
             row = []
             for column_index in range(BOARD_SIZE):
                 model = create_random_item(
-                    group=group, models_selection=self.models_selection, row=row_index, column=column_index
+                    group=group,
+                    models_selection=self.models_selection,
+                    row=row_index,
+                    column=column_index,
                 )
                 row.append(model)
+
+            board.append(row)
+
+        return board
+
+    def create_matched_grid(self):
+        board = []
+
+        for row_index in range(BOARD_SIZE):
+            row = []
+            for column_index in range(BOARD_SIZE):
+                row.append(0)
 
             board.append(row)
 
@@ -104,21 +130,23 @@ class Board:
                             break
 
     def find_matches(self):
-        self.horizontal_matches_count = 0
-        self.vertical_matches_count = 0
+        clear_matched_items(self.matched_items)
 
         # Check horizontal matches
         for y_index in range(BOARD_SIZE):
             for x_index in range(BOARD_SIZE - 2):
                 if check_matched_items(self.grid, x_index, y_index, Match.HORIZONTAL):
-                    self.horizontal_matches_count += 1
+                    self.matched_items[y_index][x_index] = 1
+                    self.matched_items[y_index][x_index + 1] = 1
+                    self.matched_items[y_index][x_index + 2] = 1
 
         # Check vertical matches
         for x_index in range(BOARD_SIZE):
             for y_index in range(BOARD_SIZE - 2):
                 if check_matched_items(self.grid, x_index, y_index, Match.VERTICAL):
-                    self.vertical_matches_count += 1
-
+                    self.matched_items[y_index][x_index] = 1
+                    self.matched_items[y_index + 1][x_index] = 1
+                    self.matched_items[y_index + 2][x_index] = 1
 
     def resolve_matches(self, group):
         self.state = BoardState.UPDATING
@@ -139,9 +167,9 @@ class Board:
                 self.grid[move_y][x_index] = create_random_item(
                     group=group,
                     models_selection=self.models_selection,
-                    row=BOARD_SIZE - move_y + self.horizontal_matches_count + self.vertical_matches_count * 3,
+                    row=move_y + 3,
                     column=x_index,
-                    fall_position_z=BOARD_OFFSET.z + (move_y * TILE_SIZE)
+                    fall_position_z=BOARD_OFFSET.z + (move_y * TILE_SIZE),
                 )
                 move_y += 1
 

@@ -14,7 +14,7 @@ class Model:
         rotation_axis=Vector3(),
         rotation_angle=0,
         scale=Vector3(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE),
-        fall_position_z=None
+        fall_position_z=None,
     ):
         self.model = model
         self.type = type
@@ -29,7 +29,6 @@ class Model:
 
         if fall_position_z:
             self.fall_position_z = fall_position_z
-
 
         group.append(self)
 
