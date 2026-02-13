@@ -7,7 +7,7 @@ from ..constants import MODEL_VERTICAL_VALUE
 from ..model import Model
 
 
-def create_random_item(group, models_selection, row, column):
+def create_random_item(group, models_selection, row, column, fall_position_z=None):
     model_pick = choice(models_selection)
 
     return Model(
@@ -19,6 +19,7 @@ def create_random_item(group, models_selection, row, column):
             MODEL_VERTICAL_VALUE,
             BOARD_OFFSET.z + (row * TILE_SIZE),
         ),
+        fall_position_z=fall_position_z
     )
 
 
@@ -53,3 +54,13 @@ def check_matched_items(grid, x_index, y_index, match):
         found_three_matches = True
 
     return found_three_matches
+
+
+def are_items_moving(grid):
+    for row in range(BOARD_SIZE):
+        for column in range(BOARD_SIZE):
+            item = grid[row][column]
+            if item.fall_position_z != item.position.z:
+                return True
+
+    return False

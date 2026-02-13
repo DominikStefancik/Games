@@ -21,8 +21,7 @@ from settings import (
 )
 
 from .constants import BOARD_OFFSET, BOARD_SIZE, TILE_SIZE, TILE_TYPES_COUNT
-from ..constants import MODEL_VERTICAL_VALUE
-from .helpers import create_random_item, find_matches
+from .helpers import are_items_moving, create_random_item, find_matches
 
 
 class Board:
@@ -109,24 +108,26 @@ class Board:
                 if item.is_matched:
                     item.to_be_removed = True
                 else:
-                    item.position = Vector3(
-                        BOARD_OFFSET.x + (x_index * TILE_SIZE),
-                        MODEL_VERTICAL_VALUE,
-                        BOARD_OFFSET.z + (move_y * TILE_SIZE),
-                    )
+                    item.fall_position_z = BOARD_OFFSET.z + (move_y * TILE_SIZE)
                     self.grid[move_y][x_index] = item
                     move_y += 1
 
             # Fill empty spots with new items
             while move_y < BOARD_SIZE:
                 self.grid[move_y][x_index] = create_random_item(
-                    group=group, models_selection=self.models_selection, row=move_y, column=x_index
+                    group=group,
+                    models_selection=self.models_selection,
+                    row=move_y + 3,
+                    column=x_index,
+                    fall_position_z=BOARD_OFFSET.z + (move_y * TILE_SIZE)
                 )
                 move_y += 1
 
     def update(self, group):
         self.check_selected_item()
-        find_matches(self.grid)
+
+        if not are_items_moving(self.grid):
+            find_matches(self.grid)
 
         if is_key_pressed(KEY_SPACE):
             self.resolve_matches(group)

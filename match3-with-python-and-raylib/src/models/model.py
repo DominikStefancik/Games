@@ -1,6 +1,7 @@
 from settings import draw_model_ex, draw_model_wires_ex, GREEN, Vector3, WHITE, YELLOW
 
 from .constants import MODEL_SCALE, OUTLINE_SCALE
+from .board.constants import TILE_FALL_SPEED
 
 
 class Model:
@@ -13,6 +14,7 @@ class Model:
         rotation_axis=Vector3(),
         rotation_angle=0,
         scale=Vector3(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE),
+        fall_position_z=None
     ):
         self.model = model
         self.type = type
@@ -23,6 +25,11 @@ class Model:
         self.is_selected = False
         self.is_matched = False
         self.to_be_removed = False
+        self.fall_position_z = self.position.z
+
+        if fall_position_z:
+            self.fall_position_z = fall_position_z
+
 
         group.append(self)
 
@@ -45,3 +52,10 @@ class Model:
             self.scale,
             WHITE,
         )
+
+    def update(self):
+        if self.fall_position_z < self.position.z:
+            self.position.z -= TILE_FALL_SPEED
+
+            if self.fall_position_z > self.position.z:
+                self.fall_position_z = self.position.z

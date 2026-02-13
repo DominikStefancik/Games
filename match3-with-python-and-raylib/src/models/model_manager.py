@@ -30,6 +30,9 @@ class ModelManager:
         self.board.update(self.all_models)
         self.remove_sprites()
 
+        for model in self.all_models:
+            model.update()
+
     def draw(self):
         for model in self.all_models:
             model.draw()
