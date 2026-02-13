@@ -53,13 +53,13 @@ class Board:
         for row_index in range(BOARD_SIZE):
             row = []
             for column_index in range(BOARD_SIZE):
-                model = create_random_item(
+                item = create_random_item(
                     group=group,
                     models_selection=self.models_selection,
                     row=row_index,
                     column=column_index,
                 )
-                row.append(model)
+                row.append(item)
 
             board.append(row)
 

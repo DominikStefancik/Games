@@ -2,21 +2,27 @@ from random import choice
 
 from settings import Vector3
 
-from .constants import BoardState, BOARD_OFFSET, BOARD_SIZE, Match, TILE_SIZE
-from ..constants import MODEL_VERTICAL_VALUE
-from ..model import Model
+from .constants import (
+    BoardState,
+    BOARD_OFFSET,
+    BOARD_SIZE,
+    ITEM_VERTICAL_VALUE,
+    Match,
+    TILE_SIZE,
+)
+from .item import Item
 
 
 def create_random_item(group, models_selection, row, column, fall_position_z=None):
     model_pick = choice(models_selection)
 
-    return Model(
+    return Item(
         group=group,
         model=model_pick[1],
         type=model_pick[0],
         position=Vector3(
             BOARD_OFFSET.x + (column * TILE_SIZE),
-            MODEL_VERTICAL_VALUE,
+            ITEM_VERTICAL_VALUE,
             BOARD_OFFSET.z + (row * TILE_SIZE),
         ),
         fall_position_z=fall_position_z,
