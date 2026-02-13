@@ -20,8 +20,8 @@ from settings import (
     Vector3Add,
 )
 
-from .constants import BoardState, BOARD_OFFSET, BOARD_SIZE, TILE_SIZE, TILE_TYPES_COUNT
-from .helpers import create_random_item, find_matches, get_state
+from .constants import BoardState, BOARD_OFFSET, BOARD_SIZE, Match, TILE_SIZE, TILE_TYPES_COUNT
+from .helpers import check_matched_items, create_random_item, get_state
 
 
 class Board:
@@ -33,6 +33,8 @@ class Board:
         self.grid = self.create_grid(group)
         self.selected_item = None
         self.state = BoardState.IDLE
+        self.horizontal_matches_count = 0
+        self.vertical_matches_count = 0
 
     def create_grid(self, group):
         board = []
@@ -101,6 +103,23 @@ class Board:
                             self.selected_item = item
                             break
 
+    def find_matches(self):
+        self.horizontal_matches_count = 0
+        self.vertical_matches_count = 0
+
+        # Check horizontal matches
+        for y_index in range(BOARD_SIZE):
+            for x_index in range(BOARD_SIZE - 2):
+                if check_matched_items(self.grid, x_index, y_index, Match.HORIZONTAL):
+                    self.horizontal_matches_count += 1
+
+        # Check vertical matches
+        for x_index in range(BOARD_SIZE):
+            for y_index in range(BOARD_SIZE - 2):
+                if check_matched_items(self.grid, x_index, y_index, Match.VERTICAL):
+                    self.vertical_matches_count += 1
+
+
     def resolve_matches(self, group):
         self.state = BoardState.UPDATING
 
@@ -120,7 +139,7 @@ class Board:
                 self.grid[move_y][x_index] = create_random_item(
                     group=group,
                     models_selection=self.models_selection,
-                    row=move_y + 3,
+                    row=BOARD_SIZE - move_y + self.horizontal_matches_count + self.vertical_matches_count * 3,
                     column=x_index,
                     fall_position_z=BOARD_OFFSET.z + (move_y * TILE_SIZE)
                 )
@@ -131,7 +150,7 @@ class Board:
 
         if self.state == BoardState.IDLE:
             self.check_selected_item()
-            find_matches(self.grid)
+            self.find_matches()
 
             if is_key_pressed(KEY_SPACE):
                 self.resolve_matches(group)

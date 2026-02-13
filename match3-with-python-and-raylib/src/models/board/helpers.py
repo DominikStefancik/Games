@@ -23,18 +23,6 @@ def create_random_item(group, models_selection, row, column, fall_position_z=Non
     )
 
 
-def find_matches(grid):
-    # Check horizontal metches
-    for y_index in range(BOARD_SIZE):
-        for x_index in range(BOARD_SIZE - 2):
-            check_matched_items(grid, x_index, y_index, Match.HORIZONTAL)
-
-    # Check vertical metches
-    for x_index in range(BOARD_SIZE):
-        for y_index in range(BOARD_SIZE - 2):
-            check_matched_items(grid, x_index, y_index, Match.VERTICAL)
-
-
 def check_matched_items(grid, x_index, y_index, match):
     found_three_matches = False
     items = []
