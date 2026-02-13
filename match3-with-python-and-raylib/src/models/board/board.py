@@ -20,8 +20,8 @@ from settings import (
     Vector3Add,
 )
 
-from .constants import BOARD_OFFSET, BOARD_SIZE, TILE_SIZE, TILE_TYPES_COUNT
-from .helpers import are_items_moving, create_random_item, find_matches
+from .constants import BoardState, BOARD_OFFSET, BOARD_SIZE, TILE_SIZE, TILE_TYPES_COUNT
+from .helpers import create_random_item, find_matches, get_state
 
 
 class Board:
@@ -32,6 +32,7 @@ class Board:
         )
         self.grid = self.create_grid(group)
         self.selected_item = None
+        self.state = BoardState.IDLE
 
     def create_grid(self, group):
         board = []
@@ -101,6 +102,8 @@ class Board:
                             break
 
     def resolve_matches(self, group):
+        self.state = BoardState.UPDATING
+
         for x_index in range(BOARD_SIZE):
             move_y = 0
             for y_index in range(0, BOARD_SIZE):
@@ -124,10 +127,11 @@ class Board:
                 move_y += 1
 
     def update(self, group):
-        self.check_selected_item()
+        self.state = get_state(self)
 
-        if not are_items_moving(self.grid):
+        if self.state == BoardState.IDLE:
+            self.check_selected_item()
             find_matches(self.grid)
 
-        if is_key_pressed(KEY_SPACE):
-            self.resolve_matches(group)
+            if is_key_pressed(KEY_SPACE):
+                self.resolve_matches(group)

@@ -2,7 +2,7 @@ from random import choice
 
 from settings import Vector3
 
-from .constants import BOARD_OFFSET, BOARD_SIZE, Match, TILE_SIZE
+from .constants import BoardState, BOARD_OFFSET, BOARD_SIZE, Match, TILE_SIZE
 from ..constants import MODEL_VERTICAL_VALUE
 from ..model import Model
 
@@ -56,11 +56,14 @@ def check_matched_items(grid, x_index, y_index, match):
     return found_three_matches
 
 
-def are_items_moving(grid):
-    for row in range(BOARD_SIZE):
-        for column in range(BOARD_SIZE):
-            item = grid[row][column]
-            if item.fall_position_z != item.position.z:
-                return True
+def get_state(board):
+    # Check, if the board is still updating position of any of its items
+    if board.state == BoardState.UPDATING:
+        for row in range(BOARD_SIZE):
+            for column in range(BOARD_SIZE):
+                item = board.grid[row][column]
 
-    return False
+                if item.is_updating_position():
+                    return BoardState.UPDATING
+
+    return BoardState.IDLE

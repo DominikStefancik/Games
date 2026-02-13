@@ -33,6 +33,9 @@ class Model:
 
         group.append(self)
 
+    def is_updating_position(self):
+        return self.fall_position_z != self.position.z
+
     def draw(self):
         if self.is_selected or self.is_matched:
             draw_model_wires_ex(
