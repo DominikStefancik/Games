@@ -22,10 +22,8 @@ from settings import (
 
 from .constants import (
     BoardState,
-    BOARD_OFFSET,
     BOARD_SIZE,
     Match,
-    TILE_SIZE,
     TILE_TYPES_COUNT,
 )
 from .helpers import (
@@ -159,7 +157,7 @@ class Board:
                 if item.is_matched:
                     item.to_be_removed = True
                 else:
-                    item.fall_position_z = BOARD_OFFSET.z - (move_y * TILE_SIZE)
+                    item.fall_position_z = move_y
                     self.grid[move_y][x_index] = item
                     move_y -= 1
 
@@ -170,7 +168,7 @@ class Board:
                     models_selection=self.models_selection,
                     row=move_y - get_matched_items_count(self.matched_items, x_index),
                     column=x_index,
-                    fall_position_z=BOARD_OFFSET.z - (move_y * TILE_SIZE),
+                    fall_position_z=move_y,
                 )
                 move_y -= 1
 

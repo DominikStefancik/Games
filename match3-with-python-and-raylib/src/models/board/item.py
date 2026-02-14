@@ -1,6 +1,12 @@
 from settings import draw_model_ex, draw_model_wires_ex, GREEN, Vector3, WHITE, YELLOW
 
-from .constants import ITEM_SCALE, OUTLINE_SCALE, TILE_FALL_SPEED
+from .constants import (
+    BOARD_OFFSET,
+    ITEM_SCALE,
+    OUTLINE_SCALE,
+    TILE_FALL_SPEED,
+    TILE_SIZE,
+)
 from ..model import Model
 
 
@@ -33,7 +39,11 @@ class Item(Model):
         if self.is_selected or self.is_matched:
             draw_model_wires_ex(
                 self.model,
-                self.position,
+                Vector3(
+                    BOARD_OFFSET.x - (self.position.x * TILE_SIZE),
+                    self.position.y,
+                    BOARD_OFFSET.z - (self.position.z * TILE_SIZE),
+                ),
                 self.rotation_axis,
                 self.rotation_angle,
                 Vector3(OUTLINE_SCALE, OUTLINE_SCALE, OUTLINE_SCALE),
@@ -42,7 +52,11 @@ class Item(Model):
 
         draw_model_ex(
             self.model,
-            self.position,
+            Vector3(
+                BOARD_OFFSET.x - (self.position.x * TILE_SIZE),
+                self.position.y,
+                BOARD_OFFSET.z - (self.position.z * TILE_SIZE),
+            ),
             self.rotation_axis,
             self.rotation_angle,
             self.scale,
@@ -50,8 +64,8 @@ class Item(Model):
         )
 
     def update(self):
-        if self.fall_position_z < self.position.z:
-            self.position.z -= TILE_FALL_SPEED
+        if self.fall_position_z > self.position.z:
+            self.position.z += TILE_FALL_SPEED
 
-            if self.fall_position_z > self.position.z:
+            if self.fall_position_z < self.position.z:
                 self.fall_position_z = self.position.z
