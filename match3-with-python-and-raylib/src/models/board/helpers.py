@@ -1,11 +1,10 @@
 from random import choice
 
-from settings import Vector3
+from settings import Vector2
 
 from .constants import (
     BoardState,
     BOARD_SIZE,
-    ITEM_VERTICAL_VALUE,
     Match,
 )
 from .item import Item
@@ -18,9 +17,8 @@ def create_random_item(group, models_selection, row, column, fall_position_z=Non
         group=group,
         model=model_pick[1],
         type=model_pick[0],
-        position=Vector3(
+        grid_position=Vector2(
             column,
-            ITEM_VERTICAL_VALUE,
             row,
         ),
         fall_position_z=fall_position_z,
