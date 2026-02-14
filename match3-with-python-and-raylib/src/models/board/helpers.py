@@ -62,6 +62,13 @@ def check_matched_items(grid, x_index, y_index, match):
     return found_three_matches
 
 
+def are_items_adjacent(item1, item2):
+    return (
+        abs(item1.grid_position.x - item2.grid_position.x)
+        + abs(item1.grid_position.y - item2.grid_position.y)
+    ) == 1
+
+
 def get_state(board):
     # Check, if the board is still updating position of any of its items
     if board.state == BoardState.UPDATING:

@@ -16,6 +16,7 @@ from settings import (
     matrix_scale,
     matrix_translate,
     MOUSE_LEFT_BUTTON,
+    Vector2,
     Vector3,
     Vector3Add,
 )
@@ -29,6 +30,7 @@ from .constants import (
     TILE_TYPES_COUNT,
 )
 from .helpers import (
+    are_items_adjacent,
     check_matched_items,
     clear_matched_items,
     create_random_item,
@@ -122,12 +124,17 @@ class Board:
                         )
 
                         if mesh_hit.hit:
-                            # Deselect item which was previously selected
-                            if self.selected_item:
-                                self.selected_item.is_selected = False
+                            if not self.selected_item:
+                                item.is_selected = True
+                                self.selected_item = item
+                            else:
+                                if are_items_adjacent(self.selected_item, item):
+                                    self.swap_items(self.selected_item, item)
 
-                            item.is_selected = True
-                            self.selected_item = item
+                                # Deselect item which was previously selected
+                                self.selected_item.is_selected = False
+                                self.selected_item = None
+
                             break
 
     def find_matches(self):
@@ -160,6 +167,7 @@ class Board:
                     item.to_be_removed = True
                 else:
                     item.fall_position_z = BOARD_OFFSET.z - (move_y * TILE_SIZE)
+                    item.grid_position.y = move_y
                     self.grid[move_y][x_index] = item
                     move_y -= 1
 
@@ -173,6 +181,22 @@ class Board:
                     fall_position_z=BOARD_OFFSET.z - (move_y * TILE_SIZE),
                 )
                 move_y -= 1
+
+    def swap_items(self, item1, item2):
+        temp_position = Vector3(item1.position.x, item1.position.y, item1.position.z)
+        temp_grid_position = Vector2(item1.grid_position.x, item1.grid_position.y)
+        temp_fall_position_z = item1.fall_position_z
+
+        item1.position = item2.position
+        item1.grid_position = item2.grid_position
+        item1.fall_position_z = item2.fall_position_z
+
+        item2.position = temp_position
+        item2.grid_position = temp_grid_position
+        item2.fall_position_z = temp_fall_position_z
+
+        self.grid[int(item1.grid_position.y)][int(item1.grid_position.x)] = item2
+        self.grid[int(item2.grid_position.y)][int(item2.grid_position.x)] = item1
 
     def update(self, group):
         self.state = get_state(self)

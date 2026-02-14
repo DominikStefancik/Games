@@ -36,6 +36,7 @@ class Item(Model):
             scale,
         )
 
+        self.grid_position = grid_position
         self.type = type
         self.is_selected = False
         self.is_matched = False
