@@ -1,3 +1,6 @@
+from levels.board import draw_board
+from levels.level1.layout import level1_layout
+from levels.level1.config import LEVEL_1_CONFIG
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 
 
@@ -14,6 +17,7 @@ class Game:
 
     def draw(self):
         self.display_surface.fill("black")
+        draw_board(self.display_surface, level1_layout, LEVEL_1_CONFIG)
 
     def run(self):
         delta_time = self.clock.tick() / 1000

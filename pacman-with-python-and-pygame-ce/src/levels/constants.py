@@ -1,0 +1,25 @@
+from enum import Enum
+
+from settings import WINDOW_WIDTH, WINDOW_HEIGHT
+
+BOARD_WIDTH, BOARD_HEIGHT = 30, 33
+
+# "//" is a "floor division" which returns an integer
+TILE_WIDTH = WINDOW_WIDTH // BOARD_WIDTH
+TILE_HEIGHT = (WINDOW_HEIGHT - 50) // BOARD_HEIGHT
+DOT_RADIUS = 4
+BIG_DOT_RADIUS = 10
+LINE_THICKNESS = 3
+
+
+class BoardTile(Enum):
+    EMPTY_BLACK_RECTANGLE = 0
+    DOT = 1
+    BIG_DOT = 2
+    VERTICAL_LINE = 3
+    HORIZONTAL_LINE = 4
+    TOP_RIGHT = 5
+    TOP_LEFT = 6
+    BOTTOM_LEFT = 7
+    BOTTOM_RIGHT = 8
+    GATE = 9
