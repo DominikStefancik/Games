@@ -9,9 +9,7 @@ from settings import (
     get_ray_collision_box,
     get_ray_collision_mesh,
     get_screen_to_world_ray,
-    is_key_pressed,
     is_mouse_button_pressed,
-    KEY_SPACE,
     matrix_multiply,
     matrix_scale,
     matrix_translate,
@@ -131,6 +129,13 @@ class Board:
                                 if are_items_adjacent(self.selected_item, item):
                                     self.swap_items(self.selected_item, item)
 
+                                    # We only allow swapping items if it results in 3 or more matches
+                                    # otherwise, we have to swap items back
+                                    if self.find_matches():
+                                        self.resolve_matches(group)
+                                    else:
+                                        self.swap_items(self.selected_item, item)
+
                                 # Deselect item which was previously selected
                                 self.selected_item.is_selected = False
                                 self.selected_item = None
@@ -139,6 +144,7 @@ class Board:
 
     def find_matches(self):
         clear_matched_items(self.matched_items)
+        found_match = False
 
         # Check horizontal matches
         for y_index in range(BOARD_SIZE):
@@ -147,6 +153,7 @@ class Board:
                     self.matched_items[y_index][x_index] = 1
                     self.matched_items[y_index][x_index + 1] = 1
                     self.matched_items[y_index][x_index + 2] = 1
+                    found_match = True
 
         # Check vertical matches
         for x_index in range(BOARD_SIZE):
@@ -155,6 +162,9 @@ class Board:
                     self.matched_items[y_index][x_index] = 1
                     self.matched_items[y_index + 1][x_index] = 1
                     self.matched_items[y_index + 2][x_index] = 1
+                    found_match = True
+
+        return found_match
 
     def resolve_matches(self, group):
         self.state = BoardState.UPDATING
@@ -203,7 +213,6 @@ class Board:
 
         if self.state == BoardState.IDLE:
             self.check_selected_item()
-            self.find_matches()
 
-            if is_key_pressed(KEY_SPACE):
+            if self.find_matches():
                 self.resolve_matches(group)
