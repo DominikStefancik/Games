@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ImageAsset(Enum):
-    IMAGE = "image"
+    PACMAN = "pacman"
 
 
 class AudioAsset(Enum):

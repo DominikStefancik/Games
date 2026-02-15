@@ -1,5 +1,5 @@
 from .loaders import (
-    load_audio_files,
+    load_audio,
     load_font,
     load_graphics,
 )

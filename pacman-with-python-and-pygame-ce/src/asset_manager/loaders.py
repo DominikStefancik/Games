@@ -3,13 +3,12 @@ from os.path import join
 from settings import pygame
 
 from .constants import AudioAsset, ImageAsset
+from .import_helpers import import_folder_as_list
 
 
 def load_graphics():
     return {
-        ImageAsset.IMAGE: pygame.image.load(
-            join("assets", "graphics", "level", "image.png")
-        ).convert_alpha(),
+        ImageAsset.PACMAN: import_folder_as_list("assets", "images", "pacman"),
     }
 
 

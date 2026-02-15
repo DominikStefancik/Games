@@ -1,6 +1,9 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import ImageAsset
 from levels.board import draw_board
 from levels.level1.layout import level1_layout
 from levels.level1.config import LEVEL_1_CONFIG
+from pacman.pacman import PacMan
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 
 
@@ -12,23 +15,30 @@ class Game:
         pygame.display.set_caption("Python Pac-Man")
         self.clock = pygame.time.Clock()
 
-    def update(self):
-        pass
+        asset_manager = get_asset_manager()
+        self.all_sprites = pygame.sprite.Group()
+        self.pacman = PacMan(
+            self.all_sprites, asset_manager.graphics[ImageAsset.PACMAN], (450, 663)
+        )
+
+    def update(self, delta_time):
+        self.all_sprites.update(delta_time)
 
     def draw(self):
         self.display_surface.fill("black")
         draw_board(self.display_surface, level1_layout, LEVEL_1_CONFIG)
+        self.all_sprites.draw(self.display_surface)
 
     def run(self):
-        delta_time = self.clock.tick() / 1000
-
         while True:
+            delta_time = self.clock.tick() / 1000
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-            self.update()
+            self.update(delta_time)
             self.draw()
 
             pygame.display.update()

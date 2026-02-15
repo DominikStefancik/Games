@@ -1,3 +1,4 @@
 import pygame, sys
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 900, 950
+ANIMATION_SPEED = 8
