@@ -18,7 +18,10 @@ class Game:
         asset_manager = get_asset_manager()
         self.all_sprites = pygame.sprite.Group()
         self.pacman = PacMan(
-            self.all_sprites, asset_manager.graphics[ImageAsset.PACMAN], (450, 663)
+            groups=self.all_sprites,
+            animation_frames=asset_manager.graphics[ImageAsset.PACMAN],
+            position=(450, 663),
+            level_layout=level1_layout,
         )
 
     def update(self, delta_time):
