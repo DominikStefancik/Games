@@ -6,6 +6,7 @@ class GameStateManager:
     def __init__(self):
         self._current_level = Level.LEVEL_1
         self.score = 0
+        self.lives = 3
 
     def get_level_config(self):
         config = LEVEL_1_CONFIG

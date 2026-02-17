@@ -1,6 +1,7 @@
 from game_state.game_state_manager import get_game_state_manager
 from levels.constants import BoardTile, TILE_HEIGHT, TILE_WIDTH
 from settings import ANIMATION_SPEED, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from timers.timers_manager import get_timers_manager
 
 from .constants import (
     COLLISION_FUDGE_FACTOR,
@@ -243,26 +244,33 @@ class PacMan(pygame.sprite.Sprite):
                         self.allowed_turns[Direction.LEFT] = True
 
     def detect_collisions(self):
-        tile = self.level_layout[self.rect.centery // TILE_HEIGHT][
-            self.rect.centerx // TILE_WIDTH
-        ]
-        is_tile_dot = False
-
-        if tile == BoardTile.DOT.value:
-            self.game_state_manager.score += self.game_state_manager.get_level_config()[
-                "dot_score"
-            ]
-            is_tile_dot = True
-        if tile == BoardTile.BIG_DOT.value:
-            self.game_state_manager.score += self.game_state_manager.get_level_config()[
-                "big_dot_score"
-            ]
-            is_tile_dot = True
-
-        if is_tile_dot:
-            self.level_layout[self.rect.centery // TILE_HEIGHT][
+        # We have to avoid checking the collisions when the Pacman is on the left of right edge of the screen
+        # (for the case when he goes out of the right edge and pops up on the left edge, and vice versa).
+        # Otherwise we will get out of index range exception in that case.
+        if 0 < self.rect.centerx < WINDOW_WIDTH - TILE_WIDTH:
+            tile = self.level_layout[self.rect.centery // TILE_HEIGHT][
                 self.rect.centerx // TILE_WIDTH
-            ] = BoardTile.EMPTY_BLACK_RECTANGLE.value
+            ]
+            is_tile_dot = False
+
+            if tile == BoardTile.DOT.value:
+                self.game_state_manager.score += (
+                    self.game_state_manager.get_level_config()["dot_score"]
+                )
+                is_tile_dot = True
+
+            if tile == BoardTile.BIG_DOT.value:
+                self.game_state_manager.score += (
+                    self.game_state_manager.get_level_config()["big_dot_score"]
+                )
+                is_tile_dot = True
+                timers_manager = get_timers_manager()
+                timers_manager.power_up_timer.activate()
+
+            if is_tile_dot:
+                self.level_layout[self.rect.centery // TILE_HEIGHT][
+                    self.rect.centerx // TILE_WIDTH
+                ] = BoardTile.EMPTY_BLACK_RECTANGLE.value
 
     def move(self):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:

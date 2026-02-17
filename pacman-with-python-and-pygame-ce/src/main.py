@@ -6,6 +6,7 @@ from levels.level1.config import LEVEL_1_CONFIG
 from pacman.pacman import PacMan
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 from text_manager import TextManager
+from timers.timers_manager import get_timers_manager
 
 
 class Game:
@@ -18,6 +19,7 @@ class Game:
 
         asset_manager = get_asset_manager()
         self.text_manager = TextManager()
+        self.timers_manager = get_timers_manager()
         self.all_sprites = pygame.sprite.Group()
         self.pacman = PacMan(
             groups=self.all_sprites,
@@ -27,6 +29,7 @@ class Game:
         )
 
     def update(self, delta_time):
+        self.timers_manager.update()
         self.all_sprites.update(delta_time)
 
     def draw(self):
