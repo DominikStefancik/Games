@@ -1,3 +1,4 @@
+from game_state.game_state_manager import get_game_state_manager
 from levels.constants import BoardTile, TILE_HEIGHT, TILE_WIDTH
 from settings import ANIMATION_SPEED, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 
@@ -31,6 +32,8 @@ class PacMan(pygame.sprite.Sprite):
             Direction.UP: False,
             Direction.DOWN: False,
         }
+
+        self.game_state_manager = get_game_state_manager()
 
     def process_key_input(self):
         pressed_keys = pygame.key.get_pressed()
@@ -239,6 +242,28 @@ class PacMan(pygame.sprite.Sprite):
                     ):
                         self.allowed_turns[Direction.LEFT] = True
 
+    def detect_collisions(self):
+        tile = self.level_layout[self.rect.centery // TILE_HEIGHT][
+            self.rect.centerx // TILE_WIDTH
+        ]
+        is_tile_dot = False
+
+        if tile == BoardTile.DOT.value:
+            self.game_state_manager.score += self.game_state_manager.get_level_config()[
+                "dot_score"
+            ]
+            is_tile_dot = True
+        if tile == BoardTile.BIG_DOT.value:
+            self.game_state_manager.score += self.game_state_manager.get_level_config()[
+                "big_dot_score"
+            ]
+            is_tile_dot = True
+
+        if is_tile_dot:
+            self.level_layout[self.rect.centery // TILE_HEIGHT][
+                self.rect.centerx // TILE_WIDTH
+            ] = BoardTile.EMPTY_BLACK_RECTANGLE.value
+
     def move(self):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:
             self.rect.centerx -= 1
@@ -259,3 +284,4 @@ class PacMan(pygame.sprite.Sprite):
         self.process_key_input()
         self.animate(delta_time)
         self.move()
+        self.detect_collisions()

@@ -1,6 +1,6 @@
 from .loaders import (
     load_audio,
-    load_font,
+    load_fonts,
     load_graphics,
 )
 
@@ -8,7 +8,7 @@ from .loaders import (
 class AssetManager:
     def __init__(self):
         self._graphics = None
-        self._font = None
+        self._fonts = None
         self._audio = None
 
     @property
@@ -19,11 +19,11 @@ class AssetManager:
         return self._graphics
 
     @property
-    def font(self):
-        if self._font == None:
-            self._font = load_font()
+    def fonts(self):
+        if self._fonts == None:
+            self._fonts = load_fonts()
 
-        return self._font
+        return self._fonts
 
     @property
     def audio_files(self):

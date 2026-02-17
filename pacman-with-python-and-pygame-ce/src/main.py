@@ -5,6 +5,7 @@ from levels.level1.layout import level1_layout
 from levels.level1.config import LEVEL_1_CONFIG
 from pacman.pacman import PacMan
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
+from text_manager import TextManager
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         asset_manager = get_asset_manager()
+        self.text_manager = TextManager()
         self.all_sprites = pygame.sprite.Group()
         self.pacman = PacMan(
             groups=self.all_sprites,
@@ -31,6 +33,7 @@ class Game:
         self.display_surface.fill("black")
         draw_board(self.display_surface, level1_layout, LEVEL_1_CONFIG)
         self.all_sprites.draw(self.display_surface)
+        self.text_manager.draw()
 
     def run(self):
         while True:

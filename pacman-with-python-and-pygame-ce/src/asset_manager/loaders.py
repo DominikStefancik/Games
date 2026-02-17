@@ -2,7 +2,7 @@ from os.path import join
 
 from settings import pygame
 
-from .constants import AudioAsset, ImageAsset
+from .constants import AudioAsset, FontAsset, ImageAsset
 from .import_helpers import import_folder_as_list
 
 
@@ -12,8 +12,10 @@ def load_graphics():
     }
 
 
-def load_font():
-    return pygame.font.Font("freesansbold.ttf", 20)
+def load_fonts():
+    return {
+        FontAsset.FREE_SANS_BOLD: pygame.font.Font("freesansbold.ttf", 20),
+    }
 
 
 def load_audio():

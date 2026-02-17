@@ -23,3 +23,7 @@ class BoardTile(Enum):
     BOTTOM_LEFT = 7
     BOTTOM_RIGHT = 8
     GATE = 9
+
+
+class Level(Enum):
+    LEVEL_1 = 1
