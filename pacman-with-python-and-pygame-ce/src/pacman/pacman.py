@@ -23,7 +23,6 @@ class PacMan(pygame.sprite.Sprite):
         # Represents a rectangle to figure out where the Pacman will be drawn in a current frame
         self.rect = self.image.get_rect(center=position)
         self.level_layout = level_layout
-        self.speed = 10
         self.direction = Direction.RIGHT
         self.direction_command = Direction.RIGHT
         self.allowed_turns = {
@@ -63,13 +62,16 @@ class PacMan(pygame.sprite.Sprite):
             and self.allowed_turns[Direction.LEFT]
         ):
             self.direction = Direction.LEFT
+
         if (
             self.direction_command == Direction.RIGHT
             and self.allowed_turns[Direction.RIGHT]
         ):
             self.direction = Direction.RIGHT
+
         if self.direction_command == Direction.UP and self.allowed_turns[Direction.UP]:
             self.direction = Direction.UP
+
         if (
             self.direction_command == Direction.DOWN
             and self.allowed_turns[Direction.DOWN]
@@ -119,6 +121,7 @@ class PacMan(pygame.sprite.Sprite):
                 in open_tiles
             ):
                 self.allowed_turns[Direction.RIGHT] = True
+
             if (
                 self.direction == Direction.RIGHT
                 and self.level_layout[self.rect.centery // TILE_HEIGHT][
@@ -127,6 +130,7 @@ class PacMan(pygame.sprite.Sprite):
                 in open_tiles
             ):
                 self.allowed_turns[Direction.LEFT] = True
+
             if (
                 self.direction == Direction.UP
                 and self.level_layout[
@@ -135,6 +139,7 @@ class PacMan(pygame.sprite.Sprite):
                 in open_tiles
             ):
                 self.allowed_turns[Direction.DOWN] = True
+
             if (
                 self.direction == Direction.DOWN
                 and self.level_layout[
@@ -158,6 +163,7 @@ class PacMan(pygame.sprite.Sprite):
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.UP] = True
+
                     # If the position below the Pacman is open
                     if (
                         self.level_layout[
@@ -179,6 +185,7 @@ class PacMan(pygame.sprite.Sprite):
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.LEFT] = True
+
                     if (
                         self.level_layout[self.rect.centery // TILE_HEIGHT][
                             (self.rect.centerx + TILE_WIDTH) // TILE_WIDTH
@@ -201,6 +208,7 @@ class PacMan(pygame.sprite.Sprite):
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.UP] = True
+
                     # If the position below the Pacman is open
                     if (
                         self.level_layout[
@@ -222,6 +230,7 @@ class PacMan(pygame.sprite.Sprite):
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.RIGHT] = True
+
                     if (
                         self.level_layout[self.rect.centery // TILE_HEIGHT][
                             (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
@@ -230,23 +239,23 @@ class PacMan(pygame.sprite.Sprite):
                     ):
                         self.allowed_turns[Direction.LEFT] = True
 
-    def move(self, delta_time):
+    def move(self):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:
-            self.rect.centerx -= self.speed * delta_time
+            self.rect.centerx -= 1
         if self.direction == Direction.RIGHT and self.allowed_turns[Direction.RIGHT]:
-            self.rect.centerx += self.speed * delta_time
+            self.rect.centerx += 1
         if self.direction == Direction.UP and self.allowed_turns[Direction.UP]:
-            self.rect.centery -= self.speed * delta_time
+            self.rect.centery -= 1
         if self.direction == Direction.DOWN and self.allowed_turns[Direction.DOWN]:
-            self.rect.centery += self.speed * delta_time
+            self.rect.centery += 1
 
-        if self.rect.centerx > WINDOW_WIDTH:
-            self.rect.centerx = -47
-        elif self.rect.centerx - self.rect.width / 2 < 0:
-            self.rect.centerx = WINDOW_WIDTH - 3
+        if self.rect.centerx > WINDOW_WIDTH + self.rect.width / 4:
+            self.rect.centerx = -self.rect.width / 4
+        elif self.rect.centerx < -self.rect.width / 4:
+            self.rect.centerx = WINDOW_WIDTH + self.rect.width / 4
 
     def update(self, delta_time):
         self.update_allowed_turns()
         self.process_key_input()
         self.animate(delta_time)
-        self.move(delta_time)
+        self.move()
