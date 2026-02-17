@@ -1,7 +1,12 @@
 from levels.constants import BoardTile, TILE_HEIGHT, TILE_WIDTH
 from settings import ANIMATION_SPEED, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 
-from .constants import COLLISION_FUDGE_FACTOR, Direction
+from .constants import (
+    COLLISION_FUDGE_FACTOR,
+    Direction,
+    TILE_CENTER_FACTOR_MAX,
+    TILE_CENTER_FACTOR_MIN,
+)
 
 
 class PacMan(pygame.sprite.Sprite):
@@ -94,8 +99,8 @@ class PacMan(pygame.sprite.Sprite):
         self.allowed_turns[Direction.DOWN] = False
 
         if (
-            self.rect.x - self.rect.width / 2 < 0
-            or self.rect.x + self.rect.width / 2 >= WINDOW_WIDTH
+            self.rect.centerx - self.rect.width / 2 < 0
+            or self.rect.centerx + self.rect.width / 2 >= WINDOW_WIDTH
         ):
             self.allowed_turns[Direction.LEFT] = True
             self.allowed_turns[Direction.RIGHT] = True
@@ -108,16 +113,16 @@ class PacMan(pygame.sprite.Sprite):
 
             if (
                 self.direction == Direction.LEFT
-                and self.level_layout[self.rect.y // TILE_HEIGHT][
-                    (self.rect.x + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+                and self.level_layout[self.rect.centery // TILE_HEIGHT][
+                    (self.rect.centerx + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
                 ]
                 in open_tiles
             ):
                 self.allowed_turns[Direction.RIGHT] = True
             if (
                 self.direction == Direction.RIGHT
-                and self.level_layout[self.rect.y // TILE_HEIGHT][
-                    (self.rect.x - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+                and self.level_layout[self.rect.centery // TILE_HEIGHT][
+                    (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
                 ]
                 in open_tiles
             ):
@@ -125,85 +130,101 @@ class PacMan(pygame.sprite.Sprite):
             if (
                 self.direction == Direction.UP
                 and self.level_layout[
-                    (self.rect.y + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                ][self.rect.x // TILE_WIDTH]
+                    (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+                ][self.rect.centerx // TILE_WIDTH]
                 in open_tiles
             ):
                 self.allowed_turns[Direction.DOWN] = True
             if (
                 self.direction == Direction.DOWN
                 and self.level_layout[
-                    (self.rect.y - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                ][(self.rect.x) // TILE_WIDTH]
+                    (self.rect.centery - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+                ][(self.rect.centerx) // TILE_WIDTH]
                 in open_tiles
             ):
                 self.allowed_turns[Direction.UP] = True
 
             if self.direction in [Direction.UP, Direction.DOWN]:
-                if 12 <= self.rect.x % TILE_WIDTH <= 18:
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centerx % TILE_WIDTH
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
                     # If the position above the Pacman is open
                     if (
                         self.level_layout[
-                            (self.rect.y - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                        ][self.rect.x // TILE_WIDTH]
+                            (self.rect.centery - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+                        ][self.rect.centerx // TILE_WIDTH]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.UP] = True
                     # If the position below the Pacman is open
                     if (
                         self.level_layout[
-                            (self.rect.y + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                        ][self.rect.x // TILE_WIDTH]
+                            (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+                        ][self.rect.centerx // TILE_WIDTH]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.DOWN] = True
 
-                if 12 <= self.rect.y % TILE_HEIGHT <= 18:
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centery % TILE_HEIGHT
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
                     if (
-                        self.level_layout[self.rect.y // TILE_HEIGHT][
-                            (self.rect.x - TILE_WIDTH) // TILE_WIDTH
+                        self.level_layout[self.rect.centery // TILE_HEIGHT][
+                            (self.rect.centerx - TILE_WIDTH) // TILE_WIDTH
                         ]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.LEFT] = True
                     if (
-                        self.level_layout[self.rect.y // TILE_HEIGHT][
-                            (self.rect.x + TILE_WIDTH) // TILE_WIDTH
+                        self.level_layout[self.rect.centery // TILE_HEIGHT][
+                            (self.rect.centerx + TILE_WIDTH) // TILE_WIDTH
                         ]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.RIGHT] = True
 
             if self.direction in [Direction.LEFT, Direction.RIGHT]:
-                if 12 <= self.rect.x % TILE_WIDTH <= 18:
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centerx % TILE_WIDTH
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
                     # If the position above the Pacman is open
                     if (
-                        self.level_layout[(self.rect.y - TILE_HEIGHT) // TILE_HEIGHT][
-                            self.rect.x // TILE_WIDTH
-                        ]
+                        self.level_layout[
+                            (self.rect.centery - TILE_HEIGHT) // TILE_HEIGHT
+                        ][self.rect.centerx // TILE_WIDTH]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.UP] = True
                     # If the position below the Pacman is open
                     if (
-                        self.level_layout[(self.rect.y + TILE_HEIGHT) // TILE_HEIGHT][
-                            self.rect.x // TILE_WIDTH
-                        ]
+                        self.level_layout[
+                            (self.rect.centery + TILE_HEIGHT) // TILE_HEIGHT
+                        ][self.rect.centerx // TILE_WIDTH]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.DOWN] = True
 
-                if 12 <= self.rect.y % TILE_HEIGHT <= 18:
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centery % TILE_HEIGHT
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
                     if (
-                        self.level_layout[self.rect.y // TILE_HEIGHT][
-                            (self.rect.x + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+                        self.level_layout[self.rect.centery // TILE_HEIGHT][
+                            (self.rect.centerx + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
                         ]
                         in open_tiles
                     ):
                         self.allowed_turns[Direction.RIGHT] = True
                     if (
-                        self.level_layout[self.rect.y // TILE_HEIGHT][
-                            (self.rect.x - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+                        self.level_layout[self.rect.centery // TILE_HEIGHT][
+                            (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
                         ]
                         in open_tiles
                     ):
@@ -211,18 +232,18 @@ class PacMan(pygame.sprite.Sprite):
 
     def move(self, delta_time):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:
-            self.rect.x -= self.speed * delta_time
+            self.rect.centerx -= self.speed * delta_time
         if self.direction == Direction.RIGHT and self.allowed_turns[Direction.RIGHT]:
-            self.rect.x += self.speed * delta_time
+            self.rect.centerx += self.speed * delta_time
         if self.direction == Direction.UP and self.allowed_turns[Direction.UP]:
-            self.rect.y -= self.speed * delta_time
+            self.rect.centery -= self.speed * delta_time
         if self.direction == Direction.DOWN and self.allowed_turns[Direction.DOWN]:
-            self.rect.y += self.speed * delta_time
+            self.rect.centery += self.speed * delta_time
 
-        if self.rect.x > WINDOW_WIDTH:
-            self.rect.x = -47
-        elif self.rect.x - self.rect.width / 2 < 0:
-            self.rect.x = WINDOW_WIDTH - 3
+        if self.rect.centerx > WINDOW_WIDTH:
+            self.rect.centerx = -47
+        elif self.rect.centerx - self.rect.width / 2 < 0:
+            self.rect.centerx = WINDOW_WIDTH - 3
 
     def update(self, delta_time):
         self.update_allowed_turns()
