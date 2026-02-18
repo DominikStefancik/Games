@@ -251,7 +251,7 @@ class Ghost(pygame.sprite.Sprite):
         elif self.rect.centerx < -self.rect.width / 4:
             self.rect.centerx = WINDOW_WIDTH + self.rect.width / 4
 
-        if 350 < self.rect.x < 550 and 370 < self.rect.y < 490:
+        if 350 < self.rect.x < 550 and 340 < self.rect.y < 490:
             self.is_in_box = True
         else:
             self.is_in_box = False

@@ -97,15 +97,15 @@ def move_clyde(clyde_ghost):
         elif can_follow_target_to_left:
             clyde_ghost.rect.centerx -= clyde_ghost.speed
         elif not clyde_ghost.allowed_turns[Direction.LEFT]:
-            if can_follow_target_up:
+            if can_follow_target_down:
+                clyde_ghost.direction = Direction.DOWN
+                clyde_ghost.rect.centery += clyde_ghost.speed
+            elif can_follow_target_up:
                 clyde_ghost.direction = Direction.UP
                 clyde_ghost.rect.centery -= clyde_ghost.speed
             elif can_follow_target_to_right:
                 clyde_ghost.direction = Direction.RIGHT
                 clyde_ghost.rect.centerx += clyde_ghost.speed
-            elif can_follow_target_down:
-                clyde_ghost.direction = Direction.DOWN
-                clyde_ghost.rect.centery += clyde_ghost.speed
             # The Pacman is above/below and right from the ghost and the ghost cannot go above/below and right,
             # so we try to move it any possible direction.
             elif clyde_ghost.allowed_turns[Direction.DOWN]:
@@ -125,7 +125,6 @@ def move_clyde(clyde_ghost):
             elif can_follow_target_up:
                 clyde_ghost.direction = Direction.UP
                 clyde_ghost.rect.centery -= clyde_ghost.speed
-
             # The Pacman is not up or down from the ghost
             # so it will go its default direction left
             else:
@@ -148,7 +147,7 @@ def move_clyde(clyde_ghost):
                 clyde_ghost.rect.centery += clyde_ghost.speed
             # The Pacman is left/right and up from the ghost and the ghost cannot go left/right and up,
             # so we try to move it any possible direction
-            if clyde_ghost.allowed_turns[Direction.DOWN]:
+            elif clyde_ghost.allowed_turns[Direction.DOWN]:
                 clyde_ghost.direction = Direction.DOWN
                 clyde_ghost.rect.centery += clyde_ghost.speed
             elif clyde_ghost.allowed_turns[Direction.LEFT]:
@@ -159,12 +158,12 @@ def move_clyde(clyde_ghost):
                 clyde_ghost.rect.centerx += clyde_ghost.speed
         # The ghost can go up, but the Pacman is not on the upper side
         elif clyde_ghost.allowed_turns[Direction.UP]:
-            if can_follow_target_to_left:
-                clyde_ghost.direction = Direction.LEFT
-                clyde_ghost.rect.centerx -= clyde_ghost.speed
-            elif can_follow_target_to_right:
+            if can_follow_target_to_right:
                 clyde_ghost.direction = Direction.RIGHT
                 clyde_ghost.rect.centerx += clyde_ghost.speed
+            elif can_follow_target_to_left:
+                clyde_ghost.direction = Direction.LEFT
+                clyde_ghost.rect.centerx -= clyde_ghost.speed
             # The Pacman is not left or right from the ghost
             # so it will go its default direction up
             else:
@@ -195,12 +194,12 @@ def move_clyde(clyde_ghost):
                 clyde_ghost.rect.centerx += clyde_ghost.speed
         # The ghost can go down, but the Pacman is not on the down side
         elif clyde_ghost.allowed_turns[Direction.DOWN]:
-            if can_follow_target_to_left:
-                clyde_ghost.direction = Direction.LEFT
-                clyde_ghost.rect.centerx -= clyde_ghost.speed
-            elif can_follow_target_to_right:
+            if can_follow_target_to_right:
                 clyde_ghost.direction = Direction.RIGHT
                 clyde_ghost.rect.centerx += clyde_ghost.speed
+            elif can_follow_target_to_left:
+                clyde_ghost.direction = Direction.LEFT
+                clyde_ghost.rect.centerx -= clyde_ghost.speed
             # The Pacman is not left or right from the ghost
             # so it will go its default direction down
             else:
