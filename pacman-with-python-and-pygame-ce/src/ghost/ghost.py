@@ -1,5 +1,13 @@
 from game_state.game_state_manager import get_game_state_manager
-from settings import pygame
+from levels.constants import (
+    BoardTile,
+    COLLISION_FUDGE_FACTOR,
+    TILE_CENTER_FACTOR_MAX,
+    TILE_CENTER_FACTOR_MIN,
+    TILE_HEIGHT,
+    TILE_WIDTH,
+)
+from settings import Direction, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 from timers.timers_manager import get_timers_manager
 
 from .constants import GhostImageType
@@ -30,6 +38,12 @@ class Ghost(pygame.sprite.Sprite):
         self.target = ghost_config["target"]
         self.is_dead = False
         self.is_eaten = False
+        self.allowed_turns = {
+            Direction.LEFT: False,
+            Direction.RIGHT: False,
+            Direction.UP: False,
+            Direction.DOWN: False,
+        }
 
         self.timers_manager = get_timers_manager()
 
@@ -51,5 +65,162 @@ class Ghost(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(center=(self.rect.centerx, self.rect.centery))
 
+    def update_allowed_turns(self):
+        # Restart allowed turns
+        self.allowed_turns[Direction.LEFT] = False
+        self.allowed_turns[Direction.RIGHT] = False
+        self.allowed_turns[Direction.UP] = False
+        self.allowed_turns[Direction.DOWN] = False
+
+        if (
+            self.rect.centerx - self.rect.width / 2 < 0
+            or self.rect.centerx + self.rect.width / 2 >= WINDOW_WIDTH
+        ):
+            self.allowed_turns[Direction.LEFT] = True
+            self.allowed_turns[Direction.RIGHT] = True
+        else:
+            tile_left = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+            ]
+            tile_right = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                (self.rect.centerx + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+            ]
+            tile_up = self.level_layout[
+                (self.rect.centery - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+            ][self.rect.centerx // TILE_WIDTH]
+            tile_down = self.level_layout[
+                (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+            ][self.rect.centerx // TILE_WIDTH]
+
+            open_tiles = [
+                BoardTile.EMPTY_BLACK_RECTANGLE.value,
+                BoardTile.DOT.value,
+                BoardTile.BIG_DOT.value,
+            ]
+
+            if tile_left in open_tiles or (
+                tile_left == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
+            ):
+                self.allowed_turns[Direction.LEFT] = True
+
+            if tile_right in open_tiles or (
+                tile_right == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
+            ):
+                self.allowed_turns[Direction.RIGHT] = True
+
+            if tile_up in open_tiles or (
+                tile_up == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
+            ):
+                self.allowed_turns[Direction.UP] = True
+
+            if tile_down in open_tiles or (
+                tile_down == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
+            ):
+                self.allowed_turns[Direction.DOWN] = True
+
+            if self.direction in [Direction.UP, Direction.DOWN]:
+                # Check if the current position is moderately in the center of a tile
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centerx % TILE_WIDTH
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
+                    # If the position above the ghost is open
+                    if tile_up in open_tiles or (
+                        tile_up == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.UP] = True
+
+                    # If the position below the ghost is open
+                    if tile_down in open_tiles or (
+                        tile_down == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.DOWN] = True
+
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centery % TILE_HEIGHT
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
+                    tile_left = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                        (self.rect.centerx - TILE_WIDTH) // TILE_WIDTH
+                    ]
+                    tile_right = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                        (self.rect.centerx + TILE_WIDTH) // TILE_WIDTH
+                    ]
+
+                    if tile_left in open_tiles or (
+                        tile_left == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.LEFT] = True
+
+                    if tile_right in open_tiles or (
+                        tile_right == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.RIGHT] = True
+
+            if self.direction in [Direction.LEFT, Direction.RIGHT]:
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centerx % TILE_WIDTH
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
+                    # If the position above the ghost is open
+                    if tile_up in open_tiles or (
+                        tile_up == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.UP] = True
+
+                    # If the position below the ghost is open
+                    if tile_down in open_tiles or (
+                        tile_down == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.DOWN] = True
+
+                if (
+                    TILE_CENTER_FACTOR_MIN
+                    <= self.rect.centery % TILE_HEIGHT
+                    <= TILE_CENTER_FACTOR_MAX
+                ):
+                    if tile_left in open_tiles or (
+                        tile_left == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.LEFT] = True
+
+                    if tile_right in open_tiles or (
+                        tile_right == BoardTile.GATE.value
+                        and (self.is_in_box or self.is_dead)
+                    ):
+                        self.allowed_turns[Direction.RIGHT] = True
+
+    def move(self):
+        if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:
+            self.rect.centerx -= 1
+        if self.direction == Direction.RIGHT and self.allowed_turns[Direction.RIGHT]:
+            self.rect.centerx += 1
+        if self.direction == Direction.UP and self.allowed_turns[Direction.UP]:
+            self.rect.centery -= 1
+        if self.direction == Direction.DOWN and self.allowed_turns[Direction.DOWN]:
+            self.rect.centery += 1
+
+        if self.rect.centerx > WINDOW_WIDTH + self.rect.width / 4:
+            self.rect.centerx = -self.rect.width / 4
+        elif self.rect.centerx < -self.rect.width / 4:
+            self.rect.centerx = WINDOW_WIDTH + self.rect.width / 4
+
+        if 350 < self.rect.x < 550 and 370 < self.rect.y < 490:
+            self.is_in_box = True
+        else:
+            self.is_in_box = False
+
     def update(self, delta_time):
         self.update_image()
+        self.update_allowed_turns()
+        self.move()

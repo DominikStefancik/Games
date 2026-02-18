@@ -1,13 +1,14 @@
 from game_state.game_state_manager import get_game_state_manager
-from levels.constants import BoardTile, TILE_HEIGHT, TILE_WIDTH
-from settings import ANIMATION_SPEED, Direction, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
-from timers.timers_manager import get_timers_manager
-
-from .constants import (
+from levels.constants import (
+    BoardTile,
     COLLISION_FUDGE_FACTOR,
     TILE_CENTER_FACTOR_MAX,
     TILE_CENTER_FACTOR_MIN,
+    TILE_HEIGHT,
+    TILE_WIDTH,
 )
+from settings import ANIMATION_SPEED, Direction, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from timers.timers_manager import get_timers_manager
 
 
 class PacMan(pygame.sprite.Sprite):
@@ -112,70 +113,50 @@ class PacMan(pygame.sprite.Sprite):
             self.allowed_turns[Direction.LEFT] = True
             self.allowed_turns[Direction.RIGHT] = True
         else:
+            tile_left = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+            ]
+            tile_right = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                (self.rect.centerx + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
+            ]
+            tile_up = self.level_layout[
+                (self.rect.centery - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+            ][self.rect.centerx // TILE_WIDTH]
+            tile_down = self.level_layout[
+                (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
+            ][self.rect.centerx // TILE_WIDTH]
+
             open_tiles = [
                 BoardTile.EMPTY_BLACK_RECTANGLE.value,
                 BoardTile.DOT.value,
                 BoardTile.BIG_DOT.value,
             ]
 
-            if (
-                self.direction == Direction.LEFT
-                and self.level_layout[self.rect.centery // TILE_HEIGHT][
-                    (self.rect.centerx + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
-                ]
-                in open_tiles
-            ):
+            if self.direction == Direction.LEFT and tile_right in open_tiles:
                 self.allowed_turns[Direction.RIGHT] = True
 
-            if (
-                self.direction == Direction.RIGHT
-                and self.level_layout[self.rect.centery // TILE_HEIGHT][
-                    (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
-                ]
-                in open_tiles
-            ):
+            if self.direction == Direction.RIGHT and tile_left in open_tiles:
                 self.allowed_turns[Direction.LEFT] = True
 
-            if (
-                self.direction == Direction.UP
-                and self.level_layout[
-                    (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                ][self.rect.centerx // TILE_WIDTH]
-                in open_tiles
-            ):
+            if self.direction == Direction.UP and tile_down in open_tiles:
                 self.allowed_turns[Direction.DOWN] = True
 
-            if (
-                self.direction == Direction.DOWN
-                and self.level_layout[
-                    (self.rect.centery - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                ][(self.rect.centerx) // TILE_WIDTH]
-                in open_tiles
-            ):
+            if self.direction == Direction.DOWN and tile_up in open_tiles:
                 self.allowed_turns[Direction.UP] = True
 
             if self.direction in [Direction.UP, Direction.DOWN]:
+                # Check if the current position is moderately in the center of a tile
                 if (
                     TILE_CENTER_FACTOR_MIN
                     <= self.rect.centerx % TILE_WIDTH
                     <= TILE_CENTER_FACTOR_MAX
                 ):
                     # If the position above the Pacman is open
-                    if (
-                        self.level_layout[
-                            (self.rect.centery - COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                        ][self.rect.centerx // TILE_WIDTH]
-                        in open_tiles
-                    ):
+                    if tile_up in open_tiles:
                         self.allowed_turns[Direction.UP] = True
 
                     # If the position below the Pacman is open
-                    if (
-                        self.level_layout[
-                            (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
-                        ][self.rect.centerx // TILE_WIDTH]
-                        in open_tiles
-                    ):
+                    if tile_down in open_tiles:
                         self.allowed_turns[Direction.DOWN] = True
 
                 if (
@@ -183,20 +164,17 @@ class PacMan(pygame.sprite.Sprite):
                     <= self.rect.centery % TILE_HEIGHT
                     <= TILE_CENTER_FACTOR_MAX
                 ):
-                    if (
-                        self.level_layout[self.rect.centery // TILE_HEIGHT][
-                            (self.rect.centerx - TILE_WIDTH) // TILE_WIDTH
-                        ]
-                        in open_tiles
-                    ):
+                    tile_left = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                        (self.rect.centerx - TILE_WIDTH) // TILE_WIDTH
+                    ]
+                    tile_right = self.level_layout[self.rect.centery // TILE_HEIGHT][
+                        (self.rect.centerx + TILE_WIDTH) // TILE_WIDTH
+                    ]
+
+                    if tile_left in open_tiles:
                         self.allowed_turns[Direction.LEFT] = True
 
-                    if (
-                        self.level_layout[self.rect.centery // TILE_HEIGHT][
-                            (self.rect.centerx + TILE_WIDTH) // TILE_WIDTH
-                        ]
-                        in open_tiles
-                    ):
+                    if tile_right in open_tiles:
                         self.allowed_turns[Direction.RIGHT] = True
 
             if self.direction in [Direction.LEFT, Direction.RIGHT]:
@@ -205,22 +183,19 @@ class PacMan(pygame.sprite.Sprite):
                     <= self.rect.centerx % TILE_WIDTH
                     <= TILE_CENTER_FACTOR_MAX
                 ):
+                    tile_up = self.level_layout[
+                        (self.rect.centery - TILE_HEIGHT) // TILE_HEIGHT
+                    ][self.rect.centerx // TILE_WIDTH]
+                    tile_down = self.level_layout[
+                        (self.rect.centery + TILE_HEIGHT) // TILE_HEIGHT
+                    ][self.rect.centerx // TILE_WIDTH]
+
                     # If the position above the Pacman is open
-                    if (
-                        self.level_layout[
-                            (self.rect.centery - TILE_HEIGHT) // TILE_HEIGHT
-                        ][self.rect.centerx // TILE_WIDTH]
-                        in open_tiles
-                    ):
+                    if tile_up in open_tiles:
                         self.allowed_turns[Direction.UP] = True
 
                     # If the position below the Pacman is open
-                    if (
-                        self.level_layout[
-                            (self.rect.centery + TILE_HEIGHT) // TILE_HEIGHT
-                        ][self.rect.centerx // TILE_WIDTH]
-                        in open_tiles
-                    ):
+                    if tile_down in open_tiles:
                         self.allowed_turns[Direction.DOWN] = True
 
                 if (
@@ -228,20 +203,10 @@ class PacMan(pygame.sprite.Sprite):
                     <= self.rect.centery % TILE_HEIGHT
                     <= TILE_CENTER_FACTOR_MAX
                 ):
-                    if (
-                        self.level_layout[self.rect.centery // TILE_HEIGHT][
-                            (self.rect.centerx + COLLISION_FUDGE_FACTOR) // TILE_WIDTH
-                        ]
-                        in open_tiles
-                    ):
+                    if tile_right in open_tiles:
                         self.allowed_turns[Direction.RIGHT] = True
 
-                    if (
-                        self.level_layout[self.rect.centery // TILE_HEIGHT][
-                            (self.rect.centerx - COLLISION_FUDGE_FACTOR) // TILE_WIDTH
-                        ]
-                        in open_tiles
-                    ):
+                    if tile_left in open_tiles:
                         self.allowed_turns[Direction.LEFT] = True
 
     def detect_collisions(self):
