@@ -22,14 +22,14 @@ class Game:
         self.text_manager = TextManager()
         self.timers_manager = get_timers_manager()
         self.all_sprites = pygame.sprite.Group()
-        PacMan(
+        pacman = PacMan(
             groups=self.all_sprites,
             animation_frames=asset_manager.graphics[ImageAsset.PACMAN],
         )
-        Ghost(groups=self.all_sprites, type=GhostType.BLINKY)
-        Ghost(groups=self.all_sprites, type=GhostType.PINKY)
-        Ghost(groups=self.all_sprites, type=GhostType.INKY)
-        Ghost(groups=self.all_sprites, type=GhostType.CLYDE)
+        Ghost(groups=self.all_sprites, type=GhostType.BLINKY, pacman=pacman)
+        Ghost(groups=self.all_sprites, type=GhostType.PINKY, pacman=pacman)
+        Ghost(groups=self.all_sprites, type=GhostType.INKY, pacman=pacman)
+        Ghost(groups=self.all_sprites, type=GhostType.CLYDE, pacman=pacman)
 
         game_state_manager = get_game_state_manager()
         self.level_config = game_state_manager.get_level_config()

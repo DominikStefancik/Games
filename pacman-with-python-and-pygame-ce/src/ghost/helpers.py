@@ -35,22 +35,22 @@ def get_ghost_images(ghost_type):
 def move_clyde(clyde_ghost):
     # The Pacman is left from the ghost and the ghost can go left
     can_follow_target_to_left = (
-        clyde_ghost.target[0] < clyde_ghost.rect.x
+        clyde_ghost.target_position.x < clyde_ghost.rect.x
         and clyde_ghost.allowed_turns[Direction.LEFT]
     )
     # The Pacman is right from the ghost and the ghost can go right
     can_follow_target_to_right = (
-        clyde_ghost.target[0] > clyde_ghost.rect.x
+        clyde_ghost.target_position.x > clyde_ghost.rect.x
         and clyde_ghost.allowed_turns[Direction.RIGHT]
     )
     # The Pacman is above the ghost and the ghost can go up
     can_follow_target_up = (
-        clyde_ghost.target[1] < clyde_ghost.rect.y
+        clyde_ghost.target_position.y < clyde_ghost.rect.y
         and clyde_ghost.allowed_turns[Direction.UP]
     )
     # The Pacman is below the ghost and the ghost can go down
     can_follow_target_down = (
-        clyde_ghost.target[1] > clyde_ghost.rect.y
+        clyde_ghost.target_position.y > clyde_ghost.rect.y
         and clyde_ghost.allowed_turns[Direction.DOWN]
     )
 

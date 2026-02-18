@@ -7,7 +7,7 @@ from levels.constants import (
     TILE_HEIGHT,
     TILE_WIDTH,
 )
-from settings import Direction, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import Direction, pygame, Vector2, WINDOW_HEIGHT, WINDOW_WIDTH
 from timers.timers_manager import get_timers_manager
 
 from .constants import GhostImageType, GhostType
@@ -15,10 +15,11 @@ from .helpers import get_ghost_images, move_clyde
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, groups, type):
+    def __init__(self, groups, type, pacman):
         super().__init__(groups)
 
         self.type = type
+        self.pacman = pacman
 
         self.game_state_manager = get_game_state_manager()
         ghost_config = self.game_state_manager.get_level_config()[self.type.value]
@@ -35,7 +36,10 @@ class Ghost(pygame.sprite.Sprite):
         self.direction = ghost_config["direction"]
         self.speed = ghost_config["speed"]
         self.is_in_box = ghost_config["is_in_box"]
-        self.target = ghost_config["target"]
+        self.target_position = self.pacman.rect
+        self.box_target_position = self.game_state_manager.get_level_config()[
+            "ghost_box_position"
+        ]
         self.is_dead = False
         self.is_eaten = False
         self.allowed_turns = {
@@ -200,14 +204,45 @@ class Ghost(pygame.sprite.Sprite):
                     ):
                         self.allowed_turns[Direction.RIGHT] = True
 
+    def update_target(self):
+        # If a ghost is dead, the goal is to get in the box
+        if self.is_dead:
+            self.target_position = self.box_target_position
+            return
+
+        runaway = Vector2()
+
+        if self.pacman.rect.x < WINDOW_WIDTH / 2:
+            runaway.x = WINDOW_WIDTH
+        if self.pacman.rect.y < WINDOW_HEIGHT / 2:
+            runaway.y = WINDOW_HEIGHT
+
+        # If a power-up is active, the goal is to run away from the Pacman
+        if self.timers_manager.power_up_timer.active:
+            match self.type:
+                case GhostType.BLINKY:
+                    self.target_position = runaway
+                case GhostType.PINKY:
+                    self.target_position = Vector2(self.pacman.rect.x, runaway.y)
+                case GhostType.INKY:
+                    self.target_position = Vector2(runaway.x, self.pacman.rect.y)
+                case GhostType.CLYDE:
+                    self.target_position = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        else:
+            # If a ghost is in the box, the goal is to get outside of it
+            if self.is_in_box:
+                self.target_position = Vector2(400, 100)
+            else:
+                self.target_position = self.pacman.rect
+
     def move(self):
         match self.type:
             case GhostType.BLINKY:
                 move_clyde(self)
             case GhostType.PINKY:
-                pass
+                move_clyde(self)
             case GhostType.INKY:
-                pass
+                move_clyde(self)
             case GhostType.CLYDE:
                 move_clyde(self)
 
@@ -224,4 +259,5 @@ class Ghost(pygame.sprite.Sprite):
     def update(self, delta_time):
         self.update_image()
         self.update_allowed_turns()
+        self.update_target()
         self.move()
