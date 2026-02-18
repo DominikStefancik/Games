@@ -31,6 +31,7 @@ class PacMan(pygame.sprite.Sprite):
         self.level_layout = level_layout
         self.direction = pacman_config["direction"]
         self.direction_command = self.direction
+        self.speed = pacman_config["speed"]
         self.allowed_turns = {
             Direction.LEFT: False,
             Direction.RIGHT: False,
@@ -240,13 +241,13 @@ class PacMan(pygame.sprite.Sprite):
 
     def move(self):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:
-            self.rect.centerx -= 1
+            self.rect.centerx -= self.speed
         if self.direction == Direction.RIGHT and self.allowed_turns[Direction.RIGHT]:
-            self.rect.centerx += 1
+            self.rect.centerx += self.speed
         if self.direction == Direction.UP and self.allowed_turns[Direction.UP]:
-            self.rect.centery -= 1
+            self.rect.centery -= self.speed
         if self.direction == Direction.DOWN and self.allowed_turns[Direction.DOWN]:
-            self.rect.centery += 1
+            self.rect.centery += self.speed
 
         if self.rect.centerx > WINDOW_WIDTH + self.rect.width / 4:
             self.rect.centerx = -self.rect.width / 4

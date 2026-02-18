@@ -10,8 +10,8 @@ from levels.constants import (
 from settings import Direction, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 from timers.timers_manager import get_timers_manager
 
-from .constants import GhostImageType
-from .helpers import get_ghost_images
+from .constants import GhostImageType, GhostType
+from .helpers import get_ghost_images, move_clyde
 
 
 class Ghost(pygame.sprite.Sprite):
@@ -201,14 +201,15 @@ class Ghost(pygame.sprite.Sprite):
                         self.allowed_turns[Direction.RIGHT] = True
 
     def move(self):
-        if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:
-            self.rect.centerx -= 1
-        if self.direction == Direction.RIGHT and self.allowed_turns[Direction.RIGHT]:
-            self.rect.centerx += 1
-        if self.direction == Direction.UP and self.allowed_turns[Direction.UP]:
-            self.rect.centery -= 1
-        if self.direction == Direction.DOWN and self.allowed_turns[Direction.DOWN]:
-            self.rect.centery += 1
+        match self.type:
+            case GhostType.BLINKY:
+                move_clyde(self)
+            case GhostType.PINKY:
+                pass
+            case GhostType.INKY:
+                pass
+            case GhostType.CLYDE:
+                move_clyde(self)
 
         if self.rect.centerx > WINDOW_WIDTH + self.rect.width / 4:
             self.rect.centerx = -self.rect.width / 4
