@@ -1,8 +1,9 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
+from game_state.game_state_manager import get_game_state_manager
+from ghost.constants import GhostType
+from ghost.ghost import Ghost
 from levels.board import draw_board
-from levels.level1.layout import level1_layout
-from levels.level1.config import LEVEL_1_CONFIG
 from pacman.pacman import PacMan
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 from text_manager import TextManager
@@ -21,12 +22,18 @@ class Game:
         self.text_manager = TextManager()
         self.timers_manager = get_timers_manager()
         self.all_sprites = pygame.sprite.Group()
-        self.pacman = PacMan(
+        PacMan(
             groups=self.all_sprites,
             animation_frames=asset_manager.graphics[ImageAsset.PACMAN],
-            position=(450, 663),
-            level_layout=level1_layout,
         )
+        Ghost(groups=self.all_sprites, type=GhostType.BLINKY)
+        Ghost(groups=self.all_sprites, type=GhostType.PINKY)
+        Ghost(groups=self.all_sprites, type=GhostType.INKY)
+        Ghost(groups=self.all_sprites, type=GhostType.CLYDE)
+
+        game_state_manager = get_game_state_manager()
+        self.level_config = game_state_manager.get_level_config()
+        self.level_layout = game_state_manager.get_level_layout()
 
     def update(self, delta_time):
         self.timers_manager.update()
@@ -34,7 +41,7 @@ class Game:
 
     def draw(self):
         self.display_surface.fill("black")
-        draw_board(self.display_surface, level1_layout, LEVEL_1_CONFIG)
+        draw_board(self.display_surface, self.level_layout, self.level_config)
         self.all_sprites.draw(self.display_surface)
         self.text_manager.draw()
 

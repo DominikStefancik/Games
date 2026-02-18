@@ -1,4 +1,5 @@
 from levels.constants import Level
+from levels.level1.layout import level1_layout
 from levels.level1.config import LEVEL_1_CONFIG
 
 
@@ -16,6 +17,15 @@ class GameStateManager:
                 config = LEVEL_1_CONFIG
 
         return config
+
+    def get_level_layout(self):
+        layout = level1_layout
+
+        match self._current_level:
+            case Level.LEVEL_1:
+                layout = level1_layout
+
+        return layout
 
 
 GAME_STATE_MANAGER = GameStateManager()

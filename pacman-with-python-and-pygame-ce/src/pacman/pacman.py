@@ -1,40 +1,41 @@
 from game_state.game_state_manager import get_game_state_manager
 from levels.constants import BoardTile, TILE_HEIGHT, TILE_WIDTH
-from settings import ANIMATION_SPEED, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import ANIMATION_SPEED, Direction, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 from timers.timers_manager import get_timers_manager
 
 from .constants import (
     COLLISION_FUDGE_FACTOR,
-    Direction,
     TILE_CENTER_FACTOR_MAX,
     TILE_CENTER_FACTOR_MIN,
 )
 
 
 class PacMan(pygame.sprite.Sprite):
-    def __init__(self, groups, animation_frames, position, level_layout):
+    def __init__(self, groups, animation_frames):
         super().__init__(groups)
+
+        self.game_state_manager = get_game_state_manager()
+        pacman_config = self.game_state_manager.get_level_config()["pacman"]
+        level_layout = self.game_state_manager.get_level_layout()
+        position = pacman_config["position"]
 
         # We have to scale the original Pacman images, because they are too big
         self.animation_frames = list(
             map(lambda frame: pygame.transform.scale(frame, (45, 45)), animation_frames)
         )
         self.frame_index = 0
-        self.position = position
         self.image = self.animation_frames[self.frame_index]
         # Represents a rectangle to figure out where the Pacman will be drawn in a current frame
         self.rect = self.image.get_rect(center=position)
         self.level_layout = level_layout
-        self.direction = Direction.RIGHT
-        self.direction_command = Direction.RIGHT
+        self.direction = pacman_config["direction"]
+        self.direction_command = self.direction
         self.allowed_turns = {
             Direction.LEFT: False,
             Direction.RIGHT: False,
             Direction.UP: False,
             Direction.DOWN: False,
         }
-
-        self.game_state_manager = get_game_state_manager()
 
     def process_key_input(self):
         pressed_keys = pygame.key.get_pressed()
