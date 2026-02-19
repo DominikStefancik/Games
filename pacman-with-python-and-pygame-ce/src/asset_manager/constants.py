@@ -12,7 +12,8 @@ class ImageAsset(Enum):
 
 
 class FontAsset(Enum):
-    FREE_SANS_BOLD = "freesansbold"
+    FREE_SANS_BOLD_20 = "freesansbold_20"
+    FREE_SANS_BOLD_35 = "freesansbold_35"
 
 
 class AudioAsset(Enum):

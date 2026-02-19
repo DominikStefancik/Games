@@ -24,6 +24,17 @@ class GameStateManager:
         if self._game_state == GameState.WAITING_TO_START:
             self.notify_all()
 
+    @property
+    def lives(self):
+        return self._lives
+
+    @lives.setter
+    def lives(self, value):
+        self._lives = value
+
+        if self._lives < 0:
+            self._game_state = GameState.GAME_OVER
+
     def get_level_config(self):
         config = LEVEL_1_CONFIG
 

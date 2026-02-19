@@ -32,7 +32,8 @@ def load_graphics():
 
 def load_fonts():
     return {
-        FontAsset.FREE_SANS_BOLD: pygame.font.Font("freesansbold.ttf", 20),
+        FontAsset.FREE_SANS_BOLD_20: pygame.font.Font("freesansbold.ttf", 20),
+        FontAsset.FREE_SANS_BOLD_35: pygame.font.Font("freesansbold.ttf", 35),
     }
 
 
