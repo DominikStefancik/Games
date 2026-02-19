@@ -35,7 +35,7 @@ class Ghost(pygame.sprite.Sprite):
 
         self.level_layout = level_layout
         self.direction = self.ghost_config["direction"]
-        self.speed = self.ghost_config["speed"]
+        self.speed = self.ghost_config["speed"]["normal"]
         self.is_in_box = self.ghost_config["is_in_box"]
         self.target_position = self.pacman.rect
         self.box_target_position = self.game_state_manager.get_level_config()[
@@ -237,6 +237,16 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 self.target_position = self.pacman.rect
 
+    def update_speed(self):
+        speed_config = self.ghost_config["speed"]
+
+        if self.is_dead:
+            self.speed = speed_config["dead"]
+        elif self.timers_manager.power_up_timer.active:
+            self.speed = speed_config["power_up"]
+        else:
+            self.speed = speed_config["normal"]
+
     def detect_collisions(self):
         if (
             not self.is_dead
@@ -287,14 +297,15 @@ class Ghost(pygame.sprite.Sprite):
         elif self.rect.centerx < -self.rect.width / 4:
             self.rect.centerx = WINDOW_WIDTH + self.rect.width / 4
 
-        if 350 < self.rect.x < 550 and 340 < self.rect.y < 490:
+        if 350 < self.rect.x < 550 and 340 < self.rect.y < 480:
             self.is_in_box = True
         else:
             self.is_in_box = False
 
-    def update(self, delta_time):
+    def update(self, _delta_time):
         self.update_image()
         self.update_allowed_turns()
         self.update_target()
+        self.update_speed()
         self.move()
         self.detect_collisions()

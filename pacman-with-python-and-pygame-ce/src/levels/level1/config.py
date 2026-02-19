@@ -11,25 +11,25 @@ LEVEL_1_CONFIG = {
     "blinky": {
         "position": (78, 78),
         "direction": Direction.RIGHT,
-        "speed": 1,
+        "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
     },
     "inky": {
         "position": (440, 388),
         "direction": Direction.UP,
-        "speed": 1,
+        "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
     },
     "pinky": {
         "position": (440, 438),
         "direction": Direction.UP,
-        "speed": 1,
+        "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
     },
     "clyde": {
         "position": (440, 438),
         "direction": Direction.UP,
-        "speed": 1,
+        "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
     },
 }
