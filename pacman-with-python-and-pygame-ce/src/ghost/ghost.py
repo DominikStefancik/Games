@@ -1,3 +1,5 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from levels.constants import (
@@ -28,6 +30,7 @@ class Ghost(pygame.sprite.Sprite):
         self.type = type
         self.pacman = pacman
 
+        self.asset_manager = get_asset_manager()
         self.game_state_manager = get_game_state_manager()
         self.ghost_config = self.game_state_manager.get_level_config()[self.type.value]
         level_layout = self.game_state_manager.get_level_layout()
@@ -265,6 +268,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.game_state_manager.score += (
                     self.game_state_manager.get_level_config()["score_points"]["ghost"]
                 )
+                self.asset_manager.sounds[AudioAsset.EAT_GHOST].play()
             else:
                 self.game_state_manager.game_state = GameState.WAITING_TO_START
                 self.game_state_manager.lives -= 1

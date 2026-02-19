@@ -1,5 +1,5 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import AudioAsset, ImageAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from ghost.constants import GhostType
@@ -19,13 +19,13 @@ class Game:
         pygame.display.set_caption("Python Pac-Man")
         self.clock = pygame.time.Clock()
 
-        asset_manager = get_asset_manager()
+        self.asset_manager = get_asset_manager()
         self.text_manager = TextManager()
         self.timers_manager = get_timers_manager()
         self.all_sprites = pygame.sprite.Group()
         pacman = PacMan(
             groups=self.all_sprites,
-            animation_frames=asset_manager.graphics[ImageAsset.PACMAN],
+            animation_frames=self.asset_manager.graphics[ImageAsset.PACMAN],
         )
         Ghost(groups=self.all_sprites, type=GhostType.BLINKY, pacman=pacman)
         Ghost(groups=self.all_sprites, type=GhostType.PINKY, pacman=pacman)
@@ -58,6 +58,7 @@ class Game:
             if self.game_state_manager.game_state == GameState.WAITING_TO_START:
                 self.game_state_manager.game_state = GameState.RUNNING
                 self.timers_manager.startup_timer.activate()
+                self.asset_manager.sounds[AudioAsset.START].play()
             elif self.game_state_manager.game_state == GameState.RUNNING:
                 self.update(delta_time)
                 self.draw()

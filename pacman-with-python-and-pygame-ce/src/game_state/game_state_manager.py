@@ -1,3 +1,5 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAsset
 from levels.constants import Level
 from levels.level1.layout import level1_layout
 from levels.level1.config import LEVEL_1_CONFIG
@@ -34,6 +36,8 @@ class GameStateManager:
 
         if self._lives < 0:
             self._game_state = GameState.GAME_OVER
+            asset_manager = get_asset_manager()
+            asset_manager.sounds[AudioAsset.GAME_OVER].play()
 
     def get_level_config(self):
         config = LEVEL_1_CONFIG

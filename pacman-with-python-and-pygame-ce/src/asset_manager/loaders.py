@@ -37,7 +37,20 @@ def load_fonts():
     }
 
 
-def load_audio():
+def load_sounds():
     return {
-        AudioAsset.SOUND: pygame.mixer.Sound(join("assets", "audio", "sound.wav")),
+        AudioAsset.EAT_DOT: pygame.mixer.Sound(join("assets", "sounds", "eat_dot.wav")),
+        AudioAsset.EAT_BIG_DOT: pygame.mixer.Sound(
+            join("assets", "sounds", "eat_big_dot.wav")
+        ),
+        AudioAsset.EAT_GHOST: pygame.mixer.Sound(
+            join("assets", "sounds", "eat_ghost.wav")
+        ),
+        AudioAsset.POWER_UP: pygame.mixer.Sound(
+            join("assets", "sounds", "power_up.wav")
+        ),
+        AudioAsset.START: pygame.mixer.Sound(join("assets", "sounds", "start.wav")),
+        AudioAsset.GAME_OVER: pygame.mixer.Sound(
+            join("assets", "sounds", "game_over.wav")
+        ),
     }

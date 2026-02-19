@@ -1,7 +1,7 @@
 from .loaders import (
-    load_audio,
     load_fonts,
     load_graphics,
+    load_sounds,
 )
 
 
@@ -9,7 +9,7 @@ class AssetManager:
     def __init__(self):
         self._graphics = None
         self._fonts = None
-        self._audio = None
+        self._sounds = None
 
     @property
     def graphics(self):
@@ -26,15 +26,15 @@ class AssetManager:
         return self._fonts
 
     @property
-    def audio_files(self):
-        if self._audio == None:
-            self._audio = load_audio()
+    def sounds(self):
+        if self._sounds == None:
+            self._sounds = load_sounds()
 
             # Update volume of the sounds
-            for key, _ in self._audio.items():
-                self._audio[key].set_volume(0.4)
+            for key, _ in self._sounds.items():
+                self._sounds[key].set_volume(0.4)
 
-        return self._audio
+        return self._sounds
 
 
 ASSET_MANAGER = AssetManager()

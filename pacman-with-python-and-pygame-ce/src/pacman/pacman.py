@@ -1,3 +1,5 @@
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAsset
 from game_state.game_state_manager import get_game_state_manager
 from levels.constants import (
     BoardTile,
@@ -222,11 +224,13 @@ class PacMan(pygame.sprite.Sprite):
             ]
             is_tile_dot = False
 
+            asset_manager = get_asset_manager()
             if tile == BoardTile.DOT.value:
                 self.game_state_manager.score += (
                     self.game_state_manager.get_level_config()["score_points"]["dot"]
                 )
                 is_tile_dot = True
+                asset_manager.sounds[AudioAsset.EAT_DOT].play()
 
             if tile == BoardTile.BIG_DOT.value:
                 self.game_state_manager.score += (
@@ -237,6 +241,8 @@ class PacMan(pygame.sprite.Sprite):
                 is_tile_dot = True
                 timers_manager = get_timers_manager()
                 timers_manager.power_up_timer.activate()
+                asset_manager.sounds[AudioAsset.EAT_BIG_DOT].play()
+                asset_manager.sounds[AudioAsset.POWER_UP].play()
 
             if is_tile_dot:
                 self.level_layout[self.rect.centery // TILE_HEIGHT][

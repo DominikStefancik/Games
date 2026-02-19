@@ -17,4 +17,9 @@ class FontAsset(Enum):
 
 
 class AudioAsset(Enum):
-    SOUND = "sound"
+    EAT_DOT = "eat_dot"
+    EAT_BIG_DOT = "eat_big_dot"
+    EAT_GHOST = "eat_ghost"
+    POWER_UP = "power_up"
+    START = "start"
+    GAME_OVER = "game_over"
