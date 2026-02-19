@@ -4,8 +4,7 @@ LEVEL_1_CONFIG = {
     "wall_color": "blue",
     "gate_color": "white",
     "dot_color": "white",
-    "dot_score": 10,
-    "big_dot_score": 50,
+    "score_points": {"dot": 10, "big_dot": 50, "ghost": 200},
     "ghost_box_position": Vector2(380, 400),
     "pacman": {"position": (450, 663), "direction": Direction.RIGHT, "speed": 1},
     "blinky": {

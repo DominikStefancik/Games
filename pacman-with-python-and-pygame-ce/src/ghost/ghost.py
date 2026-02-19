@@ -256,6 +256,9 @@ class Ghost(pygame.sprite.Sprite):
             if self.timers_manager.power_up_timer.active:
                 self.is_dead = True
                 self.is_eaten = True
+                self.game_state_manager.score += (
+                    self.game_state_manager.get_level_config()["score_points"]["ghost"]
+                )
             else:
                 self.game_state_manager.game_state = GameState.WAITING_TO_START
                 self.game_state_manager.lives -= 1

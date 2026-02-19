@@ -224,13 +224,15 @@ class PacMan(pygame.sprite.Sprite):
 
             if tile == BoardTile.DOT.value:
                 self.game_state_manager.score += (
-                    self.game_state_manager.get_level_config()["dot_score"]
+                    self.game_state_manager.get_level_config()["score_points"]["dot"]
                 )
                 is_tile_dot = True
 
             if tile == BoardTile.BIG_DOT.value:
                 self.game_state_manager.score += (
-                    self.game_state_manager.get_level_config()["big_dot_score"]
+                    self.game_state_manager.get_level_config()["score_points"][
+                        "big_dot"
+                    ]
                 )
                 is_tile_dot = True
                 timers_manager = get_timers_manager()
