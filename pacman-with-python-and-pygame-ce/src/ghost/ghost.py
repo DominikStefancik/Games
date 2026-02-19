@@ -12,7 +12,7 @@ from settings import Direction, pygame, Vector2, WINDOW_HEIGHT, WINDOW_WIDTH
 from timers.timers_manager import get_timers_manager
 
 from .constants import GhostImageType, GhostType
-from .helpers import get_ghost_images, move_blinky, move_towards_target
+from .helpers import get_ghost_images, move_blinky, move_inky, move_towards_target
 
 
 class Ghost(pygame.sprite.Sprite):
@@ -293,7 +293,7 @@ class Ghost(pygame.sprite.Sprite):
                     move_towards_target(self)
             case GhostType.PINKY:
                 if not self.is_dead and not self.is_in_box:
-                    move_towards_target(self)
+                    move_inky(self)
                 else:
                     move_towards_target(self)
             case GhostType.INKY:
