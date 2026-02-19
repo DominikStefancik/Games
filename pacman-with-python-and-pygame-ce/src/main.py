@@ -33,8 +33,6 @@ class Game:
         Ghost(groups=self.all_sprites, type=GhostType.CLYDE, pacman=pacman)
 
         self.game_state_manager = get_game_state_manager()
-        self.level_config = self.game_state_manager.get_level_config()
-        self.level_layout = self.game_state_manager.get_level_layout()
 
     def update(self, delta_time):
         self.timers_manager.update()
@@ -44,7 +42,7 @@ class Game:
 
     def draw(self):
         self.display_surface.fill("black")
-        draw_board(self.display_surface, self.level_layout, self.level_config)
+        draw_board(self.display_surface, self.game_state_manager)
         self.all_sprites.draw(self.display_surface)
         self.text_manager.draw()
 

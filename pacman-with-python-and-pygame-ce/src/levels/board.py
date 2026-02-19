@@ -12,7 +12,10 @@ from .constants import (
 )
 
 
-def draw_board(surface, layout, config):
+def draw_board(surface, game_state_manager):
+    config = game_state_manager.get_level_config()
+    layout = game_state_manager.get_level_layout()
+
     for row in range(len(layout)):
         for column in range(len(layout[row])):
             layout_tile = layout[row][column]
