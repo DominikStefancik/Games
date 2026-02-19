@@ -16,9 +16,9 @@ class PacMan(pygame.sprite.Sprite):
         super().__init__(groups)
 
         self.game_state_manager = get_game_state_manager()
-        pacman_config = self.game_state_manager.get_level_config()["pacman"]
+        self.pacman_config = self.game_state_manager.get_level_config()["pacman"]
         level_layout = self.game_state_manager.get_level_layout()
-        position = pacman_config["position"]
+        position = self.pacman_config["position"]
 
         # We have to scale the original Pacman images, because they are too big
         self.animation_frames = list(
@@ -29,15 +29,17 @@ class PacMan(pygame.sprite.Sprite):
         # Represents a rectangle to figure out where the Pacman will be drawn in a current frame
         self.rect = self.image.get_rect(center=position)
         self.level_layout = level_layout
-        self.direction = pacman_config["direction"]
+        self.direction = self.pacman_config["direction"]
         self.direction_command = self.direction
-        self.speed = pacman_config["speed"]
+        self.speed = self.pacman_config["speed"]
         self.allowed_turns = {
             Direction.LEFT: False,
             Direction.RIGHT: False,
             Direction.UP: False,
             Direction.DOWN: False,
         }
+
+        self.game_state_manager.subscribe(self)
 
     def process_key_input(self):
         pressed_keys = pygame.key.get_pressed()
@@ -238,6 +240,19 @@ class PacMan(pygame.sprite.Sprite):
                 self.level_layout[self.rect.centery // TILE_HEIGHT][
                     self.rect.centerx // TILE_WIDTH
                 ] = BoardTile.EMPTY_BLACK_RECTANGLE.value
+
+    def restart(self):
+        self.frame_index = 0
+        self.image = self.animation_frames[self.frame_index]
+
+        position = self.pacman_config["position"]
+        # Represents a rectangle to figure out where the Pacman will be drawn in a current frame
+        self.rect = self.image.get_rect(center=position)
+        self.direction = self.pacman_config["direction"]
+        self.direction_command = self.direction
+
+    def update_state(self):
+        self.restart()
 
     def move(self):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:

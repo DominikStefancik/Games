@@ -1,5 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
+from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from ghost.constants import GhostType
 from ghost.ghost import Ghost
@@ -31,13 +32,15 @@ class Game:
         Ghost(groups=self.all_sprites, type=GhostType.INKY, pacman=pacman)
         Ghost(groups=self.all_sprites, type=GhostType.CLYDE, pacman=pacman)
 
-        game_state_manager = get_game_state_manager()
-        self.level_config = game_state_manager.get_level_config()
-        self.level_layout = game_state_manager.get_level_layout()
+        self.game_state_manager = get_game_state_manager()
+        self.level_config = self.game_state_manager.get_level_config()
+        self.level_layout = self.game_state_manager.get_level_layout()
 
     def update(self, delta_time):
         self.timers_manager.update()
-        self.all_sprites.update(delta_time)
+
+        if not self.timers_manager.startup_timer.active:
+            self.all_sprites.update(delta_time)
 
     def draw(self):
         self.display_surface.fill("black")
@@ -54,8 +57,12 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            self.update(delta_time)
-            self.draw()
+            if self.game_state_manager.game_state == GameState.WAITING_TO_START:
+                self.game_state_manager.game_state = GameState.RUNNING
+                self.timers_manager.startup_timer.activate()
+            elif self.game_state_manager.game_state == GameState.RUNNING:
+                self.update(delta_time)
+                self.draw()
 
             pygame.display.update()
 

@@ -1,3 +1,4 @@
+from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from levels.constants import (
     BoardTile,
@@ -22,20 +23,20 @@ class Ghost(pygame.sprite.Sprite):
         self.pacman = pacman
 
         self.game_state_manager = get_game_state_manager()
-        ghost_config = self.game_state_manager.get_level_config()[self.type.value]
+        self.ghost_config = self.game_state_manager.get_level_config()[self.type.value]
         level_layout = self.game_state_manager.get_level_layout()
 
         self.possible_images = get_ghost_images(self.type)
         self.image = self.possible_images[GhostImageType.MAIN]
 
-        position = ghost_config["position"]
+        position = self.ghost_config["position"]
         # Represents a rectangle to figure out where the ghost will be drawn in a current frame
         self.rect = self.image.get_rect(center=position)
 
         self.level_layout = level_layout
-        self.direction = ghost_config["direction"]
-        self.speed = ghost_config["speed"]
-        self.is_in_box = ghost_config["is_in_box"]
+        self.direction = self.ghost_config["direction"]
+        self.speed = self.ghost_config["speed"]
+        self.is_in_box = self.ghost_config["is_in_box"]
         self.target_position = self.pacman.rect
         self.box_target_position = self.game_state_manager.get_level_config()[
             "ghost_box_position"
@@ -50,6 +51,7 @@ class Ghost(pygame.sprite.Sprite):
         }
 
         self.timers_manager = get_timers_manager()
+        self.game_state_manager.subscribe(self)
 
     def update_image(self):
         if (not self.timers_manager.power_up_timer.active and not self.is_dead) or (
@@ -235,6 +237,40 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 self.target_position = self.pacman.rect
 
+    def detect_collisions(self):
+        if (
+            not self.is_dead
+            and not self.is_eaten
+            and self.rect.colliderect(self.pacman.rect)
+        ):
+            if self.timers_manager.power_up_timer.active:
+                self.is_dead = True
+                self.is_eaten = True
+            else:
+                self.game_state_manager.game_state = GameState.WAITING_TO_START
+                self.game_state_manager.lives -= 1
+                self.timers_manager.power_up_timer.deactivate()
+
+        if (
+            self.timers_manager.power_up_timer.active
+            and self.is_eaten
+            and not self.is_dead
+        ):
+            self.restart()
+
+    def restart(self):
+        self.is_dead = False
+        self.is_eaten = False
+        self.update_image()
+
+        position = self.ghost_config["position"]
+        # Represents a rectangle to figure out where the ghost will be drawn in a current frame
+        self.rect = self.image.get_rect(center=position)
+        self.direction = self.ghost_config["direction"]
+
+    def update_state(self):
+        self.restart()
+
     def move(self):
         match self.type:
             case GhostType.BLINKY:
@@ -261,3 +297,4 @@ class Ghost(pygame.sprite.Sprite):
         self.update_allowed_turns()
         self.update_target()
         self.move()
+        self.detect_collisions()
