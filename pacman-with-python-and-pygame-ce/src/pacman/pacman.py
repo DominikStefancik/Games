@@ -41,8 +41,6 @@ class PacMan(pygame.sprite.Sprite):
             Direction.DOWN: False,
         }
 
-        self.game_state_manager.subscribe(self)
-
     def process_key_input(self):
         pressed_keys = pygame.key.get_pressed()
         released_keys = pygame.key.get_just_released()
@@ -249,6 +247,9 @@ class PacMan(pygame.sprite.Sprite):
                     self.rect.centerx // TILE_WIDTH
                 ] = BoardTile.EMPTY_BLACK_RECTANGLE.value
 
+                if self.game_state_manager.is_current_level_won():
+                    self.game_state_manager.move_to_next_level()
+
     def restart(self):
         self.frame_index = 0
         self.image = self.animation_frames[self.frame_index]
@@ -258,9 +259,6 @@ class PacMan(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=position)
         self.direction = self.pacman_config["direction"]
         self.direction_command = self.direction
-
-    def update_state(self):
-        self.restart()
 
     def move(self):
         if self.direction == Direction.LEFT and self.allowed_turns[Direction.LEFT]:

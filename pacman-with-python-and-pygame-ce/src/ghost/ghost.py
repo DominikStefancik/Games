@@ -60,7 +60,6 @@ class Ghost(pygame.sprite.Sprite):
         }
 
         self.timers_manager = get_timers_manager()
-        self.game_state_manager.subscribe(self)
 
     def update_image(self):
         if (not self.timers_manager.power_up_timer.active and not self.is_dead) or (
@@ -290,9 +289,6 @@ class Ghost(pygame.sprite.Sprite):
         # Represents a rectangle to figure out where the ghost will be drawn in a current frame
         self.rect = self.image.get_rect(center=position)
         self.direction = self.ghost_config["direction"]
-
-    def update_state(self):
-        self.restart()
 
     def move(self):
         # If a ghost is dead or in the box, use the effective way to get

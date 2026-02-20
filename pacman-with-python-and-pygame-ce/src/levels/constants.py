@@ -30,3 +30,4 @@ class BoardTile(Enum):
 
 class Level(Enum):
     LEVEL_1 = 1
+    LEVEL_2 = 2

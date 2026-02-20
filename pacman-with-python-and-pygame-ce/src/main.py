@@ -1,12 +1,10 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import AudioAsset, ImageAsset
+from asset_manager.constants import AudioAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
-from ghost.constants import GhostType
-from ghost.ghost import Ghost
 from levels.board import draw_board
-from pacman.pacman import PacMan
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
+from sprites_manager import SpritesManager
 from text_manager import TextManager
 from timers.timers_manager import get_timers_manager
 
@@ -17,50 +15,45 @@ class Game:
         pygame.init()
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Python Pac-Man")
-        self.clock = pygame.time.Clock()
 
         self.asset_manager = get_asset_manager()
+        self.game_state_manager = get_game_state_manager()
+        self.sprites_manager = SpritesManager()
         self.text_manager = TextManager()
         self.timers_manager = get_timers_manager()
-        self.all_sprites = pygame.sprite.Group()
-        pacman = PacMan(
-            groups=self.all_sprites,
-            animation_frames=self.asset_manager.graphics[ImageAsset.PACMAN],
-        )
-        Ghost(groups=self.all_sprites, type=GhostType.BLINKY, pacman=pacman)
-        Ghost(groups=self.all_sprites, type=GhostType.PINKY, pacman=pacman)
-        Ghost(groups=self.all_sprites, type=GhostType.INKY, pacman=pacman)
-        Ghost(groups=self.all_sprites, type=GhostType.CLYDE, pacman=pacman)
 
-        self.game_state_manager = get_game_state_manager()
-
-    def update(self, delta_time):
+    def update(self):
         self.timers_manager.update()
-
-        if not self.timers_manager.startup_timer.active:
-            self.all_sprites.update(delta_time)
+        self.sprites_manager.update()
+        self.game_state_manager.is_game_won()
 
     def draw(self):
         self.display_surface.fill("black")
         draw_board(self.display_surface, self.game_state_manager)
-        self.all_sprites.draw(self.display_surface)
+        self.sprites_manager.draw()
         self.text_manager.draw()
 
     def run(self):
         while True:
-            delta_time = self.clock.tick() / 1000
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+                if (
+                    self.game_state_manager.game_state
+                    in [GameState.GAME_WON, GameState.GAME_OVER]
+                    and event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_SPACE
+                ):
+                    self.game_state_manager.restart_game()
 
             if self.game_state_manager.game_state == GameState.WAITING_TO_START:
                 self.game_state_manager.game_state = GameState.RUNNING
                 self.timers_manager.startup_timer.activate()
                 self.asset_manager.sounds[AudioAsset.START].play()
             elif self.game_state_manager.game_state == GameState.RUNNING:
-                self.update(delta_time)
+                self.update()
                 self.draw()
 
             pygame.display.update()
