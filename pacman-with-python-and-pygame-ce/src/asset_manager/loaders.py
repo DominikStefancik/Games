@@ -50,6 +50,9 @@ def load_sounds():
             join("assets", "sounds", "power_up.wav")
         ),
         AudioAsset.START: pygame.mixer.Sound(join("assets", "sounds", "start.wav")),
+        AudioAsset.GAME_WON: pygame.mixer.Sound(
+            join("assets", "sounds", "game_won.mp3")
+        ),
         AudioAsset.GAME_OVER: pygame.mixer.Sound(
             join("assets", "sounds", "game_over.wav")
         ),

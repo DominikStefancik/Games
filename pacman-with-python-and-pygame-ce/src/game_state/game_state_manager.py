@@ -112,6 +112,8 @@ class GameStateManager:
         ):
             if self.is_current_level_won():
                 self._game_state = GameState.GAME_WON
+                asset_manager = get_asset_manager()
+                asset_manager.sounds[AudioAsset.GAME_WON].play()
 
     def subscribe(self, subscriber):
         self._subscribers.append(subscriber)

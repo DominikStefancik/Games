@@ -52,18 +52,18 @@ class TextManager:
         )
         pygame.draw.rect(
             self.display_surface,
-            "dark gray",
+            (204, 230, 206),
             (70, WINDOW_HEIGHT / 2 - 130, 760, 260),
             0,
             10,
         )
-        game_won_text = font.render("You won!!!", True, "green")
-        restart_text = font.render("Press Space to restart", True, "green")
+        game_won_text = font.render("You won!!!", True, (55, 189, 65))
+        play_again_text = font.render("Press Space to play again", True, (55, 189, 65))
         self.display_surface.blit(
             game_won_text, (WINDOW_WIDTH / 2 - 80, WINDOW_HEIGHT / 2 - 60)
         )
         self.display_surface.blit(
-            restart_text, (WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 + 20)
+            play_again_text, (WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 20)
         )
 
     def draw_game_over(self):
@@ -77,18 +77,18 @@ class TextManager:
         )
         pygame.draw.rect(
             self.display_surface,
-            "dark gray",
+            (255, 245, 245),
             (70, WINDOW_HEIGHT / 2 - 130, 760, 260),
             0,
             10,
         )
-        game_over_text = font.render("Game Over!", True, "red")
-        restart_text = font.render("Press Space to restart", True, "red")
+        game_over_text = font.render("Game Over!", True, (196, 20, 20))
+        play_again_text = font.render("Press Space to play again", True, (196, 20, 20))
         self.display_surface.blit(
             game_over_text, (WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 60)
         )
         self.display_surface.blit(
-            restart_text, (WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 + 20)
+            play_again_text, (WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 20)
         )
 
     def draw(self):

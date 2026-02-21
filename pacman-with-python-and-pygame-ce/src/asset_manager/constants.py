@@ -22,4 +22,5 @@ class AudioAsset(Enum):
     EAT_GHOST = "eat_ghost"
     POWER_UP = "power_up"
     START = "start"
+    GAME_WON = "game_won"
     GAME_OVER = "game_over"
