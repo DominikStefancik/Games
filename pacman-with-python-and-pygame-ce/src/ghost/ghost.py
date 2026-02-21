@@ -34,6 +34,7 @@ class Ghost(pygame.sprite.Sprite):
         self.game_state_manager = get_game_state_manager()
         self.ghost_config = self.game_state_manager.get_level_config()[self.type.value]
         level_layout = self.game_state_manager.get_level_layout()
+        self.ghost_box = self.game_state_manager.get_level_config()["ghost_box"]
 
         self.possible_images = get_ghost_images(self.type)
         self.image = self.possible_images[GhostImageType.MAIN]
@@ -47,9 +48,6 @@ class Ghost(pygame.sprite.Sprite):
         self.speed = self.ghost_config["speed"]["normal"]
         self.is_in_box = self.ghost_config["is_in_box"]
         self.target_position = self.pacman.rect
-        self.box_target_position = self.game_state_manager.get_level_config()[
-            "ghost_box_position"
-        ]
         self.is_dead = False
         self.is_eaten = False
         self.allowed_turns = {
@@ -215,9 +213,9 @@ class Ghost(pygame.sprite.Sprite):
                         self.allowed_turns[Direction.RIGHT] = True
 
     def update_target(self):
-        # If a ghost is dead, the goal is to get in the box
+        # If a ghost is dead, the goal is to get in the ghost box
         if self.is_dead:
-            self.target_position = self.box_target_position
+            self.target_position = self.ghost_box["target_position"]
             return
 
         runaway = Vector2()
@@ -312,7 +310,12 @@ class Ghost(pygame.sprite.Sprite):
         elif self.rect.centerx < -self.rect.width / 4:
             self.rect.centerx = WINDOW_WIDTH + self.rect.width / 4
 
-        if 350 < self.rect.x < 550 and 340 < self.rect.y < 480:
+        top_left = self.ghost_box["top_left"]
+        bottom_right = self.ghost_box["bottom_right"]
+        if (
+            top_left.x < self.rect.x < bottom_right.x
+            and top_left.y - 30 < self.rect.y < bottom_right.y
+        ):
             self.is_in_box = True
         else:
             self.is_in_box = False

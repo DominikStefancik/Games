@@ -5,7 +5,11 @@ LEVEL_2_CONFIG = {
     "gate_color": "yellow",
     "dot_color": "white",
     "score_points": {"dot": 10, "big_dot": 50, "ghost": 200},
-    "ghost_box_position": Vector2(380, 400),
+    "ghost_box": {
+        "top_left": Vector2(350, 370),
+        "bottom_right": Vector2(550, 470),
+        "target_position": Vector2(420, 420),
+    },
     "pacman": {"position": (450, 663), "direction": Direction.RIGHT, "speed": 1},
     "blinky": {
         "position": (78, 78),
