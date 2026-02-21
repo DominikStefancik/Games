@@ -26,7 +26,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.DOT.value:
                     pygame.draw.circle(
                         surface,
-                        config["dot_color"],
+                        config["color"]["dot"],
                         (
                             (column * TILE_WIDTH + TILE_WIDTH / 2),
                             (row * TILE_HEIGHT + TILE_HEIGHT / 2),
@@ -36,7 +36,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.BIG_DOT.value:
                     pygame.draw.circle(
                         surface,
-                        config["dot_color"],
+                        config["color"]["big_dot"],
                         (
                             (column * TILE_WIDTH + TILE_WIDTH / 2),
                             (row * TILE_HEIGHT + TILE_HEIGHT / 2),
@@ -46,7 +46,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.VERTICAL_LINE.value:
                     pygame.draw.line(
                         surface,
-                        config["wall_color"],
+                        config["color"]["wall"],
                         ((column * TILE_WIDTH + TILE_WIDTH / 2), (row * TILE_HEIGHT)),
                         (
                             (column * TILE_WIDTH + TILE_WIDTH / 2),
@@ -57,7 +57,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.HORIZONTAL_LINE.value:
                     pygame.draw.line(
                         surface,
-                        config["wall_color"],
+                        config["color"]["wall"],
                         ((column * TILE_WIDTH), (row * TILE_HEIGHT + TILE_HEIGHT / 2)),
                         (
                             (column * TILE_WIDTH + TILE_WIDTH),
@@ -68,7 +68,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.TOP_RIGHT.value:
                     pygame.draw.arc(
                         surface,
-                        config["wall_color"],
+                        config["color"]["wall"],
                         # We have to define a rectangle which will represent a quarter of a circle
                         [
                             column * TILE_WIDTH - TILE_WIDTH / 2 - 2,
@@ -83,7 +83,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.TOP_LEFT.value:
                     pygame.draw.arc(
                         surface,
-                        config["wall_color"],
+                        config["color"]["wall"],
                         # We have to define a rectangle which will represent a quarter of a circle
                         [
                             column * TILE_WIDTH + TILE_WIDTH / 2 - 2,
@@ -98,7 +98,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.BOTTOM_LEFT.value:
                     pygame.draw.arc(
                         surface,
-                        config["wall_color"],
+                        config["color"]["wall"],
                         # We have to define a rectangle which will represent a quartr of a circle
                         [
                             column * TILE_WIDTH + TILE_WIDTH / 2 - 2,
@@ -113,7 +113,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.BOTTOM_RIGHT.value:
                     pygame.draw.arc(
                         surface,
-                        config["wall_color"],
+                        config["color"]["wall"],
                         # We have to define a rectangle which will represent a quartr of a circle
                         [
                             column * TILE_WIDTH - TILE_WIDTH / 2 - 2,
@@ -128,7 +128,7 @@ def draw_board(surface, game_state_manager):
                 case BoardTile.GATE.value:
                     pygame.draw.line(
                         surface,
-                        config["gate_color"],
+                        config["color"]["gate"],
                         ((column * TILE_WIDTH), (row * TILE_HEIGHT + TILE_HEIGHT / 2)),
                         (
                             (column * TILE_WIDTH + TILE_WIDTH),

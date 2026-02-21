@@ -1,9 +1,7 @@
 from settings import Direction, Vector2
 
 LEVEL_2_CONFIG = {
-    "wall_color": "purple",
-    "gate_color": "yellow",
-    "dot_color": "white",
+    "color": {"wall": "purple", "gate": "yellow", "dot": "white", "big_dot": "red"},
     "score_points": {"dot": 10, "big_dot": 50, "ghost": 200},
     "ghost_box": {
         "top_left": Vector2(350, 370),
