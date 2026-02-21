@@ -104,30 +104,26 @@ class Ghost(pygame.sprite.Sprite):
                 (self.rect.centery + COLLISION_FUDGE_FACTOR) // TILE_HEIGHT
             ][self.rect.centerx // TILE_WIDTH]
 
+            can_go_through_gate = lambda tile: (
+                tile == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
+            )
+
             open_tiles = [
                 BoardTile.EMPTY_BLACK_RECTANGLE.value,
                 BoardTile.DOT.value,
                 BoardTile.BIG_DOT.value,
             ]
 
-            if tile_left in open_tiles or (
-                tile_left == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
-            ):
+            if tile_left in open_tiles or can_go_through_gate(tile_left):
                 self.allowed_turns[Direction.LEFT] = True
 
-            if tile_right in open_tiles or (
-                tile_right == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
-            ):
+            if tile_right in open_tiles or can_go_through_gate(tile_right):
                 self.allowed_turns[Direction.RIGHT] = True
 
-            if tile_up in open_tiles or (
-                tile_up == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
-            ):
+            if tile_up in open_tiles or can_go_through_gate(tile_up):
                 self.allowed_turns[Direction.UP] = True
 
-            if tile_down in open_tiles or (
-                tile_down == BoardTile.GATE.value and (self.is_in_box or self.is_dead)
-            ):
+            if tile_down in open_tiles or can_go_through_gate(tile_down):
                 self.allowed_turns[Direction.DOWN] = True
 
             if self.direction in [Direction.UP, Direction.DOWN]:
@@ -138,17 +134,11 @@ class Ghost(pygame.sprite.Sprite):
                     <= TILE_CENTER_FACTOR_MAX
                 ):
                     # If the position above the ghost is open
-                    if tile_up in open_tiles or (
-                        tile_up == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_up in open_tiles or can_go_through_gate(tile_up):
                         self.allowed_turns[Direction.UP] = True
 
                     # If the position below the ghost is open
-                    if tile_down in open_tiles or (
-                        tile_down == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_down in open_tiles or can_go_through_gate(tile_down):
                         self.allowed_turns[Direction.DOWN] = True
 
                 if (
@@ -163,16 +153,10 @@ class Ghost(pygame.sprite.Sprite):
                         (self.rect.centerx + TILE_WIDTH) // TILE_WIDTH
                     ]
 
-                    if tile_left in open_tiles or (
-                        tile_left == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_left in open_tiles or can_go_through_gate(tile_left):
                         self.allowed_turns[Direction.LEFT] = True
 
-                    if tile_right in open_tiles or (
-                        tile_right == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_right in open_tiles or can_go_through_gate(tile_right):
                         self.allowed_turns[Direction.RIGHT] = True
 
             if self.direction in [Direction.LEFT, Direction.RIGHT]:
@@ -182,17 +166,11 @@ class Ghost(pygame.sprite.Sprite):
                     <= TILE_CENTER_FACTOR_MAX
                 ):
                     # If the position above the ghost is open
-                    if tile_up in open_tiles or (
-                        tile_up == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_up in open_tiles or can_go_through_gate(tile_up):
                         self.allowed_turns[Direction.UP] = True
 
                     # If the position below the ghost is open
-                    if tile_down in open_tiles or (
-                        tile_down == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_down in open_tiles or can_go_through_gate(tile_down):
                         self.allowed_turns[Direction.DOWN] = True
 
                 if (
@@ -200,16 +178,10 @@ class Ghost(pygame.sprite.Sprite):
                     <= self.rect.centery % TILE_HEIGHT
                     <= TILE_CENTER_FACTOR_MAX
                 ):
-                    if tile_left in open_tiles or (
-                        tile_left == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_left in open_tiles or can_go_through_gate(tile_left):
                         self.allowed_turns[Direction.LEFT] = True
 
-                    if tile_right in open_tiles or (
-                        tile_right == BoardTile.GATE.value
-                        and (self.is_in_box or self.is_dead)
-                    ):
+                    if tile_right in open_tiles or can_go_through_gate(tile_right):
                         self.allowed_turns[Direction.RIGHT] = True
 
     def update_target(self):
