@@ -147,7 +147,7 @@ def move_blinky(ghost):
                 ghost.rect.centery -= ghost.speed
             # The Pacman is left/right and down from the ghost and the ghost cannot go left/right and down,
             # so we try to move it any possible direction
-            if ghost.allowed_turns[Direction.UP]:
+            elif ghost.allowed_turns[Direction.UP]:
                 ghost.direction = Direction.UP
                 ghost.rect.centery -= ghost.speed
             elif ghost.allowed_turns[Direction.RIGHT]:
@@ -298,7 +298,7 @@ def move_inky(ghost):
                 ghost.rect.centery -= ghost.speed
             # The Pacman is left/right and down from the ghost and the ghost cannot go left/right and down,
             # so we try to move it any possible direction
-            if ghost.allowed_turns[Direction.UP]:
+            elif ghost.allowed_turns[Direction.UP]:
                 ghost.direction = Direction.UP
                 ghost.rect.centery -= ghost.speed
             elif ghost.allowed_turns[Direction.LEFT]:
@@ -438,7 +438,7 @@ def move_pinky(ghost):
                 ghost.rect.centery -= ghost.speed
             # The Pacman is left/right and down from the ghost and the ghost cannot go left/right and down,
             # so we try to move it any possible direction
-            if ghost.allowed_turns[Direction.UP]:
+            elif ghost.allowed_turns[Direction.UP]:
                 ghost.direction = Direction.UP
                 ghost.rect.centery -= ghost.speed
             elif ghost.allowed_turns[Direction.LEFT]:
@@ -609,7 +609,7 @@ def move_towards_target(ghost):
                 ghost.rect.centery -= ghost.speed
             # The Pacman is left/right and down from the ghost and the ghost cannot go left/right and down,
             # so we try to move it any possible direction
-            if ghost.allowed_turns[Direction.UP]:
+            elif ghost.allowed_turns[Direction.UP]:
                 ghost.direction = Direction.UP
                 ghost.rect.centery -= ghost.speed
             elif ghost.allowed_turns[Direction.LEFT]:
