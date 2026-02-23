@@ -22,13 +22,13 @@ LEVEL_2_CONFIG = {
         "is_in_box": False,
     },
     "pinky": {
-        "position": (440, 438),
+        "position": (420, 418),
         "direction": Direction.UP,
         "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
     },
     "clyde": {
-        "position": (440, 438),
+        "position": (480, 418),
         "direction": Direction.UP,
         "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,

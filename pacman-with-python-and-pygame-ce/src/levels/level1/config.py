@@ -28,7 +28,7 @@ LEVEL_1_CONFIG = {
         "is_in_box": False,
     },
     "clyde": {
-        "position": (440, 438),
+        "position": (490, 438),
         "direction": Direction.UP,
         "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
