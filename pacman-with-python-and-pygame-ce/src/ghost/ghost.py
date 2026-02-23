@@ -225,8 +225,10 @@ class Ghost(pygame.sprite.Sprite):
                 )
                 self.asset_manager.sounds[AudioAsset.EAT_GHOST].play()
             else:
-                self.game_state_manager.game_state = GameState.WAITING_TO_START
                 self.game_state_manager.lives -= 1
+
+                if self.game_state_manager.lives >= 0:
+                    self.game_state_manager.game_state = GameState.WAITING_TO_START
 
     def restart(self):
         self.is_dead = False

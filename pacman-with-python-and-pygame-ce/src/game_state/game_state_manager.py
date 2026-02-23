@@ -48,6 +48,7 @@ class GameStateManager:
         if self._lives < 0:
             self._game_state = GameState.GAME_OVER
             asset_manager = get_asset_manager()
+            asset_manager.sounds[AudioAsset.POWER_UP].stop()
             asset_manager.sounds[AudioAsset.GAME_OVER].play()
 
     @property
