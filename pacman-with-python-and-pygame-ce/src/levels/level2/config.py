@@ -16,8 +16,8 @@ LEVEL_2_CONFIG = {
         "is_in_box": False,
     },
     "inky": {
-        "position": (440, 388),
-        "direction": Direction.UP,
+        "position": (820, 820),
+        "direction": Direction.LEFT,
         "speed": {"normal": 1, "power_up": 1, "dead": 2},
         "is_in_box": False,
     },
