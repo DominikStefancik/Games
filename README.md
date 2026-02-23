@@ -41,6 +41,7 @@
 * [Car Racing](car-racing-with-python-and-pygame) - 2D car racing game implemented with Pygame
 * [Hangman](hangman-with-python-and-pygame) - classical game Hangman implemented with Pygame
 * [Jumpy](jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
+* [Pacman](pacman-with-python-and-pygame-ce) - famous game Pacman implemented with Pygame-ce
 * [Super Pirate](super-pirate-platformer-with-python-and-pygame-ce) - platformer game based on the classic Nintendo game Super Mario Bros implemented with Pygame-ce
 * [Tower Defence](tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
 
