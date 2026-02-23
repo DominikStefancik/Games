@@ -12,9 +12,10 @@ class Timer:
         if autostart:
             self.activate()
 
-    def activate(self):
+    def activate(self, function=None):
         self.active = True
         self.start_time = pygame.time.get_ticks()
+        self.function = function
 
     def deactivate(self):
         self.active = False

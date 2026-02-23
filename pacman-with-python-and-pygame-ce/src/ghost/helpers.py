@@ -208,7 +208,7 @@ def move_inky(ghost):
                 ghost.rect.centerx -= ghost.speed
         # The ghost can go right, but the Pacman is not on the right side
         elif ghost.allowed_turns[Direction.RIGHT]:
-            if can_follow_target_up:
+            if can_follow_target_down:
                 ghost.direction = Direction.DOWN
                 ghost.rect.centery += ghost.speed
             elif can_follow_target_up:
@@ -507,7 +507,7 @@ def move_towards_target(ghost):
                 ghost.rect.centerx -= ghost.speed
         # The ghost can go right, but the Pacman is not on the right side
         elif ghost.allowed_turns[Direction.RIGHT]:
-            if can_follow_target_up:
+            if can_follow_target_down:
                 ghost.direction = Direction.DOWN
                 ghost.rect.centery += ghost.speed
             elif can_follow_target_up:

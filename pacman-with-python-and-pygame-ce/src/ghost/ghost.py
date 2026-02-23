@@ -49,7 +49,6 @@ class Ghost(pygame.sprite.Sprite):
         self.is_in_box = self.ghost_config["is_in_box"]
         self.target_position = self.pacman.rect
         self.is_dead = False
-        self.is_eaten = False
         self.allowed_turns = {
             Direction.LEFT: False,
             Direction.RIGHT: False,
@@ -60,17 +59,9 @@ class Ghost(pygame.sprite.Sprite):
         self.timers_manager = get_timers_manager()
 
     def update_image(self):
-        if (not self.timers_manager.power_up_timer.active and not self.is_dead) or (
-            self.timers_manager.power_up_timer.active
-            and self.is_eaten
-            and not self.is_dead
-        ):
+        if not self.timers_manager.power_up_timer.active and not self.is_dead:
             self.image = self.possible_images[GhostImageType.MAIN]
-        elif (
-            self.timers_manager.power_up_timer.active
-            and not self.is_dead
-            and not self.is_eaten
-        ):
+        elif self.timers_manager.power_up_timer.active and not self.is_dead:
             self.image = self.possible_images[GhostImageType.SPOOKED]
         else:
             self.image = self.possible_images[GhostImageType.DEAD]
@@ -226,14 +217,9 @@ class Ghost(pygame.sprite.Sprite):
             self.speed = speed_config["normal"]
 
     def detect_collisions(self):
-        if (
-            not self.is_dead
-            and not self.is_eaten
-            and self.rect.colliderect(self.pacman.rect)
-        ):
+        if not self.is_dead and self.rect.colliderect(self.pacman.rect):
             if self.timers_manager.power_up_timer.active:
                 self.is_dead = True
-                self.is_eaten = True
                 self.game_state_manager.score += (
                     self.game_state_manager.get_level_config()["score_points"]["ghost"]
                 )
@@ -241,18 +227,9 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 self.game_state_manager.game_state = GameState.WAITING_TO_START
                 self.game_state_manager.lives -= 1
-                self.timers_manager.power_up_timer.deactivate()
-
-        if (
-            self.timers_manager.power_up_timer.active
-            and self.is_eaten
-            and not self.is_dead
-        ):
-            self.restart()
 
     def restart(self):
         self.is_dead = False
-        self.is_eaten = False
         self.update_image()
 
         position = self.ghost_config["position"]
@@ -289,8 +266,14 @@ class Ghost(pygame.sprite.Sprite):
             and top_left.y - 30 < self.rect.y < bottom_right.y
         ):
             self.is_in_box = True
+
+            if self.is_dead and not self.timers_manager.ghost_resurrection_timer.active:
+                self.timers_manager.ghost_resurrection_timer.activate(self.resurrect)
         else:
             self.is_in_box = False
+
+    def resurrect(self):
+        self.is_dead = False
 
     def update(self, _delta_time):
         self.update_image()

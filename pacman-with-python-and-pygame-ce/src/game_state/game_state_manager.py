@@ -6,6 +6,7 @@ from levels.level1.config import LEVEL_1_CONFIG
 from levels.level1.layout import LEVEL_1_LAYOUT
 from levels.level2.config import LEVEL_2_CONFIG
 from levels.level2.layout import LEVEL_2_LAYOUT
+from timers.timers_manager import get_timers_manager
 
 from .game_state import GameState
 
@@ -30,6 +31,11 @@ class GameStateManager:
 
         if self._game_state == GameState.WAITING_TO_START:
             self.notify_all_restart()
+
+            asset_manager = get_asset_manager()
+            asset_manager.sounds[AudioAsset.POWER_UP].stop()
+            timers_manager = get_timers_manager()
+            timers_manager.power_up_timer.deactivate()
 
     @property
     def lives(self):
