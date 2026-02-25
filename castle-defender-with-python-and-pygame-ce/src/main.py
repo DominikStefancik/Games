@@ -1,3 +1,4 @@
+from scene_manager.scene_manager import SceneManager
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
 from sprites_manager import SpritesManager
 
@@ -9,6 +10,7 @@ class Game:
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Python Castle Defender")
 
+        self.scene_manager = SceneManager()
         self.sprites_manager = SpritesManager()
 
     def update(self):
@@ -16,6 +18,7 @@ class Game:
 
     def draw(self):
         self.display_surface.fill("black")
+        self.scene_manager.draw()
         self.sprites_manager.draw()
 
     def run(self):

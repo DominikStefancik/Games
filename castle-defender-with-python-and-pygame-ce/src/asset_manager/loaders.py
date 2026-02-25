@@ -8,8 +8,8 @@ from .import_helpers import import_folder_as_list
 
 def load_graphics():
     return {
-        ImageAsset.IMAGE: pygame.image.load(
-            join("assets", "images", "image.png")
+        ImageAsset.BACKGROUND: pygame.image.load(
+            join("assets", "images", "background.png")
         ).convert_alpha(),
     }
 

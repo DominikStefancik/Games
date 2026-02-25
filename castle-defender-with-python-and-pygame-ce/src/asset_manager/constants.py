@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ImageAsset(Enum):
-    IMAGE = "image"
+    BACKGROUND = "background"
 
 
 class FontAsset(Enum):
