@@ -1,5 +1,6 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
+from castle.bullet import Bullet
 from castle.castle import Castle
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 
@@ -9,15 +10,26 @@ class SpritesManager:
         # The main surface on which we will be drawing sprites
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = pygame.sprite.Group()
+        self.bullet_sprites = pygame.sprite.Group()
         self.clock = pygame.time.Clock()
 
-        asset_manager = get_asset_manager()
+        self.asset_manager = get_asset_manager()
         Castle(
             group=self.all_sprites,
-            images=asset_manager.graphics[ImageAssetGroup.CASTLE],
+            images=self.asset_manager.graphics[ImageAssetGroup.CASTLE],
             position=(WINDOW_WIDTH - 430, WINDOW_HEIGHT - 470),
-            image_scale=0.3,
+            create_bullet_function=self.create_bullet,
         )
+
+    def create_bullet(self, position, angle):
+        Bullet(
+            groups=(self.all_sprites, self.bullet_sprites),
+            image=self.asset_manager.graphics[ImageAssetGroup.BULLET],
+            position=position,
+            angle=angle,
+        )
+
+        print(len(self.bullet_sprites))
 
     def update(self):
         delta_time = self.clock.tick() / 1000
