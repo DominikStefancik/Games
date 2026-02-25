@@ -2,15 +2,18 @@ from os.path import join
 
 from settings import pygame
 
-from .constants import AudioAsset, FontAsset, ImageAsset
-from .import_helpers import import_folder_as_list
+from .constants import AudioAsset, FontAsset, ImageAssetGroup
+from .import_helpers import import_folder_as_dict
 
 
 def load_graphics():
     return {
-        ImageAsset.BACKGROUND: pygame.image.load(
+        ImageAssetGroup.BACKGROUND: pygame.image.load(
             join("assets", "images", "background.png")
         ).convert_alpha(),
+        ImageAssetGroup.CASTLE: import_folder_as_dict(
+            join("assets", "images", "castle")
+        ),
     }
 
 

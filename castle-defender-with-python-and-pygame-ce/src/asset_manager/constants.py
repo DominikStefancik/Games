@@ -1,8 +1,9 @@
 from enum import Enum
 
 
-class ImageAsset(Enum):
+class ImageAssetGroup(Enum):
     BACKGROUND = "background"
+    CASTLE = "castle"
 
 
 class FontAsset(Enum):

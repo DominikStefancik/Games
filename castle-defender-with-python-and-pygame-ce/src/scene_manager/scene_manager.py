@@ -1,8 +1,7 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import ImageAssetGroup
+from helpers import scale_image
 from settings import pygame
-
-from .helpers import scale_image
 
 
 class SceneManager:
@@ -12,7 +11,7 @@ class SceneManager:
 
         self.asset_manager = get_asset_manager()
         self.background = scale_image(
-            self.asset_manager.graphics[ImageAsset.BACKGROUND], 1.21
+            self.asset_manager.graphics[ImageAssetGroup.BACKGROUND], 1.21
         )
 
     def update(self):

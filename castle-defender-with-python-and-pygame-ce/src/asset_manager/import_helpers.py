@@ -13,3 +13,15 @@ def import_folder_as_list(*path):
             frames.append(surface)
 
     return frames
+
+
+def import_folder_as_dict(*path):
+    frames_dict = {}
+
+    for folder_path, _, image_names in walk(join(*path)):
+        for image_name in image_names:
+            full_path = join(folder_path, image_name)
+            surface = pygame.image.load(full_path).convert_alpha()
+            frames_dict[image_name.split(".")[0]] = surface
+
+    return frames_dict
