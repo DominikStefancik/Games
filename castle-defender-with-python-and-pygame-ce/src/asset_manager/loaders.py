@@ -3,7 +3,7 @@ from os.path import join
 from settings import pygame
 
 from .constants import AudioAsset, FontAsset, ImageAssetGroup
-from .import_helpers import import_folder_as_dict
+from .import_helpers import import_folder_as_dict, import_subfolders_as_dict
 
 
 def load_graphics():
@@ -17,6 +17,18 @@ def load_graphics():
         ImageAssetGroup.BULLET: pygame.image.load(
             join("assets", "images", "bullet.png")
         ).convert_alpha(),
+        ImageAssetGroup.KNIGHT: import_subfolders_as_dict(
+            join("assets", "images", "enemies", "knight")
+        ),
+        ImageAssetGroup.GOBLIN: import_subfolders_as_dict(
+            join("assets", "images", "enemies", "goblin")
+        ),
+        ImageAssetGroup.RED_GOBLIN: import_subfolders_as_dict(
+            join("assets", "images", "enemies", "red_goblin")
+        ),
+        ImageAssetGroup.PURPLE_GOBLIN: import_subfolders_as_dict(
+            join("assets", "images", "enemies", "purple_goblin")
+        ),
     }
 
 

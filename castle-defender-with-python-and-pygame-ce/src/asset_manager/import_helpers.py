@@ -25,3 +25,14 @@ def import_folder_as_dict(*path):
             frames_dict[image_name.split(".")[0]] = surface
 
     return frames_dict
+
+
+def import_subfolders_as_dict(*path):
+    frames_dict = {}
+
+    for _, subfolders, _ in walk(join(*path)):
+        if subfolders:
+            for subfolder in subfolders:
+                frames_dict[subfolder] = import_folder_as_list(*path, subfolder)
+
+    return frames_dict

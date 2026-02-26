@@ -5,6 +5,10 @@ class ImageAssetGroup(Enum):
     BACKGROUND = "background"
     CASTLE = "castle"
     BULLET = "bullet"
+    KNIGHT = "knight"
+    GOBLIN = "goblin"
+    RED_GOBLIN = "red_goblin"
+    PURPLE_GOBLIN = "purple_goblin"
 
 
 class FontAsset(Enum):
