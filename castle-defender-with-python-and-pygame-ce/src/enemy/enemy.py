@@ -1,5 +1,7 @@
 from math import cos, radians, sin
 
+from castle.constants import BULLET_DAMAGE
+from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 
 from .constants import EnemyAnimation, ENEMY_ANIMATION_SPEED, ENEMY_SPEED
@@ -7,35 +9,62 @@ from .helpers import get_enemy_health, scale_animation_frames
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, groups, animation_frames, type, position):
-        super().__init__(groups)
+    def __init__(self, group, animation_frames, type, position):
+        super().__init__(group)
 
         self.type = type
         self.animation = EnemyAnimation.WALK
         self.animation_frames = scale_animation_frames(animation_frames)
         self.frame_index = 0
         self.image = self.animation_frames[self.animation.value][self.frame_index]
-        self.rect = self.image.get_frect(center=position)
+        # We have to create rectangle manually and not derive it from an image,
+        # because every image contains a lot of white space on the top and right sides
+        # which would complicate collision detection
+        #
+        # Theyn, in the EnemyGroup class we will draw the enemy so it fits into thos rectangle
+        self.rect = pygame.FRect(0, 0, 25, 45)
+        self.rect.center = position
         self.health = get_enemy_health(self.type)
         self.speed = ENEMY_SPEED
+        self.is_alive = True
 
     def animate(self, delta_time):
         animation_frames = self.animation_frames[self.animation.value]
         self.frame_index += ENEMY_ANIMATION_SPEED * delta_time
         self.image = animation_frames[int(self.frame_index % len(animation_frames))]
 
-    def move(self, delta_time):
-        self.rect.x += self.speed * delta_time
+        if self.animation == EnemyAnimation.DEATH:
+            if self.frame_index >= len(animation_frames):
+                self.image = animation_frames[len(animation_frames) - 1]
 
-    def update(self, delta_time):
-        self.move(delta_time)
+    def move(self, delta_time, castle):
+        if self.rect.right < castle.rect.left:
+            self.rect.x += self.speed * delta_time
+
+    def detect_collisions(self, castle, bullet_sprites):
+        if self.rect.right > castle.rect.left:
+            self.rect.right = castle.rect.left
+            self.update_animation(EnemyAnimation.ATTACK)
+
+        # With the last argument set to True, we destroy each bullet which collided with an enemy
+        if pygame.sprite.spritecollide(self, bullet_sprites, True):
+            self.health -= BULLET_DAMAGE
+
+            if self.health <= 0:
+                self.update_animation(EnemyAnimation.DEATH)
+                self.is_alive = False
+
+                game_state_manager = get_game_state_manager()
+                game_state_manager.update_after_enemy_dead(self.type)
+
+    def update_animation(self, new_animation):
+        if self.animation != new_animation:
+            self.animation = new_animation
+            self.frame_index = 0
+
+    def update(self, delta_time, castle, bullet_sprites):
+        if self.is_alive:
+            self.move(delta_time, castle)
+            self.detect_collisions(castle, bullet_sprites)
+
         self.animate(delta_time)
-
-        # If a bullet got out of the screen, destroy it
-        if (
-            self.rect.right < 0
-            or self.rect.left > WINDOW_WIDTH
-            or self.rect.bottom < 0
-            or self.rect.top > WINDOW_HEIGHT
-        ):
-            self.kill()

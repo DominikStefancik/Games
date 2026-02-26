@@ -7,8 +7,8 @@ from .constants import BULLET_IMAGE_SCALE, BULLET_SPEED
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, groups, image, position, angle):
-        super().__init__(groups)
+    def __init__(self, group, image, position, angle):
+        super().__init__(group)
 
         self.image = scale_image(image, BULLET_IMAGE_SCALE)
         self.rect = self.image.get_frect(topleft=position)
