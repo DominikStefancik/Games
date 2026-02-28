@@ -13,20 +13,53 @@ class TextManager:
         self.asset_manager = get_asset_manager()
         self.game_state_manager = get_game_state_manager()
 
+    def draw_text(self, text, font, text_color, position):
+        image = font.render(text, True, text_color)
+        self.display_surface.blit(image, position)
+
+    def draw_status(self):
+        font = self.asset_manager.fonts[FontAsset.FUTURA_25]
+        self.draw_text(
+            f"Money: {self.game_state_manager.money}", font, "white", (15, 15)
+        )
+        self.draw_text(
+            f"Score: {self.game_state_manager.score}", font, "white", (185, 15)
+        )
+        self.draw_text(
+            f"Best Score: {self.game_state_manager.best_score}",
+            font,
+            "white",
+            (185, 45),
+        )
+        self.draw_text(
+            f"Level: {self.game_state_manager.current_level}",
+            font,
+            "white",
+            (WINDOW_HEIGHT / 2, 15),
+        )
+        self.draw_text(
+            f"Health: {self.game_state_manager.health} / {self.game_state_manager.max_health}",
+            font,
+            "white",
+            (WINDOW_WIDTH - 400, WINDOW_HEIGHT - 100),
+        )
+
     def draw_new_level(self):
         font = self.asset_manager.fonts[FontAsset.FUTURA_60]
-        level_text = font.render(
-            f"LEVEL {self.game_state_manager.current_level}", True, "white"
-        )
-        self.display_surface.blit(
-            level_text, (WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2 + 20)
+        self.draw_text(
+            f"LEVEL {self.game_state_manager.current_level}",
+            font,
+            "white",
+            (WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2 + 20),
         )
 
     def draw_level_complete(self):
         font = self.asset_manager.fonts[FontAsset.FUTURA_60]
-        level_text = font.render("LEVEL COMPLETE!", True, "white")
-        self.display_surface.blit(
-            level_text, (WINDOW_WIDTH / 2 - 300, WINDOW_HEIGHT / 2 + 20)
+        self.draw_text(
+            "LEVEL COMPLETE!",
+            font,
+            "white",
+            (WINDOW_WIDTH / 2 - 300, WINDOW_HEIGHT / 2 + 20),
         )
 
     def draw_game_won(self):
@@ -36,6 +69,8 @@ class TextManager:
         pass
 
     def draw(self):
+        self.draw_status()
+
         match self.game_state_manager.game_state:
             case GameState.WAITING_TO_START:
                 self.draw_new_level()

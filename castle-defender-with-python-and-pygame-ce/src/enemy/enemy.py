@@ -21,6 +21,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, group, animation_frames, type, position, line):
         super().__init__(group)
 
+        self.game_state_manager = get_game_state_manager()
         self.type = type
         self.animation = EnemyAnimation.WALK
         self.animation_frames = scale_animation_frames(animation_frames)
@@ -53,7 +54,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def attack(self, castle):
         if not self.attack_timer.active:
-            castle.health -= ENEMY_ATTACK_DAMAGE
+            self.game_state_manager.health -= ENEMY_ATTACK_DAMAGE
             self.attack_timer.activate()
 
     def take_action(self, delta_time, castle):
@@ -88,8 +89,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.is_alive = False
                 self.attack_timer.deactivate()
 
-                game_state_manager = get_game_state_manager()
-                game_state_manager.update_after_enemy_died(self.type)
+                self.game_state_manager.update_after_enemy_died(self.type)
 
     def update_animation(self, new_animation):
         if self.animation != new_animation:

@@ -1,9 +1,10 @@
 from math import atan2, degrees
 
+from game_state.game_state_manager import get_game_state_manager
 from helpers import scale_image
 from settings import pygame
 
-from .constants import CASTLE_IMAGE_SCALE, CASTLE_STARTING_HEALTH, CastleState
+from .constants import CASTLE_IMAGE_SCALE, CastleState
 from .helpers import get_castle_image
 
 
@@ -11,8 +12,7 @@ class Castle(pygame.sprite.Sprite):
     def __init__(self, group, images, position, create_bullet_function):
         super().__init__(group)
 
-        self.max_health = CASTLE_STARTING_HEALTH
-        self.health = self.max_health
+        self.game_state_manager = get_game_state_manager()
         self.state = CastleState.FULLY_RESTORED
 
         self.images = {
@@ -43,9 +43,9 @@ class Castle(pygame.sprite.Sprite):
             )
 
     def update_state(self):
-        if self.health <= 250:
+        if self.game_state_manager.health <= 250:
             self.state = CastleState.SEVERELY_DAMAGED
-        elif self.health <= 500:
+        elif self.game_state_manager.health <= 500:
             self.state = CastleState.DAMAGED
         else:
             self.state = CastleState.FULLY_RESTORED

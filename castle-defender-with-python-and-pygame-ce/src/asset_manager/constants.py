@@ -13,7 +13,7 @@ class ImageAssetGroup(Enum):
 
 
 class FontAsset(Enum):
-    FUTURA_30 = "futura_30"
+    FUTURA_25 = "futura_25"
     FUTURA_60 = "futura_60"
 
 

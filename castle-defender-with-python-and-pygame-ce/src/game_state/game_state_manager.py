@@ -1,7 +1,12 @@
 from enemy.constants import EnemyType
 from timer import Timer
 
-from .constants import LEVEL_DIFFICULTY_MULTIPLIER, LEVEL_START_DELAY, LEVEL_WON_DELAY
+from .constants import (
+    CASTLE_STARTING_HEALTH,
+    LEVEL_DIFFICULTY_MULTIPLIER,
+    LEVEL_START_DELAY,
+    LEVEL_WON_DELAY,
+)
 from .game_state import GameState
 
 
@@ -18,7 +23,10 @@ class GameStateManager:
         )
         self._level_won_timer = Timer(duration=LEVEL_WON_DELAY)
         self.score = 0
+        self.best_score = 0
         self.money = 0
+        self.health = CASTLE_STARTING_HEALTH
+        self.max_health = CASTLE_STARTING_HEALTH
 
     @property
     def game_state(self):
