@@ -52,6 +52,6 @@ class Castle(pygame.sprite.Sprite):
 
         self.image = self.images[self.state]
 
-    def update(self, delta_time):
+    def update(self):
         self.update_state()
         self.shoot()

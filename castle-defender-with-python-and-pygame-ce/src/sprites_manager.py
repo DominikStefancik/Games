@@ -2,6 +2,7 @@ from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
 from castle.bullet import Bullet
 from castle.castle import Castle
+from castle.crosshair import Crosshair
 from enemy.constants import EnemyType
 from enemy.enemy import Enemy
 from enemy.enemy_group import EnemyGroup
@@ -24,6 +25,10 @@ class SpritesManager:
             position=(WINDOW_WIDTH - 430, WINDOW_HEIGHT - 470),
             create_bullet_function=self.create_bullet,
         )
+        Crosshair(
+            group=self.static_sprites,
+            image=self.asset_manager.graphics[ImageAssetGroup.CROSSHAIR],
+        )
         Enemy(
             group=self.enemy_sprites,
             animation_frames=self.asset_manager.graphics[ImageAssetGroup.KNIGHT],
@@ -42,7 +47,7 @@ class SpritesManager:
     def update(self):
         delta_time = self.clock.tick() / 1000
 
-        self.static_sprites.update(delta_time)
+        self.static_sprites.update()
         self.enemy_sprites.update(delta_time, self.castle, self.bullet_sprites)
         self.bullet_sprites.update(delta_time)
 

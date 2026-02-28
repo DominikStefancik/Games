@@ -17,6 +17,9 @@ def load_graphics():
         ImageAssetGroup.BULLET: pygame.image.load(
             join("assets", "images", "bullet.png")
         ).convert_alpha(),
+        ImageAssetGroup.CROSSHAIR: pygame.image.load(
+            join("assets", "images", "crosshair.png")
+        ).convert_alpha(),
         ImageAssetGroup.KNIGHT: import_subfolders_as_dict(
             join("assets", "images", "enemies", "knight")
         ),

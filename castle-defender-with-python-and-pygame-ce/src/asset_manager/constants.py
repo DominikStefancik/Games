@@ -5,6 +5,7 @@ class ImageAssetGroup(Enum):
     BACKGROUND = "background"
     CASTLE = "castle"
     BULLET = "bullet"
+    CROSSHAIR = "crosshair"
     KNIGHT = "knight"
     GOBLIN = "goblin"
     RED_GOBLIN = "red_goblin"
