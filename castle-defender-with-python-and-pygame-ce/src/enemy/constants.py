@@ -1,6 +1,6 @@
 from enum import Enum
 
-from settings import Vector2
+from settings import Vector2, WINDOW_HEIGHT
 
 
 class EnemyType(Enum):
@@ -14,6 +14,18 @@ class EnemyAnimation(Enum):
     WALK = "walk"
     ATTACK = "attack"
     DEATH = "death"
+
+
+class EnemyLine(Enum):
+    UP = WINDOW_HEIGHT - 240
+    MIDDLE = WINDOW_HEIGHT - 200
+    DOWN = WINDOW_HEIGHT - 160
+
+
+class EnemyLineOffset(Enum):
+    UP = 0
+    MIDDLE = 10
+    DOWN = 20
 
 
 ENEMY_FRAME_SCALE = 0.2

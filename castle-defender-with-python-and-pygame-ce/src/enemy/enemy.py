@@ -10,13 +10,15 @@ from .constants import (
     ENEMY_ANIMATION_SPEED,
     ENEMY_ATTACK_COOLDOWN_INTERVAL,
     ENEMY_ATTACK_DAMAGE,
+    EnemyLine,
+    EnemyLineOffset,
     ENEMY_SPEED,
 )
 from .helpers import get_enemy_health, scale_animation_frames
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, group, animation_frames, type, position):
+    def __init__(self, group, animation_frames, type, position, line):
         super().__init__(group)
 
         self.type = type
@@ -34,6 +36,7 @@ class Enemy(pygame.sprite.Sprite):
         self.health = get_enemy_health(self.type)
         self.speed = ENEMY_SPEED
         self.is_alive = True
+        self.line = line
         self.attack_timer = Timer(ENEMY_ATTACK_COOLDOWN_INTERVAL)
 
     def animate(self, delta_time):
@@ -54,14 +57,25 @@ class Enemy(pygame.sprite.Sprite):
             self.attack_timer.activate()
 
     def take_action(self, delta_time, castle):
-        if self.rect.right < castle.rect.left:
+        if self.rect.right < castle.rect.left + self.get_castle_detection_offset():
             self.move(delta_time)
         elif self.animation == EnemyAnimation.ATTACK:
             self.attack(castle)
 
+    def get_castle_detection_offset(self):
+        match self.line:
+            case EnemyLine.UP:
+                return EnemyLineOffset.UP.value
+            case EnemyLine.MIDDLE:
+                return EnemyLineOffset.MIDDLE.value
+            case EnemyLine.DOWN:
+                return EnemyLineOffset.DOWN.value
+
     def detect_collisions(self, castle, bullet_sprites):
-        if self.rect.right > castle.rect.left:
-            self.rect.right = castle.rect.left
+        offset = self.get_castle_detection_offset()
+
+        if self.rect.right > castle.rect.left + offset:
+            self.rect.right = castle.rect.left + offset
             self.update_animation(EnemyAnimation.ATTACK)
             self.attack_timer.activate()
 

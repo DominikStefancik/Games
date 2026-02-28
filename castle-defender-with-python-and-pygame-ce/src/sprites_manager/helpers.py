@@ -1,7 +1,7 @@
 from random import choice
 
 from asset_manager.constants import ImageAssetGroup
-from enemy.constants import EnemyType
+from enemy.constants import EnemyLine, EnemyType
 from enemy.enemy import Enemy
 from settings import WINDOW_HEIGHT
 
@@ -15,19 +15,18 @@ def get_random_enemy(group, asset_manager):
             EnemyType.PURPLE_GOBLIN,
         ]
     )
-    vertical_position = choice(
-        [WINDOW_HEIGHT - 160, WINDOW_HEIGHT - 200, WINDOW_HEIGHT - 240]
-    )
+    enemy_line = choice([EnemyLine.DOWN, EnemyLine.MIDDLE, EnemyLine.UP])
 
     return Enemy(
         group=group,
-        animation_frames=asset_manager.graphics[map_image_group(enemy_type)],
+        animation_frames=asset_manager.graphics[map_enemy_type(enemy_type)],
         type=enemy_type,
-        position=(-50, vertical_position),
+        position=(-50, enemy_line.value),
+        line=enemy_line,
     )
 
 
-def map_image_group(enemy_type):
+def map_enemy_type(enemy_type):
     match enemy_type:
         case EnemyType.KNIGHT:
             return ImageAssetGroup.KNIGHT
