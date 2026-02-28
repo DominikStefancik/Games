@@ -1,7 +1,7 @@
 from game_state.game_state_manager import get_game_state_manager
 from scene_manager.scene_manager import SceneManager
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
-from sprites_manager.sprites_manager import SpritesManager
+from sprites.sprites_manager import SpritesManager
 from text_manager import TextManager
 
 

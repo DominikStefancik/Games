@@ -6,6 +6,8 @@ class ImageAssetGroup(Enum):
     CASTLE = "castle"
     BULLET = "bullet"
     CROSSHAIR = "crosshair"
+    REPAIR_BUTTON = "repair_button"
+    ARMOUR_BUTTON = "armour_button"
     KNIGHT = "knight"
     GOBLIN = "goblin"
     RED_GOBLIN = "red_goblin"

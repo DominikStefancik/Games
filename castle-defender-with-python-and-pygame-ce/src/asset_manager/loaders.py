@@ -20,6 +20,12 @@ def load_graphics():
         ImageAssetGroup.CROSSHAIR: pygame.image.load(
             join("assets", "images", "crosshair.png")
         ).convert_alpha(),
+        ImageAssetGroup.REPAIR_BUTTON: pygame.image.load(
+            join("assets", "images", "buttons", "repair.png")
+        ).convert_alpha(),
+        ImageAssetGroup.ARMOUR_BUTTON: pygame.image.load(
+            join("assets", "images", "buttons", "armour.png")
+        ).convert_alpha(),
         ImageAssetGroup.KNIGHT: import_subfolders_as_dict(
             join("assets", "images", "enemies", "knight")
         ),
