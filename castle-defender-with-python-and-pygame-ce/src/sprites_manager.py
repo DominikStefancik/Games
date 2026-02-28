@@ -28,7 +28,7 @@ class SpritesManager:
             group=self.enemy_sprites,
             animation_frames=self.asset_manager.graphics[ImageAssetGroup.KNIGHT],
             type=EnemyType.KNIGHT,
-            position=(200, WINDOW_HEIGHT - 200),
+            position=(350, WINDOW_HEIGHT - 200),
         )
 
     def create_bullet(self, position, angle):

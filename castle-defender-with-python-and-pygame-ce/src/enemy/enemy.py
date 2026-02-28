@@ -3,8 +3,15 @@ from math import cos, radians, sin
 from castle.constants import BULLET_DAMAGE
 from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from timer import Timer
 
-from .constants import EnemyAnimation, ENEMY_ANIMATION_SPEED, ENEMY_SPEED
+from .constants import (
+    EnemyAnimation,
+    ENEMY_ANIMATION_SPEED,
+    ENEMY_ATTACK_COOLDOWN_INTERVAL,
+    ENEMY_ATTACK_DAMAGE,
+    ENEMY_SPEED,
+)
 from .helpers import get_enemy_health, scale_animation_frames
 
 
@@ -27,6 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         self.health = get_enemy_health(self.type)
         self.speed = ENEMY_SPEED
         self.is_alive = True
+        self.attack_timer = Timer(ENEMY_ATTACK_COOLDOWN_INTERVAL)
 
     def animate(self, delta_time):
         animation_frames = self.animation_frames[self.animation.value]
@@ -37,14 +45,25 @@ class Enemy(pygame.sprite.Sprite):
             if self.frame_index >= len(animation_frames):
                 self.image = animation_frames[len(animation_frames) - 1]
 
-    def move(self, delta_time, castle):
+    def move(self, delta_time):
+        self.rect.x += self.speed * delta_time
+
+    def attack(self, castle):
+        if not self.attack_timer.active:
+            castle.health -= ENEMY_ATTACK_DAMAGE
+            self.attack_timer.activate()
+
+    def take_action(self, delta_time, castle):
         if self.rect.right < castle.rect.left:
-            self.rect.x += self.speed * delta_time
+            self.move(delta_time)
+        elif self.animation == EnemyAnimation.ATTACK:
+            self.attack(castle)
 
     def detect_collisions(self, castle, bullet_sprites):
         if self.rect.right > castle.rect.left:
             self.rect.right = castle.rect.left
             self.update_animation(EnemyAnimation.ATTACK)
+            self.attack_timer.activate()
 
         # With the last argument set to True, we destroy each bullet which collided with an enemy
         if pygame.sprite.spritecollide(self, bullet_sprites, True):
@@ -53,6 +72,7 @@ class Enemy(pygame.sprite.Sprite):
             if self.health <= 0:
                 self.update_animation(EnemyAnimation.DEATH)
                 self.is_alive = False
+                self.attack_timer.deactivate()
 
                 game_state_manager = get_game_state_manager()
                 game_state_manager.update_after_enemy_dead(self.type)
@@ -63,8 +83,10 @@ class Enemy(pygame.sprite.Sprite):
             self.frame_index = 0
 
     def update(self, delta_time, castle, bullet_sprites):
+        self.attack_timer.update()
+
         if self.is_alive:
-            self.move(delta_time, castle)
+            self.take_action(delta_time, castle)
             self.detect_collisions(castle, bullet_sprites)
 
         self.animate(delta_time)

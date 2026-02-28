@@ -42,6 +42,16 @@ class Castle(pygame.sprite.Sprite):
                 (self.rect.midleft[0], self.rect.midleft[1]), angle
             )
 
-    def update(self, delta_time):
+    def update_state(self):
+        if self.health <= 250:
+            self.state = CastleState.SEVERELY_DAMAGED
+        elif self.health <= 500:
+            self.state = CastleState.DAMAGED
+        else:
+            self.state = CastleState.FULLY_RESTORED
+
         self.image = self.images[self.state]
+
+    def update(self, delta_time):
+        self.update_state()
         self.shoot()
