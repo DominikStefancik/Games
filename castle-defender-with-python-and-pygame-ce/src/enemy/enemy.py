@@ -89,7 +89,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.attack_timer.deactivate()
 
                 game_state_manager = get_game_state_manager()
-                game_state_manager.update_after_enemy_dead(self.type)
+                game_state_manager.update_after_enemy_died(self.type)
 
     def update_animation(self, new_animation):
         if self.animation != new_animation:

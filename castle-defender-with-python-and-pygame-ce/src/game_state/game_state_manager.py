@@ -1,5 +1,7 @@
 from enemy.constants import EnemyType
+from timer import Timer
 
+from .constants import LEVEL_DIFFICULTY_MULTIPLIER, LEVEL_START_DELAY, LEVEL_WON_DELAY
 from .game_state import GameState
 
 
@@ -7,9 +9,14 @@ class GameStateManager:
     def __init__(self):
         self._game_state = GameState.WAITING_TO_START
         self._current_level = 1
-        self._last_level = 1
         self._level_difficulty = 0
         self._enemy_difficulty = 1000
+        self._alive_enemies = 0
+        self._subscribers = []
+        self._start_level_timer = Timer(
+            duration=LEVEL_START_DELAY, repeat=False, autostart=True
+        )
+        self._level_won_timer = Timer(duration=LEVEL_WON_DELAY)
         self.score = 0
         self.money = 0
 
@@ -33,10 +40,30 @@ class GameStateManager:
     def level_difficulty(self, value):
         self._level_difficulty = value
 
-    def move_to_next_level(self):
-        pass
+    @property
+    def alive_enemies(self):
+        return self._alive_enemies
 
-    def update_after_enemy_dead(self, enemy_type):
+    @alive_enemies.setter
+    def alive_enemies(self, value):
+        self._alive_enemies = value
+
+        if self.is_current_level_won():
+            self._game_state = GameState.LEVEL_WON
+            self._level_won_timer.activate()
+
+    def move_to_next_level(self):
+        self._current_level += 1
+        self._alive_enemies = 0
+        self._level_difficulty = 0
+        self._enemy_difficulty *= LEVEL_DIFFICULTY_MULTIPLIER
+        self.notify_all_new_level()
+        self._game_state = GameState.WAITING_TO_START
+        self._start_level_timer.activate()
+
+    def update_after_enemy_died(self, enemy_type):
+        self.alive_enemies -= 1
+
         match enemy_type:
             case EnemyType.KNIGHT:
                 self.score += 100
@@ -52,17 +79,35 @@ class GameStateManager:
                 self.money += 100
 
     def is_current_level_won(self):
-        level_is_won = False
-
-        return level_is_won
+        return self._alive_enemies == 0
 
     def is_game_won(self):
-        if self._current_level == self._last_level:
-            if self.is_current_level_won():
-                self._game_state = GameState.GAME_WON
+        if self.is_current_level_won():
+            self._game_state = GameState.GAME_WON
 
     def reached_level_difficulty(self):
         return self._level_difficulty >= self._enemy_difficulty
+
+    def subscribe(self, subscriber):
+        self._subscribers.append(subscriber)
+
+    def notify_all_new_level(self):
+        for subscriber in self._subscribers:
+            subscriber.new_level()
+
+    def update(self):
+        self._start_level_timer.update()
+        self._level_won_timer.update()
+
+        if (
+            self._game_state == GameState.WAITING_TO_START
+            and not self._start_level_timer.active
+        ):
+            self._game_state = GameState.RUNNING
+        elif (
+            self._game_state == GameState.LEVEL_WON and not self._level_won_timer.active
+        ):
+            self.move_to_next_level()
 
 
 GAME_STATE_MANAGER = GameStateManager()

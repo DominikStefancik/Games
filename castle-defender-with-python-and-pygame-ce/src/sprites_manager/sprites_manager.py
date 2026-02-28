@@ -4,6 +4,7 @@ from castle.bullet import Bullet
 from castle.castle import Castle
 from castle.crosshair import Crosshair
 from enemy.enemy_group import EnemyGroup
+from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 from timer import Timer
@@ -35,23 +36,32 @@ class SpritesManager:
         )
         self.create_enemies_timer = Timer(ENEMY_CREATION_INTERVAL)
 
+        self.game_state_manager.subscribe(self)
+
     def create_bullet(self, position, angle):
-        Bullet(
-            group=self.bullet_sprites,
-            image=self.asset_manager.graphics[ImageAssetGroup.BULLET],
-            position=position,
-            angle=angle,
-        )
+        if self.game_state_manager.game_state == GameState.RUNNING:
+            Bullet(
+                group=self.bullet_sprites,
+                image=self.asset_manager.graphics[ImageAssetGroup.BULLET],
+                position=position,
+                angle=angle,
+            )
 
     def create_enemies(self):
+        if self.game_state_manager.game_state == GameState.RUNNING:
+            if (
+                not self.game_state_manager.reached_level_difficulty()
+                and not self.create_enemies_timer.active
+            ):
+                enemy = get_random_enemy(self.enemy_sprites, self.asset_manager)
+                self.game_state_manager.level_difficulty += enemy.health
+                self.game_state_manager.alive_enemies += 1
+                self.create_enemies_timer.activate()
 
-        if (
-            not self.game_state_manager.reached_level_difficulty()
-            and not self.create_enemies_timer.active
-        ):
-            enemy = get_random_enemy(self.enemy_sprites, self.asset_manager)
-            self.game_state_manager.level_difficulty += enemy.health
-            self.create_enemies_timer.activate()
+    def new_level(self):
+        self.bullet_sprites.empty()
+        self.enemy_sprites.empty()
+        self.create_enemies_timer.deactivate()
 
     def update(self):
         delta_time = self.clock.tick() / 1000
