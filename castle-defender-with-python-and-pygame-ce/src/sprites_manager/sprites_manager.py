@@ -3,10 +3,13 @@ from asset_manager.constants import ImageAssetGroup
 from castle.bullet import Bullet
 from castle.castle import Castle
 from castle.crosshair import Crosshair
-from enemy.constants import EnemyType
-from enemy.enemy import Enemy
 from enemy.enemy_group import EnemyGroup
+from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from timer import Timer
+
+from .constants import ENEMY_CREATION_INTERVAL
+from .helpers import get_random_enemy
 
 
 class SpritesManager:
@@ -19,6 +22,7 @@ class SpritesManager:
         self.clock = pygame.time.Clock()
 
         self.asset_manager = get_asset_manager()
+        self.game_state_manager = get_game_state_manager()
         self.castle = Castle(
             group=self.static_sprites,
             images=self.asset_manager.graphics[ImageAssetGroup.CASTLE],
@@ -29,12 +33,7 @@ class SpritesManager:
             group=self.static_sprites,
             image=self.asset_manager.graphics[ImageAssetGroup.CROSSHAIR],
         )
-        Enemy(
-            group=self.enemy_sprites,
-            animation_frames=self.asset_manager.graphics[ImageAssetGroup.KNIGHT],
-            type=EnemyType.KNIGHT,
-            position=(350, WINDOW_HEIGHT - 200),
-        )
+        self.create_enemies_timer = Timer(ENEMY_CREATION_INTERVAL)
 
     def create_bullet(self, position, angle):
         Bullet(
@@ -44,12 +43,26 @@ class SpritesManager:
             angle=angle,
         )
 
+    def create_enemies(self):
+
+        if (
+            not self.game_state_manager.reached_level_difficulty()
+            and not self.create_enemies_timer.active
+        ):
+            enemy = get_random_enemy(self.enemy_sprites, self.asset_manager)
+            self.game_state_manager.level_difficulty += enemy.health
+            self.create_enemies_timer.activate()
+
     def update(self):
         delta_time = self.clock.tick() / 1000
+
+        self.create_enemies_timer.update()
 
         self.static_sprites.update()
         self.enemy_sprites.update(delta_time, self.castle, self.bullet_sprites)
         self.bullet_sprites.update(delta_time)
+
+        self.create_enemies()
 
     def draw(self):
         self.static_sprites.draw(self.display_surface)

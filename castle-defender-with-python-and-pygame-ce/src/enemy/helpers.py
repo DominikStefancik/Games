@@ -8,11 +8,11 @@ def get_enemy_health(enemy_type):
         case EnemyType.KNIGHT:
             return 75
         case EnemyType.GOBLIN:
-            return 75
+            return 100
         case EnemyType.RED_GOBLIN:
-            return 75
+            return 125
         case EnemyType.PURPLE_GOBLIN:
-            return 75
+            return 150
 
 
 def scale_animation_frames(animation_frames):

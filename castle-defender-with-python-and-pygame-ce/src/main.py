@@ -1,6 +1,6 @@
 from scene_manager.scene_manager import SceneManager
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
-from sprites_manager import SpritesManager
+from sprites_manager.sprites_manager import SpritesManager
 
 
 class Game:
