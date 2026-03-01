@@ -1,6 +1,7 @@
 from game_state.game_state_manager import get_game_state_manager
 from scene_manager.scene_manager import SceneManager
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
+from sprites.constants import ButtonEvent
 from sprites.sprites_manager import SpritesManager
 from text_manager import TextManager
 
@@ -33,6 +34,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+                if event.type == ButtonEvent.REPAIR.value:
+                    self.game_state_manager.repair_health()
+
+                if event.type == ButtonEvent.ARMOUR.value:
+                    self.game_state_manager.increase_max_health()
 
             self.update()
             self.draw()

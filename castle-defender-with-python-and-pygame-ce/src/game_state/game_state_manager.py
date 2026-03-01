@@ -3,9 +3,13 @@ from timer import Timer
 
 from .constants import (
     CASTLE_STARTING_HEALTH,
+    INCREASE_MAX_HEALTH_AMOUNT,
+    INCREASE_MAX_HEALTH_COST,
     LEVEL_DIFFICULTY_MULTIPLIER,
     LEVEL_START_DELAY,
     LEVEL_WON_DELAY,
+    REPAIR_HEALTH_AMOUNT,
+    REPAIR_HEALTH_COST,
 )
 from .game_state import GameState
 
@@ -60,15 +64,6 @@ class GameStateManager:
             self._game_state = GameState.LEVEL_WON
             self._level_won_timer.activate()
 
-    def move_to_next_level(self):
-        self._current_level += 1
-        self._alive_enemies = 0
-        self._level_difficulty = 0
-        self._enemy_difficulty *= LEVEL_DIFFICULTY_MULTIPLIER
-        self.notify_all_new_level()
-        self._game_state = GameState.WAITING_TO_START
-        self._start_level_timer.activate()
-
     def update_after_enemy_died(self, enemy_type):
         self.alive_enemies -= 1
 
@@ -77,14 +72,36 @@ class GameStateManager:
                 self.score += 100
                 self.money += 100
             case EnemyType.GOBLIN:
-                self.score += 100
-                self.money += 100
+                self.score += 125
+                self.money += 125
             case EnemyType.RED_GOBLIN:
-                self.score += 100
-                self.money += 100
+                self.score += 150
+                self.money += 150
             case EnemyType.PURPLE_GOBLIN:
-                self.score += 100
-                self.money += 100
+                self.score += 200
+                self.money += 200
+
+    def repair_health(self):
+        if self.health < self.max_health and self.money > REPAIR_HEALTH_COST:
+            self.health += REPAIR_HEALTH_AMOUNT
+            self.money -= REPAIR_HEALTH_COST
+
+            if self.health > self.max_health:
+                self.health = self.max_health
+
+    def increase_max_health(self):
+        if self.money > INCREASE_MAX_HEALTH_COST:
+            self.max_health += INCREASE_MAX_HEALTH_AMOUNT
+            self.money -= INCREASE_MAX_HEALTH_COST
+
+    def move_to_next_level(self):
+        self._current_level += 1
+        self._alive_enemies = 0
+        self._level_difficulty = 0
+        self._enemy_difficulty *= LEVEL_DIFFICULTY_MULTIPLIER
+        self.notify_all_new_level()
+        self._game_state = GameState.WAITING_TO_START
+        self._start_level_timer.activate()
 
     def is_current_level_won(self):
         return self._alive_enemies == 0

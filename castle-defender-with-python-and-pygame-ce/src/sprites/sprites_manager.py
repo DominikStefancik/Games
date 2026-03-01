@@ -11,6 +11,7 @@ from timer import Timer
 from .button import Button
 from .constants import (
     ARMOUR_BUTTON_IMAGE_SCALE,
+    ButtonEvent,
     ENEMY_CREATION_INTERVAL,
     REPAIR_BUTTON_IMAGE_SCALE,
 )
@@ -44,12 +45,14 @@ class SpritesManager:
             image=self.asset_manager.graphics[ImageAssetGroup.REPAIR_BUTTON],
             position=(WINDOW_WIDTH - 220, 15),
             scale=REPAIR_BUTTON_IMAGE_SCALE,
+            event=ButtonEvent.REPAIR,
         )
         Button(
             group=self.static_sprites,
             image=self.asset_manager.graphics[ImageAssetGroup.ARMOUR_BUTTON],
             position=(WINDOW_WIDTH - 75, 15),
             scale=ARMOUR_BUTTON_IMAGE_SCALE,
+            event=ButtonEvent.ARMOUR,
         )
         self.create_enemies_timer = Timer(ENEMY_CREATION_INTERVAL)
 
