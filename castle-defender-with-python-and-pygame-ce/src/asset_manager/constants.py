@@ -4,6 +4,7 @@ from enum import Enum
 class ImageAssetGroup(Enum):
     BACKGROUND = "background"
     CASTLE = "castle"
+    TOWER = "tower"
     BULLET = "bullet"
     CROSSHAIR = "crosshair"
     REPAIR_BUTTON = "repair_button"

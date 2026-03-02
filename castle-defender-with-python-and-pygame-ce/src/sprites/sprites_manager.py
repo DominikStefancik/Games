@@ -2,7 +2,11 @@ from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAssetGroup
 from castle.bullet import Bullet
 from castle.castle import Castle
+from castle.constants import TowerState
+from castle.helpers import get_tower_image
+from castle.tower import Tower
 from enemy.enemy_group import EnemyGroup
+from game_state.constants import MAX_TOWER_COUNT
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -24,6 +28,7 @@ class SpritesManager:
         # The main surface on which we will be drawing sprites
         self.display_surface = pygame.display.get_surface()
         self.static_sprites = pygame.sprite.Group()
+        self.tower_sprites = pygame.sprite.Group()
         self.bullet_sprites = pygame.sprite.Group()
         self.enemy_sprites = EnemyGroup()
         self.clock = pygame.time.Clock()
@@ -43,9 +48,19 @@ class SpritesManager:
         Button(
             group=self.static_sprites,
             image=self.asset_manager.graphics[ImageAssetGroup.REPAIR_BUTTON],
-            position=(WINDOW_WIDTH - 220, 15),
+            position=(WINDOW_WIDTH - 270, 15),
             scale=REPAIR_BUTTON_IMAGE_SCALE,
             event=ButtonEvent.REPAIR,
+        )
+        Button(
+            group=self.static_sprites,
+            image=get_tower_image(
+                self.asset_manager.graphics[ImageAssetGroup.TOWER],
+                TowerState.FULLY_RESTORED,
+            ),
+            position=(WINDOW_WIDTH - 160, 10),
+            scale=0.1,
+            event=ButtonEvent.TOWER,
         )
         Button(
             group=self.static_sprites,
@@ -55,6 +70,13 @@ class SpritesManager:
             event=ButtonEvent.ARMOUR,
         )
         self.create_enemies_timer = Timer(ENEMY_CREATION_INTERVAL)
+
+        self.tower_positions = [
+            (WINDOW_WIDTH - 250, WINDOW_HEIGHT - 200),
+            (WINDOW_WIDTH - 200, WINDOW_HEIGHT - 150),
+            (WINDOW_WIDTH - 150, WINDOW_HEIGHT - 150),
+            (WINDOW_WIDTH - 100, WINDOW_HEIGHT - 150),
+        ]
 
         self.game_state_manager.subscribe(self)
 
@@ -78,6 +100,18 @@ class SpritesManager:
                 self.game_state_manager.alive_enemies += 1
                 self.create_enemies_timer.activate()
 
+    def create_tower(self):
+        if (
+            self.game_state_manager.game_state == GameState.RUNNING
+            and len(self.tower_sprites) < MAX_TOWER_COUNT
+        ):
+            Tower(
+                group=self.tower_sprites,
+                images=self.asset_manager.graphics[ImageAssetGroup.TOWER],
+                position=self.tower_positions[len(self.tower_sprites)],
+                create_bullet_function=self.create_bullet,
+            )
+
     def new_level(self):
         self.bullet_sprites.empty()
         self.enemy_sprites.empty()
@@ -89,6 +123,7 @@ class SpritesManager:
         self.create_enemies_timer.update()
 
         self.static_sprites.update()
+        self.tower_sprites.update(self.enemy_sprites)
         self.enemy_sprites.update(delta_time, self.castle, self.bullet_sprites)
         self.bullet_sprites.update(delta_time)
 
@@ -96,5 +131,6 @@ class SpritesManager:
 
     def draw(self):
         self.static_sprites.draw(self.display_surface)
+        self.tower_sprites.draw(self.display_surface)
         self.enemy_sprites.draw()
         self.bullet_sprites.draw(self.display_surface)

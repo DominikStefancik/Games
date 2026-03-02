@@ -1,6 +1,10 @@
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import FontAsset
-from game_state.constants import INCREASE_MAX_HEALTH_COST, REPAIR_HEALTH_COST
+from game_state.constants import (
+    INCREASE_MAX_HEALTH_COST,
+    REPAIR_HEALTH_COST,
+    TOWER_COST,
+)
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -48,7 +52,13 @@ class TextManager:
             f"{REPAIR_HEALTH_COST}",
             font,
             "black",
-            (WINDOW_WIDTH - 220, 60),
+            (WINDOW_WIDTH - 270, 60),
+        )
+        self.draw_text(
+            f"{TOWER_COST}",
+            font,
+            "black",
+            (WINDOW_WIDTH - 175, 60),
         )
         self.draw_text(
             f"{INCREASE_MAX_HEALTH_COST}",

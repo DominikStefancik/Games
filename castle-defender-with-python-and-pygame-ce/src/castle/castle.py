@@ -37,7 +37,7 @@ class Castle(pygame.sprite.Sprite):
 
             if mouse_position[0] < self.rect.left + 25:
                 distance_x = mouse_position[0] - self.rect.midleft[0]
-                # Because the Y-coordinate increaces when going down, we have to use negativa value after calculation
+                # Because the Y-coordinate increaces when going down, we have to use negative value after calculation
                 distance_y = -(mouse_position[1] - self.rect.midleft[1])
                 angle = degrees(atan2(distance_y, distance_x))
                 self.create_bullet_function(

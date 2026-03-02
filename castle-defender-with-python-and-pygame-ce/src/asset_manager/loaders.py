@@ -14,6 +14,7 @@ def load_graphics():
         ImageAssetGroup.CASTLE: import_folder_as_dict(
             join("assets", "images", "castle")
         ),
+        ImageAssetGroup.TOWER: import_folder_as_dict(join("assets", "images", "tower")),
         ImageAssetGroup.BULLET: pygame.image.load(
             join("assets", "images", "bullet.png")
         ).convert_alpha(),

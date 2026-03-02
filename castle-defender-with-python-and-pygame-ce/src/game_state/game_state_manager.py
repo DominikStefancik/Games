@@ -10,6 +10,7 @@ from .constants import (
     LEVEL_WON_DELAY,
     REPAIR_HEALTH_AMOUNT,
     REPAIR_HEALTH_COST,
+    TOWER_COST,
 )
 from .game_state import GameState
 
@@ -82,7 +83,7 @@ class GameStateManager:
                 self.money += 200
 
     def repair_health(self):
-        if self.health < self.max_health and self.money > REPAIR_HEALTH_COST:
+        if self.health < self.max_health and self.money >= REPAIR_HEALTH_COST:
             self.health += REPAIR_HEALTH_AMOUNT
             self.money -= REPAIR_HEALTH_COST
 
@@ -90,9 +91,14 @@ class GameStateManager:
                 self.health = self.max_health
 
     def increase_max_health(self):
-        if self.money > INCREASE_MAX_HEALTH_COST:
+        if self.money >= INCREASE_MAX_HEALTH_COST:
             self.max_health += INCREASE_MAX_HEALTH_AMOUNT
             self.money -= INCREASE_MAX_HEALTH_COST
+
+    def add_tower(self):
+        if self.money >= TOWER_COST:
+            self.money -= TOWER_COST
+            self.notify_all_add_tower()
 
     def move_to_next_level(self):
         self._current_level += 1
@@ -115,6 +121,10 @@ class GameStateManager:
 
     def subscribe(self, subscriber):
         self._subscribers.append(subscriber)
+
+    def notify_all_add_tower(self):
+        for subscriber in self._subscribers:
+            subscriber.create_tower()
 
     def notify_all_new_level(self):
         for subscriber in self._subscribers:

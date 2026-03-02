@@ -10,4 +10,5 @@ ENEMY_CREATION_INTERVAL = 1000
 
 class ButtonEvent(Enum):
     REPAIR = pygame.event.custom_type()
+    TOWER = pygame.event.custom_type()
     ARMOUR = pygame.event.custom_type()

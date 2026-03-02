@@ -1,3 +1,4 @@
+from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from scene_manager.scene_manager import SceneManager
 from settings import pygame, sys, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -35,11 +36,15 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-                if event.type == ButtonEvent.REPAIR.value:
-                    self.game_state_manager.repair_health()
+                if self.game_state_manager.game_state == GameState.RUNNING:
+                    if event.type == ButtonEvent.REPAIR.value:
+                        self.game_state_manager.repair_health()
 
-                if event.type == ButtonEvent.ARMOUR.value:
-                    self.game_state_manager.increase_max_health()
+                    if event.type == ButtonEvent.TOWER.value:
+                        self.game_state_manager.add_tower()
+
+                    if event.type == ButtonEvent.ARMOUR.value:
+                        self.game_state_manager.increase_max_health()
 
             self.update()
             self.draw()
