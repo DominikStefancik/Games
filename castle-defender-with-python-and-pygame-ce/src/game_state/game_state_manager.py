@@ -1,7 +1,10 @@
+import os
+
 from enemy.constants import EnemyType
 from timer import Timer
 
 from .constants import (
+    BEST_SCORE_FILE_NAME,
     CASTLE_STARTING_HEALTH,
     INCREASE_MAX_HEALTH_AMOUNT,
     INCREASE_MAX_HEALTH_COST,
@@ -28,7 +31,7 @@ class GameStateManager:
         )
         self._level_won_timer = Timer(duration=LEVEL_WON_DELAY)
         self.score = 0
-        self.best_score = 0
+        self.set_best_score()
         self.money = 0
         self.health = CASTLE_STARTING_HEALTH
         self.max_health = CASTLE_STARTING_HEALTH
@@ -64,6 +67,14 @@ class GameStateManager:
         if self.is_current_level_won():
             self._game_state = GameState.LEVEL_WON
             self._level_won_timer.activate()
+
+    def set_best_score(self):
+        if os.path.exists(BEST_SCORE_FILE_NAME):
+            # Open the file for reading
+            with open(BEST_SCORE_FILE_NAME, "r") as file:
+                self.best_score = int(file.read())
+        else:
+            self.best_score = 0
 
     def update_after_enemy_died(self, enemy_type):
         self.alive_enemies -= 1
@@ -108,6 +119,13 @@ class GameStateManager:
         self.notify_all_new_level()
         self._game_state = GameState.WAITING_TO_START
         self._start_level_timer.activate()
+
+        if self.best_score < self.score:
+            self.best_score = self.score
+
+            # Open the file for writting
+            with open(BEST_SCORE_FILE_NAME, "w") as file:
+                file.write(str(self.best_score))
 
     def is_current_level_won(self):
         return self._alive_enemies == 0

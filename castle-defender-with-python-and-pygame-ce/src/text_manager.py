@@ -25,7 +25,10 @@ class TextManager:
     def draw_status(self):
         font = self.asset_manager.fonts[FontAsset.FUTURA_25]
         self.draw_text(
-            f"Money: {self.game_state_manager.money}", font, "black", (15, 15)
+            f"Level: {self.game_state_manager.current_level}",
+            font,
+            "black",
+            (15, 15),
         )
         self.draw_text(
             f"Score: {self.game_state_manager.score}", font, "black", (185, 15)
@@ -37,10 +40,10 @@ class TextManager:
             (185, 45),
         )
         self.draw_text(
-            f"Level: {self.game_state_manager.current_level}",
+            f"Money: {self.game_state_manager.money}",
             font,
             "black",
-            (WINDOW_HEIGHT / 2, 15),
+            (WINDOW_HEIGHT / 2 + 120, 15),
         )
         self.draw_text(
             f"Health: {self.game_state_manager.health} / {self.game_state_manager.max_health}",
