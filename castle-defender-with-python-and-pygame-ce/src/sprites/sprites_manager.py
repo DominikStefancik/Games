@@ -41,7 +41,7 @@ class SpritesManager:
             position=(WINDOW_WIDTH - 430, WINDOW_HEIGHT - 470),
             create_bullet_function=self.create_bullet,
         )
-        Crosshair(
+        self.crosshair = Crosshair(
             group=self.static_sprites,
             image=self.asset_manager.graphics[ImageAssetGroup.CROSSHAIR],
         )
@@ -117,6 +117,16 @@ class SpritesManager:
         self.enemy_sprites.empty()
         self.create_enemies_timer.deactivate()
 
+    def restart(self):
+        self.bullet_sprites.empty()
+        self.enemy_sprites.empty()
+        self.tower_sprites.empty()
+        self.crosshair = Crosshair(
+            group=self.static_sprites,
+            image=self.asset_manager.graphics[ImageAssetGroup.CROSSHAIR],
+        )
+        self.create_enemies_timer.deactivate()
+
     def update(self):
         delta_time = self.clock.tick() / 1000
 
@@ -128,6 +138,13 @@ class SpritesManager:
         self.bullet_sprites.update(delta_time)
 
         self.create_enemies()
+
+        # At the end of the game don't show the Crosshair anymore
+        if self.game_state_manager.game_state in [
+            GameState.GAME_WON,
+            GameState.GAME_OVER,
+        ]:
+            self.crosshair.kill()
 
     def draw(self):
         self.static_sprites.draw(self.display_surface)

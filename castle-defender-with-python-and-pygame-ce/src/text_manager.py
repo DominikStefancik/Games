@@ -89,10 +89,36 @@ class TextManager:
         )
 
     def draw_game_won(self):
-        pass
+        font = self.asset_manager.fonts[FontAsset.FUTURA_60]
+        self.draw_text(
+            f"YOU WIN!!!",
+            font,
+            "white",
+            (WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 + 20),
+        )
+        font = self.asset_manager.fonts[FontAsset.FUTURA_35]
+        self.draw_text(
+            f"Press Space bar to play again",
+            font,
+            "white",
+            (WINDOW_WIDTH / 2 - 260, WINDOW_HEIGHT / 2 + 120),
+        )
 
     def draw_game_over(self):
-        pass
+        font = self.asset_manager.fonts[FontAsset.FUTURA_60]
+        self.draw_text(
+            f"GAME OVER",
+            font,
+            "white",
+            (WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 + 20),
+        )
+        font = self.asset_manager.fonts[FontAsset.FUTURA_35]
+        self.draw_text(
+            f"Press Space bar to play again",
+            font,
+            "white",
+            (WINDOW_WIDTH / 2 - 260, WINDOW_HEIGHT / 2 + 120),
+        )
 
     def draw(self):
         self.draw_status()

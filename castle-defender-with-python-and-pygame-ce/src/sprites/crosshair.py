@@ -10,8 +10,6 @@ class Crosshair(pygame.sprite.Sprite):
 
         self.image = scale_image(image, CROSSHAIR_IMAGE_SCALE)
         self.rect = self.image.get_frect()
-        # Hide the mouse cursor
-        pygame.mouse.set_visible(False)
 
     def update(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()

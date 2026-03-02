@@ -21,7 +21,12 @@ class Game:
 
     def update(self):
         self.game_state_manager.update()
-        self.sprites_manager.update()
+
+        if not self.game_state_manager.game_state in [
+            GameState.GAME_WON,
+            GameState.GAME_OVER,
+        ]:
+            self.sprites_manager.update()
 
     def draw(self):
         self.display_surface.fill("black")
@@ -36,7 +41,14 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-                if self.game_state_manager.game_state == GameState.RUNNING:
+                if (
+                    self.game_state_manager.game_state
+                    in [GameState.GAME_WON, GameState.GAME_OVER]
+                    and event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_SPACE
+                ):
+                    self.game_state_manager.restart()
+                elif self.game_state_manager.game_state == GameState.RUNNING:
                     if event.type == ButtonEvent.REPAIR.value:
                         self.game_state_manager.repair_health()
 

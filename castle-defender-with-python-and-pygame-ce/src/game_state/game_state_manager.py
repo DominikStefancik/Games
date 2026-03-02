@@ -1,18 +1,21 @@
 import os
 
 from enemy.constants import EnemyType
+from settings import pygame
 from timer import Timer
 
 from .constants import (
     BEST_SCORE_FILE_NAME,
-    CASTLE_STARTING_HEALTH,
     INCREASE_MAX_HEALTH_AMOUNT,
     INCREASE_MAX_HEALTH_COST,
     LEVEL_DIFFICULTY_MULTIPLIER,
     LEVEL_START_DELAY,
     LEVEL_WON_DELAY,
+    LEVELS_COUNT,
     REPAIR_HEALTH_AMOUNT,
     REPAIR_HEALTH_COST,
+    STARTING_CASTLE_HEALTH,
+    STARTING_ENEMY_DIFFICULTY,
     TOWER_COST,
 )
 from .game_state import GameState
@@ -23,7 +26,7 @@ class GameStateManager:
         self._game_state = GameState.WAITING_TO_START
         self._current_level = 1
         self._level_difficulty = 0
-        self._enemy_difficulty = 1000
+        self._enemy_difficulty = STARTING_ENEMY_DIFFICULTY
         self._alive_enemies = 0
         self._subscribers = []
         self._start_level_timer = Timer(
@@ -33,8 +36,8 @@ class GameStateManager:
         self.score = 0
         self.set_best_score()
         self.money = 0
-        self.health = CASTLE_STARTING_HEALTH
-        self.max_health = CASTLE_STARTING_HEALTH
+        self._health = STARTING_CASTLE_HEALTH
+        self.max_health = STARTING_CASTLE_HEALTH
 
     @property
     def game_state(self):
@@ -65,8 +68,23 @@ class GameStateManager:
         self._alive_enemies = value
 
         if self.is_current_level_won():
-            self._game_state = GameState.LEVEL_WON
-            self._level_won_timer.activate()
+            if self._current_level == LEVELS_COUNT:
+                self._game_state = GameState.GAME_WON
+            else:
+                self._game_state = GameState.LEVEL_WON
+                self._level_won_timer.activate()
+
+    @property
+    def health(self):
+        return self._health
+
+    @health.setter
+    def health(self, value):
+        self._health = value
+
+        if self._health <= 0:
+            self._health = 0
+            self._game_state = GameState.GAME_OVER
 
     def set_best_score(self):
         if os.path.exists(BEST_SCORE_FILE_NAME):
@@ -130,12 +148,21 @@ class GameStateManager:
     def is_current_level_won(self):
         return self._alive_enemies == 0
 
-    def is_game_won(self):
-        if self.is_current_level_won():
-            self._game_state = GameState.GAME_WON
-
     def reached_level_difficulty(self):
         return self._level_difficulty >= self._enemy_difficulty
+
+    def restart(self):
+        self._current_level = 1
+        self._alive_enemies = 0
+        self._level_difficulty = 0
+        self._enemy_difficulty = STARTING_ENEMY_DIFFICULTY
+        self.score = 0
+        self.money = 0
+        self._health = STARTING_CASTLE_HEALTH
+        self.max_health = STARTING_CASTLE_HEALTH
+        self.notify_all_restart()
+        self._game_state = GameState.WAITING_TO_START
+        self._start_level_timer.activate()
 
     def subscribe(self, subscriber):
         self._subscribers.append(subscriber)
@@ -144,6 +171,10 @@ class GameStateManager:
         for subscriber in self._subscribers:
             subscriber.create_tower()
 
+    def notify_all_restart(self):
+        for subscriber in self._subscribers:
+            subscriber.restart()
+
     def notify_all_new_level(self):
         for subscriber in self._subscribers:
             subscriber.new_level()
@@ -151,6 +182,12 @@ class GameStateManager:
     def update(self):
         self._start_level_timer.update()
         self._level_won_timer.update()
+
+        is_mouse_cursor_visible = self._game_state in [
+            GameState.GAME_WON,
+            GameState.GAME_OVER,
+        ]
+        pygame.mouse.set_visible(is_mouse_cursor_visible)
 
         if (
             self._game_state == GameState.WAITING_TO_START
