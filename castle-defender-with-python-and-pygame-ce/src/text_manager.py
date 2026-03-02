@@ -7,7 +7,7 @@ from game_state.constants import (
 )
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
-from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import INFO_TEXT_COLOR, pygame, WINDOW_HEIGHT, WINDOW_WIDTH
 
 
 class TextManager:
@@ -27,46 +27,46 @@ class TextManager:
         self.draw_text(
             f"Level: {self.game_state_manager.current_level}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (15, 15),
         )
         self.draw_text(
-            f"Score: {self.game_state_manager.score}", font, "black", (185, 15)
+            f"Score: {self.game_state_manager.score}", font, INFO_TEXT_COLOR, (185, 15)
         )
         self.draw_text(
             f"Best Score: {self.game_state_manager.best_score}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (185, 45),
         )
         self.draw_text(
             f"Money: {self.game_state_manager.money}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (WINDOW_HEIGHT / 2 + 120, 15),
         )
         self.draw_text(
             f"Health: {self.game_state_manager.health} / {self.game_state_manager.max_health}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (WINDOW_WIDTH - 400, WINDOW_HEIGHT - 100),
         )
         self.draw_text(
             f"{REPAIR_HEALTH_COST}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (WINDOW_WIDTH - 270, 60),
         )
         self.draw_text(
             f"{TOWER_COST}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (WINDOW_WIDTH - 175, 60),
         )
         self.draw_text(
             f"{INCREASE_MAX_HEALTH_COST}",
             font,
-            "black",
+            INFO_TEXT_COLOR,
             (WINDOW_WIDTH - 80, 60),
         )
 
