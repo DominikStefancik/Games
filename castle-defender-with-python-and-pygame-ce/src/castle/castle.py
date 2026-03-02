@@ -53,7 +53,7 @@ class Castle(pygame.sprite.Sprite):
             self.state = CastleState.FULLY_RESTORED
 
         self.image = self.images[self.state]
-        self.rect.topleft = map_castle_position(self.state)
+        self.rect = self.image.get_frect(topleft=map_castle_position(self.state))
 
     def update(self):
         self.update_state()
