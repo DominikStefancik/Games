@@ -17,9 +17,9 @@ class EnemyAnimation(Enum):
 
 
 class EnemyLine(Enum):
-    UP = WINDOW_HEIGHT - 240
-    MIDDLE = WINDOW_HEIGHT - 200
-    DOWN = WINDOW_HEIGHT - 160
+    UP = WINDOW_HEIGHT - 280
+    MIDDLE = WINDOW_HEIGHT - 240
+    DOWN = WINDOW_HEIGHT - 200
 
 
 class EnemyLineOffset(Enum):

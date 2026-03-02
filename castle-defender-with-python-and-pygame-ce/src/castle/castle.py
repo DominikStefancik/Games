@@ -5,11 +5,11 @@ from helpers import scale_image
 from settings import pygame
 
 from .constants import CASTLE_IMAGE_SCALE, CastleState
-from .helpers import get_castle_image
+from .helpers import get_castle_image, map_castle_position
 
 
 class Castle(pygame.sprite.Sprite):
-    def __init__(self, group, images, position, create_bullet_function):
+    def __init__(self, group, images, create_bullet_function):
         super().__init__(group)
 
         self.game_state_manager = get_game_state_manager()
@@ -28,7 +28,7 @@ class Castle(pygame.sprite.Sprite):
             ),
         }
         self.image = self.images[self.state]
-        self.rect = self.image.get_frect(topleft=position)
+        self.rect = self.image.get_frect(topleft=map_castle_position(self.state))
         self.create_bullet_function = create_bullet_function
 
     def shoot(self):
@@ -53,6 +53,7 @@ class Castle(pygame.sprite.Sprite):
             self.state = CastleState.FULLY_RESTORED
 
         self.image = self.images[self.state]
+        self.rect.topleft = map_castle_position(self.state)
 
     def update(self):
         self.update_state()

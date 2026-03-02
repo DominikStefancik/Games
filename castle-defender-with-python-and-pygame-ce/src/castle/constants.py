@@ -1,10 +1,18 @@
 from enum import Enum
 
+from settings import WINDOW_HEIGHT, WINDOW_WIDTH
+
 
 class CastleState(Enum):
     FULLY_RESTORED = 100
     DAMAGED = 50
     SEVERELY_DAMAGED = 25
+
+
+class CastlePosition(Enum):
+    FULLY_RESTORED = (WINDOW_WIDTH - 430, WINDOW_HEIGHT - 500)
+    DAMAGED = (WINDOW_WIDTH - 430, WINDOW_HEIGHT - 490)
+    SEVERELY_DAMAGED = (WINDOW_WIDTH - 425, WINDOW_HEIGHT - 427)
 
 
 class TowerState(Enum):

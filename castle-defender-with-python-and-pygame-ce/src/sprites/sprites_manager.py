@@ -38,7 +38,6 @@ class SpritesManager:
         self.castle = Castle(
             group=self.static_sprites,
             images=self.asset_manager.graphics[ImageAssetGroup.CASTLE],
-            position=(WINDOW_WIDTH - 430, WINDOW_HEIGHT - 470),
             create_bullet_function=self.create_bullet,
         )
         self.crosshair = Crosshair(
@@ -72,10 +71,10 @@ class SpritesManager:
         self.create_enemies_timer = Timer(ENEMY_CREATION_INTERVAL)
 
         self.tower_positions = [
-            (WINDOW_WIDTH - 250, WINDOW_HEIGHT - 200),
-            (WINDOW_WIDTH - 200, WINDOW_HEIGHT - 150),
-            (WINDOW_WIDTH - 150, WINDOW_HEIGHT - 150),
-            (WINDOW_WIDTH - 100, WINDOW_HEIGHT - 150),
+            (WINDOW_WIDTH - 400, WINDOW_HEIGHT - 260),
+            (WINDOW_WIDTH - 290, WINDOW_HEIGHT - 260),
+            (WINDOW_WIDTH - 160, WINDOW_HEIGHT - 290),
+            (WINDOW_WIDTH - 75, WINDOW_HEIGHT - 290),
         ]
 
         self.game_state_manager.subscribe(self)
