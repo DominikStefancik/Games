@@ -25,7 +25,7 @@ class EnemyLine(Enum):
 class EnemyLineOffset(Enum):
     UP = 0
     MIDDLE = 10
-    DOWN = 20
+    DOWN = 25
 
 
 ENEMY_FRAME_SCALE = 0.2

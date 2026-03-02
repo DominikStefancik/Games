@@ -52,5 +52,7 @@ def load_fonts():
 
 def load_sounds():
     return {
-        AudioAsset.SOUND: pygame.mixer.Sound(join("assets", "sounds", "sound.wav")),
+        AudioAsset.MARCH: pygame.mixer.Sound(join("assets", "sounds", "march.mp3")),
+        AudioAsset.ATTACK: pygame.mixer.Sound(join("assets", "sounds", "attack.mp3")),
+        AudioAsset.DEATH: pygame.mixer.Sound(join("assets", "sounds", "death.mp3")),
     }

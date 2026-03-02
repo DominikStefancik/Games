@@ -1,5 +1,7 @@
 from math import cos, radians, sin
 
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAsset
 from castle.constants import BULLET_DAMAGE
 from game_state.game_state_manager import get_game_state_manager
 from settings import pygame, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -21,6 +23,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, group, animation_frames, type, position, line):
         super().__init__(group)
 
+        self.asset_manager = get_asset_manager()
         self.game_state_manager = get_game_state_manager()
         self.type = type
         self.animation = EnemyAnimation.WALK
@@ -55,6 +58,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self, castle):
         if not self.attack_timer.active:
             self.game_state_manager.health -= ENEMY_ATTACK_DAMAGE
+            self.asset_manager.sounds[AudioAsset.ATTACK].play()
             self.attack_timer.activate()
 
     def take_action(self, delta_time, castle):
@@ -88,6 +92,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.update_animation(EnemyAnimation.DEATH)
                 self.is_alive = False
                 self.attack_timer.deactivate()
+                self.asset_manager.sounds[AudioAsset.DEATH].play()
 
                 self.game_state_manager.update_after_enemy_died(self.type)
 

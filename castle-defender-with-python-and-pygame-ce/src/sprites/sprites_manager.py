@@ -1,10 +1,11 @@
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAssetGroup
+from asset_manager.constants import AudioAsset, ImageAssetGroup
 from castle.bullet import Bullet
 from castle.castle import Castle
 from castle.constants import TowerState
 from castle.helpers import get_tower_image
 from castle.tower import Tower
+from enemy.constants import EnemyAnimation
 from enemy.enemy_group import EnemyGroup
 from game_state.constants import MAX_TOWER_COUNT
 from game_state.game_state import GameState
@@ -77,6 +78,8 @@ class SpritesManager:
             (WINDOW_WIDTH - 75, WINDOW_HEIGHT - 290),
         ]
 
+        self.march_sound_started = False
+
         self.game_state_manager.subscribe(self)
 
     def create_bullet(self, position, angle):
@@ -99,6 +102,11 @@ class SpritesManager:
                 self.game_state_manager.alive_enemies += 1
                 self.create_enemies_timer.activate()
 
+                # Start marching sound when the first enemy is created
+                if not self.march_sound_started:
+                    self.asset_manager.sounds[AudioAsset.MARCH].play()
+                    self.march_sound_started = True
+
     def create_tower(self):
         if (
             self.game_state_manager.game_state == GameState.RUNNING
@@ -115,6 +123,7 @@ class SpritesManager:
         self.bullet_sprites.empty()
         self.enemy_sprites.empty()
         self.create_enemies_timer.deactivate()
+        self.march_sound_started = False
 
     def restart(self):
         self.bullet_sprites.empty()
@@ -125,6 +134,7 @@ class SpritesManager:
             image=self.asset_manager.graphics[ImageAssetGroup.CROSSHAIR],
         )
         self.create_enemies_timer.deactivate()
+        self.march_sound_started = False
 
     def update(self):
         delta_time = self.clock.tick() / 1000
@@ -144,6 +154,18 @@ class SpritesManager:
             GameState.GAME_OVER,
         ]:
             self.crosshair.kill()
+
+        if self.game_state_manager.game_state in [
+            GameState.LEVEL_WON,
+            GameState.GAME_WON,
+        ]:
+            self.asset_manager.sounds[AudioAsset.MARCH].stop()
+
+        for enemy in self.enemy_sprites:
+            # Stop marching sound whenever the first enemy starts attacking the castle
+            if enemy.animation == EnemyAnimation.ATTACK:
+                self.asset_manager.sounds[AudioAsset.MARCH].stop()
+                break
 
     def draw(self):
         self.static_sprites.draw(self.display_surface)

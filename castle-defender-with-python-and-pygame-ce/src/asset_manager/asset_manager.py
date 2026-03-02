@@ -32,7 +32,7 @@ class AssetManager:
 
             # Update volume of the sounds
             for key, _ in self._sounds.items():
-                self._sounds[key].set_volume(0.4)
+                self._sounds[key].set_volume(0.3)
 
         return self._sounds
 

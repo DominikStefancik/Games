@@ -69,6 +69,7 @@ class GameStateManager:
 
         if self.is_current_level_won():
             if self._current_level == LEVELS_COUNT:
+                self.save_best_score()
                 self._game_state = GameState.GAME_WON
             else:
                 self._game_state = GameState.LEVEL_WON
@@ -94,9 +95,15 @@ class GameStateManager:
         else:
             self.best_score = 0
 
-    def update_after_enemy_died(self, enemy_type):
-        self.alive_enemies -= 1
+    def save_best_score(self):
+        if self.best_score < self.score:
+            self.best_score = self.score
 
+            # Open the file for writting
+            with open(BEST_SCORE_FILE_NAME, "w") as file:
+                file.write(str(self.best_score))
+
+    def update_after_enemy_died(self, enemy_type):
         match enemy_type:
             case EnemyType.KNIGHT:
                 self.score += 100
@@ -110,6 +117,8 @@ class GameStateManager:
             case EnemyType.PURPLE_GOBLIN:
                 self.score += 200
                 self.money += 200
+
+        self.alive_enemies -= 1
 
     def repair_health(self):
         if self.health < self.max_health and self.money >= REPAIR_HEALTH_COST:
@@ -137,13 +146,7 @@ class GameStateManager:
         self.notify_all_new_level()
         self._game_state = GameState.WAITING_TO_START
         self._start_level_timer.activate()
-
-        if self.best_score < self.score:
-            self.best_score = self.score
-
-            # Open the file for writting
-            with open(BEST_SCORE_FILE_NAME, "w") as file:
-                file.write(str(self.best_score))
+        self.save_best_score()
 
     def is_current_level_won(self):
         return self._alive_enemies == 0

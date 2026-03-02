@@ -22,4 +22,6 @@ class FontAsset(Enum):
 
 
 class AudioAsset(Enum):
-    SOUND = "sound"
+    MARCH = "march"
+    ATTACK = "attack"
+    DEATH = "death"
