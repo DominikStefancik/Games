@@ -9,6 +9,11 @@ class ImageAsset(Enum):
     WATER_BACK = "water_back"
     WATER_FRONT = "water_front"
     GRASS = "grass"
+    DUCK_BROWN = "duck_brown"
+    DUCK_BROWN_TARGET = "duck_brown_target"
+    DUCK_YELLOW = "duck_yellow"
+    DUCK_YELLOW_TARGET = "duck_yellow_target"
+    STICK = "stick"
 
 
 class FontAsset(Enum):

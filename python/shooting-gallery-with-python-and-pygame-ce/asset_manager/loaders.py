@@ -28,6 +28,21 @@ def load_graphics():
         ImageAsset.GRASS: pygame.image.load(
             join("assets", "images", "grass.png")
         ).convert_alpha(),
+        ImageAsset.DUCK_BROWN: pygame.image.load(
+            join("assets", "images", "duck", "duck_outline_brown.png")
+        ).convert_alpha(),
+        ImageAsset.DUCK_BROWN_TARGET: pygame.image.load(
+            join("assets", "images", "duck", "duck_outline_target_brown.png")
+        ).convert_alpha(),
+        ImageAsset.DUCK_YELLOW: pygame.image.load(
+            join("assets", "images", "duck", "duck_outline_yellow.png")
+        ).convert_alpha(),
+        ImageAsset.DUCK_YELLOW_TARGET: pygame.image.load(
+            join("assets", "images", "duck", "duck_outline_target_yellow.png")
+        ).convert_alpha(),
+        ImageAsset.STICK: pygame.image.load(
+            join("assets", "images", "stick_metal.png")
+        ).convert_alpha(),
     }
 
 

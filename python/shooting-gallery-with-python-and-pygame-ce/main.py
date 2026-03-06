@@ -1,7 +1,7 @@
 import pygame
 
 from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
-from scene_manager import SceneManager
+from scene_manager.scene_manager import SceneManager
 
 
 class Game:
@@ -14,7 +14,7 @@ class Game:
         self.scene_manager = SceneManager()
 
     def update(self):
-        pass
+        self.scene_manager.update()
 
     def draw(self):
         self.scene_manager.draw()
