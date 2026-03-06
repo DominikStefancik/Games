@@ -1,6 +1,7 @@
-import pygame, sys
+import pygame
 
-from settings import WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
+from scene_manager import SceneManager
 
 
 class Game:
@@ -8,19 +9,25 @@ class Game:
         pygame.init()
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Python Shooting Gallery")
+        self.clock = pygame.time.Clock()
+
+        self.scene_manager = SceneManager()
 
     def update(self):
         pass
 
     def draw(self):
-        pass
+        self.scene_manager.draw()
 
     def run(self):
-        while True:
+        is_running = True
+
+        while is_running:
+            self.clock.tick(FPS)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    is_running = False
 
             self.update()
             self.draw()
@@ -28,7 +35,6 @@ class Game:
             pygame.display.update()
 
         pygame.quit()
-        sys.exit()
 
 
 # To make sure we are running only main.py and not anything else
