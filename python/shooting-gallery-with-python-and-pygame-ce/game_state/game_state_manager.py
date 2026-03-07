@@ -6,6 +6,7 @@ from .constants import (
     LEVEL_DIFFICULTY_MULTIPLIER,
     LEVEL_FINISHED_DELAY,
     LEVEL_START_DELAY,
+    LEVELS_COUNT,
     MAX_BULLETS,
 )
 from .game_state import GameState
@@ -15,7 +16,6 @@ class GameStateManager:
     def __init__(self):
         self._game_state = GameState.WAITING_TO_START
         self._current_level = 1
-        self._last_level = 5
         self._level_difficulty = 1
         self.static_sprites = pygame.sprite.Group()
         self.brown_duck_sprites = pygame.sprite.Group()
@@ -26,6 +26,7 @@ class GameStateManager:
             duration=LEVEL_START_DELAY, repeat=False, autostart=True
         )
         self._level_finished_timer = Timer(duration=LEVEL_FINISHED_DELAY)
+        self._subscribers = []
 
     @property
     def game_state(self):
@@ -52,7 +53,7 @@ class GameStateManager:
         self._remaining_bullets_count = value
 
         if self.remaining_bullets_count == 0:
-            if self._current_level != self._last_level:
+            if self._current_level != LEVELS_COUNT:
                 self._game_state = GameState.LEVEL_FINISHED
             else:
                 self._game_state = GameState.GAME_OVER
@@ -65,6 +66,7 @@ class GameStateManager:
         self._current_level += 1
         self._level_difficulty *= LEVEL_DIFFICULTY_MULTIPLIER
         self._remaining_bullets_count = MAX_BULLETS
+        self.notify_all_restart()
         self._game_state = GameState.WAITING_TO_START
         self._start_level_timer.activate()
 
@@ -75,6 +77,7 @@ class GameStateManager:
         self._current_level = 1
         self._level_difficulty = 1
         self._remaining_bullets_count = MAX_BULLETS
+        self.notify_all_restart()
         self._game_state = GameState.WAITING_TO_START
         self._start_level_timer.activate()
 
@@ -94,6 +97,13 @@ class GameStateManager:
             and not self._level_finished_timer.active
         ):
             self.move_to_next_level()
+
+    def subscribe(self, subscriber):
+        self._subscribers.append(subscriber)
+
+    def notify_all_restart(self):
+        for subscriber in self._subscribers:
+            subscriber.restart()
 
 
 GAME_STATE_MANAGER = GameStateManager()

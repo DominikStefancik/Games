@@ -14,9 +14,6 @@ class SceneManager:
         self.asset_manager = get_asset_manager()
         self.game_state_manager = get_game_state_manager()
 
-    def restart(self):
-        pass
-
     def draw_background(self):
         background = self.asset_manager.graphics[ImageAsset.BACKGROUND]
         image_width, image_height = background.get_width(), background.get_height()

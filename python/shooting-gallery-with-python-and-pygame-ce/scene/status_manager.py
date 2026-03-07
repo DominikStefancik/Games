@@ -37,15 +37,21 @@ class StatusManager:
 
     def draw_ready_text(self):
         text = self.asset_manager.graphics[ImageAsset.READY]
-        self.display_surface.blit(text, (WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 - 50))
+        self.display_surface.blit(
+            text, (WINDOW_WIDTH / 2 - text.get_width() / 2, WINDOW_HEIGHT / 2 - 30)
+        )
 
     def draw_go_text(self):
         text = self.asset_manager.graphics[ImageAsset.GO]
-        self.display_surface.blit(text, (WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 - 50))
+        self.display_surface.blit(
+            text, (WINDOW_WIDTH / 2 - text.get_width() / 2, WINDOW_HEIGHT / 2 - 30)
+        )
 
     def draw_game_over_text(self):
         text = self.asset_manager.graphics[ImageAsset.GAME_OVER]
-        self.display_surface.blit(text, (WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 - 50))
+        self.display_surface.blit(
+            text, (WINDOW_WIDTH / 2 - text.get_width() / 2, WINDOW_HEIGHT / 2 - 30)
+        )
 
     def draw(self):
         if self.game_state_manager.game_state == GameState.WAITING_TO_START:
