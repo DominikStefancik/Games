@@ -1,7 +1,9 @@
+from random import choice
+
 import pygame
 
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import AudioAsset, ImageAsset
 from crosshair import Crosshair
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
@@ -44,6 +46,8 @@ class SpritesManager:
 
     def detect_collision_with_duck(self):
         if pygame.mouse.get_just_pressed()[0]:
+            self.game_state_manager.remaining_bullets_count -= 1
+            duck_shot = False
             mouse_position = pygame.mouse.get_pos()
 
             for duck in (
@@ -53,9 +57,28 @@ class SpritesManager:
                 if not duck.is_hit and duck.rect.collidepoint(mouse_position):
                     duck.is_hit = True
                     self.game_state_manager.score += duck.points
+                    duck_shot = True
+
+                    random_hit_sound = choice(
+                        [
+                            AudioAsset.METAL_HIT_1,
+                            AudioAsset.METAL_HIT_2,
+                            AudioAsset.METAL_HIT_3,
+                            AudioAsset.METAL_HIT_4,
+                            AudioAsset.METAL_HIT_5,
+                            AudioAsset.METAL_HIT_6,
+                            AudioAsset.METAL_HIT_7,
+                            AudioAsset.METAL_HIT_8,
+                            AudioAsset.METAL_HIT_9,
+                        ]
+                    )
+                    hit_sound = self.asset_manager.sounds[random_hit_sound]
+                    hit_sound.play()
                     break
 
-            self.game_state_manager.remaining_bullets_count -= 1
+            if not duck_shot:
+                shot_sound = self.asset_manager.sounds[AudioAsset.GUN_SHOT]
+                shot_sound.play()
 
     def update(self):
         if self.game_state_manager.game_state != GameState.GAME_OVER:

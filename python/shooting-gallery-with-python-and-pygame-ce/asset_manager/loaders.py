@@ -58,9 +58,6 @@ def load_graphics():
         ImageAsset.READY: pygame.image.load(
             join("assets", "images", "text", "text_ready.png")
         ).convert_alpha(),
-        ImageAsset.GO: pygame.image.load(
-            join("assets", "images", "text", "text_go.png")
-        ).convert_alpha(),
         ImageAsset.GAME_OVER: pygame.image.load(
             join("assets", "images", "text", "text_gameover.png")
         ).convert_alpha(),
@@ -105,5 +102,40 @@ def load_fonts():
 
 def load_sounds():
     return {
-        AudioAsset.SOUND: pygame.mixer.Sound(join("assets", "sounds", "sound.wav")),
+        AudioAsset.FUN_FAIR: pygame.mixer.Sound(
+            join("assets", "sounds", "funfair_music.mp3")
+        ),
+        AudioAsset.GAME_OVER: pygame.mixer.Sound(
+            join("assets", "sounds", "game_over.mp3")
+        ),
+        AudioAsset.GUN_SHOT: pygame.mixer.Sound(
+            join("assets", "sounds", "gun_shot.mp3")
+        ),
+        AudioAsset.METAL_HIT_1: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_1.mp3")
+        ),
+        AudioAsset.METAL_HIT_2: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_2.mp3")
+        ),
+        AudioAsset.METAL_HIT_3: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_3.mp3")
+        ),
+        AudioAsset.METAL_HIT_4: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_4.mp3")
+        ),
+        AudioAsset.METAL_HIT_5: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_5.mp3")
+        ),
+        AudioAsset.METAL_HIT_6: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_6.mp3")
+        ),
+        AudioAsset.METAL_HIT_7: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_7.mp3")
+        ),
+        AudioAsset.METAL_HIT_8: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_8.mp3")
+        ),
+        AudioAsset.METAL_HIT_9: pygame.mixer.Sound(
+            join("assets", "sounds", "metal_hit_9.mp3")
+        ),
     }

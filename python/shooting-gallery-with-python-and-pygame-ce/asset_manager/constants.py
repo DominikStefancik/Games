@@ -38,4 +38,15 @@ class FontAsset(Enum):
 
 
 class AudioAsset(Enum):
-    AUDIO = "audio"
+    FUN_FAIR = "fun_fair"
+    GAME_OVER = "game_over"
+    GUN_SHOT = "gun_shot"
+    METAL_HIT_1 = "metal_hit_1"
+    METAL_HIT_2 = "metal_hit_2"
+    METAL_HIT_3 = "metal_hit_3"
+    METAL_HIT_4 = "metal_hit_4"
+    METAL_HIT_5 = "metal_hit_5"
+    METAL_HIT_6 = "metal_hit_6"
+    METAL_HIT_7 = "metal_hit_7"
+    METAL_HIT_8 = "metal_hit_8"
+    METAL_HIT_9 = "metal_hit_9"

@@ -1,5 +1,7 @@
 import pygame
 
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAsset
 from timer import Timer
 
 from .constants import (
@@ -58,6 +60,10 @@ class GameStateManager:
             else:
                 self._game_state = GameState.GAME_OVER
                 self.static_sprites.empty()
+
+                asset_manager = get_asset_manager()
+                asset_manager.sounds[AudioAsset.FUN_FAIR].stop()
+                asset_manager.sounds[AudioAsset.GAME_OVER].play()
 
     def move_to_next_level(self):
         self.brown_duck_sprites.empty()

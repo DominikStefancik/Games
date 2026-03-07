@@ -1,5 +1,7 @@
 import pygame
 
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import AudioAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
@@ -31,6 +33,9 @@ class Game:
 
     def run(self):
         is_running = True
+
+        asset_manager = get_asset_manager()
+        asset_manager.sounds[AudioAsset.FUN_FAIR].play(-1)
 
         while is_running:
             self.clock.tick(FPS)
