@@ -49,6 +49,45 @@ def load_graphics():
         ImageAsset.BULLET: pygame.image.load(
             join("assets", "images", "silver_bullet.png")
         ).convert_alpha(),
+        ImageAsset.SCORE: pygame.image.load(
+            join("assets", "images", "text", "text_score.png")
+        ).convert_alpha(),
+        ImageAsset.COLON: pygame.image.load(
+            join("assets", "images", "text", "text_dots.png")
+        ).convert_alpha(),
+        ImageAsset.GAME_OVER: pygame.image.load(
+            join("assets", "images", "text", "text_gameover.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_0: pygame.image.load(
+            join("assets", "images", "text", "text_0.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_1: pygame.image.load(
+            join("assets", "images", "text", "text_1.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_2: pygame.image.load(
+            join("assets", "images", "text", "text_2.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_3: pygame.image.load(
+            join("assets", "images", "text", "text_3.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_4: pygame.image.load(
+            join("assets", "images", "text", "text_4.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_5: pygame.image.load(
+            join("assets", "images", "text", "text_5.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_6: pygame.image.load(
+            join("assets", "images", "text", "text_6.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_7: pygame.image.load(
+            join("assets", "images", "text", "text_7.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_8: pygame.image.load(
+            join("assets", "images", "text", "text_8.png")
+        ).convert_alpha(),
+        ImageAsset.NUMBER_9: pygame.image.load(
+            join("assets", "images", "text", "text_9.png")
+        ).convert_alpha(),
     }
 
 

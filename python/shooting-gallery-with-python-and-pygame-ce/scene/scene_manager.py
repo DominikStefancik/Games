@@ -63,12 +63,6 @@ class SceneManager:
         for x in range(0, WINDOW_WIDTH, curtain_top.get_width()):
             self.display_surface.blit(curtain_top, (x, 0))
 
-    def draw_bullets(self):
-        bullet = self.asset_manager.graphics[ImageAsset.BULLET]
-
-        for index in range(self.game_state_manager.remaining_bullets_count):
-            self.display_surface.blit(bullet, (index * 30 + 100, WINDOW_HEIGHT - 60))
-
     def draw(self):
         self.draw_background()
         self.draw_grass()
@@ -84,4 +78,3 @@ class SceneManager:
         self.draw_front_water()
         self.draw_table()
         self.draw_curtains()
-        self.draw_bullets()

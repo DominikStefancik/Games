@@ -47,8 +47,8 @@ class SpritesManager:
             mouse_position = pygame.mouse.get_pos()
 
             for duck in (
-                self.game_state_manager.brown_duck_sprites.sprites()
-                + self.game_state_manager.yellow_duck_sprites.sprites()
+                self.game_state_manager.yellow_duck_sprites.sprites()
+                + self.game_state_manager.brown_duck_sprites.sprites()
             ):
                 if not duck.is_hit and duck.rect.collidepoint(mouse_position):
                     duck.is_hit = True

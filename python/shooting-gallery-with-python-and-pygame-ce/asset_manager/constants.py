@@ -16,6 +16,19 @@ class ImageAsset(Enum):
     STICK = "stick"
     CROSSHAIR = "crosshair"
     BULLET = "bullet"
+    SCORE = "score"
+    COLON = "colon"
+    GAME_OVER = "game_over"
+    NUMBER_0 = "number_0"
+    NUMBER_1 = "number_1"
+    NUMBER_2 = "number_2"
+    NUMBER_3 = "number_3"
+    NUMBER_4 = "number_4"
+    NUMBER_5 = "number_5"
+    NUMBER_6 = "number_6"
+    NUMBER_7 = "number_7"
+    NUMBER_8 = "number_8"
+    NUMBER_9 = "number_9"
 
 
 class FontAsset(Enum):

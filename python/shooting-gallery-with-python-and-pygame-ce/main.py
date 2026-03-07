@@ -3,8 +3,9 @@ import pygame
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
-from scene_manager.scene_manager import SceneManager
-from scene_manager.sprites_manager import SpritesManager
+from scene.scene_manager import SceneManager
+from scene.sprites_manager import SpritesManager
+from scene.status_manager import StatusManager
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
 
         self.game_state_manager = get_game_state_manager()
         self.scene_manager = SceneManager()
+        self.status_manager = StatusManager()
         self.sprites_manager = SpritesManager()
 
     def update(self):
@@ -25,6 +27,7 @@ class Game:
     def draw(self):
         self.scene_manager.draw()
         self.sprites_manager.draw()
+        self.status_manager.draw()
 
     def run(self):
         is_running = True
