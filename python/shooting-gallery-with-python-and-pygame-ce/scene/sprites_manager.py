@@ -15,7 +15,7 @@ class SpritesManager:
         self.asset_manager = get_asset_manager()
         self.game_state_manager = get_game_state_manager()
         self.crosshair = Crosshair(
-            group=self.game_state_manager.all_sprites,
+            group=self.game_state_manager.static_sprites,
             image=self.asset_manager.graphics[ImageAsset.CROSSHAIR],
         )
 
@@ -25,20 +25,14 @@ class SpritesManager:
     def create_brown_ducks(self):
         for index in range(MAX_DUCKS_ON_SCREEN):
             create_brown_duck(
-                (
-                    self.game_state_manager.all_sprites,
-                    self.game_state_manager.brown_duck_sprites,
-                ),
+                self.game_state_manager.brown_duck_sprites,
                 index,
             )
 
     def create_yellow_ducks(self):
         for index in range(MAX_DUCKS_ON_SCREEN):
             create_yellow_duck(
-                (
-                    self.game_state_manager.all_sprites,
-                    self.game_state_manager.yellow_duck_sprites,
-                ),
+                self.game_state_manager.yellow_duck_sprites,
                 index,
             )
 
@@ -58,27 +52,26 @@ class SpritesManager:
             self.game_state_manager.remaining_bullets_count -= 1
 
     def update(self):
-        self.game_state_manager.all_sprites.update()
+        if self.game_state_manager.game_state != GameState.GAME_OVER:
+            self.game_state_manager.static_sprites.update()
+            self.game_state_manager.brown_duck_sprites.update()
+            self.game_state_manager.yellow_duck_sprites.update()
 
-        if len(self.game_state_manager.brown_duck_sprites) < MAX_DUCKS_ON_SCREEN:
-            create_brown_duck(
-                (
-                    self.game_state_manager.all_sprites,
+        if self.game_state_manager.game_state == GameState.RUNNING:
+            if len(self.game_state_manager.brown_duck_sprites) < MAX_DUCKS_ON_SCREEN:
+                create_brown_duck(
                     self.game_state_manager.brown_duck_sprites,
-                ),
-                MAX_DUCKS_ON_SCREEN,
-            )
+                    MAX_DUCKS_ON_SCREEN,
+                )
 
-        if len(self.game_state_manager.yellow_duck_sprites) < MAX_DUCKS_ON_SCREEN:
-            create_yellow_duck(
-                (
-                    self.game_state_manager.all_sprites,
+            if len(self.game_state_manager.yellow_duck_sprites) < MAX_DUCKS_ON_SCREEN:
+                create_yellow_duck(
                     self.game_state_manager.yellow_duck_sprites,
-                ),
-                -0.5,
-            )
+                    -0.5,
+                )
 
-        self.detect_collision_with_duck()
+            self.detect_collision_with_duck()
 
     def draw(self):
-        self.crosshair.draw()
+        if self.game_state_manager.game_state != GameState.GAME_OVER:
+            self.crosshair.draw()

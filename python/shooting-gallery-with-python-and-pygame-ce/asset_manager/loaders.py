@@ -55,6 +55,12 @@ def load_graphics():
         ImageAsset.COLON: pygame.image.load(
             join("assets", "images", "text", "text_dots.png")
         ).convert_alpha(),
+        ImageAsset.READY: pygame.image.load(
+            join("assets", "images", "text", "text_ready.png")
+        ).convert_alpha(),
+        ImageAsset.GO: pygame.image.load(
+            join("assets", "images", "text", "text_go.png")
+        ).convert_alpha(),
         ImageAsset.GAME_OVER: pygame.image.load(
             join("assets", "images", "text", "text_gameover.png")
         ).convert_alpha(),

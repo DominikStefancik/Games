@@ -18,6 +18,8 @@ class ImageAsset(Enum):
     BULLET = "bullet"
     SCORE = "score"
     COLON = "colon"
+    READY = "ready"
+    GO = "go"
     GAME_OVER = "game_over"
     NUMBER_0 = "number_0"
     NUMBER_1 = "number_1"

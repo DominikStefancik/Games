@@ -2,8 +2,9 @@ import pygame
 
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
+from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
-from settings import WINDOW_HEIGHT
+from settings import WINDOW_HEIGHT, WINDOW_WIDTH
 
 from .helpers import get_digit_image
 
@@ -34,6 +35,24 @@ class StatusManager:
         for index in range(self.game_state_manager.remaining_bullets_count):
             self.display_surface.blit(bullet, (index * 30 + 100, WINDOW_HEIGHT - 60))
 
+    def draw_ready_text(self):
+        text = self.asset_manager.graphics[ImageAsset.READY]
+        self.display_surface.blit(text, (WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 - 50))
+
+    def draw_go_text(self):
+        text = self.asset_manager.graphics[ImageAsset.GO]
+        self.display_surface.blit(text, (WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 - 50))
+
+    def draw_game_over_text(self):
+        text = self.asset_manager.graphics[ImageAsset.GAME_OVER]
+        self.display_surface.blit(text, (WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 - 50))
+
     def draw(self):
+        if self.game_state_manager.game_state == GameState.WAITING_TO_START:
+            self.draw_ready_text()
+
+        if self.game_state_manager.game_state == GameState.GAME_OVER:
+            self.draw_game_over_text()
+
         self.draw_score()
         self.draw_bullets()

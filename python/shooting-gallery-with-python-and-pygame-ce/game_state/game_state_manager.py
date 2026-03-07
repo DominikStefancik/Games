@@ -1,6 +1,13 @@
 import pygame
 
-from .constants import MAX_BULLETS
+from timer import Timer
+
+from .constants import (
+    LEVEL_DIFFICULTY_MULTIPLIER,
+    LEVEL_FINISHED_DELAY,
+    LEVEL_START_DELAY,
+    MAX_BULLETS,
+)
 from .game_state import GameState
 
 
@@ -8,11 +15,17 @@ class GameStateManager:
     def __init__(self):
         self._game_state = GameState.WAITING_TO_START
         self._current_level = 1
-        self.all_sprites = pygame.sprite.Group()
+        self._last_level = 5
+        self._level_difficulty = 1
+        self.static_sprites = pygame.sprite.Group()
         self.brown_duck_sprites = pygame.sprite.Group()
         self.yellow_duck_sprites = pygame.sprite.Group()
         self.score = 0
-        self.remaining_bullets_count = MAX_BULLETS
+        self._remaining_bullets_count = MAX_BULLETS
+        self._start_level_timer = Timer(
+            duration=LEVEL_START_DELAY, repeat=False, autostart=True
+        )
+        self._level_finished_timer = Timer(duration=LEVEL_FINISHED_DELAY)
 
     @property
     def game_state(self):
@@ -26,21 +39,61 @@ class GameStateManager:
     def current_level(self):
         return self._current_level
 
-    def move_to_next_level(self):
-        pass
+    @property
+    def level_difficulty(self):
+        return self._level_difficulty
 
-    def is_current_level_won(self):
-        pass
+    @property
+    def remaining_bullets_count(self):
+        return self._remaining_bullets_count
+
+    @remaining_bullets_count.setter
+    def remaining_bullets_count(self, value):
+        self._remaining_bullets_count = value
+
+        if self.remaining_bullets_count == 0:
+            if self._current_level != self._last_level:
+                self._game_state = GameState.LEVEL_FINISHED
+            else:
+                self._game_state = GameState.GAME_OVER
+                self.static_sprites.empty()
+
+    def move_to_next_level(self):
+        self.brown_duck_sprites.empty()
+        self.yellow_duck_sprites.empty()
+
+        self._current_level += 1
+        self._level_difficulty *= LEVEL_DIFFICULTY_MULTIPLIER
+        self._remaining_bullets_count = MAX_BULLETS
+        self._game_state = GameState.WAITING_TO_START
+        self._start_level_timer.activate()
 
     def restart(self):
-        pass
+        self.brown_duck_sprites.empty()
+        self.yellow_duck_sprites.empty()
+
+        self._current_level = 1
+        self._level_difficulty = 1
+        self._remaining_bullets_count = MAX_BULLETS
+        self._game_state = GameState.WAITING_TO_START
+        self._start_level_timer.activate()
 
     def update(self):
-        is_mouse_cursor_visible = self._game_state in [
-            GameState.GAME_WON,
-            GameState.GAME_OVER,
-        ]
-        pygame.mouse.set_visible(is_mouse_cursor_visible)
+        self._start_level_timer.update()
+        self._level_finished_timer.update()
+
+        pygame.mouse.set_visible(self._game_state == GameState.GAME_OVER)
+
+        if (
+            self._game_state == GameState.WAITING_TO_START
+            and not self._start_level_timer.active
+        ):
+            self._game_state = GameState.RUNNING
+        elif (
+            self._game_state == GameState.LEVEL_FINISHED
+            and not self._level_finished_timer.active
+        ):
+            self.move_to_next_level()
 
 
 GAME_STATE_MANAGER = GameStateManager()
