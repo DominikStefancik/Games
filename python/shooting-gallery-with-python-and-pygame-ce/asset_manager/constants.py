@@ -14,6 +14,8 @@ class ImageAsset(Enum):
     DUCK_YELLOW = "duck_yellow"
     DUCK_YELLOW_TARGET = "duck_yellow_target"
     STICK = "stick"
+    CROSSHAIR = "crosshair"
+    BULLET = "bullet"
 
 
 class FontAsset(Enum):

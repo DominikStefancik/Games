@@ -1,5 +1,6 @@
-import os
+import pygame
 
+from .constants import MAX_BULLETS
 from .game_state import GameState
 
 
@@ -7,6 +8,11 @@ class GameStateManager:
     def __init__(self):
         self._game_state = GameState.WAITING_TO_START
         self._current_level = 1
+        self.all_sprites = pygame.sprite.Group()
+        self.brown_duck_sprites = pygame.sprite.Group()
+        self.yellow_duck_sprites = pygame.sprite.Group()
+        self.score = 0
+        self.remaining_bullets_count = MAX_BULLETS
 
     @property
     def game_state(self):
@@ -28,6 +34,13 @@ class GameStateManager:
 
     def restart(self):
         pass
+
+    def update(self):
+        is_mouse_cursor_visible = self._game_state in [
+            GameState.GAME_WON,
+            GameState.GAME_OVER,
+        ]
+        pygame.mouse.set_visible(is_mouse_cursor_visible)
 
 
 GAME_STATE_MANAGER = GameStateManager()

@@ -1,7 +1,10 @@
 import pygame
 
+from game_state.game_state import GameState
+from game_state.game_state_manager import get_game_state_manager
 from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from scene_manager.scene_manager import SceneManager
+from scene_manager.sprites_manager import SpritesManager
 
 
 class Game:
@@ -11,13 +14,17 @@ class Game:
         pygame.display.set_caption("Python Shooting Gallery")
         self.clock = pygame.time.Clock()
 
+        self.game_state_manager = get_game_state_manager()
         self.scene_manager = SceneManager()
+        self.sprites_manager = SpritesManager()
 
     def update(self):
-        self.scene_manager.update()
+        self.game_state_manager.update()
+        self.sprites_manager.update()
 
     def draw(self):
         self.scene_manager.draw()
+        self.sprites_manager.draw()
 
     def run(self):
         is_running = True

@@ -2,10 +2,8 @@ import pygame
 
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
+from game_state.game_state_manager import get_game_state_manager
 from settings import WINDOW_HEIGHT, WINDOW_WIDTH
-
-from .constants import MAX_DUCKS_ON_SCREEN
-from .helpers import create_brown_duck, create_yellow_duck
 
 
 class SceneManager:
@@ -14,20 +12,7 @@ class SceneManager:
         self.display_surface = pygame.display.get_surface()
 
         self.asset_manager = get_asset_manager()
-        self.all_sprites = pygame.sprite.Group()
-        self.brown_duck_sprites = pygame.sprite.Group()
-        self.yellow_duck_sprites = pygame.sprite.Group()
-
-        self.create_brown_ducks()
-        self.create_yellow_ducks()
-
-    def create_brown_ducks(self):
-        for index in range(MAX_DUCKS_ON_SCREEN):
-            create_brown_duck((self.all_sprites, self.brown_duck_sprites), index)
-
-    def create_yellow_ducks(self):
-        for index in range(MAX_DUCKS_ON_SCREEN):
-            create_yellow_duck((self.all_sprites, self.yellow_duck_sprites), index)
+        self.game_state_manager = get_game_state_manager()
 
     def restart(self):
         pass
@@ -78,29 +63,25 @@ class SceneManager:
         for x in range(0, WINDOW_WIDTH, curtain_top.get_width()):
             self.display_surface.blit(curtain_top, (x, 0))
 
-    def update(self):
-        self.all_sprites.update()
+    def draw_bullets(self):
+        bullet = self.asset_manager.graphics[ImageAsset.BULLET]
 
-        if len(self.brown_duck_sprites) < MAX_DUCKS_ON_SCREEN:
-            create_brown_duck(
-                (self.all_sprites, self.brown_duck_sprites), MAX_DUCKS_ON_SCREEN
-            )
-
-        if len(self.yellow_duck_sprites) < MAX_DUCKS_ON_SCREEN:
-            create_yellow_duck((self.all_sprites, self.yellow_duck_sprites), -0.5)
+        for index in range(self.game_state_manager.remaining_bullets_count):
+            self.display_surface.blit(bullet, (index * 30 + 100, WINDOW_HEIGHT - 60))
 
     def draw(self):
         self.draw_background()
         self.draw_grass()
 
-        for duck in self.brown_duck_sprites:
+        for duck in self.game_state_manager.brown_duck_sprites:
             duck.draw()
 
         self.draw_back_water()
 
-        for duck in self.yellow_duck_sprites:
+        for duck in self.game_state_manager.yellow_duck_sprites:
             duck.draw()
 
         self.draw_front_water()
         self.draw_table()
         self.draw_curtains()
+        self.draw_bullets()

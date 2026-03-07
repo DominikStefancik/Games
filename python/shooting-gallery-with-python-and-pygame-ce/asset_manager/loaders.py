@@ -43,6 +43,12 @@ def load_graphics():
         ImageAsset.STICK: pygame.image.load(
             join("assets", "images", "stick_metal.png")
         ).convert_alpha(),
+        ImageAsset.CROSSHAIR: pygame.image.load(
+            join("assets", "images", "crosshair_outline.png")
+        ).convert_alpha(),
+        ImageAsset.BULLET: pygame.image.load(
+            join("assets", "images", "silver_bullet.png")
+        ).convert_alpha(),
     }
 
 
