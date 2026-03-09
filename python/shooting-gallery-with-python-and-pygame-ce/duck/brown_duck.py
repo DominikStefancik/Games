@@ -12,7 +12,7 @@ class BrownDuck(Duck):
         self.points = 4 if has_target else 2
 
     def update(self):
-        self.rect.x -= self.speed * self.game_state_manager.level_difficulty
+        self.rect.x -= self.speed * self.game_state_manager.round_difficulty
 
         if self.rect.right < 0:
             self.kill()

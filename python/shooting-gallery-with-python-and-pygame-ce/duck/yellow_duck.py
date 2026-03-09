@@ -13,7 +13,7 @@ class YellowDuck(Duck):
         self.points = 2 if has_target else 1
 
     def update(self):
-        self.rect.x += self.speed * self.game_state_manager.level_difficulty
+        self.rect.x += self.speed * self.game_state_manager.round_difficulty
 
         if self.rect.x > WINDOW_WIDTH:
             self.kill()

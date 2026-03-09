@@ -5,11 +5,11 @@ from asset_manager.constants import AudioAsset
 from timer import Timer
 
 from .constants import (
-    LEVEL_DIFFICULTY_MULTIPLIER,
-    LEVEL_FINISHED_DELAY,
-    LEVEL_START_DELAY,
-    LEVELS_COUNT,
     MAX_BULLETS,
+    ROUND_DIFFICULTY_MULTIPLIER,
+    ROUND_FINISHED_DELAY,
+    ROUND_START_DELAY,
+    ROUNDS_COUNT,
 )
 from .game_state import GameState
 
@@ -17,17 +17,17 @@ from .game_state import GameState
 class GameStateManager:
     def __init__(self):
         self._game_state = GameState.WAITING_TO_START
-        self._current_level = 1
-        self._level_difficulty = 1
+        self._current_round = 1
+        self._round_difficulty = 1
         self.static_sprites = pygame.sprite.Group()
         self.brown_duck_sprites = pygame.sprite.Group()
         self.yellow_duck_sprites = pygame.sprite.Group()
         self.score = 0
         self._remaining_bullets_count = MAX_BULLETS
-        self._start_level_timer = Timer(
-            duration=LEVEL_START_DELAY, repeat=False, autostart=True
+        self._start_round_timer = Timer(
+            duration=ROUND_START_DELAY, repeat=False, autostart=True
         )
-        self._level_finished_timer = Timer(duration=LEVEL_FINISHED_DELAY)
+        self._round_finished_timer = Timer(duration=ROUND_FINISHED_DELAY)
         self._subscribers = []
 
     @property
@@ -39,12 +39,12 @@ class GameStateManager:
         self._game_state = value
 
     @property
-    def current_level(self):
-        return self._current_level
+    def current_round(self):
+        return self._current_round
 
     @property
-    def level_difficulty(self):
-        return self._level_difficulty
+    def round_difficulty(self):
+        return self._round_difficulty
 
     @property
     def remaining_bullets_count(self):
@@ -55,8 +55,9 @@ class GameStateManager:
         self._remaining_bullets_count = value
 
         if self.remaining_bullets_count == 0:
-            if self._current_level != LEVELS_COUNT:
-                self._game_state = GameState.LEVEL_FINISHED
+            if self._current_round != ROUNDS_COUNT:
+                self._game_state = GameState.ROUND_FINISHED
+                self._round_finished_timer.activate()
             else:
                 self._game_state = GameState.GAME_OVER
                 self.static_sprites.empty()
@@ -69,38 +70,38 @@ class GameStateManager:
         self.brown_duck_sprites.empty()
         self.yellow_duck_sprites.empty()
 
-        self._current_level += 1
-        self._level_difficulty *= LEVEL_DIFFICULTY_MULTIPLIER
+        self._current_round += 1
+        self._round_difficulty *= ROUND_DIFFICULTY_MULTIPLIER
         self._remaining_bullets_count = MAX_BULLETS
         self.notify_all_restart()
         self._game_state = GameState.WAITING_TO_START
-        self._start_level_timer.activate()
+        self._start_round_timer.activate()
 
     def restart(self):
         self.brown_duck_sprites.empty()
         self.yellow_duck_sprites.empty()
 
-        self._current_level = 1
-        self._level_difficulty = 1
+        self._current_round = 1
+        self._round_difficulty = 1
         self._remaining_bullets_count = MAX_BULLETS
         self.notify_all_restart()
         self._game_state = GameState.WAITING_TO_START
-        self._start_level_timer.activate()
+        self._start_round_timer.activate()
 
     def update(self):
-        self._start_level_timer.update()
-        self._level_finished_timer.update()
+        self._start_round_timer.update()
+        self._round_finished_timer.update()
 
         pygame.mouse.set_visible(self._game_state == GameState.GAME_OVER)
 
         if (
             self._game_state == GameState.WAITING_TO_START
-            and not self._start_level_timer.active
+            and not self._start_round_timer.active
         ):
             self._game_state = GameState.RUNNING
         elif (
-            self._game_state == GameState.LEVEL_FINISHED
-            and not self._level_finished_timer.active
+            self._game_state == GameState.ROUND_FINISHED
+            and not self._round_finished_timer.active
         ):
             self.move_to_next_level()
 
