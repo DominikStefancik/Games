@@ -9,7 +9,7 @@ class YellowDuck(Duck):
         super().__init__(group, image, position)
 
         self.game_state_manager = get_game_state_manager()
-        self.speed = 1.5
+        self.speed = 2
         self.points = 2 if has_target else 1
 
     def update(self):

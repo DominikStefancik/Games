@@ -94,7 +94,13 @@ class SpritesManager:
             self.game_state_manager.yellow_duck_sprites.update()
 
         if self.game_state_manager.game_state == GameState.RUNNING:
-            if len(self.game_state_manager.brown_duck_sprites) < MAX_DUCKS_IN_SCENE:
+            # With the higher round difficulty (and the speed of ducks's movement),
+            # it happens that the group is empty that's why we have to use creating ducks as a group
+            if len(self.game_state_manager.brown_duck_sprites) == 0:
+                self.create_brown_ducks()
+            elif (
+                0 < len(self.game_state_manager.brown_duck_sprites) < MAX_DUCKS_IN_SCENE
+            ):
                 last_duck = self.game_state_manager.brown_duck_sprites.sprites()[-1]
 
                 create_brown_duck(
@@ -104,7 +110,15 @@ class SpritesManager:
                     + DUCK_IMAGE_WIDTH / 2,
                 )
 
-            if len(self.game_state_manager.yellow_duck_sprites) < MAX_DUCKS_IN_SCENE:
+            # With the higher round difficulty (and the speed of ducks's movement),
+            # it happens that the group is empty that's why we have to use creating ducks as a group
+            if len(self.game_state_manager.yellow_duck_sprites) == 0:
+                self.create_yellow_ducks()
+            elif (
+                0
+                < len(self.game_state_manager.yellow_duck_sprites)
+                < MAX_DUCKS_IN_SCENE
+            ):
                 last_duck = self.game_state_manager.yellow_duck_sprites.sprites()[-1]
 
                 create_yellow_duck(

@@ -34,7 +34,7 @@ class ImageAsset(Enum):
 
 
 class FontAsset(Enum):
-    FONT = "font"
+    FUTURA = "futura"
 
 
 class AudioAsset(Enum):

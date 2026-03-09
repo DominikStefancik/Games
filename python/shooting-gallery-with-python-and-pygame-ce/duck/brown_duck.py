@@ -8,7 +8,7 @@ class BrownDuck(Duck):
         super().__init__(group, image, position)
 
         self.game_state_manager = get_game_state_manager()
-        self.speed = 2.5
+        self.speed = 3
         self.points = 4 if has_target else 2
 
     def update(self):

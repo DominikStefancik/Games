@@ -1,7 +1,7 @@
 import pygame
 
 from asset_manager.asset_manager import get_asset_manager
-from asset_manager.constants import ImageAsset
+from asset_manager.constants import FontAsset, ImageAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import WINDOW_HEIGHT, WINDOW_WIDTH
@@ -29,6 +29,17 @@ class StatusManager:
             self.display_surface.blit(get_digit_image(digit), (digit_x, 5))
             digit_x += 25
 
+    def draw_round(self):
+        section_start_x = 300
+        font = self.asset_manager.fonts[FontAsset.FUTURA]
+        image = font.render("ROUND: ", True, (255, 255, 255))
+        self.display_surface.blit(image, (section_start_x, 0))
+
+        self.display_surface.blit(
+            get_digit_image(str(self.game_state_manager.current_round)),
+            (section_start_x + image.get_width() + 3, 5),
+        )
+
     def draw_bullets(self):
         bullet = self.asset_manager.graphics[ImageAsset.BULLET]
 
@@ -55,4 +66,5 @@ class StatusManager:
             self.draw_game_over_text()
 
         self.draw_score()
+        self.draw_round()
         self.draw_bullets()

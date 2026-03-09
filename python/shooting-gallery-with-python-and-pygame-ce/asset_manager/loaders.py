@@ -96,7 +96,7 @@ def load_graphics():
 
 def load_fonts():
     return {
-        FontAsset.FONT: pygame.font.SysFont("Font", 25),
+        FontAsset.FUTURA: pygame.font.SysFont("Futura", 35),
     }
 
 
