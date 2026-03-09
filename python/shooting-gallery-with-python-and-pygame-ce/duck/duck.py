@@ -7,14 +7,14 @@ from asset_manager.constants import ImageAsset
 
 
 class Duck(pygame.sprite.Sprite):
-    def __init__(self, groups, image, position):
-        super().__init__(groups)
+    def __init__(self, group, image, position):
+        super().__init__(group)
 
         self.display_surface = pygame.display.get_surface()
         self.image = image
         self.rect = self.image.get_frect(center=position)
         # Randomly adjust the Y-coordinate to vary the heights of ducks
-        self.rect.y += randint(0, 5) * 10
+        self.rect.y += randint(0, 7) * 10
 
         self.is_hit = False
 

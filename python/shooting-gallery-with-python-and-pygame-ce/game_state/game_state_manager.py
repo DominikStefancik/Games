@@ -66,7 +66,7 @@ class GameStateManager:
                 asset_manager.sounds[AudioAsset.FUN_FAIR].stop()
                 asset_manager.sounds[AudioAsset.GAME_OVER].play()
 
-    def move_to_next_level(self):
+    def move_to_next_round(self):
         self.brown_duck_sprites.empty()
         self.yellow_duck_sprites.empty()
 
@@ -103,7 +103,7 @@ class GameStateManager:
             self._game_state == GameState.ROUND_FINISHED
             and not self._round_finished_timer.active
         ):
-            self.move_to_next_level()
+            self.move_to_next_round()
 
     def subscribe(self, subscriber):
         self._subscribers.append(subscriber)

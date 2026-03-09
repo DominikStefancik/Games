@@ -4,11 +4,11 @@ from .duck import Duck
 
 
 class BrownDuck(Duck):
-    def __init__(self, groups, image, position, has_target):
-        super().__init__(groups, image, position)
+    def __init__(self, group, image, position, has_target):
+        super().__init__(group, image, position)
 
         self.game_state_manager = get_game_state_manager()
-        self.speed = 2
+        self.speed = 2.5
         self.points = 4 if has_target else 2
 
     def update(self):

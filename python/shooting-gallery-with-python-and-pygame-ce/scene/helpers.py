@@ -6,15 +6,12 @@ from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
 from duck.brown_duck import BrownDuck
 from duck.yellow_duck import YellowDuck
+from settings import WINDOW_WIDTH
 
-from .constants import (
-    BROWN_DUCK_VERTICAL_LINE,
-    GAP_BETWEEN_DUCKS,
-    YELLOW_DUCK_VERTICAL_LINE,
-)
+from .constants import BROWN_DUCK_VERTICAL_LINE, YELLOW_DUCK_VERTICAL_LINE
 
 
-def create_brown_duck(groups, index):
+def create_brown_duck(group, position_x):
     asset_manager = get_asset_manager()
     has_target = choice([False, False, False, True])
     image = (
@@ -22,17 +19,16 @@ def create_brown_duck(groups, index):
         if has_target
         else asset_manager.graphics[ImageAsset.DUCK_BROWN]
     )
-    position_x = index * (image.get_width() + GAP_BETWEEN_DUCKS) * 2
 
     return BrownDuck(
-        groups,
+        group,
         pygame.transform.flip(image, True, False),
         (position_x, BROWN_DUCK_VERTICAL_LINE),
         has_target,
     )
 
 
-def create_yellow_duck(groups, index):
+def create_yellow_duck(group, position_x):
     asset_manager = get_asset_manager()
     has_target = choice([False, True])
     image = (
@@ -40,11 +36,8 @@ def create_yellow_duck(groups, index):
         if has_target
         else asset_manager.graphics[ImageAsset.DUCK_YELLOW]
     )
-    position_x = index * (image.get_width() + GAP_BETWEEN_DUCKS) * 2
 
-    return YellowDuck(
-        groups, image, (position_x, YELLOW_DUCK_VERTICAL_LINE), has_target
-    )
+    return YellowDuck(group, image, (position_x, YELLOW_DUCK_VERTICAL_LINE), has_target)
 
 
 def get_digit_image(digit):

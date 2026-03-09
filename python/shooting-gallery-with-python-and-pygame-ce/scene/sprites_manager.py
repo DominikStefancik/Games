@@ -7,8 +7,9 @@ from asset_manager.constants import AudioAsset, ImageAsset
 from crosshair import Crosshair
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
+from settings import WINDOW_WIDTH
 
-from .constants import MAX_DUCKS_IN_SCENE
+from .constants import DUCK_IMAGE_WIDTH, GAP_BETWEEN_DUCKS, MAX_DUCKS_IN_SCENE
 from .helpers import create_brown_duck, create_yellow_duck
 
 
@@ -28,16 +29,22 @@ class SpritesManager:
 
     def create_brown_ducks(self):
         for index in range(MAX_DUCKS_IN_SCENE):
+            position_x = (
+                index * (DUCK_IMAGE_WIDTH + GAP_BETWEEN_DUCKS) * 2
+            ) + WINDOW_WIDTH / 2
             create_brown_duck(
                 self.game_state_manager.brown_duck_sprites,
-                index,
+                position_x,
             )
 
     def create_yellow_ducks(self):
         for index in range(MAX_DUCKS_IN_SCENE):
+            position_x = (
+                index * (DUCK_IMAGE_WIDTH + GAP_BETWEEN_DUCKS) * 2 - WINDOW_WIDTH / 2
+            )
             create_yellow_duck(
                 self.game_state_manager.yellow_duck_sprites,
-                index,
+                -position_x,
             )
 
     def restart(self):
@@ -88,15 +95,23 @@ class SpritesManager:
 
         if self.game_state_manager.game_state == GameState.RUNNING:
             if len(self.game_state_manager.brown_duck_sprites) < MAX_DUCKS_IN_SCENE:
+                last_duck = self.game_state_manager.brown_duck_sprites.sprites()[-1]
+
                 create_brown_duck(
                     self.game_state_manager.brown_duck_sprites,
-                    MAX_DUCKS_IN_SCENE,
+                    last_duck.rect.left
+                    + (DUCK_IMAGE_WIDTH + GAP_BETWEEN_DUCKS) * 2
+                    + DUCK_IMAGE_WIDTH / 2,
                 )
 
             if len(self.game_state_manager.yellow_duck_sprites) < MAX_DUCKS_IN_SCENE:
+                last_duck = self.game_state_manager.yellow_duck_sprites.sprites()[-1]
+
                 create_yellow_duck(
                     self.game_state_manager.yellow_duck_sprites,
-                    -0.5,
+                    last_duck.rect.right
+                    - (DUCK_IMAGE_WIDTH + GAP_BETWEEN_DUCKS) * 2
+                    - DUCK_IMAGE_WIDTH / 2,
                 )
 
             self.detect_collision_with_duck()
