@@ -44,6 +44,16 @@ class Game:
                 if event.type == pygame.QUIT:
                     is_running = False
 
+                # Handle mouse click event
+                # "event.button == 1" represents the left mouse button
+                if (
+                    self.game_state_manager.game_state == GameState.GAME_OVER
+                    and event.type == pygame.MOUSEBUTTONDOWN
+                    and event.button == 1
+                ):
+                    self.game_state_manager.restart()
+                    asset_manager.sounds[AudioAsset.FUN_FAIR].play(-1)
+
             self.update()
             self.draw()
 

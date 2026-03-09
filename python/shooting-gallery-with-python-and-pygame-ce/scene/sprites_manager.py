@@ -50,6 +50,14 @@ class SpritesManager:
     def restart(self):
         self.create_brown_ducks()
         self.create_yellow_ducks()
+        self.crosshair = Crosshair(
+            group=self.game_state_manager.static_sprites,
+            image=self.asset_manager.graphics[ImageAsset.CROSSHAIR],
+        )
+
+    def new_round(self):
+        self.create_brown_ducks()
+        self.create_yellow_ducks()
 
     def detect_collision_with_duck(self):
         if pygame.mouse.get_just_pressed()[0]:

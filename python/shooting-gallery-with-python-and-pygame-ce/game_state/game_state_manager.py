@@ -73,17 +73,19 @@ class GameStateManager:
         self._current_round += 1
         self._round_difficulty *= ROUND_DIFFICULTY_MULTIPLIER
         self._remaining_bullets_count = MAX_BULLETS
-        self.notify_all_restart()
+        self.notify_all_new_round()
         self._game_state = GameState.WAITING_TO_START
         self._start_round_timer.activate()
 
     def restart(self):
+        self.static_sprites.empty()
         self.brown_duck_sprites.empty()
         self.yellow_duck_sprites.empty()
 
         self._current_round = 1
         self._round_difficulty = 1
         self._remaining_bullets_count = MAX_BULLETS
+        self.score = 0
         self.notify_all_restart()
         self._game_state = GameState.WAITING_TO_START
         self._start_round_timer.activate()
@@ -111,6 +113,10 @@ class GameStateManager:
     def notify_all_restart(self):
         for subscriber in self._subscribers:
             subscriber.restart()
+
+    def notify_all_new_round(self):
+        for subscriber in self._subscribers:
+            subscriber.new_round()
 
 
 GAME_STATE_MANAGER = GameStateManager()
