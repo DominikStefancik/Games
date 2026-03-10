@@ -7,6 +7,7 @@ from asset_manager.constants import AudioAsset, ImageAsset
 from crosshair import Crosshair
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
+from input_manager import get_input_manager
 from settings import WINDOW_WIDTH
 
 from .constants import DUCK_IMAGE_WIDTH, GAP_BETWEEN_DUCKS, MAX_DUCKS_IN_SCENE
@@ -17,6 +18,7 @@ class SpritesManager:
     def __init__(self):
         self.asset_manager = get_asset_manager()
         self.game_state_manager = get_game_state_manager()
+        self.input_manager = get_input_manager()
         self.crosshair = Crosshair(
             group=self.game_state_manager.static_sprites,
             image=self.asset_manager.graphics[ImageAsset.CROSSHAIR],
@@ -60,7 +62,7 @@ class SpritesManager:
         self.create_yellow_ducks()
 
     def detect_collision_with_duck(self):
-        if pygame.mouse.get_just_pressed()[0]:
+        if self.input_manager.left_mouse_clicked:
             self.game_state_manager.remaining_bullets_count -= 1
             duck_shot = False
             mouse_position = pygame.mouse.get_pos()

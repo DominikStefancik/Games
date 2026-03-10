@@ -4,6 +4,7 @@ from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import AudioAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
+from input_manager import get_input_manager
 from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from scene.scene_manager import SceneManager
 from scene.sprites_manager import SpritesManager
@@ -18,12 +19,14 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.game_state_manager = get_game_state_manager()
+        self.input_manager = get_input_manager()
         self.scene_manager = SceneManager()
         self.status_manager = StatusManager()
         self.sprites_manager = SpritesManager()
 
     def update(self):
         self.game_state_manager.update()
+        self.input_manager.update()
         self.sprites_manager.update()
 
     def draw(self):
@@ -40,19 +43,16 @@ class Game:
         while is_running:
             self.clock.tick(FPS)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    is_running = False
+            if self.input_manager.exit_button_clicked:
+                is_running = False
 
-                # Handle mouse click event
-                # "event.button == 1" represents the left mouse button
-                if (
-                    self.game_state_manager.game_state == GameState.GAME_OVER
-                    and event.type == pygame.MOUSEBUTTONDOWN
-                    and event.button == 1
-                ):
-                    self.game_state_manager.restart()
-                    asset_manager.sounds[AudioAsset.FUN_FAIR].play(-1)
+            if (
+                self.game_state_manager.game_state == GameState.GAME_OVER
+                and self.input_manager.left_mouse_clicked
+                and not self.game_state_manager.game_over_timer.active
+            ):
+                self.game_state_manager.restart()
+                asset_manager.sounds[AudioAsset.FUN_FAIR].play(-1)
 
             self.update()
             self.draw()

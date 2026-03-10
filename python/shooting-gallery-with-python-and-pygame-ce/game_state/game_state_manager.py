@@ -5,6 +5,7 @@ from asset_manager.constants import AudioAsset
 from timer import Timer
 
 from .constants import (
+    GAME_OVER_DELAY,
     MAX_BULLETS,
     ROUND_DIFFICULTY_MULTIPLIER,
     ROUND_FINISHED_DELAY,
@@ -28,6 +29,7 @@ class GameStateManager:
             duration=ROUND_START_DELAY, repeat=False, autostart=True
         )
         self._round_finished_timer = Timer(duration=ROUND_FINISHED_DELAY)
+        self._game_over_timer = Timer(duration=GAME_OVER_DELAY)
         self._subscribers = []
 
     @property
@@ -65,6 +67,11 @@ class GameStateManager:
                 asset_manager = get_asset_manager()
                 asset_manager.sounds[AudioAsset.FUN_FAIR].stop()
                 asset_manager.sounds[AudioAsset.GAME_OVER].play()
+                self._game_over_timer.activate()
+
+    @property
+    def game_over_timer(self):
+        return self._game_over_timer
 
     def move_to_next_round(self):
         self.brown_duck_sprites.empty()
@@ -93,6 +100,7 @@ class GameStateManager:
     def update(self):
         self._start_round_timer.update()
         self._round_finished_timer.update()
+        self._game_over_timer.update()
 
         pygame.mouse.set_visible(self._game_state == GameState.GAME_OVER)
 
