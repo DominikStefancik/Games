@@ -43,6 +43,7 @@
 * [Hangman](python/hangman-with-python-and-pygame) - classical game Hangman implemented with Pygame
 * [Jumpy](python/jumpy-with-python-and-pygame) - jumping game based on the popular game Doodle Jump implemented with Pygame
 * [Pacman](python/pacman-with-python-and-pygame-ce) - famous game Pacman implemented with Pygame-ce
+* [Shooting Gallery](python/shooting-gallery-with-python-and-pygame-ce) - shooting gallery game implemented with Pygame-ce
 * [Super Pirate](python/super-pirate-platformer-with-python-and-pygame-ce) - platformer game based on the classic Nintendo game Super Mario Bros implemented with Pygame-ce
 * [Tower Defence](python/tower-defence-with-python-and-pygame) - classical game Tower Defence implemented with Pygame
 
