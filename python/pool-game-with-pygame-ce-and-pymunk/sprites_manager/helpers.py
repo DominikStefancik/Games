@@ -1,20 +1,41 @@
 import pymunk
 
+from settings import WINDOW_HEIGHT
 from sprites_manager.constants import (
+    BALL_DIAMETER,
     BALL_ELASTICITY,
     BALL_MASS,
     BALL_MAX_FORCE,
+    BALL_RADIUS,
     CUSHION_ELASTICITY,
 )
 
 
-def create_ball(space, radius, position):
+def create_balls(space):
+    balls = []
+    rows = 5
+
+    for column in range(5):
+        for row in range(rows):
+            position = (
+                250 + column * BALL_DIAMETER,
+                267 + (row * (BALL_DIAMETER + 2)) + (column * BALL_RADIUS),
+            )
+            new_ball = create_ball(space, position)
+            balls.append(new_ball)
+
+        rows -= 1
+
+    return balls
+
+
+def create_ball(space, position):
     # An object in PyMunk space has a body and shape
     #
     # By default a body is dynamic
     body = pymunk.Body()
     body.position = position
-    shape = pymunk.Circle(body, radius)
+    shape = pymunk.Circle(body, BALL_RADIUS)
     shape.mass = BALL_MASS
     shape.elasticity = BALL_ELASTICITY
 

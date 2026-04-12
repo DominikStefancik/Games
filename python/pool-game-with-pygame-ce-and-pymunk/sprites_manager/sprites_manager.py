@@ -5,9 +5,9 @@ import pymunk.pygame_util
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
 from input_manager import get_input_manager
-from settings import FPS
+from settings import FPS, WINDOW_HEIGHT
 from sprites_manager.constants import CUE_BALL_IMPULSE_X, CUSHIONS_DIMENSIONS
-from sprites_manager.helpers import create_ball, create_table_cushion
+from sprites_manager.helpers import create_ball, create_balls, create_table_cushion
 
 
 class SpritesManager:
@@ -25,8 +25,8 @@ class SpritesManager:
         for dimension in CUSHIONS_DIMENSIONS:
             create_table_cushion(self.space, dimension)
 
-        self.ball = create_ball(self.space, 25, (300, 200))
-        self.cue_ball = create_ball(self.space, 25, (600, 215))
+        self.balls = create_balls(self.space)
+        self.cue_ball = create_ball(self.space, (888, WINDOW_HEIGHT / 2))
 
     def restart(self):
         pass
@@ -47,3 +47,20 @@ class SpritesManager:
     def draw(self):
         self.display_surface.blit(self.asset_manager.graphics[ImageAsset.TABLE], (0, 0))
         self.space.debug_draw(self.draw_options)
+
+        for index, ball in enumerate(self.balls):
+            self.display_surface.blit(
+                self.asset_manager.graphics[ImageAsset.get_ball(index + 1)],
+                (
+                    ball.body.position[0] - ball.radius,
+                    ball.body.position[1] - ball.radius,
+                ),
+            )
+
+        self.display_surface.blit(
+            self.asset_manager.graphics[ImageAsset.CUE_BALL],
+            (
+                self.cue_ball.body.position[0] - self.cue_ball.radius,
+                self.cue_ball.body.position[1] - self.cue_ball.radius,
+            ),
+        )
