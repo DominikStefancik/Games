@@ -2,7 +2,7 @@ import pygame
 
 from input_manager import get_input_manager
 from settings import BACKGROUND_COLOR, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
-from sprites_manager import SpritesManager
+from sprites_manager.sprites_manager import SpritesManager
 
 
 class Game:

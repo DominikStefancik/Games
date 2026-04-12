@@ -7,8 +7,8 @@ from .constants import ImageAsset
 
 def load_graphics():
     return {
-        ImageAsset.IMAGE: pygame.image.load(
-            join("assets", "images", "image.png")
+        ImageAsset.TABLE: pygame.image.load(
+            join("assets", "images", "table.png")
         ).convert_alpha(),
     }
 

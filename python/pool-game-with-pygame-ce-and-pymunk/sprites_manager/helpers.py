@@ -1,0 +1,48 @@
+import pymunk
+
+from sprites_manager.constants import (
+    BALL_ELASTICITY,
+    BALL_MASS,
+    BALL_MAX_FORCE,
+    CUSHION_ELASTICITY,
+)
+
+
+def create_ball(space, radius, position):
+    # An object in PyMunk space has a body and shape
+    #
+    # By default a body is dynamic
+    body = pymunk.Body()
+    body.position = position
+    shape = pymunk.Circle(body, radius)
+    shape.mass = BALL_MASS
+    shape.elasticity = BALL_ELASTICITY
+
+    # We need to physically attach balls to our space, so when they move, there is some kind of friction
+    # which will slow their movement down after some time.
+    #
+    # We will use pivot joint to add friction
+    pivot = pymunk.PivotJoint(
+        space.static_body, body, (0, 0), (0, 0)
+    )  # coordinates where joint is applied
+    # disable joint correction
+    pivot.max_bias = 0
+    # emulate linear friction -> the higher the value the bigger the friction
+    pivot.max_force = BALL_MAX_FORCE
+
+    space.add(body, shape, pivot)
+
+    return shape
+
+
+# Create PyMunk objects representing the table cushions so balls can collide with them
+# and change direction after a collision
+def create_table_cushion(space, polygon_dimensions):
+    # We don't want cusshions to move around. Just be static so balls can bounce of them
+    body = pymunk.Body(body_type=pymunk.Body.STATIC)
+    body.position = (0, 0)
+    # Poly = polygon
+    shape = pymunk.Poly(body, polygon_dimensions)
+    shape.elasticity = CUSHION_ELASTICITY
+
+    space.add(body, shape)
