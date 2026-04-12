@@ -1,7 +1,7 @@
 import pygame
 
 from input_manager import get_input_manager
-from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import BACKGROUND_COLOR, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from sprites_manager import SpritesManager
 
 
@@ -27,6 +27,8 @@ class Game:
 
         while is_running:
             self.clock.tick(FPS)
+
+            self.display_surface.fill(BACKGROUND_COLOR)
 
             if self.input_manager.exit_button_clicked:
                 is_running = False
