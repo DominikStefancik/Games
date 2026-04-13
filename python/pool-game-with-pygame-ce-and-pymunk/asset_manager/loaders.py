@@ -2,7 +2,7 @@ from os.path import join
 
 import pygame
 
-from .constants import ImageAsset
+from .constants import FontAsset, ImageAsset
 
 
 def load_graphics():
@@ -65,7 +65,10 @@ def load_graphics():
 
 
 def load_fonts():
-    return {}
+    return {
+        FontAsset.FUTURA_30: pygame.font.SysFont("Futura", 30),
+        FontAsset.FUTURA_60: pygame.font.SysFont("Futura", 60),
+    }
 
 
 def load_sounds():

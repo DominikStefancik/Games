@@ -12,6 +12,7 @@ class GameStateManager:
     def __init__(self):
         self.input_manager = get_input_manager()
         self._game_state = GameState.WAITING_TO_START
+        self._lives = 3
         self._start_game_timer = Timer(
             duration=GAME_START_DELAY, repeat=False, autostart=True
         )
@@ -25,6 +26,17 @@ class GameStateManager:
     def game_state(self, value):
         self._game_state = value
 
+    @property
+    def lives(self):
+        return self._lives
+
+    @lives.setter
+    def lives(self, value):
+        self._lives = value
+
+        if self._lives == 0:
+            self._game_state = GameState.GAME_OVER
+
     def restart(self):
         pass
 
@@ -32,7 +44,11 @@ class GameStateManager:
         self._start_game_timer.update()
         self._game_finished_timer.update()
 
-        pygame.mouse.set_visible(self._game_state == GameState.GAME_FINISHED)
+        is_mouse_cursor_visible = self._game_state in [
+            GameState.GAME_WON,
+            GameState.GAME_OVER,
+        ]
+        pygame.mouse.set_visible(is_mouse_cursor_visible)
 
         if (
             self._game_state == GameState.WAITING_TO_START

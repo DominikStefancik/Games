@@ -4,6 +4,7 @@ from game_state.game_state_manager import get_game_state_manager
 from input_manager import get_input_manager
 from settings import BACKGROUND_COLOR, BOTTOM_PANEL, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from sprites_manager.sprites_manager import SpritesManager
+from text_manager import TextManager
 
 
 class Game:
@@ -18,6 +19,7 @@ class Game:
         self.game_state_manager = get_game_state_manager()
         self.input_manager = get_input_manager()
         self.sprites_manager = SpritesManager()
+        self.text_manager = TextManager()
 
     def update(self):
         self.game_state_manager.update()
@@ -27,6 +29,7 @@ class Game:
     def draw(self):
         self.display_surface.fill(BACKGROUND_COLOR)
         self.sprites_manager.draw()
+        self.text_manager.draw()
 
     def run(self):
         is_running = True

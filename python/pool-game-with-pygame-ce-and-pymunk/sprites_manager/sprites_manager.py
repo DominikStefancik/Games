@@ -84,8 +84,10 @@ class SpritesManager:
 
             # Then wait after all ball stop moving
             # And only after they all stop, place the cue ball onto the starting position
-            if not are_balls_moving(self.balls, self.cue_ball):
+            if self.game_state_manager.game_state != GameState.BALLS_MOVING:
                 self.cue_ball.shape.body.position = CUE_BALL_STARTING_POSITION
+
+            self.game_state_manager.lives -= 1
 
     def draw_balls(self):
         for ball in self.balls:

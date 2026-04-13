@@ -7,4 +7,5 @@ class GameState(Enum):
     POWERING_UP = "powering up"
     TAKING_SHOT = "taking_shot"
     BALLS_MOVING = "balls_moving"
-    GAME_FINISHED = "game_finished"
+    GAME_WON = "game_won"
+    GAME_OVER = "game_over"
