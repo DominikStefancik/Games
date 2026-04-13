@@ -4,11 +4,14 @@ import pymunk.pygame_util
 
 from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
+from game_state.game_state import GameState
+from game_state.game_state_manager import get_game_state_manager
 from input_manager import get_input_manager
 from settings import FPS, WINDOW_HEIGHT
 from sprites_manager.constants import CUE_BALL_IMPULSE_X, CUSHIONS_DIMENSIONS
 from sprites_manager.cue import Cue
 from sprites_manager.helpers import (
+    are_balls_moving,
     create_ball,
     create_balls,
     create_table_cushion,
@@ -20,6 +23,7 @@ class SpritesManager:
     def __init__(self):
         # The main surface on which we will be drawing elements
         self.display_surface = pygame.display.get_surface()
+        self.game_state_manager = get_game_state_manager()
         self.asset_manager = get_asset_manager()
         self.input_manager = get_input_manager()
 
@@ -76,4 +80,10 @@ class SpritesManager:
             ),
         )
 
-        self.cue.draw(self.display_surface)
+        if self.game_state_manager.game_state != GameState.WAITING_TO_START:
+            self.game_state_manager.game_state = GameState.TAKING_SHOT
+            if are_balls_moving(self.balls, self.cue_ball):
+                self.game_state_manager.game_state = GameState.BALLS_MOVING
+
+            if self.game_state_manager.game_state == GameState.TAKING_SHOT:
+                self.cue.draw(self.display_surface)

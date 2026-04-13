@@ -81,3 +81,18 @@ def get_cue_angle(cue_ball) -> float:
     cue_angle = math.degrees(math.atan2(distance_y, distance_x))
 
     return cue_angle
+
+
+def are_balls_moving(balls, cue_ball):
+    # velocity[0] is ball speed in horizontal direction
+    # velocity[1] is ball speed in vertical direction
+    #
+    # Seomtimes the velocity stops not exactly on 0, but 0.0000000001, that's we we need to convert it to an integer
+    if int(cue_ball.body.velocity[0]) != 0 or int(cue_ball.body.velocity[1]) != 0:
+        return True
+
+    for ball in balls:
+        if int(ball.body.velocity[0]) != 0 or int(ball.body.velocity[1]) != 0:
+            return True
+
+    return False
