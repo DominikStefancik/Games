@@ -145,3 +145,19 @@ def check_potted_balls(space, balls, potted_balls):
                 space.remove(ball.shape.body)
                 balls.remove(ball)
                 potted_balls.append(ball)
+
+
+def is_cue_ball_potted(cue_ball) -> bool:
+    is_potted = False
+
+    for pocket in POCKETS_COORDINATES:
+        ball_distance_x = abs(cue_ball.shape.body.position[0] - pocket[0])
+        ball_distance_y = abs(cue_ball.shape.body.position[1] - pocket[1])
+        # the distance between the center of th ball and the center of the pocket
+        ball_distance = math.sqrt((ball_distance_x**2) + (ball_distance_y**2))
+
+        if ball_distance <= BLACK_POCKET_RADIUS:
+            is_potted = True
+            break
+
+    return is_potted

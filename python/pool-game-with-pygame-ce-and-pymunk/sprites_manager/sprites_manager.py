@@ -7,9 +7,9 @@ from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
-from settings import FPS, WINDOW_HEIGHT
+from settings import BACKGROUND_COLOR, BOTTOM_PANEL, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from sprites_manager.ball import Ball
-from sprites_manager.constants import CUSHIONS_DIMENSIONS
+from sprites_manager.constants import CUE_BALL_STARTING_POSITION, CUSHIONS_DIMENSIONS
 from sprites_manager.cue import Cue
 from sprites_manager.helpers import (
     are_balls_moving,
@@ -20,6 +20,7 @@ from sprites_manager.helpers import (
     create_table_cushion,
     get_cue_angle,
     get_cue_impulse,
+    is_cue_ball_potted,
 )
 
 
@@ -40,7 +41,7 @@ class SpritesManager:
 
         self.balls = create_balls(self.space)
         self.cue_ball = Ball(
-            create_ball(self.space, (888, WINDOW_HEIGHT / 2)),
+            create_ball(self.space, CUE_BALL_STARTING_POSITION),
             self.asset_manager.graphics[ImageAsset.CUE_BALL],
         )
         self.cue = Cue(
@@ -76,6 +77,16 @@ class SpritesManager:
 
         check_potted_balls(self.space, self.balls, self.potted_balls)
 
+        if is_cue_ball_potted(self.cue_ball):
+            self.cue_ball.shape.body.velocity = (0.0, 0.0)
+            # First hide the ball
+            self.cue_ball.shape.body.position = (-100, -100)
+
+            # Then wait after all ball stop moving
+            # And only after they all stop, place the cue ball onto the starting position
+            if not are_balls_moving(self.balls, self.cue_ball):
+                self.cue_ball.shape.body.position = CUE_BALL_STARTING_POSITION
+
     def draw_balls(self):
         for ball in self.balls:
             ball.draw(self.display_surface)
@@ -91,7 +102,6 @@ class SpritesManager:
         self.space.debug_draw(self.draw_options)
 
         self.draw_balls()
-        self.draw_potted_balls()
 
         if self.game_state_manager.game_state != GameState.WAITING_TO_START:
             if are_balls_moving(self.balls, self.cue_ball):
@@ -116,3 +126,12 @@ class SpritesManager:
                             self.cue_ball.shape.body.position[1] + 30,
                         ),
                     )
+
+            # Draw bottom panel
+            pygame.draw.rect(
+                self.display_surface,
+                BACKGROUND_COLOR,
+                (0, WINDOW_HEIGHT, WINDOW_WIDTH, BOTTOM_PANEL),
+            )
+
+            self.draw_potted_balls()
