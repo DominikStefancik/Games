@@ -3,7 +3,7 @@ import math
 import pygame
 import pymunk
 
-from settings import WINDOW_HEIGHT
+from settings import RED_COLOR, WINDOW_HEIGHT
 from sprites_manager.constants import (
     BALL_DIAMETER,
     BALL_ELASTICITY,
@@ -81,6 +81,20 @@ def get_cue_angle(cue_ball) -> float:
     cue_angle = math.degrees(math.atan2(distance_y, distance_x))
 
     return cue_angle
+
+
+def get_cue_impulse(cue_angle):
+    impulse_x = math.cos(math.radians(cue_angle))
+    impulse_y = math.sin(math.radians(cue_angle))
+
+    return (impulse_x, impulse_y)
+
+
+def create_power_bar():
+    power_bar = pygame.Surface((10, 20))
+    power_bar.fill(RED_COLOR)
+
+    return power_bar
 
 
 def are_balls_moving(balls, cue_ball):

@@ -16,6 +16,7 @@ import pygame
 class InputManager:
     def __init__(self):
         self._left_mouse_clicked = False
+        self._left_mouse_released = False
         self._exit_button_clicked = False
 
     @property
@@ -23,11 +24,16 @@ class InputManager:
         return self._left_mouse_clicked
 
     @property
+    def left_mouse_released(self):
+        return self._left_mouse_released
+
+    @property
     def exit_button_clicked(self):
         return self._exit_button_clicked
 
     def update(self):
         self._left_mouse_clicked = False
+        self._left_mouse_released = False
         self._exit_button_clicked = False
 
         for event in pygame.event.get():
@@ -38,6 +44,9 @@ class InputManager:
             # "event.button == 1" represents the left mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self._left_mouse_clicked = True
+
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                self._left_mouse_released = True
 
 
 INPUT_MANAGER = InputManager()

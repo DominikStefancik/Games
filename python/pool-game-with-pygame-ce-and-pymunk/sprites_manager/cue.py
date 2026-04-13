@@ -1,5 +1,7 @@
 import pygame
 
+from sprites_manager.constants import MAX_FORCE
+
 
 class Cue:
     def __init__(self, image, position) -> None:
@@ -9,6 +11,18 @@ class Cue:
         self.original_image = image
         self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_frect(center=position)
+        self.force = 0
+        self.force_direction = 1
+
+    def power_up(self):
+        self.force += 100 * self.force_direction
+
+        if self.force >= MAX_FORCE or self.force < 0:
+            self.force_direction *= -1
+
+    def reset_force(self):
+        self.force = 0
+        self.force_direction = 1
 
     def update(self, position, angle):
         self.rect.center = position

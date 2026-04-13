@@ -2,7 +2,7 @@ import pygame
 
 from game_state.game_state_manager import get_game_state_manager
 from input_manager import get_input_manager
-from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import BACKGROUND_COLOR, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from sprites_manager.sprites_manager import SpritesManager
 
 
@@ -23,6 +23,7 @@ class Game:
         self.sprites_manager.update()
 
     def draw(self):
+        self.display_surface.fill(BACKGROUND_COLOR)
         self.sprites_manager.draw()
 
     def run(self):

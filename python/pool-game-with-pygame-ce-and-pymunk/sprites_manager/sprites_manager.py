@@ -1,3 +1,4 @@
+import math
 import pygame
 import pymunk
 import pymunk.pygame_util
@@ -6,16 +7,17 @@ from asset_manager.asset_manager import get_asset_manager
 from asset_manager.constants import ImageAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
-from input_manager import get_input_manager
 from settings import FPS, WINDOW_HEIGHT
-from sprites_manager.constants import CUE_BALL_IMPULSE_X, CUSHIONS_DIMENSIONS
+from sprites_manager.constants import CUSHIONS_DIMENSIONS
 from sprites_manager.cue import Cue
 from sprites_manager.helpers import (
     are_balls_moving,
     create_ball,
     create_balls,
+    create_power_bar,
     create_table_cushion,
     get_cue_angle,
+    get_cue_impulse,
 )
 
 
@@ -23,9 +25,8 @@ class SpritesManager:
     def __init__(self):
         # The main surface on which we will be drawing elements
         self.display_surface = pygame.display.get_surface()
-        self.game_state_manager = get_game_state_manager()
         self.asset_manager = get_asset_manager()
-        self.input_manager = get_input_manager()
+        self.game_state_manager = get_game_state_manager()
 
         # Space is an environment where PyMunk adds objects and applies physics on them
         self.space = pymunk.Space()
@@ -47,17 +48,24 @@ class SpritesManager:
     def update(self):
         self.space.step(1 / FPS)
 
-        self.cue.update(self.cue_ball.body.position, get_cue_angle(self.cue_ball))
+        cue_angle = get_cue_angle(self.cue_ball)
+        self.cue.update(self.cue_ball.body.position, cue_angle)
 
-        if self.input_manager.left_mouse_clicked:
+        if self.game_state_manager.game_state == GameState.POWERING_UP:
+            self.cue.power_up()
+        elif self.game_state_manager.game_state == GameState.TAKING_SHOT:
+            cue_impulse = get_cue_impulse(cue_angle)
+
             # We can apply Force or Impulse to a ball
             #
             # The fist argument is impulse in the X and Y directions
             # The second argument are X and Y coordinates relative to the center of the body
             # (the value (0, 0) refers to the middle of the body)
             self.cue_ball.body.apply_impulse_at_local_point(
-                (CUE_BALL_IMPULSE_X, 0), (0, 0)
+                (self.cue.force * -cue_impulse[0], self.cue.force * cue_impulse[1]),
+                (0, 0),
             )
+            self.cue.reset_force()
 
     def draw(self):
         self.display_surface.blit(self.asset_manager.graphics[ImageAsset.TABLE], (0, 0))
@@ -81,9 +89,25 @@ class SpritesManager:
         )
 
         if self.game_state_manager.game_state != GameState.WAITING_TO_START:
-            self.game_state_manager.game_state = GameState.TAKING_SHOT
             if are_balls_moving(self.balls, self.cue_ball):
                 self.game_state_manager.game_state = GameState.BALLS_MOVING
+            elif self.game_state_manager.game_state != GameState.POWERING_UP:
+                self.game_state_manager.game_state = GameState.PREPARING_SHOT
 
-            if self.game_state_manager.game_state == GameState.TAKING_SHOT:
+            if self.game_state_manager.game_state in [
+                GameState.PREPARING_SHOT,
+                GameState.POWERING_UP,
+            ]:
                 self.cue.draw(self.display_surface)
+
+            if self.game_state_manager.game_state == GameState.POWERING_UP:
+                # Create power bars to visually show how hard the cue ball will be hit
+                power_bar = create_power_bar()
+                for bar in range(math.ceil(self.cue.force / 1250)):
+                    self.display_surface.blit(
+                        power_bar,
+                        (
+                            self.cue_ball.body.position[0] - 30 + (bar * 15),
+                            self.cue_ball.body.position[1] + 30,
+                        ),
+                    )
