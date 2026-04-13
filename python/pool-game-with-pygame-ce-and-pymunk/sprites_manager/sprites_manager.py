@@ -8,10 +8,12 @@ from asset_manager.constants import ImageAsset
 from game_state.game_state import GameState
 from game_state.game_state_manager import get_game_state_manager
 from settings import FPS, WINDOW_HEIGHT
+from sprites_manager.ball import Ball
 from sprites_manager.constants import CUSHIONS_DIMENSIONS
 from sprites_manager.cue import Cue
 from sprites_manager.helpers import (
     are_balls_moving,
+    check_potted_balls,
     create_ball,
     create_balls,
     create_power_bar,
@@ -37,10 +39,15 @@ class SpritesManager:
             create_table_cushion(self.space, dimension)
 
         self.balls = create_balls(self.space)
-        self.cue_ball = create_ball(self.space, (888, WINDOW_HEIGHT / 2))
-        self.cue = Cue(
-            self.asset_manager.graphics[ImageAsset.CUE], self.cue_ball.body.position
+        self.cue_ball = Ball(
+            create_ball(self.space, (888, WINDOW_HEIGHT / 2)),
+            self.asset_manager.graphics[ImageAsset.CUE_BALL],
         )
+        self.cue = Cue(
+            self.asset_manager.graphics[ImageAsset.CUE],
+            self.cue_ball.shape.body.position,
+        )
+        self.potted_balls = []
 
     def restart(self):
         pass
@@ -49,7 +56,7 @@ class SpritesManager:
         self.space.step(1 / FPS)
 
         cue_angle = get_cue_angle(self.cue_ball)
-        self.cue.update(self.cue_ball.body.position, cue_angle)
+        self.cue.update(self.cue_ball.shape.body.position, cue_angle)
 
         if self.game_state_manager.game_state == GameState.POWERING_UP:
             self.cue.power_up()
@@ -61,32 +68,30 @@ class SpritesManager:
             # The fist argument is impulse in the X and Y directions
             # The second argument are X and Y coordinates relative to the center of the body
             # (the value (0, 0) refers to the middle of the body)
-            self.cue_ball.body.apply_impulse_at_local_point(
+            self.cue_ball.shape.body.apply_impulse_at_local_point(
                 (self.cue.force * -cue_impulse[0], self.cue.force * cue_impulse[1]),
                 (0, 0),
             )
             self.cue.reset_force()
 
+        check_potted_balls(self.space, self.balls, self.potted_balls)
+
+    def draw_balls(self):
+        for ball in self.balls:
+            ball.draw(self.display_surface)
+
+        self.cue_ball.draw(self.display_surface)
+
+    def draw_potted_balls(self):
+        for index, ball in enumerate(self.potted_balls):
+            self.display_surface.blit(ball.image, (10 + index * 50, WINDOW_HEIGHT + 10))
+
     def draw(self):
         self.display_surface.blit(self.asset_manager.graphics[ImageAsset.TABLE], (0, 0))
         self.space.debug_draw(self.draw_options)
 
-        for index, ball in enumerate(self.balls):
-            self.display_surface.blit(
-                self.asset_manager.graphics[ImageAsset.get_ball(index + 1)],
-                (
-                    ball.body.position[0] - ball.radius,
-                    ball.body.position[1] - ball.radius,
-                ),
-            )
-
-        self.display_surface.blit(
-            self.asset_manager.graphics[ImageAsset.CUE_BALL],
-            (
-                self.cue_ball.body.position[0] - self.cue_ball.radius,
-                self.cue_ball.body.position[1] - self.cue_ball.radius,
-            ),
-        )
+        self.draw_balls()
+        self.draw_potted_balls()
 
         if self.game_state_manager.game_state != GameState.WAITING_TO_START:
             if are_balls_moving(self.balls, self.cue_ball):
@@ -107,7 +112,7 @@ class SpritesManager:
                     self.display_surface.blit(
                         power_bar,
                         (
-                            self.cue_ball.body.position[0] - 30 + (bar * 15),
-                            self.cue_ball.body.position[1] + 30,
+                            self.cue_ball.shape.body.position[0] - 30 + (bar * 15),
+                            self.cue_ball.shape.body.position[1] + 30,
                         ),
                     )

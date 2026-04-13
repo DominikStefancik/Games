@@ -3,21 +3,29 @@ import math
 import pygame
 import pymunk
 
-from settings import RED_COLOR, WINDOW_HEIGHT
+from asset_manager.asset_manager import get_asset_manager
+from asset_manager.constants import ImageAsset
+from settings import RED_COLOR
+from sprites_manager.ball import Ball
 from sprites_manager.constants import (
     BALL_DIAMETER,
     BALL_ELASTICITY,
     BALL_MASS,
     BALL_MAX_FORCE,
     BALL_RADIUS,
+    BLACK_POCKET_RADIUS,
     CUSHION_ELASTICITY,
+    POCKETS_COORDINATES,
 )
 
 
-def create_balls(space) -> list[pymunk.Shape]:
+def create_balls(space) -> list[Ball]:
+    asset_manager = get_asset_manager()
+    shapes = []
     balls = []
     rows = 5
 
+    # First create Pymunk shapes
     for column in range(5):
         for row in range(rows):
             position = (
@@ -25,9 +33,15 @@ def create_balls(space) -> list[pymunk.Shape]:
                 267 + (row * (BALL_DIAMETER + 2)) + (column * BALL_RADIUS),
             )
             new_ball = create_ball(space, position)
-            balls.append(new_ball)
+            shapes.append(new_ball)
 
         rows -= 1
+
+    # Then create balls with images
+    for index, shape in enumerate(shapes, start=1):
+        image = asset_manager.graphics[ImageAsset.get_ball(index)]
+        ball = Ball(shape, image)
+        balls.append(ball)
 
     return balls
 
@@ -75,9 +89,9 @@ def create_table_cushion(space, polygon_dimensions) -> None:
 # Calculates pool cue angle
 def get_cue_angle(cue_ball) -> float:
     mouse_position = pygame.mouse.get_pos()
-    distance_x = cue_ball.body.position[0] - mouse_position[0]
+    distance_x = cue_ball.shape.body.position[0] - mouse_position[0]
     # The value of Y-coordinate increaces as we go down, so we have to used the negative value
-    distance_y = -(cue_ball.body.position[1] - mouse_position[1])
+    distance_y = -(cue_ball.shape.body.position[1] - mouse_position[1])
     cue_angle = math.degrees(math.atan2(distance_y, distance_x))
 
     return cue_angle
@@ -101,12 +115,33 @@ def are_balls_moving(balls, cue_ball):
     # velocity[0] is ball speed in horizontal direction
     # velocity[1] is ball speed in vertical direction
     #
-    # Seomtimes the velocity stops not exactly on 0, but 0.0000000001, that's we we need to convert it to an integer
-    if int(cue_ball.body.velocity[0]) != 0 or int(cue_ball.body.velocity[1]) != 0:
+    # Sometimes the velocity stops not exactly on 0, but 0.0000000001, that's why we need to convert it to an integer
+    if (
+        int(cue_ball.shape.body.velocity[0]) != 0
+        or int(cue_ball.shape.body.velocity[1]) != 0
+    ):
         return True
 
     for ball in balls:
-        if int(ball.body.velocity[0]) != 0 or int(ball.body.velocity[1]) != 0:
+        if (
+            int(ball.shape.body.velocity[0]) != 0
+            or int(ball.shape.body.velocity[1]) != 0
+        ):
             return True
 
     return False
+
+
+def check_potted_balls(space, balls, potted_balls):
+    for ball in balls:
+        for pocket in POCKETS_COORDINATES:
+            ball_distance_x = abs(ball.shape.body.position[0] - pocket[0])
+            ball_distance_y = abs(ball.shape.body.position[1] - pocket[1])
+            # the distance between the center of th ball and the center of the pocket
+            ball_distance = math.sqrt((ball_distance_x**2) + (ball_distance_y**2))
+
+            if ball_distance <= BLACK_POCKET_RADIUS:
+                # remove the ball from the Pymunk space
+                space.remove(ball.shape.body)
+                balls.remove(ball)
+                potted_balls.append(ball)

@@ -2,14 +2,16 @@ import pygame
 
 from game_state.game_state_manager import get_game_state_manager
 from input_manager import get_input_manager
-from settings import BACKGROUND_COLOR, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
+from settings import BACKGROUND_COLOR, BOTTOM_PANEL, FPS, WINDOW_HEIGHT, WINDOW_WIDTH
 from sprites_manager.sprites_manager import SpritesManager
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.display_surface = pygame.display.set_mode(
+            (WINDOW_WIDTH, WINDOW_HEIGHT + BOTTOM_PANEL)
+        )
         pygame.display.set_caption("Python Pool Game")
         self.clock = pygame.time.Clock()
 
