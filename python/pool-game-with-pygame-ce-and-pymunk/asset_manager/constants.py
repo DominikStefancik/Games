@@ -3,6 +3,7 @@ from enum import Enum
 
 class ImageAsset(Enum):
     TABLE = "table"
+    CUE = "cue"
     BALL_1 = "ball_1"
     BALL_2 = "ball_2"
     BALL_3 = "ball_3"

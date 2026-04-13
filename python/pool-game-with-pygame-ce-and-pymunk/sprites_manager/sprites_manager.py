@@ -7,7 +7,13 @@ from asset_manager.constants import ImageAsset
 from input_manager import get_input_manager
 from settings import FPS, WINDOW_HEIGHT
 from sprites_manager.constants import CUE_BALL_IMPULSE_X, CUSHIONS_DIMENSIONS
-from sprites_manager.helpers import create_ball, create_balls, create_table_cushion
+from sprites_manager.cue import Cue
+from sprites_manager.helpers import (
+    create_ball,
+    create_balls,
+    create_table_cushion,
+    get_cue_angle,
+)
 
 
 class SpritesManager:
@@ -27,12 +33,17 @@ class SpritesManager:
 
         self.balls = create_balls(self.space)
         self.cue_ball = create_ball(self.space, (888, WINDOW_HEIGHT / 2))
+        self.cue = Cue(
+            self.asset_manager.graphics[ImageAsset.CUE], self.cue_ball.body.position
+        )
 
     def restart(self):
         pass
 
     def update(self):
         self.space.step(1 / FPS)
+
+        self.cue.update(self.cue_ball.body.position, get_cue_angle(self.cue_ball))
 
         if self.input_manager.left_mouse_clicked:
             # We can apply Force or Impulse to a ball
@@ -64,3 +75,5 @@ class SpritesManager:
                 self.cue_ball.body.position[1] - self.cue_ball.radius,
             ),
         )
+
+        self.cue.draw(self.display_surface)

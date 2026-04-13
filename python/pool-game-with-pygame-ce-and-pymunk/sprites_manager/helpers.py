@@ -1,3 +1,6 @@
+import math
+
+import pygame
 import pymunk
 
 from settings import WINDOW_HEIGHT
@@ -11,7 +14,7 @@ from sprites_manager.constants import (
 )
 
 
-def create_balls(space):
+def create_balls(space) -> list[pymunk.Shape]:
     balls = []
     rows = 5
 
@@ -29,7 +32,7 @@ def create_balls(space):
     return balls
 
 
-def create_ball(space, position):
+def create_ball(space, position) -> pymunk.Shape:
     # An object in PyMunk space has a body and shape
     #
     # By default a body is dynamic
@@ -58,7 +61,7 @@ def create_ball(space, position):
 
 # Create PyMunk objects representing the table cushions so balls can collide with them
 # and change direction after a collision
-def create_table_cushion(space, polygon_dimensions):
+def create_table_cushion(space, polygon_dimensions) -> None:
     # We don't want cusshions to move around. Just be static so balls can bounce of them
     body = pymunk.Body(body_type=pymunk.Body.STATIC)
     body.position = (0, 0)
@@ -67,3 +70,14 @@ def create_table_cushion(space, polygon_dimensions):
     shape.elasticity = CUSHION_ELASTICITY
 
     space.add(body, shape)
+
+
+# Calculates pool cue angle
+def get_cue_angle(cue_ball) -> float:
+    mouse_position = pygame.mouse.get_pos()
+    distance_x = cue_ball.body.position[0] - mouse_position[0]
+    # The value of Y-coordinate increaces as we go down, so we have to used the negative value
+    distance_y = -(cue_ball.body.position[1] - mouse_position[1])
+    cue_angle = math.degrees(math.atan2(distance_y, distance_x))
+
+    return cue_angle

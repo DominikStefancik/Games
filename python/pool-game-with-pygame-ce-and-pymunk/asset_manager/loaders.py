@@ -10,6 +10,9 @@ def load_graphics():
         ImageAsset.TABLE: pygame.image.load(
             join("assets", "images", "table.png")
         ).convert_alpha(),
+        ImageAsset.CUE: pygame.image.load(
+            join("assets", "images", "cue.png")
+        ).convert_alpha(),
         ImageAsset.BALL_1: pygame.image.load(
             join("assets", "images", "balls", "ball_1.png")
         ).convert_alpha(),
