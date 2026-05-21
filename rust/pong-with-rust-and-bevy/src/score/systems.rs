@@ -7,7 +7,6 @@ use bevy::{
         event::EntityEvent,
         observer::On,
         query::{With, Without},
-        spawn::SpawnRelated,
         system::{Commands, Query, Res, ResMut, Single},
     },
     log::info,
