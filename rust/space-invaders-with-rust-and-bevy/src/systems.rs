@@ -136,7 +136,7 @@ pub fn explosion_animation_system(
     for (entity, mut timer, mut sprite) in query.iter_mut() {
         timer.0.tick(time.delta());
 
-        if timer.0.finished() {
+        if timer.0.is_finished() {
             // when the timer cycle finished
             if let Some(texture_atlas) = &mut sprite.texture_atlas {
                 texture_atlas.index += 1;

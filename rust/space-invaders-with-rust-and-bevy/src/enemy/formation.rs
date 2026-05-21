@@ -3,7 +3,7 @@ use crate::{
     resources::WindowSize,
 };
 use bevy::prelude::{Component, Resource};
-use rand::{rng, Rng};
+use rand::{rng, RngExt};
 
 // Component - Enemy Formation (per enemy)
 // Each enemy will have its own formation clone

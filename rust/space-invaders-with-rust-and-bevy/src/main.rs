@@ -1,4 +1,4 @@
-use bevy::core_pipeline::core_2d::Camera2d;
+use bevy::camera::Camera2d;
 use bevy::image::TextureAtlasLayout;
 use bevy::math::UVec2;
 use bevy::prelude::{
@@ -29,7 +29,7 @@ fn main() {
                 title: "Rust Space Invaders".to_string(),
                 // property resolution is of the type WindowResolution
                 // and the method "into()" automatically converts a tuple into this required type
-                resolution: (598_f32, 676_f32).into(),
+                resolution: (598, 676).into(),
                 ..Default::default()
             }),
             ..Default::default()
@@ -63,7 +63,7 @@ fn setup_system(
 ) {
     // Add camera into the scene
     // spawn_batch() allows to spawn an entity with a set of properties
-    commands.spawn(Camera2d::default());
+    commands.spawn(Camera2d);
 
     // position the game window
     let mut window = windows.single_mut().unwrap();
