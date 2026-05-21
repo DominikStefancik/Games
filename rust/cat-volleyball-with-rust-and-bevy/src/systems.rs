@@ -8,7 +8,7 @@ use bevy::prelude::{
     AudioSink, AudioSinkPlayback, ButtonInput, Commands, Entity, KeyCode, Query, Res, ResMut,
     TextUiWriter, Time, Transform, With,
 };
-use rand::Rng;
+use rand::RngExt;
 
 /*
  * Generally, all Bevy system functions work in this way; various arguments to retrieve resources,

@@ -18,7 +18,7 @@ use crate::systems::{
     update_score_system,
 };
 use bevy::audio::Volume;
-use bevy::core_pipeline::core_2d::Camera2d;
+use bevy::camera::Camera2d;
 use bevy::image::TextureAtlasLayout;
 use bevy::prelude::{
     App, AssetServer, Assets, AudioPlayer, ClearColor, Color, Commands, PlaybackSettings,
@@ -31,7 +31,7 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Rust Cat Volleyball".into(),
-                resolution: (ARENA_WIDTH, ARENA_HEIGHT).into(),
+                resolution: (ARENA_WIDTH as u32, ARENA_HEIGHT as u32).into(),
                 ..Default::default()
             }),
             ..Default::default()
