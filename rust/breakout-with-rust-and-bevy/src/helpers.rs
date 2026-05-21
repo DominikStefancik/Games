@@ -9,8 +9,7 @@ use crate::constants::{
 };
 use bevy::prelude::{
     children, vec2, vec3, Assets, Circle, ColorMaterial, Commands, Mesh, Mesh2d, MeshMaterial2d,
-    Node, PositionType, ResMut, SpawnRelated, Sprite, Text, TextColor, TextFont, TextSpan,
-    Transform, Vec2, Vec3,
+    Node, PositionType, ResMut, Sprite, Text, TextColor, TextFont, TextSpan, Transform, Vec2, Vec3,
 };
 
 pub fn spawn_player(commands: &mut Commands) {
