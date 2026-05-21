@@ -4,7 +4,6 @@ use bevy::{
         children,
         entity::{ContainsEntity, Entity},
         query::With,
-        spawn::SpawnRelated,
         system::{Commands, Res, Single},
     },
     text::{Justify, TextColor, TextFont, TextLayout},

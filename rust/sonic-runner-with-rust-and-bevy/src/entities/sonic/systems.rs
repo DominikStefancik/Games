@@ -5,7 +5,6 @@ use bevy::{
         entity::{ContainsEntity, Entity},
         observer::On,
         query::With,
-        spawn::SpawnRelated,
         system::{Commands, Query, Res, ResMut, Single},
     },
     image::TextureAtlas,

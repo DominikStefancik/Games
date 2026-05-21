@@ -8,7 +8,6 @@ use bevy::{
         entity::{ContainsEntity, Entity},
         observer::On,
         query::With,
-        spawn::SpawnRelated,
         system::{Commands, Res, ResMut, Single},
     },
     input::{ButtonInput, keyboard::KeyCode},

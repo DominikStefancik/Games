@@ -5,7 +5,7 @@ use bevy::{
     prelude::{Deref, DerefMut},
     time::{Timer, TimerMode},
 };
-use rand::{Rng, rng};
+use rand::{RngExt, rng};
 
 #[derive(Resource, Deref, DerefMut)]
 pub struct RingGenerationTimer(pub Timer);
