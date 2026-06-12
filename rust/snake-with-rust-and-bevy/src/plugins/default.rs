@@ -1,12 +1,12 @@
 use std::num::NonZero;
 
 use bevy::{
+    DefaultPlugins,
     app::{App, PluginGroup},
     window::{Window, WindowPlugin, WindowResolution},
-    DefaultPlugins,
 };
 
-pub const WINDOW_RESOLUTION: (u32, u32) = (1400, 900);
+use crate::core::WINDOW_RESOLUTION;
 
 pub fn plugin(app: &mut App) {
     let primary_window = Window {
