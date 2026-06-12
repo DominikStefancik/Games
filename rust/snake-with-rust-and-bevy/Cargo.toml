@@ -1,0 +1,9 @@
+[package]
+name = "snake-with-rust-and-bevy"
+version = "0.1.0"
+edition = "2024"
+authors = ["Dominik Stefancik <dstefancik@gmail.com>"]
+
+[dependencies]
+bevy = { version = "0.18.1", features = ["wav"] }
+rand = "0.10.1"
