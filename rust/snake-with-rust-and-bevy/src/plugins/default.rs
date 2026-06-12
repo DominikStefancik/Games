@@ -8,7 +8,7 @@ use bevy::{
 
 use crate::core::WINDOW_RESOLUTION;
 
-pub fn plugin(app: &mut App) {
+pub fn default_plugin(app: &mut App) {
     let primary_window = Window {
         title: "Snake".into(),
         resizable: false,
