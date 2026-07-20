@@ -30,12 +30,12 @@ impl GridSize {
 
     // translates grid position into a pixels position
     pub fn to_pixels(&self, position: GridPosition, z_index: f32) -> Vec3 {
-        let half_width = self.size.x as f32 * CELL_PIXELS as f32 / 2.0;
-        let half_height = self.size.y as f32 * CELL_PIXELS as f32 / 2.0;
+        let half_width = self.size.x as f32 * self.pixels as f32 / 2.0;
+        let half_height = self.size.y as f32 * self.pixels as f32 / 2.0;
 
         Vec3::new(
-            position.column as f32 * 0.5 + self.pixels as f32 / 2.0 - half_width,
-            position.row as f32 * 0.5 + self.pixels as f32 / 2.0 - half_height,
+            position.column as f32 * self.pixels as f32 + self.pixels as f32 / 2.0 - half_width,
+            position.row as f32 * self.pixels as f32 + self.pixels as f32 / 2.0 - half_height,
             z_index,
         )
     }

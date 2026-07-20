@@ -20,10 +20,10 @@ pub fn draw_background(mut commands: Commands) {
     ));
 }
 
-pub fn draw_canvas(mut commands: Commands, grid: Res<GridSize>) {
+pub fn draw_canvas(mut commands: Commands, grid_size: Res<GridSize>) {
     let canvas_size = Vec2::new(
-        (grid.size.x * grid.pixels) as f32,
-        (grid.size.y * grid.pixels) as f32,
+        (grid_size.size.x * grid_size.pixels) as f32,
+        (grid_size.size.y * grid_size.pixels) as f32,
     );
 
     commands.spawn((
