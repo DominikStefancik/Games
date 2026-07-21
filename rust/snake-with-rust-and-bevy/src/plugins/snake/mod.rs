@@ -1,9 +1,10 @@
 use bevy::app::{App, Plugin, Startup};
 
-use crate::plugins::snake::systems::{initialise_snake, setup_snake};
-
 pub mod resources;
 mod systems;
+
+pub use resources::*;
+pub use systems::*;
 
 pub struct SnakePlugin;
 

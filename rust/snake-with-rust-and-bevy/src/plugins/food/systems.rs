@@ -12,8 +12,8 @@ use crate::{
     core::{CELL_PADDING, FOOD_COLOR, Grid, Randomizer},
     plugins::{
         food::{helpers::new_food_position, resources::Food},
-        shared::events::GameStarted,
-        snake::resources::Snake,
+        shared::GameStarted,
+        snake::Snake,
     },
 };
 

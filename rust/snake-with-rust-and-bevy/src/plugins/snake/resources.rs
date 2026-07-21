@@ -1,14 +1,6 @@
 use bevy::ecs::resource::Resource;
 
-use crate::core::GridPosition;
-
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
-}
+use crate::core::{Direction, GridPosition};
 
 #[derive(Resource)]
 pub struct Snake {

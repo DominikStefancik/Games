@@ -10,7 +10,7 @@ use bevy::{
 
 use crate::{
     core::{CELL_PADDING, Grid, GridPosition, SNAKE_COLOR},
-    plugins::{shared::events::GameStarted, snake::resources::Snake},
+    plugins::{shared::GameStarted, snake::Snake},
 };
 
 pub fn setup_snake(mut commands: Commands, grid: Res<Grid>) {

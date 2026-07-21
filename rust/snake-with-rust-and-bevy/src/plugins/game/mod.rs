@@ -3,7 +3,7 @@ use bevy::{
     ecs::schedule::IntoScheduleConfigs,
 };
 
-use crate::plugins::{food::systems::setup_food, shared::systems::initialise_game};
+use crate::plugins::{food::setup_food, shared::initialise_game};
 
 pub struct GamePlugin;
 
@@ -24,6 +24,11 @@ impl Plugin for GamePlugin {
          *    and Bevy's automatic dependency-based sync insertion (auto_insert_apply_deferred, on by default)
          *    will insert a flush between them because it detects A writes deferred commands that B might depend on.
          *    Without ordering, A and B could run in parallel and B might not see the resource yet.
+         *
+         * If you just need the resource available for Update (or later) systems, "commands.insert_resource" in any
+         * startup system is fine — it'll be flushed before Update starts.
+         * If another Startup-stage system needs it in the same schedule, either order the systems explicitly (.after())
+         * or just use "world.insert_resource" / a plain exclusive system for immediate insertion.
          */
         app.add_systems(Startup, initialise_game.after(setup_food));
     }

@@ -1,4 +1,5 @@
 pub mod camera;
+pub mod controls;
 pub mod default;
 pub mod food;
 pub mod game;
@@ -7,6 +8,7 @@ pub mod snake;
 pub mod window;
 
 pub use camera::CameraPlugin;
+pub use controls::ControlsPlugin;
 pub use default::default_plugin;
 pub use food::FoodPlugin;
 pub use game::GamePlugin;

@@ -1,6 +1,6 @@
 use crate::{
     core::{Grid, GridPosition, Randomizer},
-    plugins::snake::resources::Snake,
+    plugins::snake::Snake,
 };
 use rand::RngExt;
 

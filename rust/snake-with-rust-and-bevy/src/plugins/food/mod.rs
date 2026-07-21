@@ -1,10 +1,10 @@
 use bevy::app::{App, Plugin, Startup};
 
-use crate::plugins::food::systems::{initialise_food, setup_food};
-
 mod helpers;
 mod resources;
 pub mod systems;
+
+pub use systems::*;
 
 pub struct FoodPlugin;
 
