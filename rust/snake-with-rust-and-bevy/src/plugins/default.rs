@@ -10,7 +10,7 @@ use crate::core::WINDOW_RESOLUTION;
 
 pub fn default_plugin(app: &mut App) {
     let primary_window = Window {
-        title: "Snake".into(),
+        title: "Rust Snake".into(),
         resizable: false,
         resolution: WindowResolution::new(WINDOW_RESOLUTION.0, WINDOW_RESOLUTION.1),
         canvas: Some("#bevy".to_owned()),

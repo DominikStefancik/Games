@@ -4,6 +4,7 @@ use bevy::{
     math::{UVec2, Vec3},
     text::Font,
 };
+use rand::rngs::StdRng;
 
 use crate::core::{CELL_PIXELS, GRID_SIZE, GridPosition};
 
@@ -15,14 +16,14 @@ pub struct GameFonts {
 // If the data rarely changes during the game, it's better to use Resource rather than a Component
 // From the perfomance point of view, Resources can render much faster then Components and can run in parallel
 #[derive(Resource)]
-pub struct GridSize {
+pub struct Grid {
     pub size: UVec2,
     pub pixels: u32,
 }
 
-impl GridSize {
+impl Grid {
     pub fn default() -> Self {
-        GridSize {
+        Grid {
             size: UVec2::splat(GRID_SIZE),
             pixels: CELL_PIXELS,
         }
@@ -39,4 +40,9 @@ impl GridSize {
             z_index,
         )
     }
+}
+
+#[derive(Resource)]
+pub struct Randomizer {
+    pub rng: StdRng,
 }

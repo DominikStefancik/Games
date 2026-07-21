@@ -7,7 +7,7 @@ use bevy::{
 };
 
 use crate::core::{
-    BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_TEXT_COLOR, GameFonts, GridPosition, GridSize,
+    BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_TEXT_COLOR, GameFonts, Grid, GridPosition,
     INSTRUCTIONS_FONT_SIZE, WINDOW_RESOLUTION,
 };
 
@@ -20,10 +20,10 @@ pub fn draw_background(mut commands: Commands) {
     ));
 }
 
-pub fn draw_canvas(mut commands: Commands, grid_size: Res<GridSize>) {
+pub fn draw_canvas(mut commands: Commands, grid: Res<Grid>) {
     let canvas_size = Vec2::new(
-        (grid_size.size.x * grid_size.pixels) as f32,
-        (grid_size.size.y * grid_size.pixels) as f32,
+        (grid.size.x * grid.pixels) as f32,
+        (grid.size.y * grid.pixels) as f32,
     );
 
     commands.spawn((
@@ -32,7 +32,7 @@ pub fn draw_canvas(mut commands: Commands, grid_size: Res<GridSize>) {
     ));
 }
 
-pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Res<GridSize>) {
+pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Res<Grid>) {
     let offset =
         grid.to_pixels(GridPosition { column: 0, row: 0 }, 1.) + Vec3::new(-200., 300., 0.);
 

@@ -1,6 +1,8 @@
 use bevy::app::App;
 
-use crate::plugins::{CameraPlugin, SharedPlugin, WindowPlugin, default_plugin};
+use crate::plugins::{
+    CameraPlugin, FoodPlugin, GamePlugin, SharedPlugin, SnakePlugin, WindowPlugin, default_plugin,
+};
 
 mod core;
 mod plugins;
@@ -8,6 +10,13 @@ mod plugins;
 fn main() {
     App::new()
         .add_plugins(default_plugin)
-        .add_plugins((CameraPlugin, SharedPlugin, WindowPlugin))
+        .add_plugins((
+            CameraPlugin,
+            SharedPlugin,
+            WindowPlugin,
+            GamePlugin,
+            SnakePlugin,
+            FoodPlugin,
+        ))
         .run();
 }
