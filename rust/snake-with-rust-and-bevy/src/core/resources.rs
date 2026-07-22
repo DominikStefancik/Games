@@ -1,17 +1,35 @@
+use std::collections::VecDeque;
+
 use bevy::{
     asset::Handle,
+    audio::AudioSource,
     ecs::resource::Resource,
     math::{UVec2, Vec3},
     text::Font,
+    time::Timer,
 };
 use rand::rngs::StdRng;
 
-use crate::core::{CELL_PIXELS, GRID_SIZE, GridPosition};
+use crate::core::{CELL_PIXELS, Direction, GRID_SIZE, GridPosition};
 
 #[derive(Resource)]
 pub struct GameFonts {
     pub bebas_neue_regular: Handle<Font>,
 }
+
+#[derive(Resource)]
+pub struct GameSounds {
+    pub eat: Handle<AudioSource>,
+}
+
+/*
+ * Here is a classic Snake bug: a player presses Right then Down very quickly within one tick.
+ * If we change direction immediately, the snake goes right, then the same tick processes Down and the snake turns down.
+ * But if the player pressed Left then Right, the snake reverses into itself and dies.
+ * Creating a queue of directions fixes this. Each tick, we will pop one direction off the queue.
+ */
+#[derive(Resource)]
+pub struct DirectionQueue(pub VecDeque<Direction>);
 
 // If the data rarely changes during the game, it's better to use Resource rather than a Component
 // From the perfomance point of view, Resources can render much faster then Components and can run in parallel
@@ -46,3 +64,6 @@ impl Grid {
 pub struct Randomizer {
     pub rng: StdRng,
 }
+
+#[derive(Resource)]
+pub struct MoveTimer(pub Timer);

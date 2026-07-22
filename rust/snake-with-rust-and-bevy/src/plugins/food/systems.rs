@@ -1,18 +1,15 @@
-use bevy::{
-    ecs::{
-        observer::On,
-        system::{Commands, Res, ResMut},
-    },
-    math::Vec2,
-    sprite::Sprite,
-    transform::components::Transform,
+use bevy::ecs::{
+    entity::{ContainsEntity, Entity},
+    observer::On,
+    query::With,
+    system::{Commands, Res, ResMut, Single},
 };
 
 use crate::{
-    core::{CELL_PADDING, FOOD_COLOR, Grid, Randomizer},
+    core::{Grid, Randomizer},
     plugins::{
-        food::{helpers::new_food_position, resources::Food},
-        shared::GameStarted,
+        food::{Food, FoodSprite, new_food_position, render_food},
+        shared::{FoodConsumed, GameStarted},
         snake::Snake,
     },
 };
@@ -37,8 +34,21 @@ pub fn initialise_food(
     let position = new_food_position(randomizer.into_inner(), &grid, &snake);
     food.0 = position;
 
-    commands.spawn((
-        Sprite::from_color(FOOD_COLOR, Vec2::splat((grid.pixels - CELL_PADDING) as f32)),
-        Transform::from_translation(grid.to_pixels(food.0, 1.)),
-    ));
+    render_food(&mut commands, &grid, &food);
+}
+
+pub fn create_new_food(
+    _: On<FoodConsumed>,
+    mut commands: Commands,
+    randomizer: ResMut<Randomizer>,
+    grid: Res<Grid>,
+    snake: ResMut<Snake>,
+    mut food: ResMut<Food>,
+    food_sprite: Single<Entity, With<FoodSprite>>,
+) {
+    let position = new_food_position(randomizer.into_inner(), &grid, &snake);
+    food.0 = position;
+
+    commands.entity(food_sprite.entity()).despawn();
+    render_food(&mut commands, &grid, &food);
 }

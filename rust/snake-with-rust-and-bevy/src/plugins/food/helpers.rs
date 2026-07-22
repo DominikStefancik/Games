@@ -1,7 +1,11 @@
 use crate::{
-    core::{Grid, GridPosition, Randomizer},
-    plugins::snake::Snake,
+    core::{CELL_PADDING, FOOD_COLOR, Grid, GridPosition, Randomizer},
+    plugins::{
+        food::{Food, FoodSprite},
+        snake::Snake,
+    },
 };
+use bevy::{ecs::system::Commands, math::Vec2, sprite::Sprite, transform::components::Transform};
 use rand::RngExt;
 
 fn random_food_position(randomizer: &mut Randomizer, grid: &Grid) -> GridPosition {
@@ -19,4 +23,12 @@ pub fn new_food_position(randomizer: &mut Randomizer, grid: &Grid, snake: &Snake
             return food_position;
         }
     }
+}
+
+pub fn render_food(commands: &mut Commands, grid: &Grid, food: &Food) {
+    commands.spawn((
+        Sprite::from_color(FOOD_COLOR, Vec2::splat((grid.pixels - CELL_PADDING) as f32)),
+        Transform::from_translation(grid.to_pixels(food.0, 1.)),
+        FoodSprite,
+    ));
 }

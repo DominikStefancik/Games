@@ -1,6 +1,13 @@
-use bevy::app::{App, Plugin, Startup};
+use std::collections::VecDeque;
 
-use crate::core::{Grid, Randomizer, load_fonts};
+use bevy::{
+    app::{App, Plugin, Startup},
+    time::{Timer, TimerMode},
+};
+
+use crate::core::{
+    DirectionQueue, Grid, MoveTimer, Randomizer, SNAKE_MOVE_INTERVAL, load_fonts, load_sounds,
+};
 
 pub mod events;
 pub mod systems;
@@ -16,6 +23,11 @@ impl Plugin for SharedPlugin {
             .insert_resource(Randomizer {
                 rng: rand::make_rng(),
             })
-            .add_systems(Startup, load_fonts);
+            .insert_resource(MoveTimer(Timer::from_seconds(
+                SNAKE_MOVE_INTERVAL,
+                TimerMode::Repeating,
+            )))
+            .insert_resource(DirectionQueue(VecDeque::new()))
+            .add_systems(Startup, (load_fonts, load_sounds));
     }
 }
