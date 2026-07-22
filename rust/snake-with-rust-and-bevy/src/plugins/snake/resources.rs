@@ -9,7 +9,7 @@ pub struct Snake {
 }
 
 impl Snake {
-    pub fn new(start_column: u32, start_row: u32) -> Self {
+    pub fn new(start_column: i32, start_row: i32) -> Self {
         Snake {
             segments: vec![
                 GridPosition::new(start_column, start_row),
@@ -20,7 +20,7 @@ impl Snake {
         }
     }
 
-    pub fn restart(&mut self, start_column: u32, start_row: u32) {
+    pub fn restart(&mut self, start_column: i32, start_row: i32) {
         self.segments = vec![
             GridPosition::new(start_column, start_row),
             GridPosition::new(start_column - 1, start_row),

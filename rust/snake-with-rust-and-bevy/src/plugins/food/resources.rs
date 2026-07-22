@@ -6,7 +6,7 @@ use crate::core::GridPosition;
 pub struct Food(pub GridPosition);
 
 impl Food {
-    pub fn new(column: u32, row: u32) -> Self {
+    pub fn new(column: i32, row: i32) -> Self {
         Food(GridPosition::new(column, row))
     }
 }

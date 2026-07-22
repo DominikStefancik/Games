@@ -3,12 +3,12 @@ use bevy::ecs::component::Component;
 // Every object in Snake lives on a discrete grid cell
 #[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
 pub struct GridPosition {
-    pub column: u32,
-    pub row: u32,
+    pub column: i32,
+    pub row: i32,
 }
 
 impl GridPosition {
-    pub fn new(column: u32, row: u32) -> Self {
+    pub fn new(column: i32, row: i32) -> Self {
         GridPosition { column, row }
     }
 }

@@ -4,7 +4,7 @@ use bevy::{
     asset::Handle,
     audio::AudioSource,
     ecs::resource::Resource,
-    math::{UVec2, Vec3},
+    math::{IVec2, Vec3},
     text::Font,
     time::Timer,
 };
@@ -20,6 +20,7 @@ pub struct GameFonts {
 #[derive(Resource)]
 pub struct GameSounds {
     pub eat: Handle<AudioSource>,
+    pub die: Handle<AudioSource>,
 }
 
 /*
@@ -35,14 +36,14 @@ pub struct DirectionQueue(pub VecDeque<Direction>);
 // From the perfomance point of view, Resources can render much faster then Components and can run in parallel
 #[derive(Resource)]
 pub struct Grid {
-    pub size: UVec2,
-    pub pixels: u32,
+    pub size: IVec2,
+    pub pixels: i32,
 }
 
 impl Grid {
     pub fn default() -> Self {
         Grid {
-            size: UVec2::splat(GRID_SIZE),
+            size: IVec2::splat(GRID_SIZE),
             pixels: CELL_PIXELS,
         }
     }

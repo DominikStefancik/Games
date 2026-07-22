@@ -13,7 +13,7 @@ use crate::{
     core::{Direction, DirectionQueue, GameSounds, Grid, GridPosition, MoveTimer},
     plugins::{
         food::Food,
-        shared::{FoodConsumed, GameStarted},
+        shared::{FoodConsumed, GameStarted, SnakeDied},
         snake::{Snake, components::SnakeSegmentSprite, render_snake},
     },
 };
@@ -79,6 +79,20 @@ pub fn move_snake(
         Direction::Up => GridPosition::new(head.column, head.row + 1),
         Direction::Down => GridPosition::new(head.column, head.row - 1),
     };
+
+    if new_head_position.column < 0
+        || new_head_position.column == grid.size.y
+        || new_head_position.row < 0
+        || new_head_position.row == grid.size.x
+    {
+        commands.spawn((
+            AudioPlayer::new(game_sounds.die.clone()),
+            PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.5)),
+        ));
+        commands.trigger(SnakeDied);
+        return;
+    }
+
     snake.segments.insert(0, new_head_position);
 
     if new_head_position == food.0 {

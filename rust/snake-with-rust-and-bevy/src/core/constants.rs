@@ -10,9 +10,9 @@ pub const FOOD_COLOR: Color = Color::srgb(0.8, 0.2, 0.2);
 
 pub const INSTRUCTIONS_FONT_SIZE: f32 = 24.;
 
-pub const GRID_SIZE: u32 = 20;
-pub const CELL_PIXELS: u32 = 30; // number of pixels for each cell
-pub const CELL_PADDING: u32 = 2;
+pub const GRID_SIZE: i32 = 20;
+pub const CELL_PIXELS: i32 = 30; // number of pixels for each cell
+pub const CELL_PADDING: i32 = 2;
 
 pub const SNAKE_MOVE_INTERVAL: f32 = 0.15;
 
