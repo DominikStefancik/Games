@@ -7,8 +7,8 @@ use bevy::{
 };
 
 use crate::core::{
-    BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_TEXT_COLOR, GameFonts, Grid, GridPosition,
-    INSTRUCTIONS_FONT_SIZE, WINDOW_RESOLUTION,
+    BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts, Grid,
+    GridPosition, WINDOW_RESOLUTION,
 };
 
 pub fn draw_background(mut commands: Commands) {
@@ -43,7 +43,7 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
 
     let text_font = TextFont {
         font: fonts.bebas_neue_regular.clone(),
-        font_size: INSTRUCTIONS_FONT_SIZE,
+        font_size: DEFAULT_FONT_SIZE,
         font_smoothing: bevy::text::FontSmoothing::None,
         ..Default::default()
     };
