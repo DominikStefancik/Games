@@ -1,7 +1,8 @@
 use std::collections::VecDeque;
 
 use bevy::{
-    app::{App, Plugin, Startup},
+    app::{App, Plugin, Startup, Update},
+    state::app::AppExtStates,
     time::{Timer, TimerMode},
 };
 
@@ -10,16 +11,19 @@ use crate::core::{
 };
 
 pub mod events;
+mod states;
 pub mod systems;
 
 pub use events::*;
+pub use states::*;
 pub use systems::*;
 
 pub struct SharedPlugin;
 
 impl Plugin for SharedPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(Grid::default())
+        app.init_state::<GameState>()
+            .insert_resource(Grid::default())
             .insert_resource(Randomizer {
                 rng: rand::make_rng(),
             })
@@ -28,6 +32,7 @@ impl Plugin for SharedPlugin {
                 TimerMode::Repeating,
             )))
             .insert_resource(DirectionQueue(VecDeque::new()))
-            .add_systems(Startup, (load_fonts, load_sounds));
+            .add_systems(Startup, (load_fonts, load_sounds))
+            .add_systems(Update, toggle_pausing_game);
     }
 }

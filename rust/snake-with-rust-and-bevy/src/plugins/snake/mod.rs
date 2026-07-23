@@ -1,4 +1,10 @@
-use bevy::app::{App, Plugin, Startup, Update};
+use bevy::{
+    app::{App, Plugin, Startup, Update},
+    ecs::schedule::IntoScheduleConfigs,
+    state::condition::in_state,
+};
+
+use crate::plugins::shared::GameState;
 
 mod components;
 mod helpers;
@@ -14,7 +20,7 @@ pub struct SnakePlugin;
 impl Plugin for SnakePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_snake)
-            .add_systems(Update, move_snake)
+            .add_systems(Update, move_snake.run_if(in_state(GameState::Playing)))
             // Global observers
             .add_observer(initialise_snake);
     }

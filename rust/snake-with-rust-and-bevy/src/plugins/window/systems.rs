@@ -38,7 +38,7 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
 
     let text_intructions = "INSTRUCTIONS\n\n\n\n\n\n\n\n
         Left/Right/Top/Bottom\n\nArrow Keys\n\n\n
-        Press P to Pause/Unpause\n\n\n
+        Press SPACE to Pause/Unpause\n\n\n
         Press R to Reset";
 
     let text_font = TextFont {
