@@ -16,6 +16,7 @@ pub const SCORE_FONT_SIZE: f32 = 200.;
 pub const GRID_SIZE: i32 = 20;
 pub const CELL_PIXELS: i32 = 30; // number of pixels for each cell
 pub const CELL_PADDING: i32 = 2;
+pub const SCORE_TEXT_Y_OFFSET: f32 = 100.;
 
 pub const SNAKE_MOVE_INTERVAL: f32 = 0.15;
 

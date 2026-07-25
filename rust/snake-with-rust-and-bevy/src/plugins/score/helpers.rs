@@ -10,6 +10,11 @@ use bevy::{
 
 use crate::core::{Grid, GridPosition};
 
+pub fn get_score_text_offset(grid: &Grid, y_offset: f32, z_index: f32) -> Vec3 {
+    grid.to_pixels(GridPosition::new(grid.size.x, grid.size.y / 2), z_index)
+        + Vec3::new(80., y_offset, 0.)
+}
+
 pub fn spawn_score_text(
     commands: &mut Commands,
     font: Handle<Font>,
@@ -20,9 +25,8 @@ pub fn spawn_score_text(
     text: &str,
     ui_marker: impl Component,
 ) {
-    let score_label_offset = grid.to_pixels(GridPosition::new(grid.size.x, grid.size.y / 2), 1.)
-        + Vec3::new(80., y_offset, 0.);
-    let score_label_style = TextFont {
+    let score_text_offset = get_score_text_offset(grid, y_offset, 1.);
+    let score_text_style = TextFont {
         font,
         font_size,
         font_smoothing: FontSmoothing::None,
@@ -31,10 +35,10 @@ pub fn spawn_score_text(
 
     commands.spawn((
         Text2d::new(text),
-        score_label_style.clone(),
+        score_text_style.clone(),
         TextLayout::new_with_justify(Justify::Center),
         TextColor(text_color),
-        Transform::from_translation(score_label_offset),
+        Transform::from_translation(score_text_offset),
         ui_marker,
     ));
 }

@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, Plugin, Startup},
+    app::{App, Plugin, Startup, Update},
     ecs::schedule::IntoScheduleConfigs,
 };
 
@@ -21,6 +21,8 @@ impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Score::default())
             .add_systems(Startup, spawn_score.after(load_fonts))
-            .add_observer(update_score);
+            .add_systems(Update, update_score_pop)
+            .add_observer(update_score)
+            .add_observer(spawn_score_pop);
     }
 }

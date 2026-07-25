@@ -1,4 +1,4 @@
-use bevy::ecs::component::Component;
+use bevy::{ecs::component::Component, time::Timer};
 
 #[derive(Component)]
 pub struct ScoreLabelUi;
@@ -11,3 +11,6 @@ pub struct BestScoreLabelUi;
 
 #[derive(Component)]
 pub struct BestScoreTextUi;
+
+#[derive(Component, Debug)]
+pub struct ScorePop(pub Timer);
