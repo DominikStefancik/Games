@@ -8,6 +8,6 @@ pub struct ControlsPlugin;
 
 impl Plugin for ControlsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, update_snake_direction_on_keypress);
+        app.add_systems(Update, enqueue_snake_direction_on_keypress);
     }
 }

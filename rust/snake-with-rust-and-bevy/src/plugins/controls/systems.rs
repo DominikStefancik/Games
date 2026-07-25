@@ -3,11 +3,15 @@ use bevy::{
     input::{ButtonInput, keyboard::KeyCode},
 };
 
-use crate::{core::Direction, plugins::snake::Snake};
+use crate::{
+    core::{Direction, DirectionQueue},
+    plugins::snake::Snake,
+};
 
-pub fn update_snake_direction_on_keypress(
+pub fn enqueue_snake_direction_on_keypress(
     input: Res<ButtonInput<KeyCode>>,
-    mut snake: ResMut<Snake>,
+    mut queue: ResMut<DirectionQueue>,
+    snake: Res<Snake>,
 ) {
     let arrow_keys = [
         KeyCode::ArrowLeft,
@@ -20,7 +24,7 @@ pub fn update_snake_direction_on_keypress(
         if let Some(direction) = Direction::from_key(key)
             && !snake.direction.is_opposite(&direction)
         {
-            snake.direction = direction;
+            queue.0.push_back(direction);
         };
     }
 }
