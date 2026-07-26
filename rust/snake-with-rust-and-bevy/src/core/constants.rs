@@ -19,6 +19,7 @@ pub const CELL_PADDING: i32 = 2;
 pub const SCORE_TEXT_Y_OFFSET: f32 = 100.;
 
 pub const SNAKE_MOVE_INTERVAL: f32 = 0.15;
+pub const GAME_STARTING_INTERVAL: f32 = 5.;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Direction {

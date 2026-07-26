@@ -20,9 +20,9 @@ use crate::{
     plugins::{
         score::{
             BestScoreLabelUi, BestScoreTextUi, Score, ScoreLabelUi, ScorePop, ScoreTextUi,
-            get_score_text_offset, spawn_score_text,
+            spawn_score_text,
         },
-        shared::FoodConsumed,
+        shared::{FoodConsumed, get_score_text_right_offset},
     },
 };
 
@@ -96,7 +96,7 @@ pub fn spawn_score_pop(
         },
         TextLayout::new_with_justify(Justify::Center),
         TextColor(Color::WHITE),
-        Transform::from_translation(get_score_text_offset(&grid, SCORE_TEXT_Y_OFFSET, 2.)),
+        Transform::from_translation(get_score_text_right_offset(&grid, SCORE_TEXT_Y_OFFSET, 2.)),
         ScorePop(Timer::from_seconds(0.6, TimerMode::Once)),
     ));
 }

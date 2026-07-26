@@ -2,19 +2,14 @@ use bevy::{
     asset::Handle,
     color::Color,
     ecs::{component::Component, system::Commands},
-    math::Vec3,
     sprite::Text2d,
     text::{Font, FontSmoothing, Justify, TextColor, TextFont, TextLayout},
     transform::components::Transform,
 };
 
-use crate::core::{Grid, GridPosition};
+use crate::{core::Grid, plugins::shared::get_score_text_right_offset};
 
-pub fn get_score_text_offset(grid: &Grid, y_offset: f32, z_index: f32) -> Vec3 {
-    grid.to_pixels(GridPosition::new(grid.size.x, grid.size.y / 2), z_index)
-        + Vec3::new(80., y_offset, 0.)
-}
-
+#[allow(clippy::too_many_arguments)]
 pub fn spawn_score_text(
     commands: &mut Commands,
     font: Handle<Font>,
@@ -25,7 +20,7 @@ pub fn spawn_score_text(
     text: &str,
     ui_marker: impl Component,
 ) {
-    let score_text_offset = get_score_text_offset(grid, y_offset, 1.);
+    let score_text_offset = get_score_text_right_offset(grid, y_offset, 1.);
     let score_text_style = TextFont {
         font,
         font_size,

@@ -1,14 +1,21 @@
 use bevy::{
-    ecs::system::{Commands, Res},
+    ecs::{
+        entity::Entity,
+        system::{Commands, Res, Single},
+    },
     math::{Vec2, Vec3},
     sprite::{Sprite, Text2d},
     text::{Justify, TextColor, TextFont, TextLayout},
+    time::{Time, Timer, TimerMode},
     transform::components::Transform,
 };
 
-use crate::core::{
-    BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts, Grid,
-    GridPosition, WINDOW_RESOLUTION,
+use crate::{
+    core::{
+        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR,
+        GAME_STARTING_INTERVAL, GameFonts, Grid, GridPosition, WINDOW_RESOLUTION,
+    },
+    plugins::{shared::get_score_text_right_offset, window::components::GameStartingText},
 };
 
 pub fn draw_background(mut commands: Commands) {
@@ -57,4 +64,54 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
     );
 
     commands.spawn(instructions);
+}
+
+pub fn spawn_game_starting_text(mut commands: Commands, fonts: Res<GameFonts>, grid: Res<Grid>) {
+    let y_offset =
+        grid.to_pixels(
+            GridPosition {
+                column: grid.size.x,
+                row: grid.size.y,
+            },
+            0.,
+        )
+        .y + 10.;
+    let offset = get_score_text_right_offset(&grid, y_offset, 0.);
+
+    let content = "";
+
+    let text_font = TextFont {
+        font: fonts.bebas_neue_regular.clone(),
+        font_size: DEFAULT_FONT_SIZE,
+        font_smoothing: bevy::text::FontSmoothing::None,
+        ..Default::default()
+    };
+
+    let text = (
+        Text2d::new(content),
+        text_font,
+        TextColor(DEFAULT_TEXT_COLOR),
+        TextLayout::new_with_justify(Justify::Center),
+        Transform::from_translation(offset),
+        GameStartingText(Timer::from_seconds(GAME_STARTING_INTERVAL, TimerMode::Once)),
+    );
+
+    commands.spawn(text);
+}
+
+pub fn update_game_starting_text(
+    mut commands: Commands,
+    time: Res<Time>,
+    text_query: Single<(Entity, &mut GameStartingText, &mut Text2d)>,
+) {
+    let (entity, mut game_starting_text, mut text) = text_query.into_inner();
+    game_starting_text.0.tick(time.delta());
+
+    if game_starting_text.0.is_finished() {
+        commands.entity(entity).despawn();
+        return;
+    }
+
+    let remaining_seconds = game_starting_text.0.remaining_secs().ceil();
+    text.0 = format!("Game starts in {} seconds ...", remaining_seconds);
 }

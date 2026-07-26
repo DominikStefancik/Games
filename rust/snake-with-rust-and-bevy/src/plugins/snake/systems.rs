@@ -47,6 +47,7 @@ pub fn initialise_snake(
     render_snake(&mut commands, &grid, &snake);
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn move_snake(
     mut commands: Commands,
     time: Res<Time>,
