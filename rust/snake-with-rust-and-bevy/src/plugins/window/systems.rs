@@ -1,21 +1,25 @@
 use bevy::{
     ecs::{
         entity::Entity,
-        system::{Commands, Res, Single},
+        query::With,
+        system::{Commands, Res, ResMut, Single},
     },
     math::{Vec2, Vec3},
     sprite::{Sprite, Text2d},
     text::{Justify, TextColor, TextFont, TextLayout},
-    time::{Time, Timer, TimerMode},
+    time::Time,
     transform::components::Transform,
 };
 
 use crate::{
     core::{
-        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR,
-        GAME_STARTING_INTERVAL, GameFonts, Grid, GridPosition, WINDOW_RESOLUTION,
+        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts, Grid,
+        GridPosition, WINDOW_RESOLUTION,
     },
-    plugins::{shared::get_score_text_right_offset, window::components::GameStartingText},
+    plugins::{
+        shared::{GameStartingTimer, get_score_text_right_offset},
+        window::components::GameStartingText,
+    },
 };
 
 pub fn draw_background(mut commands: Commands) {
@@ -66,7 +70,12 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
     commands.spawn(instructions);
 }
 
-pub fn spawn_game_starting_text(mut commands: Commands, fonts: Res<GameFonts>, grid: Res<Grid>) {
+pub fn spawn_game_starting_text(
+    mut commands: Commands,
+    mut timer: ResMut<GameStartingTimer>,
+    fonts: Res<GameFonts>,
+    grid: Res<Grid>,
+) {
     let y_offset =
         grid.to_pixels(
             GridPosition {
@@ -93,25 +102,27 @@ pub fn spawn_game_starting_text(mut commands: Commands, fonts: Res<GameFonts>, g
         TextColor(DEFAULT_TEXT_COLOR),
         TextLayout::new_with_justify(Justify::Center),
         Transform::from_translation(offset),
-        GameStartingText(Timer::from_seconds(GAME_STARTING_INTERVAL, TimerMode::Once)),
+        GameStartingText,
     );
 
     commands.spawn(text);
+    timer.0.reset();
 }
 
 pub fn update_game_starting_text(
     mut commands: Commands,
     time: Res<Time>,
-    text_query: Single<(Entity, &mut GameStartingText, &mut Text2d)>,
+    mut timer: ResMut<GameStartingTimer>,
+    text_query: Single<(Entity, &mut Text2d), With<GameStartingText>>,
 ) {
-    let (entity, mut game_starting_text, mut text) = text_query.into_inner();
-    game_starting_text.0.tick(time.delta());
+    let (entity, mut text) = text_query.into_inner();
+    timer.0.tick(time.delta());
 
-    if game_starting_text.0.is_finished() {
+    if timer.0.is_finished() {
         commands.entity(entity).despawn();
         return;
     }
 
-    let remaining_seconds = game_starting_text.0.remaining_secs().ceil();
+    let remaining_seconds = timer.0.remaining_secs().ceil();
     text.0 = format!("Game starts in {} seconds ...", remaining_seconds);
 }

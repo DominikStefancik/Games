@@ -1,4 +1,4 @@
-use bevy::{ecs::component::Component, time::Timer};
+use bevy::ecs::component::Component;
 
 #[derive(Component, Debug)]
-pub struct GameStartingText(pub Timer);
+pub struct GameStartingText;

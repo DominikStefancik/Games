@@ -6,7 +6,7 @@ use bevy::{
 
 use crate::plugins::shared::{GameStarted, GameState};
 
-pub fn initialise_game(mut commands: Commands) {
+pub fn start_game(mut commands: Commands) {
     commands.trigger(GameStarted);
 }
 
@@ -23,7 +23,7 @@ pub fn toggle_pausing_game(
             GameState::Paused => {
                 next_state.set(GameState::Playing);
             }
-            GameState::GameOver => {}
+            _ => {}
         }
     }
 }

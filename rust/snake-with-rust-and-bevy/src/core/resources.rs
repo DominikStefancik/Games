@@ -1,9 +1,12 @@
 use std::collections::VecDeque;
 
 use bevy::{
-    asset::Handle,
+    asset::{AssetServer, Handle},
     audio::AudioSource,
-    ecs::resource::Resource,
+    ecs::{
+        resource::Resource,
+        world::{FromWorld, World},
+    },
     math::{IVec2, Vec3},
     text::Font,
     time::Timer,
@@ -15,6 +18,16 @@ use crate::core::{CELL_PIXELS, Direction, GRID_SIZE, GridPosition};
 #[derive(Resource)]
 pub struct GameFonts {
     pub bebas_neue_regular: Handle<Font>,
+}
+
+impl FromWorld for GameFonts {
+    fn from_world(world: &mut World) -> Self {
+        let asset_server = world.resource::<AssetServer>();
+
+        let bebas_neue_regular = asset_server.load("fonts/BebasNeue-Regular.ttf");
+
+        GameFonts { bebas_neue_regular }
+    }
 }
 
 #[derive(Resource)]

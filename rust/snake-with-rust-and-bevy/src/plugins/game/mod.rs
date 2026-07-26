@@ -1,9 +1,9 @@
 use bevy::{
-    app::{App, Plugin, Startup},
-    ecs::schedule::IntoScheduleConfigs,
+    app::{App, Plugin},
+    state::state::OnEnter,
 };
 
-use crate::plugins::{food::setup_food, shared::initialise_game};
+use crate::plugins::shared::{GameState, start_game};
 
 pub struct GamePlugin;
 
@@ -30,6 +30,6 @@ impl Plugin for GamePlugin {
          * If another Startup-stage system needs it in the same schedule, either order the systems explicitly (.after())
          * or just use "world.insert_resource" / a plain exclusive system for immediate insertion.
          */
-        app.add_systems(Startup, initialise_game.after(setup_food));
+        app.add_systems(OnEnter(GameState::Playing), start_game);
     }
 }
