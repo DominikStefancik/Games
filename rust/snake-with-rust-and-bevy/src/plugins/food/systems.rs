@@ -9,22 +9,13 @@ use crate::{
     core::{Grid, Randomizer},
     plugins::{
         food::{Food, FoodSprite, new_food_position, render_food},
-        shared::{FoodConsumed, GameStarted},
+        shared::{FoodConsumed, GameStartTriggered},
         snake::Snake,
     },
 };
 
-pub fn setup_food(mut commands: Commands, grid: Res<Grid>) {
-    let start_column = grid.size.x / 2;
-    let start_row = grid.size.y / 2;
-
-    let food = Food::new(start_column, start_row);
-
-    commands.insert_resource(food);
-}
-
 pub fn initialise_food(
-    _: On<GameStarted>,
+    _: On<GameStartTriggered>,
     mut commands: Commands,
     randomizer: ResMut<Randomizer>,
     grid: Res<Grid>,

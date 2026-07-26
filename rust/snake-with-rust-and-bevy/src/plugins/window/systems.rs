@@ -13,13 +13,10 @@ use bevy::{
 
 use crate::{
     core::{
-        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts, Grid,
-        GridPosition, WINDOW_RESOLUTION,
+        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts,
+        GameStartingTimer, Grid, GridPosition, WINDOW_RESOLUTION,
     },
-    plugins::{
-        shared::{GameStartingTimer, get_score_text_right_offset},
-        window::components::GameStartingText,
-    },
+    plugins::{shared::get_score_text_right_offset, window::GameStartingText},
 };
 
 pub fn draw_background(mut commands: Commands) {

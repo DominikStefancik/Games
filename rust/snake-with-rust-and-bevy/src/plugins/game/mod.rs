@@ -3,7 +3,7 @@ use bevy::{
     state::state::OnEnter,
 };
 
-use crate::plugins::shared::{GameState, start_game};
+use crate::plugins::shared::{GameState, trigger_game_start};
 
 pub struct GamePlugin;
 
@@ -30,6 +30,6 @@ impl Plugin for GamePlugin {
          * If another Startup-stage system needs it in the same schedule, either order the systems explicitly (.after())
          * or just use "world.insert_resource" / a plain exclusive system for immediate insertion.
          */
-        app.add_systems(OnEnter(GameState::Playing), start_game);
+        app.add_systems(OnEnter(GameState::GameStarting), trigger_game_start);
     }
 }

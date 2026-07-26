@@ -1,4 +1,4 @@
-use bevy::app::{App, Plugin, Startup};
+use bevy::app::{App, Plugin};
 
 mod components;
 mod helpers;
@@ -14,7 +14,7 @@ pub struct FoodPlugin;
 
 impl Plugin for FoodPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_food)
+        app.init_resource::<Food>()
             // Global observers
             .add_observer(initialise_food)
             .add_observer(create_new_food);

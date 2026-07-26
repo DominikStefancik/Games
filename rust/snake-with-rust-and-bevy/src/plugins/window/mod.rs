@@ -15,6 +15,8 @@ use crate::plugins::{
 mod components;
 mod systems;
 
+pub use components::*;
+
 pub struct WindowPlugin;
 
 impl Plugin for WindowPlugin {

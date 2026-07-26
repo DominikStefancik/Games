@@ -1,6 +1,9 @@
-use bevy::ecs::resource::Resource;
+use bevy::ecs::{
+    resource::Resource,
+    world::{FromWorld, World},
+};
 
-use crate::core::{Direction, GridPosition};
+use crate::core::{Direction, Grid, GridPosition};
 
 #[derive(Resource)]
 pub struct Snake {
@@ -27,5 +30,19 @@ impl Snake {
             GridPosition::new(start_column - 2, start_row),
         ];
         self.direction = Direction::Right;
+    }
+}
+
+// When implementing this trait, we can then initialise a Resource on the App level
+// by calling the ".init_resource::<Snake>()"
+impl FromWorld for Snake {
+    fn from_world(world: &mut World) -> Self {
+        // in order to use the Grid, we have to add the SharedPlugin to the app before the SnakePlugin,
+        // because the Grid is registered there
+        let grid = world.resource::<Grid>();
+        let start_column = grid.size.x / 2;
+        let start_row = grid.size.y / 2;
+
+        Snake::new(start_column, start_row)
     }
 }

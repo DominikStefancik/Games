@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, Plugin, Startup, Update},
+    app::{App, Plugin, Update},
     ecs::schedule::IntoScheduleConfigs,
     state::condition::in_state,
 };
@@ -19,7 +19,7 @@ pub struct SnakePlugin;
 
 impl Plugin for SnakePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_snake)
+        app.init_resource::<Snake>()
             .add_systems(Update, move_snake.run_if(in_state(GameState::Playing)))
             // Global observers
             .add_observer(initialise_snake);

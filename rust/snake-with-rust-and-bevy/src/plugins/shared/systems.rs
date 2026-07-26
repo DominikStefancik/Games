@@ -4,10 +4,10 @@ use bevy::{
     state::state::{NextState, State},
 };
 
-use crate::plugins::shared::{GameStarted, GameState};
+use crate::plugins::shared::{GameStartTriggered, GameState};
 
-pub fn start_game(mut commands: Commands) {
-    commands.trigger(GameStarted);
+pub fn trigger_game_start(mut commands: Commands) {
+    commands.trigger(GameStartTriggered);
 }
 
 pub fn toggle_pausing_game(

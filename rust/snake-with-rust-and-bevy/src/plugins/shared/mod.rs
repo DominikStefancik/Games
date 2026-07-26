@@ -8,19 +8,17 @@ use bevy::{
 };
 
 use crate::core::{
-    DirectionQueue, GAME_STARTING_INTERVAL, GameFonts, Grid, MoveTimer, Randomizer,
-    SNAKE_MOVE_INTERVAL, load_sounds,
+    DirectionQueue, GAME_STARTING_INTERVAL, GameFonts, GameStartingTimer, Grid, MoveTimer,
+    Randomizer, SNAKE_MOVE_INTERVAL, load_sounds,
 };
 
 pub mod events;
 mod helpers;
-mod resources;
 mod states;
 pub mod systems;
 
 pub use events::*;
 pub use helpers::*;
-pub use resources::*;
 pub use states::*;
 pub use systems::*;
 
@@ -30,7 +28,7 @@ impl Plugin for SharedPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<GameState>()
             // the GameFonts is initialised by calling the "from_world" method
-            .init_resource::<GameFonts>()
+            .init_resource::<GameFonts>() // calls GameFonts::from_world internally
             .insert_resource(Grid::default())
             .insert_resource(Randomizer {
                 rng: rand::make_rng(),

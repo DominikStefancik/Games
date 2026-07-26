@@ -20,8 +20,12 @@ pub struct GameFonts {
     pub bebas_neue_regular: Handle<Font>,
 }
 
+// When implementing this trait, we can then initialise a Resource on the App level
+// by calling the ".init_resource::<GameFonts>()"
 impl FromWorld for GameFonts {
     fn from_world(world: &mut World) -> Self {
+        // in order to use the AssetServer, we have to add the DefaultPlugins as a first plugin,
+        // because the AssetServer is registered there
         let asset_server = world.resource::<AssetServer>();
 
         let bebas_neue_regular = asset_server.load("fonts/BebasNeue-Regular.ttf");
@@ -78,6 +82,9 @@ impl Grid {
 pub struct Randomizer {
     pub rng: StdRng,
 }
+
+#[derive(Resource)]
+pub struct GameStartingTimer(pub Timer);
 
 #[derive(Resource)]
 pub struct MoveTimer(pub Timer);
