@@ -140,3 +140,13 @@ pub fn update_score_pop(
         text_color.0.set_alpha(time_fraction_remaining);
     }
 }
+
+pub fn update_best_score(
+    mut score: ResMut<Score>,
+    mut text_query: Single<&mut Text2d, With<BestScoreTextUi>>,
+) {
+    if score.current > score.best {
+        score.best = score.current;
+        text_query.0 = score.current.to_string();
+    }
+}

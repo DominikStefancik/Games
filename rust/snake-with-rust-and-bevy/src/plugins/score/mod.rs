@@ -1,4 +1,7 @@
-use bevy::app::{App, Plugin, Startup, Update};
+use bevy::{
+    app::{App, Plugin, Startup, Update},
+    state::state::OnEnter,
+};
 
 mod components;
 mod helpers;
@@ -10,11 +13,14 @@ pub use helpers::*;
 pub use resources::*;
 pub use systems::*;
 
+use crate::plugins::shared::GameState;
+
 pub struct ScorePlugin;
 
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Score::default())
+            .add_systems(OnEnter(GameState::GameOver), update_best_score)
             .add_systems(Startup, spawn_score)
             .add_systems(Update, update_score_pop)
             .add_observer(increase_current_score)
