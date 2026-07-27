@@ -1,6 +1,6 @@
 use bevy::{
     ecs::{
-        entity::Entity,
+        entity::{ContainsEntity, Entity},
         query::With,
         system::{Commands, Res, ResMut, Single},
     },
@@ -13,10 +13,13 @@ use bevy::{
 
 use crate::{
     core::{
-        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts,
-        GameStartingTimer, Grid, GridPosition, WINDOW_RESOLUTION,
+        BACKGROUND_COLOR, CANVAS_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GAME_OVER_FONT_SIZE,
+        GAME_OVER_TEXT_COLOR, GameFonts, GameStartingTimer, Grid, GridPosition, WINDOW_RESOLUTION,
     },
-    plugins::{shared::get_score_text_right_offset, window::GameStartingText},
+    plugins::{
+        shared::get_score_text_right_offset,
+        window::{GameOverText, GameStartingText},
+    },
 };
 
 pub fn draw_background(mut commands: Commands) {
@@ -47,7 +50,7 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
     let text_intructions = "INSTRUCTIONS\n\n\n\n\n\n\n\n
         Left/Right/Top/Bottom\n\nArrow Keys\n\n\n
         Press SPACE to Pause/Unpause\n\n\n
-        Press R to Reset";
+        Press ENTER to Restart";
 
     let text_font = TextFont {
         font: fonts.bebas_neue_regular.clone(),
@@ -67,7 +70,7 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
     commands.spawn(instructions);
 }
 
-pub fn spawn_game_starting_text(
+pub fn show_game_starting_text(
     mut commands: Commands,
     mut timer: ResMut<GameStartingTimer>,
     fonts: Res<GameFonts>,
@@ -122,4 +125,30 @@ pub fn update_game_starting_text(
 
     let remaining_seconds = timer.0.remaining_secs().ceil();
     text.0 = format!("Game starts in {} seconds ...", remaining_seconds);
+}
+
+pub fn show_game_over_text(mut commands: Commands, fonts: Res<GameFonts>) {
+    let content = "GAME OVER\n\nPRESS ENTER TO RESTART";
+
+    let text_font = TextFont {
+        font: fonts.bebas_neue_regular.clone(),
+        font_size: GAME_OVER_FONT_SIZE,
+        font_smoothing: bevy::text::FontSmoothing::None,
+        ..Default::default()
+    };
+
+    let text = (
+        Text2d::new(content),
+        text_font,
+        TextColor(GAME_OVER_TEXT_COLOR),
+        TextLayout::new_with_justify(Justify::Center),
+        Transform::from_xyz(0.0, 0.0, 1.0),
+        GameOverText,
+    );
+
+    commands.spawn(text);
+}
+
+pub fn hide_game_over_text(mut commands: Commands, text_query: Single<Entity, With<GameOverText>>) {
+    commands.entity(text_query.entity()).despawn();
 }

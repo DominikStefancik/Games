@@ -1,11 +1,15 @@
 use bevy::{
     ecs::system::{Commands, Res, ResMut},
     input::{ButtonInput, keyboard::KeyCode},
+    state::state::{NextState, State},
 };
 
 use crate::{
     core::{Direction, DirectionQueue},
-    plugins::{shared::GameRestarted, snake::Snake},
+    plugins::{
+        shared::{GameRestarted, GameState},
+        snake::Snake,
+    },
 };
 
 pub fn enqueue_snake_direction_on_keypress(
@@ -29,8 +33,26 @@ pub fn enqueue_snake_direction_on_keypress(
     }
 }
 
+pub fn toggle_pausing_game_on_keypress(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    game_state: Res<State<GameState>>,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        match game_state.get() {
+            GameState::Playing => {
+                next_state.set(GameState::Paused);
+            }
+            GameState::Paused => {
+                next_state.set(GameState::Playing);
+            }
+            _ => {}
+        }
+    }
+}
+
 pub fn reset_game_on_keypress(mut commands: Commands, input: Res<ButtonInput<KeyCode>>) {
-    if input.just_pressed(KeyCode::KeyR) {
+    if input.just_pressed(KeyCode::Enter) {
         commands.trigger(GameRestarted);
     }
 }

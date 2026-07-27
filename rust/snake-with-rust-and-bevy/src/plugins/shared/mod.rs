@@ -12,7 +12,7 @@ use crate::{
         DirectionQueue, GAME_STARTING_INTERVAL, GameFonts, GameStartingTimer, Grid, MoveTimer,
         Randomizer, SNAKE_MOVE_INTERVAL, load_sounds,
     },
-    plugins::controls::reset_game_on_keypress,
+    plugins::controls::{reset_game_on_keypress, toggle_pausing_game_on_keypress},
 };
 
 pub mod events;
@@ -50,7 +50,7 @@ impl Plugin for SharedPlugin {
                 Update,
                 (
                     move_to_playing_state,
-                    toggle_pausing_game,
+                    toggle_pausing_game_on_keypress,
                     reset_game_on_keypress.run_if(in_state(GameState::GameOver)),
                 ),
             )
