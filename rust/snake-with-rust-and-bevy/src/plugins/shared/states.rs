@@ -24,9 +24,7 @@ pub fn move_to_playing_state(
 ) {
     timer.0.tick(time.delta());
 
-    let allowed_states = [GameState::GameStarting, GameState::GameOver];
-
-    if timer.0.is_finished() && allowed_states.contains(app_state.get()) {
+    if timer.0.is_finished() && *app_state.get() == GameState::GameStarting {
         next_state.set(GameState::Playing);
     }
 }

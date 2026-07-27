@@ -1,11 +1,11 @@
 use bevy::{
-    ecs::system::{Res, ResMut},
+    ecs::system::{Commands, Res, ResMut},
     input::{ButtonInput, keyboard::KeyCode},
 };
 
 use crate::{
     core::{Direction, DirectionQueue},
-    plugins::snake::Snake,
+    plugins::{shared::GameRestarted, snake::Snake},
 };
 
 pub fn enqueue_snake_direction_on_keypress(
@@ -26,5 +26,11 @@ pub fn enqueue_snake_direction_on_keypress(
         {
             queue.0.push_back(direction);
         };
+    }
+}
+
+pub fn reset_game_on_keypress(mut commands: Commands, input: Res<ButtonInput<KeyCode>>) {
+    if input.just_pressed(KeyCode::KeyR) {
+        commands.trigger(GameRestarted);
     }
 }

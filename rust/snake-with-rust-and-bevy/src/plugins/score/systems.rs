@@ -101,7 +101,7 @@ pub fn spawn_score_pop(
     ));
 }
 
-pub fn update_score(
+pub fn increase_current_score(
     _: On<FoodConsumed>,
     mut score: ResMut<Score>,
     mut text_query: Single<&mut Text2d, With<ScoreTextUi>>,

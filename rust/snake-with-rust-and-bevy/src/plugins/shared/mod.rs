@@ -7,9 +7,12 @@ use bevy::{
     time::{Timer, TimerMode},
 };
 
-use crate::core::{
-    DirectionQueue, GAME_STARTING_INTERVAL, GameFonts, GameStartingTimer, Grid, MoveTimer,
-    Randomizer, SNAKE_MOVE_INTERVAL, load_sounds,
+use crate::{
+    core::{
+        DirectionQueue, GAME_STARTING_INTERVAL, GameFonts, GameStartingTimer, Grid, MoveTimer,
+        Randomizer, SNAKE_MOVE_INTERVAL, load_sounds,
+    },
+    plugins::controls::reset_game_on_keypress,
 };
 
 pub mod events;
@@ -47,8 +50,10 @@ impl Plugin for SharedPlugin {
                 Update,
                 (
                     move_to_playing_state,
-                    toggle_pausing_game.run_if(in_state(GameState::Playing)),
+                    toggle_pausing_game,
+                    reset_game_on_keypress.run_if(in_state(GameState::GameOver)),
                 ),
-            );
+            )
+            .add_observer(reset_game);
     }
 }

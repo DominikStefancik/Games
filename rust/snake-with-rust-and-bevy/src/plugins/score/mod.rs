@@ -17,7 +17,7 @@ impl Plugin for ScorePlugin {
         app.insert_resource(Score::default())
             .add_systems(Startup, spawn_score)
             .add_systems(Update, update_score_pop)
-            .add_observer(update_score)
+            .add_observer(increase_current_score)
             .add_observer(spawn_score_pop);
     }
 }

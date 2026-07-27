@@ -11,6 +11,7 @@ mod helpers;
 pub mod resources;
 mod systems;
 
+pub use components::*;
 pub use helpers::*;
 pub use resources::*;
 pub use systems::*;

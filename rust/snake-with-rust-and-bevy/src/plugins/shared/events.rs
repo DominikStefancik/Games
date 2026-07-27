@@ -12,6 +12,9 @@ use bevy::ecs::event::Event;
 pub struct GameStartTriggered;
 
 #[derive(Event)]
+pub struct GameRestarted;
+
+#[derive(Event)]
 pub struct FoodConsumed;
 
 #[derive(Event)]
