@@ -6,6 +6,7 @@ use bevy::{
         query::With,
         system::{Commands, Query, Res, ResMut},
     },
+    state::state::NextState,
     time::Time,
 };
 
@@ -13,7 +14,7 @@ use crate::{
     core::{Direction, DirectionQueue, GameSounds, Grid, GridPosition, MoveTimer},
     plugins::{
         food::Food,
-        shared::{FoodConsumed, GameStartTriggered, SnakeDied},
+        shared::{FoodConsumed, GameStartTriggered, GameState},
         snake::{Snake, components::SnakeSegmentSprite, render_snake},
     },
 };
@@ -34,6 +35,7 @@ pub fn move_snake(
     mut commands: Commands,
     time: Res<Time>,
     mut timer: ResMut<MoveTimer>,
+    mut next_state: ResMut<NextState<GameState>>,
     grid: Res<Grid>,
     game_sounds: Res<GameSounds>,
     mut queue: ResMut<DirectionQueue>,
@@ -72,7 +74,16 @@ pub fn move_snake(
             AudioPlayer::new(game_sounds.die.clone()),
             PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.5)),
         ));
-        commands.trigger(SnakeDied);
+        next_state.set(GameState::GameOver);
+        return;
+    }
+
+    if snake.segments.contains(&new_head_position) {
+        commands.spawn((
+            AudioPlayer::new(game_sounds.die.clone()),
+            PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.5)),
+        ));
+        next_state.set(GameState::GameOver);
         return;
     }
 

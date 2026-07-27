@@ -16,6 +16,3 @@ pub struct GameRestarted;
 
 #[derive(Event)]
 pub struct FoodConsumed;
-
-#[derive(Event)]
-pub struct SnakeDied;
