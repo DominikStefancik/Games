@@ -3,7 +3,7 @@ use bevy::{
     color::Color,
     ecs::{component::Component, system::Commands},
     sprite::Text2d,
-    text::{Font, FontSmoothing, Justify, TextColor, TextFont, TextLayout},
+    text::{Font, FontSize, FontSmoothing, Justify, TextColor, TextFont, TextLayout},
     transform::components::Transform,
 };
 
@@ -22,8 +22,8 @@ pub fn spawn_score_text(
 ) {
     let score_text_offset = get_score_text_right_offset(grid, y_offset, 1.);
     let score_text_style = TextFont {
-        font,
-        font_size,
+        font: font.into(),
+        font_size: FontSize::Px(font_size),
         font_smoothing: FontSmoothing::None,
         ..Default::default()
     };
@@ -31,7 +31,7 @@ pub fn spawn_score_text(
     commands.spawn((
         Text2d::new(text),
         score_text_style.clone(),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         TextColor(text_color),
         Transform::from_translation(score_text_offset),
         ui_marker,

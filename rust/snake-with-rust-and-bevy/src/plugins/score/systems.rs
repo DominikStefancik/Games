@@ -7,7 +7,7 @@ use bevy::{
         system::{Commands, Query, Res, ResMut, Single},
     },
     sprite::Text2d,
-    text::{FontSmoothing, Justify, TextColor, TextFont, TextLayout},
+    text::{FontSize, FontSmoothing, Justify, TextColor, TextFont, TextLayout},
     time::{Time, Timer, TimerMode},
     transform::components::Transform,
 };
@@ -89,12 +89,12 @@ pub fn spawn_score_pop(
     commands.spawn((
         Text2d::new(score.current.to_string()),
         TextFont {
-            font: fonts.bebas_neue_regular.clone(),
-            font_size: SCORE_FONT_SIZE,
+            font: fonts.bebas_neue_regular.clone().into(),
+            font_size: FontSize::Px(SCORE_FONT_SIZE),
             font_smoothing: FontSmoothing::None,
             ..Default::default()
         },
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         TextColor(Color::WHITE),
         Transform::from_translation(get_score_text_right_offset(&grid, SCORE_TEXT_Y_OFFSET, 2.)),
         ScorePop(Timer::from_seconds(0.6, TimerMode::Once)),

@@ -6,7 +6,7 @@ use bevy::{
     },
     math::{Vec2, Vec3},
     sprite::{Sprite, Text2d},
-    text::{Justify, TextColor, TextFont, TextLayout},
+    text::{FontSize, Justify, TextColor, TextFont, TextLayout},
     time::Time,
     transform::components::Transform,
 };
@@ -47,14 +47,14 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
     let offset =
         grid.to_pixels(GridPosition { column: 0, row: 0 }, 1.) + Vec3::new(-200., 300., 0.);
 
-    let text_intructions = "INSTRUCTIONS\n\n\n\n\n\n\n\n
-        Left/Right/Top/Bottom\n\nArrow Keys\n\n\n
-        Press SPACE to Pause/Unpause\n\n\n
+    let text_intructions = "INSTRUCTIONS\n\n\n
+        Left/Right/Top/Bottom\nArrow Keys\n
+        Press SPACE to Pause/Unpause\n
         Press ENTER to Restart";
 
     let text_font = TextFont {
-        font: fonts.bebas_neue_regular.clone(),
-        font_size: DEFAULT_FONT_SIZE,
+        font: fonts.bebas_neue_regular.clone().into(),
+        font_size: FontSize::Px(DEFAULT_FONT_SIZE),
         font_smoothing: bevy::text::FontSmoothing::None,
         ..Default::default()
     };
@@ -63,7 +63,7 @@ pub fn draw_instructions(mut commands: Commands, fonts: Res<GameFonts>, grid: Re
         Text2d::new(text_intructions),
         text_font,
         TextColor(DEFAULT_TEXT_COLOR),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Transform::from_translation(offset),
     );
 
@@ -90,8 +90,8 @@ pub fn show_game_starting_text(
     let content = "";
 
     let text_font = TextFont {
-        font: fonts.bebas_neue_regular.clone(),
-        font_size: DEFAULT_FONT_SIZE,
+        font: fonts.bebas_neue_regular.clone().into(),
+        font_size: FontSize::Px(DEFAULT_FONT_SIZE),
         font_smoothing: bevy::text::FontSmoothing::None,
         ..Default::default()
     };
@@ -100,7 +100,7 @@ pub fn show_game_starting_text(
         Text2d::new(content),
         text_font,
         TextColor(DEFAULT_TEXT_COLOR),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Transform::from_translation(offset),
         GameStartingText,
     );
@@ -131,8 +131,8 @@ pub fn show_game_over_text(mut commands: Commands, fonts: Res<GameFonts>) {
     let content = "GAME OVER\n\nPRESS ENTER TO RESTART";
 
     let text_font = TextFont {
-        font: fonts.bebas_neue_regular.clone(),
-        font_size: GAME_OVER_FONT_SIZE,
+        font: fonts.bebas_neue_regular.clone().into(),
+        font_size: FontSize::Px(GAME_OVER_FONT_SIZE),
         font_smoothing: bevy::text::FontSmoothing::None,
         ..Default::default()
     };
@@ -141,7 +141,7 @@ pub fn show_game_over_text(mut commands: Commands, fonts: Res<GameFonts>) {
         Text2d::new(content),
         text_font,
         TextColor(GAME_OVER_TEXT_COLOR),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Transform::from_xyz(0.0, 0.0, 1.0),
         GameOverText,
     );
