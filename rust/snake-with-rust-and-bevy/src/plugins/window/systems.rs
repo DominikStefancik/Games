@@ -128,7 +128,7 @@ pub fn update_game_starting_text(
 }
 
 pub fn show_game_over_text(mut commands: Commands, fonts: Res<GameFonts>) {
-    let content = "GAME OVER\n\nPRESS ENTER TO RESTART";
+    let content = "GAME OVER\nPRESS ENTER TO RESTART";
 
     let text_font = TextFont {
         font: fonts.bebas_neue_regular.clone().into(),
