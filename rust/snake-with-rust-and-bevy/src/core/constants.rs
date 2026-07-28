@@ -10,6 +10,7 @@ pub const BEST_SCORE_COLOR: Color = Color::srgb(241. / 255.0, 158. / 255., 75. /
 pub const SNAKE_HEAD_COLOR: Color = Color::srgb(0.2, 0.95, 0.2);
 pub const SNAKE_BODY_COLOR: Color = Color::srgb(0.2, 0.7, 0.2);
 pub const FOOD_COLOR: Color = Color::srgb(0.8, 0.2, 0.2);
+pub const PARTICLE_COLOR: Color = Color::srgb(1.0, 0.9, 0.2);
 
 pub const DEFAULT_FONT_SIZE: f32 = 24.;
 pub const SCORE_FONT_SIZE: f32 = 200.;
