@@ -1,8 +1,8 @@
 use bevy::{ecs::system::Commands, math::Vec2, sprite::Sprite, transform::components::Transform};
 
-use crate::{
-    core::{CELL_PADDING, Grid, SNAKE_BODY_COLOR, SNAKE_HEAD_COLOR},
-    plugins::snake::{Snake, components::SnakeSegmentSprite},
+use crate::plugins::{
+    shared::{CELL_PADDING, Grid, SNAKE_BODY_COLOR, SNAKE_HEAD_COLOR},
+    snake::{Snake, components::SnakeSegmentSprite},
 };
 
 pub fn render_snake(commands: &mut Commands, grid: &Grid, snake: &Snake) {

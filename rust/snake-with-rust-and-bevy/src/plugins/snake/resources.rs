@@ -1,9 +1,12 @@
-use bevy::ecs::{
-    resource::Resource,
-    world::{FromWorld, World},
+use bevy::{
+    ecs::{
+        resource::Resource,
+        world::{FromWorld, World},
+    },
+    time::Timer,
 };
 
-use crate::core::{Direction, Grid, GridPosition};
+use crate::plugins::shared::{Direction, Grid, GridPosition};
 
 #[derive(Resource)]
 pub struct Snake {
@@ -46,3 +49,6 @@ impl FromWorld for Snake {
         Snake::new(start_column, start_row)
     }
 }
+
+#[derive(Resource)]
+pub struct SnakeMoveTimer(pub Timer);

@@ -5,7 +5,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    shared::GameState,
+    game::GameState,
     window::systems::{
         draw_background, draw_canvas, draw_instructions, hide_game_over_text, show_game_over_text,
         show_game_starting_text, update_game_starting_text,

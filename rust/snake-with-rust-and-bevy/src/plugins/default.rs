@@ -6,7 +6,7 @@ use bevy::{
     window::{Window, WindowPlugin, WindowResolution},
 };
 
-use crate::core::WINDOW_RESOLUTION;
+use crate::plugins::shared::WINDOW_RESOLUTION;
 
 pub fn default_plugin(app: &mut App) {
     let primary_window = Window {

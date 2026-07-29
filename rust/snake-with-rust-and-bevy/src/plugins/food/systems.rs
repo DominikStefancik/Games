@@ -13,13 +13,11 @@ use bevy::{
 };
 use rand::RngExt;
 
-use crate::{
-    core::{Grid, PARTICLE_COLOR, Randomizer},
-    plugins::{
-        food::{Food, FoodParticle, FoodSprite, new_food_position, render_food},
-        shared::{FoodConsumed, GameStartTriggered},
-        snake::Snake,
-    },
+use crate::plugins::{
+    food::{Food, FoodConsumed, FoodParticle, FoodSprite, new_food_position, render_food},
+    game::GameStartTriggered,
+    shared::{Grid, PARTICLE_COLOR, Randomizer},
+    snake::Snake,
 };
 
 pub fn initialise_food(

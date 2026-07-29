@@ -9,10 +9,4 @@ use bevy::ecs::event::Event;
  * Note: If you need an Event to "carry" certain data, use EntityEvent
  */
 #[derive(Event)]
-pub struct GameStartTriggered;
-
-#[derive(Event)]
-pub struct GameRestarted;
-
-#[derive(Event)]
 pub struct FoodConsumed;

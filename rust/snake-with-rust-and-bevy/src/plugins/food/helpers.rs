@@ -1,9 +1,7 @@
-use crate::{
-    core::{CELL_PADDING, FOOD_COLOR, Grid, GridPosition, Randomizer},
-    plugins::{
-        food::{Food, FoodSprite},
-        snake::Snake,
-    },
+use crate::plugins::{
+    food::{Food, FoodSprite},
+    shared::{CELL_PADDING, FOOD_COLOR, Grid, GridPosition, Randomizer},
+    snake::Snake,
 };
 use bevy::{ecs::system::Commands, math::Vec2, sprite::Sprite, transform::components::Transform};
 use rand::RngExt;

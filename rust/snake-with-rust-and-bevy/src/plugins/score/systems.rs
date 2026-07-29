@@ -12,17 +12,15 @@ use bevy::{
     transform::components::Transform,
 };
 
-use crate::{
-    core::{
-        BEST_SCORE_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts, Grid, SCORE_FONT_SIZE,
-        SCORE_TEXT_COLOR, SCORE_TEXT_Y_OFFSET,
+use crate::plugins::{
+    food::FoodConsumed,
+    score::{
+        BestScoreLabelUi, BestScoreTextUi, Score, ScoreLabelUi, ScorePop, ScoreTextUi,
+        spawn_score_text,
     },
-    plugins::{
-        score::{
-            BestScoreLabelUi, BestScoreTextUi, Score, ScoreLabelUi, ScorePop, ScoreTextUi,
-            spawn_score_text,
-        },
-        shared::{FoodConsumed, get_score_text_right_offset},
+    shared::{
+        BEST_SCORE_COLOR, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR, GameFonts, Grid, SCORE_FONT_SIZE,
+        SCORE_TEXT_COLOR, SCORE_TEXT_Y_OFFSET, get_score_text_right_offset,
     },
 };
 

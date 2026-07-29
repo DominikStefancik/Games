@@ -10,13 +10,11 @@ use bevy::{
     time::Time,
 };
 
-use crate::{
-    core::{Direction, DirectionQueue, GameSounds, Grid, GridPosition, MoveTimer},
-    plugins::{
-        food::Food,
-        shared::{FoodConsumed, GameStartTriggered, GameState},
-        snake::{Snake, components::SnakeSegmentSprite, render_snake},
-    },
+use crate::plugins::{
+    food::{Food, FoodConsumed},
+    game::{GameStartTriggered, GameState},
+    shared::{Direction, DirectionQueue, GameSounds, Grid, GridPosition},
+    snake::{Snake, SnakeMoveTimer, components::SnakeSegmentSprite, render_snake},
 };
 
 pub fn initialise_snake(
@@ -34,7 +32,7 @@ pub fn initialise_snake(
 pub fn move_snake(
     mut commands: Commands,
     time: Res<Time>,
-    mut timer: ResMut<MoveTimer>,
+    mut timer: ResMut<SnakeMoveTimer>,
     mut next_state: ResMut<NextState<GameState>>,
     grid: Res<Grid>,
     game_sounds: Res<GameSounds>,

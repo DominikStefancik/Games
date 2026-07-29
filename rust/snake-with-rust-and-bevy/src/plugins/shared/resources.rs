@@ -9,11 +9,10 @@ use bevy::{
     },
     math::{IVec2, Vec3},
     text::Font,
-    time::Timer,
 };
 use rand::rngs::StdRng;
 
-use crate::core::{CELL_PIXELS, Direction, GRID_SIZE, GridPosition};
+use crate::plugins::shared::{CELL_PIXELS, Direction, GRID_SIZE, GridPosition};
 
 #[derive(Resource)]
 pub struct GameFonts {
@@ -82,9 +81,3 @@ impl Grid {
 pub struct Randomizer {
     pub rng: StdRng,
 }
-
-#[derive(Resource)]
-pub struct GameStartingTimer(pub Timer);
-
-#[derive(Resource)]
-pub struct MoveTimer(pub Timer);

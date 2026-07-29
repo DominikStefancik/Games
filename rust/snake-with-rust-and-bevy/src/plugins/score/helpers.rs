@@ -7,7 +7,7 @@ use bevy::{
     transform::components::Transform,
 };
 
-use crate::{core::Grid, plugins::shared::get_score_text_right_offset};
+use crate::plugins::shared::{Grid, get_score_text_right_offset};
 
 #[allow(clippy::too_many_arguments)]
 pub fn spawn_score_text(

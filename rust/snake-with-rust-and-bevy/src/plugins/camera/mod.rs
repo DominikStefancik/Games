@@ -9,7 +9,7 @@ use crate::plugins::{
         resources::ScreenShake,
         systems::{apply_screenshake, reset_screenshake_timer, spawn_camera},
     },
-    shared::GameState,
+    game::GameState,
 };
 
 mod resources;

@@ -4,16 +4,14 @@ use bevy::{
     state::state::{NextState, State},
 };
 
-use crate::{
-    core::{Direction, DirectionQueue},
-    plugins::{
-        shared::{GameRestarted, GameState},
-        snake::Snake,
-    },
+use crate::plugins::{
+    game::{GameRestarted, GameState},
+    shared::{Direction, DirectionQueue},
+    snake::Snake,
 };
 
 pub fn enqueue_snake_direction_on_keypress(
-    input: Res<ButtonInput<KeyCode>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
     mut queue: ResMut<DirectionQueue>,
     snake: Res<Snake>,
 ) {
@@ -24,7 +22,10 @@ pub fn enqueue_snake_direction_on_keypress(
         KeyCode::ArrowDown,
     ];
 
-    for key in arrow_keys.iter().filter(|key| input.just_pressed(**key)) {
+    for key in arrow_keys
+        .iter()
+        .filter(|key| keyboard_input.just_pressed(**key))
+    {
         if let Some(direction) = Direction::from_key(key)
             && !snake.direction.is_opposite(&direction)
         {
@@ -51,8 +52,8 @@ pub fn toggle_pausing_game_on_keypress(
     }
 }
 
-pub fn reset_game_on_keypress(mut commands: Commands, input: Res<ButtonInput<KeyCode>>) {
-    if input.just_pressed(KeyCode::Enter) {
+pub fn reset_game_on_keypress(mut commands: Commands, keyboard_input: Res<ButtonInput<KeyCode>>) {
+    if keyboard_input.just_pressed(KeyCode::Enter) {
         commands.trigger(GameRestarted);
     }
 }

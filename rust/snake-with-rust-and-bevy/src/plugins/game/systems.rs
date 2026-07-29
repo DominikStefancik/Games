@@ -1,0 +1,51 @@
+use bevy::{
+    ecs::{
+        entity::{ContainsEntity, Entity},
+        observer::On,
+        query::With,
+        system::{Commands, Query, ResMut, Single},
+    },
+    sprite::Text2d,
+    state::state::NextState,
+};
+
+use crate::plugins::{
+    food::FoodSprite,
+    game::{GameRestarted, GameStartTriggered, GameState},
+    score::{Score, ScoreTextUi},
+    shared::DirectionQueue,
+    snake::{SnakeMoveTimer, SnakeSegmentSprite},
+};
+
+pub fn trigger_game_start(mut commands: Commands) {
+    commands.trigger(GameStartTriggered);
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn reset_game(
+    _: On<GameRestarted>,
+    mut commands: Commands,
+    mut move_timer: ResMut<SnakeMoveTimer>,
+    mut queue: ResMut<DirectionQueue>,
+    snake_segments: Query<Entity, With<SnakeSegmentSprite>>,
+    food: Single<Entity, With<FoodSprite>>,
+    mut score: ResMut<Score>,
+    mut text_query: Single<&mut Text2d, With<ScoreTextUi>>,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    for segment_entity in snake_segments {
+        commands.entity(segment_entity).despawn();
+    }
+
+    commands.entity(food.entity()).despawn();
+
+    score.current = 0;
+    text_query.0 = score.current.to_string();
+
+    queue.0.clear();
+    move_timer.0.reset();
+
+    // Only after all that needs to be reset, we can start the game again by setting the state
+    // (which will then run the "trigger_game_start" system)
+    next_state.set(GameState::GameStarting);
+}

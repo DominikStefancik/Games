@@ -1,53 +1,15 @@
 use bevy::{
-    ecs::{
-        entity::{ContainsEntity, Entity},
-        observer::On,
-        query::With,
-        system::{Commands, Query, ResMut, Single},
-    },
-    sprite::Text2d,
-    state::state::NextState,
+    asset::AssetServer,
+    ecs::system::{Commands, Res},
 };
 
-use crate::{
-    core::{DirectionQueue, MoveTimer},
-    plugins::{
-        food::FoodSprite,
-        score::{Score, ScoreTextUi},
-        shared::{GameRestarted, GameStartTriggered, GameState},
-        snake::SnakeSegmentSprite,
-    },
-};
+use crate::plugins::shared::GameSounds;
 
-pub fn trigger_game_start(mut commands: Commands) {
-    commands.trigger(GameStartTriggered);
-}
+pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let eat = asset_server.load("audio/eat.wav");
+    let die = asset_server.load("audio/die.wav");
 
-#[allow(clippy::too_many_arguments)]
-pub fn reset_game(
-    _: On<GameRestarted>,
-    mut commands: Commands,
-    mut move_timer: ResMut<MoveTimer>,
-    mut queue: ResMut<DirectionQueue>,
-    snake_segments: Query<Entity, With<SnakeSegmentSprite>>,
-    food: Single<Entity, With<FoodSprite>>,
-    mut score: ResMut<Score>,
-    mut text_query: Single<&mut Text2d, With<ScoreTextUi>>,
-    mut next_state: ResMut<NextState<GameState>>,
-) {
-    for segment_entity in snake_segments {
-        commands.entity(segment_entity).despawn();
-    }
+    let game_sounds = GameSounds { eat, die };
 
-    commands.entity(food.entity()).despawn();
-
-    score.current = 0;
-    text_query.0 = score.current.to_string();
-
-    queue.0.clear();
-    move_timer.0.reset();
-
-    // Only after all that needs to be reset, we can start the game again by setting the state
-    // (which will then run the "trigger_game_start" system)
-    next_state.set(GameState::GameStarting);
+    commands.insert_resource(game_sounds);
 }

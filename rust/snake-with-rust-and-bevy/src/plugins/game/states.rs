@@ -4,7 +4,7 @@ use bevy::{
     time::Time,
 };
 
-use crate::core::GameStartingTimer;
+use crate::plugins::game::GameStartingTimer;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum GameState {

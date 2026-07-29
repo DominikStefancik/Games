@@ -5,7 +5,6 @@ use crate::plugins::{
     WindowPlugin, default_plugin,
 };
 
-mod core;
 mod plugins;
 
 fn main() {

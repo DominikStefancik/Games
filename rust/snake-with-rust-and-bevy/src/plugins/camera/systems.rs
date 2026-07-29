@@ -9,7 +9,7 @@ use bevy::{
     transform::components::Transform,
 };
 
-use crate::plugins::camera::resources::ScreenShake;
+use crate::plugins::camera::ScreenShake;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2d);

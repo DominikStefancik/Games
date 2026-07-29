@@ -1,3 +1,4 @@
+use crate::plugins::game::GameState;
 use bevy::{
     app::{App, Plugin, Startup, Update},
     state::state::OnEnter,
@@ -12,8 +13,6 @@ pub use components::*;
 pub use helpers::*;
 pub use resources::*;
 pub use systems::*;
-
-use crate::plugins::shared::GameState;
 
 pub struct ScorePlugin;
 

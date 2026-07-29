@@ -3,7 +3,7 @@ use bevy::ecs::{
     world::{FromWorld, World},
 };
 
-use crate::core::{Grid, GridPosition};
+use crate::plugins::shared::{Grid, GridPosition};
 
 #[derive(Resource)]
 pub struct Food(pub GridPosition);

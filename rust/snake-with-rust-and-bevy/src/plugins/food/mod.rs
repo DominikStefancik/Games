@@ -1,11 +1,13 @@
 use bevy::app::{App, Plugin, Update};
 
 mod components;
+mod events;
 mod helpers;
 mod resources;
-pub mod systems;
+mod systems;
 
 pub use components::*;
+pub use events::*;
 pub use helpers::*;
 pub use resources::*;
 pub use systems::*;

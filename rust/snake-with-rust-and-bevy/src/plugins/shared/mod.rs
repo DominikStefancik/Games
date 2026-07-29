@@ -1,59 +1,34 @@
-use std::collections::VecDeque;
+use bevy::app::{App, Plugin, Startup};
 
-use bevy::{
-    app::{App, Plugin, Startup, Update},
-    ecs::schedule::IntoScheduleConfigs,
-    state::{app::AppExtStates, condition::in_state},
-    time::{Timer, TimerMode},
-};
-
-use crate::{
-    core::{
-        DirectionQueue, GAME_STARTING_INTERVAL, GameFonts, GameStartingTimer, Grid, MoveTimer,
-        Randomizer, SNAKE_MOVE_INTERVAL, load_sounds,
-    },
-    plugins::controls::{reset_game_on_keypress, toggle_pausing_game_on_keypress},
-};
-
-pub mod events;
+mod components;
+mod constants;
 mod helpers;
-mod states;
-pub mod systems;
+mod resources;
+mod systems;
 
-pub use events::*;
+/* when exporting public items from each submodule here, we hide the implementation details where the items come from
+ * e.g. when importing a constant from "constants" submodule, the import statemment will be
+ *
+ * "use crate::plugins::shared::GRID_SIZE;" instead of "use crate::plugins::shared::constants::GRID_SIZE;"
+ *
+ * That way the outside world doesn't know that the GRID_SIZE constant comes from the "constants" submodule
+ */
+pub use components::*;
+pub use constants::*;
 pub use helpers::*;
-pub use states::*;
+pub use resources::*;
 pub use systems::*;
 
 pub struct SharedPlugin;
 
 impl Plugin for SharedPlugin {
     fn build(&self, app: &mut App) {
-        app.init_state::<GameState>()
-            // the GameFonts is initialised by calling the "from_world" method
-            .init_resource::<GameFonts>() // calls GameFonts::from_world internally
+        // the GameFonts is initialised by calling the "from_world" method
+        app.init_resource::<GameFonts>() // calls GameFonts::from_world internally
             .insert_resource(Grid::default())
             .insert_resource(Randomizer {
                 rng: rand::make_rng(),
             })
-            .insert_resource(GameStartingTimer(Timer::from_seconds(
-                GAME_STARTING_INTERVAL,
-                TimerMode::Once,
-            )))
-            .insert_resource(MoveTimer(Timer::from_seconds(
-                SNAKE_MOVE_INTERVAL,
-                TimerMode::Repeating,
-            )))
-            .insert_resource(DirectionQueue(VecDeque::new()))
-            .add_systems(Startup, load_sounds)
-            .add_systems(
-                Update,
-                (
-                    move_to_playing_state,
-                    toggle_pausing_game_on_keypress,
-                    reset_game_on_keypress.run_if(in_state(GameState::GameOver)),
-                ),
-            )
-            .add_observer(reset_game);
+            .add_systems(Startup, load_sounds);
     }
 }
