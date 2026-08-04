@@ -8,7 +8,7 @@ use crate::support::{TestApp, get_food_position};
 mod support;
 
 #[test]
-fn new_food_appears_at_different_place_after_consumed() {
+fn new_food_appears_at_different_place_after_previous_one_is_consumed() {
     let mut test_app = TestApp::new();
 
     /*

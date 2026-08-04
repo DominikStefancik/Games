@@ -1,3 +1,20 @@
+/*
+ * Every file directly inside tests/ is compiled as its own separate, independent crate (a separate binary).
+ * The source code in this file gets recompiled from scratch, separately, for each test binary
+ * (food_integration_tests, score_integration_tests, etc. each become their own crate).
+ * The Rust compiler's dead_code lint is evaluated per crate - it only looks at what's actually called within
+ * that one binary's compilation.
+ *
+ * This is exactly why commenting the "unused" functions out breaks compilation (some other test file needs them)
+ * while the compiler still warns about it (some other test file doesn't).
+ *
+ * Suppressings the lint on the shared module is the simplest and very common for test helpers.
+ * This is the standard pragmatic fix -> test helper modules almost always have functions that are only used by
+ * a subset of the actual test binaries, so blanket-allowing dead_code there is normal and expected.
+ */
+
+#![allow(dead_code)]
+
 use std::sync::LazyLock;
 
 use bevy::{
