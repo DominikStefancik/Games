@@ -11,7 +11,8 @@ use bevy::{
     time::{Fixed, Time},
 };
 use snake_with_rust_and_bevy::plugins::{
-    FoodPlugin, GamePlugin, SharedPlugin, SnakePlugin, shared::GridPosition, snake::Snake,
+    FoodPlugin, GamePlugin, ScorePlugin, SharedPlugin, SnakePlugin, food::Food, score::Score,
+    shared::GridPosition, snake::Snake,
 };
 
 static TEST_ENV_VARIABLES: LazyLock<()> = LazyLock::new(|| unsafe {
@@ -74,7 +75,13 @@ impl TestApp {
             .add_plugins(StatesPlugin)
             .add_plugins(AudioPlugin::default()) // registers AudioSource
             .add_plugins(TextPlugin);
-        app.add_plugins((SharedPlugin, GamePlugin, SnakePlugin, FoodPlugin));
+        app.add_plugins((
+            SharedPlugin,
+            GamePlugin,
+            SnakePlugin,
+            FoodPlugin,
+            ScorePlugin,
+        ));
 
         if app.world().get_resource::<Time<Fixed>>().is_none() {
             app.world_mut().init_resource::<Time<Fixed>>();
@@ -98,4 +105,18 @@ pub fn get_head_position(world: &mut World) -> GridPosition {
         .segments
         .first()
         .expect("Snake should have head")
+}
+
+/// Helper function to get the food position from the World
+pub fn get_food_position(world: &mut World) -> GridPosition {
+    let resource = world.get_resource::<Food>();
+
+    resource.expect("Food resource should be inserted").0
+}
+
+/// Helper function to get the score from the World
+pub fn get_score(world: &mut World) -> Score {
+    let resource = world.get_resource::<Score>();
+
+    *resource.expect("Score resource should be inserted")
 }

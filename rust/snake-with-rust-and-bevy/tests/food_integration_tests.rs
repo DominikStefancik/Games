@@ -1,14 +1,14 @@
 use std::time::Duration;
 
-use bevy::{state::state::NextState, time::TimeUpdateStrategy};
-use snake_with_rust_and_bevy::plugins::game::GameState;
+use bevy::time::TimeUpdateStrategy;
+use snake_with_rust_and_bevy::plugins::food::FoodConsumed;
 
-use crate::support::{TestApp, get_head_position};
+use crate::support::{TestApp, get_food_position};
 
 mod support;
 
 #[test]
-fn pause_and_resume_snake_motion() {
+fn new_food_appears_at_different_place_after_consumed() {
     let mut test_app = TestApp::new();
 
     /*
@@ -34,52 +34,23 @@ fn pause_and_resume_snake_motion() {
     // Trigger all the Startup systems; first 200ms tick also happens here
     test_app.update();
 
-    let initial_head = {
+    let initial_food_position = {
         let world = test_app.app.world_mut();
-        get_head_position(world)
+        get_food_position(world)
     };
-
-    {
-        let world = test_app.app.world_mut();
-        world
-            .get_resource_mut::<NextState<GameState>>()
-            .expect("Game State should be inserted")
-            .set(GameState::Paused);
-    }
-    // advances 200ms of *game* time, but state is Paused
-    test_app.update();
-
-    let paused_head = {
-        let world = test_app.app.world_mut();
-        get_head_position(world)
-    };
-
-    assert_eq!(
-        paused_head.column, initial_head.column,
-        "Head should not move while the game is paused"
-    );
-    assert_eq!(
-        paused_head.row, initial_head.row,
-        "Head should not move while the game is paused"
-    );
-
-    test_app.update();
 
     let world = test_app.app.world_mut();
-    world
-        .get_resource_mut::<NextState<GameState>>()
-        .expect("Game State should be inserted")
-        .set(GameState::Playing);
+    world.trigger(FoodConsumed);
     // advances another 200ms, snake should move now
     test_app.update();
 
-    let resumed_head = {
+    let new_food_position = {
         let world = test_app.app.world_mut();
-        get_head_position(world)
+        get_food_position(world)
     };
 
     assert_ne!(
-        resumed_head.column, initial_head.column,
-        "Head should move while the game is playing"
+        new_food_position.column, initial_food_position.column,
+        "New food should be at a different position"
     );
 }
