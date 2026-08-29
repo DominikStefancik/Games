@@ -12,8 +12,9 @@ pub fn spawn_camera(mut commands: Commands) {
 
 pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     let background = asset_server.load("graphics/other/background.png");
+    let ball = asset_server.load("graphics/other/ball.png");
 
-    let game_texture = GameTexture { background };
+    let game_texture = GameTexture { background, ball };
 
     commands.insert_resource(game_texture);
 }
