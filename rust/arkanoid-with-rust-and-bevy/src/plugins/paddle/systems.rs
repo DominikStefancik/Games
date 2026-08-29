@@ -7,7 +7,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BOTTOM_OFFSET, HALF_PADDLE, PADDLE_MOVEMENT_SPEED, PADDLE_SIZE, WINDOW_RESOLUTION,
+    BOTTOM_OFFSET, Collider, HALF_PADDLE, PADDLE_MOVEMENT_SPEED, PADDLE_SIZE, WINDOW_RESOLUTION,
     paddle::Paddle,
 };
 
@@ -18,6 +18,9 @@ pub fn spawn_paddle(mut commands: Commands) {
         Paddle {
             direction: 0.,
             speed: PADDLE_MOVEMENT_SPEED,
+        },
+        Collider {
+            size: Vec2::new(PADDLE_SIZE.0, PADDLE_SIZE.1),
         },
     ));
 }
