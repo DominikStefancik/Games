@@ -20,6 +20,8 @@ pub fn spawn_bricks(
 
         for (character_index, character) in row.chars().enumerate() {
             if character.is_ascii_digit() {
+                let brick_type = BrickType::from(character.to_string().as_str());
+
                 commands
                     .spawn((
                         /*
@@ -34,13 +36,15 @@ pub fn spawn_bricks(
                             brick_size,
                         )),
                         Visibility::default(), // required so InheritedVisibility propagates correctly
-                        Brick {
-                            brick_type: BrickType::from(character.to_string().as_str()),
-                        },
+                        Brick { brick_type },
                         Collider { size: brick_size },
                     ))
                     .with_children(|parent_sprite| {
-                        spawn_box_texture_parts(parent_sprite, &game_texture.blue_brick, brick_size)
+                        spawn_box_texture_parts(
+                            parent_sprite,
+                            &game_texture.get_brick_texture(brick_type),
+                            brick_size,
+                        )
                     });
             }
         }

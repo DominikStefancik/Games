@@ -1,6 +1,9 @@
 use bevy::{asset::Handle, ecs::resource::Resource, image::Image};
 use rand::rngs::StdRng;
 
+use crate::plugins::BrickType;
+
+#[derive(Clone)]
 pub struct BoxTexture {
     pub bottom: Handle<Image>,
     pub bottom_left: Handle<Image>,
@@ -25,6 +28,20 @@ pub struct GameTexture {
     pub orange_brick: BoxTexture,
     pub purple_brick: BoxTexture,
     pub red_brick: BoxTexture,
+}
+
+impl GameTexture {
+    pub fn get_brick_texture(&self, brick_type: BrickType) -> BoxTexture {
+        match brick_type {
+            BrickType::Blue => self.blue_brick.clone(),
+            BrickType::Bronze => self.bronze_brick.clone(),
+            BrickType::Green => self.green_brick.clone(),
+            BrickType::Grey => self.grey_brick.clone(),
+            BrickType::Orange => self.orange_brick.clone(),
+            BrickType::Purple => self.purple_brick.clone(),
+            BrickType::Red => self.red_brick.clone(),
+        }
+    }
 }
 
 #[derive(Resource)]
