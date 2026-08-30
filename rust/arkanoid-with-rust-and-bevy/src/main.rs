@@ -1,7 +1,7 @@
 use bevy::app::App;
 
 use crate::plugins::{
-    BallPlugin, ControlsPlugin, GamePlugin, PaddlePlugin, SharedPlugin, default_plugin,
+    BallPlugin, BrickPlugin, ControlsPlugin, GamePlugin, PaddlePlugin, SharedPlugin, default_plugin,
 };
 
 mod plugins;
@@ -15,6 +15,7 @@ fn main() {
             GamePlugin,
             PaddlePlugin,
             BallPlugin,
+            BrickPlugin,
         ))
         .run();
 }

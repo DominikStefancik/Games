@@ -1,4 +1,5 @@
 mod ball;
+mod brick;
 mod controls;
 mod default;
 mod game;
@@ -6,6 +7,7 @@ mod paddle;
 mod shared;
 
 pub use ball::*;
+pub use brick::*;
 pub use controls::*;
 pub use default::*;
 pub use game::*;
