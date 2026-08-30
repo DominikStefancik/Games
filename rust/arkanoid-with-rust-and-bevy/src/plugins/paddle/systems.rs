@@ -1,28 +1,28 @@
 use bevy::{
-    color::Color,
-    ecs::system::{Commands, Single},
-    math::Vec2,
-    sprite::Sprite,
+    camera::visibility::Visibility,
+    ecs::system::{Commands, Res, Single},
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BOTTOM_OFFSET, Collider, HALF_PADDLE, PADDLE_MOVEMENT_SPEED, PADDLE_SIZE, WINDOW_RESOLUTION,
-    paddle::Paddle,
+    BOTTOM_OFFSET, Collider, GameTexture, HALF_PADDLE, PADDLE_MOVEMENT_SPEED, PADDLE_SIZE, Paddle,
+    WINDOW_RESOLUTION, spawn_box_texture_parts,
 };
 
-pub fn spawn_paddle(mut commands: Commands) {
-    commands.spawn((
-        Sprite::from_color(Color::WHITE, Vec2::new(PADDLE_SIZE.0, PADDLE_SIZE.1)),
-        Transform::from_xyz(0., -((WINDOW_RESOLUTION.1 / 2 - BOTTOM_OFFSET) as f32), 1.),
-        Paddle {
-            direction: 0.,
-            speed: PADDLE_MOVEMENT_SPEED,
-        },
-        Collider {
-            size: Vec2::new(PADDLE_SIZE.0, PADDLE_SIZE.1),
-        },
-    ));
+pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
+    commands
+        .spawn((
+            Transform::from_xyz(0., -((WINDOW_RESOLUTION.1 / 2 - BOTTOM_OFFSET) as f32), 1.),
+            Visibility::default(), // required so InheritedVisibility propagates correctly
+            Paddle {
+                direction: 0.,
+                speed: PADDLE_MOVEMENT_SPEED,
+            },
+            Collider { size: PADDLE_SIZE },
+        ))
+        .with_children(|parent_sprite| {
+            spawn_box_texture_parts(parent_sprite, &game_texture.paddle, PADDLE_SIZE)
+        });
 }
 
 pub fn move_paddle(paddle_query: Single<(&mut Transform, &Paddle)>) {

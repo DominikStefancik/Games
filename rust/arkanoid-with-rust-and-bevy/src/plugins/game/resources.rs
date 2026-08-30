@@ -19,7 +19,7 @@ impl MovingArea {
             left_border: -horizontal_border,
             right_border: horizontal_border,
             upper_border: vertical_border,
-            lower_border: -(vertical_border - BOTTOM_OFFSET as f32) + PADDLE_SIZE.1 / 2.,
+            lower_border: -(vertical_border - BOTTOM_OFFSET as f32) + PADDLE_SIZE.y / 2.,
         }
     }
 }

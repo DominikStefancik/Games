@@ -25,8 +25,8 @@ pub fn spawn_bricks(
                         /*
                          * Sprite requires (and auto-inserts) GlobalTransform, InheritedVisibility, and ViewVisibility
                          * on any entity it's attached to. Those are "hierarchy-inherited" components — they get computed
-                         * by walking up the parent chain each frame. If a child has one of these but its parent doesn't,
-                         * Bevy can't propagate the value correctly and we get a warning.
+                         * by walking up the parent chain each frame. If a child has Transform or Visibility
+                         * but its parent doesn't, Bevy can't propagate the value correctly and we get a warning.
                          */
                         Transform::from_translation(calculate_brick_position(
                             row_index,

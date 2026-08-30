@@ -13,6 +13,7 @@ pub fn spawn_camera(mut commands: Commands) {
 pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     let background = asset_server.load("graphics/other/background.png");
     let ball = asset_server.load("graphics/other/ball.png");
+    let paddle = load_box_graphics(&asset_server, "graphics/paddle");
     let blue_brick = load_box_graphics(&asset_server, "graphics/bricks/blue");
     let bronze_brick = load_box_graphics(&asset_server, "graphics/bricks/bronze");
     let green_brick = load_box_graphics(&asset_server, "graphics/bricks/green");
@@ -24,6 +25,7 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     let game_texture = GameTexture {
         background,
         ball,
+        paddle,
         blue_brick,
         bronze_brick,
         green_brick,

@@ -17,6 +17,7 @@ pub struct BoxTexture {
 pub struct GameTexture {
     pub background: Handle<Image>,
     pub ball: Handle<Image>,
+    pub paddle: BoxTexture,
     pub blue_brick: BoxTexture,
     pub bronze_brick: BoxTexture,
     pub green_brick: BoxTexture,
