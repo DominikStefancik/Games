@@ -15,7 +15,7 @@ pub fn spawn_bricks(
     level_info: Res<LevelInfo>,
 ) {
     for (row_index, row) in level_info.level_map.iter().enumerate() {
-        let bricks_in_row_count = row.len() as u32;
+        let bricks_in_row_count = row.len() as f32;
         let brick_size = calculate_brick_size(bricks_in_row_count);
 
         for (character_index, character) in row.chars().enumerate() {

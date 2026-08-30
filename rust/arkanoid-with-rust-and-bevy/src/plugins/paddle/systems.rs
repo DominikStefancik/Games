@@ -12,7 +12,7 @@ use crate::plugins::{
 pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
     commands
         .spawn((
-            Transform::from_xyz(0., -((WINDOW_RESOLUTION.1 / 2 - BOTTOM_OFFSET) as f32), 1.),
+            Transform::from_xyz(0., -((WINDOW_RESOLUTION.1 / 2) as f32 - BOTTOM_OFFSET), 1.),
             Visibility::default(), // required so InheritedVisibility propagates correctly
             Paddle {
                 direction: 0.,

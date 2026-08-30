@@ -1,4 +1,10 @@
-pub const SIDE_OFFSET: u32 = 60;
-pub const TOP_OFFSET: u32 = 70;
-pub const BOTTOM_OFFSET: u32 = 40;
-pub const BRICKS_GAP: u32 = 8;
+use bevy::math::Vec2;
+
+pub const BRICK_SIDE_OFFSET: f32 = 60.;
+pub const BRICK_TOP_OFFSET: f32 = 70.;
+pub const BRICKS_GAP: f32 = 8.;
+pub const BOTTOM_OFFSET: f32 = 40.;
+pub const HEART_TEXTURE_SIZE: Vec2 = Vec2::new(20., 18.);
+pub const HEART_TOP_OFFSET: f32 = 15.;
+pub const HEART_SIDE_OFFSET: f32 = 12.;
+pub const HEARTS_GAP: f32 = 6.;

@@ -21,6 +21,7 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     let orange_brick = load_box_graphics(&asset_server, "graphics/bricks/orange");
     let purple_brick = load_box_graphics(&asset_server, "graphics/bricks/purple");
     let red_brick = load_box_graphics(&asset_server, "graphics/bricks/red");
+    let heart = asset_server.load("graphics/other/heart.png");
 
     let game_texture = GameTexture {
         background,
@@ -33,6 +34,7 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
         orange_brick,
         purple_brick,
         red_brick,
+        heart,
     };
 
     commands.insert_resource(game_texture);

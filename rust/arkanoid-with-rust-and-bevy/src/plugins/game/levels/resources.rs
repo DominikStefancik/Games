@@ -6,6 +6,7 @@ use crate::plugins::LEVEL_1_MAP;
 pub struct LevelInfo {
     pub current_level: u16,
     pub level_map: Vec<&'static str>,
+    pub lives: u16,
 }
 
 impl LevelInfo {
@@ -13,6 +14,7 @@ impl LevelInfo {
         LevelInfo {
             current_level: 1,
             level_map: LEVEL_1_MAP.to_vec(),
+            lives: 3,
         }
     }
 }
