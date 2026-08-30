@@ -1,13 +1,16 @@
 use bevy::{
-    ecs::system::{Commands, Query, Res, Single},
+    ecs::{
+        entity::Entity,
+        system::{Commands, Query, Res, Single},
+    },
     math::bounding::{Aabb2d, BoundingCircle},
     sprite::Sprite,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BALL_RADIUS, Ball, Collider, CollisionSide, GameTexture, MovingArea, check_borders_when_moving,
-    check_borders_when_moving_with_paddle, detect_ball_collision,
+    BALL_RADIUS, Ball, Brick, Collider, CollisionSide, GameTexture, MovingArea,
+    check_borders_when_moving, check_borders_when_moving_with_paddle, detect_ball_collision,
 };
 
 pub fn spawn_ball(
@@ -41,8 +44,11 @@ pub fn move_ball(moving_area: Res<MovingArea>, ball_query: Single<(&mut Transfor
 }
 
 pub fn check_ball_collision(
+    mut commands: Commands,
     ball_query: Single<(&Transform, &mut Ball)>,
-    collider_query: Query<(&Transform, &Collider)>,
+    // this query will return any entity that matches Transform and Collider components,
+    // and optionally it could or couldn't have a Brick component
+    collider_query: Query<(Entity, &Transform, &Collider, Option<&Brick>)>,
 ) {
     let (ball_transform, mut ball) = ball_query.into_inner();
 
@@ -50,7 +56,7 @@ pub fn check_ball_collision(
         return;
     }
 
-    for (collider_transform, collider) in collider_query {
+    for (collider_entity, collider_transform, collider, optional_brick) in collider_query {
         let collision_side = detect_ball_collision(
             BoundingCircle::new(ball_transform.translation.truncate(), BALL_RADIUS),
             Aabb2d::new(
@@ -65,6 +71,10 @@ pub fn check_ball_collision(
                 CollisionSide::Right => ball.direction.x = 1.,
                 CollisionSide::Top => ball.direction.y = 1.,
                 CollisionSide::Bottom => ball.direction.y = -1.,
+            }
+
+            if optional_brick.is_some() {
+                commands.entity(collider_entity).despawn();
             }
         }
     }
