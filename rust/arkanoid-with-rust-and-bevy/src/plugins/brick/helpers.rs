@@ -10,13 +10,9 @@ pub fn calculate_brick_size(bricks_in_row_count: u32) -> Vec2 {
     Vec2::new(brick_width, BRICK_HEIGHT)
 }
 
-pub fn calculate_brick_position(
-    row_index: usize,
-    character_index: usize,
-    brick_size: Vec2,
-) -> Vec3 {
+pub fn calculate_brick_position(row_index: usize, brick_index: usize, brick_size: Vec2) -> Vec3 {
     let x_position = SIDE_OFFSET as f32
-        + character_index as f32 * (brick_size.x + BRICKS_GAP as f32)
+        + brick_index as f32 * (brick_size.x + BRICKS_GAP as f32)
         + brick_size.x / 2.;
 
     let y_position = TOP_OFFSET as f32

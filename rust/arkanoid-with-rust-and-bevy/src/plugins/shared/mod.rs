@@ -1,10 +1,14 @@
 use bevy::app::{App, Plugin, PreStartup, Startup};
 
 mod components;
+mod constants;
+mod helpers;
 mod resources;
 mod systems;
 
 pub use components::*;
+pub use constants::*;
+pub use helpers::*;
 pub use resources::*;
 pub use systems::*;
 
