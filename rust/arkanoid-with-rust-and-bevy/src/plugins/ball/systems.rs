@@ -9,7 +9,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BALL_RADIUS, Ball, Brick, Collider, CollisionSide, GameTexture, MovingArea,
+    BALL_RADIUS, Ball, Brick, BrickDestroyed, Collider, CollisionSide, GameTexture, MovingArea,
     check_borders_when_moving, check_borders_when_moving_with_paddle, detect_ball_collision,
 };
 
@@ -75,6 +75,9 @@ pub fn check_ball_collision(
 
             if optional_brick.is_some() {
                 commands.entity(collider_entity).despawn();
+                commands.trigger(BrickDestroyed {
+                    brick_position: collider_transform.translation,
+                });
             }
         }
     }

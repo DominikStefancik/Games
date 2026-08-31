@@ -1,7 +1,7 @@
 use bevy::{asset::Handle, ecs::resource::Resource, image::Image};
 use rand::rngs::StdRng;
 
-use crate::plugins::BrickType;
+use crate::plugins::{BrickType, UpgradeType};
 
 #[derive(Clone)]
 pub struct BoxTexture {
@@ -14,6 +14,14 @@ pub struct BoxTexture {
     pub top: Handle<Image>,
     pub top_left: Handle<Image>,
     pub top_right: Handle<Image>,
+}
+
+#[derive(Clone)]
+pub struct UpgradeTexture {
+    pub heart: Handle<Image>,
+    pub laser: Handle<Image>,
+    pub size: Handle<Image>,
+    pub speed: Handle<Image>,
 }
 
 #[derive(Resource)]
@@ -29,6 +37,7 @@ pub struct GameTexture {
     pub purple_brick: BoxTexture,
     pub red_brick: BoxTexture,
     pub heart: Handle<Image>,
+    pub upgrade: UpgradeTexture,
 }
 
 impl GameTexture {
@@ -41,6 +50,15 @@ impl GameTexture {
             BrickType::Orange => self.orange_brick.clone(),
             BrickType::Purple => self.purple_brick.clone(),
             BrickType::Red => self.red_brick.clone(),
+        }
+    }
+
+    pub fn get_upgrade_texture(&self, upgrade_type: UpgradeType) -> Handle<Image> {
+        match upgrade_type {
+            UpgradeType::Heart => self.upgrade.heart.clone(),
+            UpgradeType::Laser => self.upgrade.laser.clone(),
+            UpgradeType::Size => self.upgrade.size.clone(),
+            UpgradeType::Speed => self.upgrade.speed.clone(),
         }
     }
 }

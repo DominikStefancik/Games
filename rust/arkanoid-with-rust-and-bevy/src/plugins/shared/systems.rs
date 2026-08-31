@@ -4,7 +4,7 @@ use bevy::{
     ecs::system::{Commands, Res},
 };
 
-use crate::plugins::{load_box_graphics, shared::GameTexture};
+use crate::plugins::{UpgradeTexture, load_box_graphics, shared::GameTexture};
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2d);
@@ -22,6 +22,12 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     let purple_brick = load_box_graphics(&asset_server, "graphics/bricks/purple");
     let red_brick = load_box_graphics(&asset_server, "graphics/bricks/red");
     let heart = asset_server.load("graphics/other/heart.png");
+    let upgrade = UpgradeTexture {
+        heart: asset_server.load("graphics/upgrades/heart.png"),
+        laser: asset_server.load("graphics/upgrades/laser.png"),
+        size: asset_server.load("graphics/upgrades/size.png"),
+        speed: asset_server.load("graphics/upgrades/speed.png"),
+    };
 
     let game_texture = GameTexture {
         background,
@@ -35,6 +41,7 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
         purple_brick,
         red_brick,
         heart,
+        upgrade,
     };
 
     commands.insert_resource(game_texture);

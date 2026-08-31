@@ -34,7 +34,7 @@ pub fn load_box_graphics(asset_server: &AssetServer, folder: &str) -> BoxTexture
 }
 
 /*
- * Visually, a single brick will be composed of several images which, when composed together should create an one image.
+ * Visually, a single brick will be composed of several images which, when put together should create an image.
  * Think of it as a mosaic of pieces which together create a picture.
  */
 pub fn spawn_box_texture_parts(
