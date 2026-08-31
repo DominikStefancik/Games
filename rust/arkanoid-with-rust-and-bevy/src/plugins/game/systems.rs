@@ -6,11 +6,11 @@ use bevy::{
 };
 
 use crate::plugins::{
-    HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, HEARTS_GAP, Heart, LevelInfo,
-    WINDOW_RESOLUTION, shared::GameTexture,
+    GameTexture, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, HEARTS_GAP, Heart,
+    LevelInfo, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
 };
 
-const BACKGROUND_SPRITE_SIZE: (f32, f32) = (1204., 512.);
+const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
 
 pub fn spawn_background(mut commands: Commands, game_texture: Res<GameTexture>) {
     commands.spawn((
@@ -19,8 +19,8 @@ pub fn spawn_background(mut commands: Commands, game_texture: Res<GameTexture>) 
             ..Default::default()
         },
         Transform::from_xyz(0., 0., 0.).with_scale(Vec3::new(
-            WINDOW_RESOLUTION.0 as f32 / BACKGROUND_SPRITE_SIZE.0,
-            WINDOW_RESOLUTION.1 as f32 / BACKGROUND_SPRITE_SIZE.1,
+            WINDOW_RESOLUTION.0 as f32 / BACKGROUND_SPRITE_SIZE.x,
+            WINDOW_RESOLUTION.1 as f32 / BACKGROUND_SPRITE_SIZE.y,
             1.,
         )),
     ));
@@ -33,11 +33,11 @@ pub fn spawn_hearts(
 ) {
     for index in 0..game_info.lives {
         let position = Vec2::new(
-            -((WINDOW_RESOLUTION.0 / 2) as f32)
+            -WINDOW_RESOLUTION_HALF.x
                 + HEART_SIDE_OFFSET
                 + index as f32 * (HEART_TEXTURE_SIZE.x + HEARTS_GAP)
                 + HEART_TEXTURE_SIZE.x / 2.,
-            (WINDOW_RESOLUTION.1 / 2) as f32 - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
+            WINDOW_RESOLUTION_HALF.y - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
         );
 
         commands.spawn((

@@ -1,6 +1,6 @@
 use bevy::ecs::resource::Resource;
 
-use crate::plugins::{BOTTOM_OFFSET, PADDLE_SIZE, WINDOW_RESOLUTION};
+use crate::plugins::{BOTTOM_OFFSET, PADDLE_SIZE, WINDOW_RESOLUTION_HALF};
 
 #[derive(Resource, Debug)]
 pub struct MovingArea {
@@ -12,14 +12,11 @@ pub struct MovingArea {
 
 impl MovingArea {
     pub fn new() -> Self {
-        let horizontal_border = (WINDOW_RESOLUTION.0 / 2) as f32;
-        let vertical_border = (WINDOW_RESOLUTION.1 / 2) as f32;
-
         MovingArea {
-            left_border: -horizontal_border,
-            right_border: horizontal_border,
-            upper_border: vertical_border,
-            lower_border: -(vertical_border - BOTTOM_OFFSET) + PADDLE_SIZE.y / 2.,
+            left_border: -WINDOW_RESOLUTION_HALF.x,
+            right_border: WINDOW_RESOLUTION_HALF.x,
+            upper_border: WINDOW_RESOLUTION_HALF.y,
+            lower_border: -(WINDOW_RESOLUTION_HALF.y - BOTTOM_OFFSET) + PADDLE_SIZE.y / 2.,
         }
     }
 }

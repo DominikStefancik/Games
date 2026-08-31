@@ -6,13 +6,13 @@ use bevy::{
 
 use crate::plugins::{
     BOTTOM_OFFSET, Collider, GameTexture, HALF_PADDLE, PADDLE_MOVEMENT_SPEED, PADDLE_SIZE, Paddle,
-    WINDOW_RESOLUTION, spawn_box_texture_parts,
+    WINDOW_RESOLUTION_HALF, spawn_box_texture_parts,
 };
 
 pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
     commands
         .spawn((
-            Transform::from_xyz(0., -((WINDOW_RESOLUTION.1 / 2) as f32 - BOTTOM_OFFSET), 1.),
+            Transform::from_xyz(0., -WINDOW_RESOLUTION_HALF.y + BOTTOM_OFFSET, 1.),
             Visibility::default(), // required so InheritedVisibility propagates correctly
             Paddle {
                 direction: 0.,
@@ -30,8 +30,8 @@ pub fn move_paddle(paddle_query: Single<(&mut Transform, &Paddle)>) {
 
     transform.translation.x += paddle.direction * paddle.speed;
 
-    let left_border = -((WINDOW_RESOLUTION.0 / 2) as f32);
-    let right_border = (WINDOW_RESOLUTION.0 / 2) as f32;
+    let left_border = -WINDOW_RESOLUTION_HALF.x;
+    let right_border = WINDOW_RESOLUTION_HALF.x;
 
     if transform.translation.x - HALF_PADDLE <= left_border {
         transform.translation.x = left_border + HALF_PADDLE;
