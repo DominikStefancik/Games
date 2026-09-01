@@ -1,18 +1,23 @@
 mod components;
 mod constants;
+mod helpers;
 mod systems;
 
-use bevy::app::{App, Plugin, Update};
+use bevy::{
+    app::{App, Plugin, Update},
+    ecs::schedule::IntoScheduleConfigs,
+};
 
 pub use components::*;
 pub use constants::*;
+pub use helpers::*;
 pub use systems::*;
 
 pub struct UpgradePlugin;
 
 impl Plugin for UpgradePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, move_upgrade)
+        app.add_systems(Update, (move_upgrade, check_upgrade_collision).chain())
             // Global observers
             .add_observer(spawn_upgrade);
     }

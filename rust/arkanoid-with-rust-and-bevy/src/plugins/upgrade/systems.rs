@@ -3,17 +3,17 @@ use bevy::{
         entity::Entity,
         observer::On,
         query::With,
-        system::{Commands, Query, Res, ResMut},
+        system::{Commands, Query, Res, ResMut, Single},
     },
-    math::Vec3,
+    math::{Vec3, bounding::Aabb2d},
     sprite::Sprite,
     transform::components::Transform,
 };
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BrickDestroyed, GameTexture, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE, Upgrade,
-    UpgradeType, WINDOW_RESOLUTION_HALF,
+    BrickDestroyed, Collider, GameTexture, LevelInfo, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED,
+    UPGRADE_TEXTURE_SIZE, Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_upgrade_collision,
 };
 
 pub fn spawn_upgrade(
@@ -42,6 +42,38 @@ pub fn move_upgrade(mut commands: Commands, query: Query<(Entity, &mut Transform
 
         if transform.translation.y <= -WINDOW_RESOLUTION_HALF.y - UPGRADE_TEXTURE_SIZE.y / 2. {
             commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn check_upgrade_collision(
+    mut commands: Commands,
+    mut level_info: ResMut<LevelInfo>,
+    paddle_query: Single<(&Transform, &mut Collider, &mut Paddle)>,
+    upgrade_query: Query<(Entity, &Transform, &Upgrade)>,
+) {
+    let (paddle_transform, mut paddle_collider, mut paddle) = paddle_query.into_inner();
+
+    for (upgrade_entity, upgrade_transform, upgrade) in upgrade_query {
+        let is_colliding = detect_upgrade_collision(
+            Aabb2d::new(
+                upgrade_transform.translation.truncate(),
+                UPGRADE_TEXTURE_SIZE / 2.,
+            ),
+            Aabb2d::new(paddle_transform.translation.truncate(), paddle.size / 2.),
+        );
+
+        if is_colliding {
+            match upgrade.upgrade_type {
+                UpgradeType::Heart => level_info.lives += 1,
+                UpgradeType::Laser => paddle.laser_count += 1,
+                UpgradeType::Size => {
+                    paddle.size.x *= 1.1;
+                    paddle_collider.size.x *= 1.1
+                }
+                UpgradeType::Speed => paddle.speed *= 1.1,
+            }
+            commands.entity(upgrade_entity).despawn();
         }
     }
 }

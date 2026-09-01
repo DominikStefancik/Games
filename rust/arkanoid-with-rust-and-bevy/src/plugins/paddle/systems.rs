@@ -15,8 +15,10 @@ pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
             Transform::from_xyz(0., -WINDOW_RESOLUTION_HALF.y + BOTTOM_OFFSET, 1.),
             Visibility::default(), // required so InheritedVisibility propagates correctly
             Paddle {
+                size: PADDLE_SIZE,
                 direction: 0.,
                 speed: PADDLE_MOVEMENT_SPEED,
+                laser_count: 0,
             },
             Collider { size: PADDLE_SIZE },
         ))
