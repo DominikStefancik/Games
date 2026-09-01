@@ -1,13 +1,16 @@
 use bevy::{
-    ecs::system::{Commands, Res},
+    ecs::{
+        observer::On,
+        system::{Commands, Res},
+    },
     math::{Vec2, Vec3},
     sprite::Sprite,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    GameTexture, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, HEARTS_GAP, Heart,
-    LevelInfo, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
+    GameInfo, GameTexture, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, HEARTS_GAP,
+    Heart, HeartUpgradeDestroyed, UpgradeType, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -29,7 +32,7 @@ pub fn spawn_background(mut commands: Commands, game_texture: Res<GameTexture>) 
 pub fn spawn_hearts(
     mut commands: Commands,
     game_texture: Res<GameTexture>,
-    game_info: Res<LevelInfo>,
+    game_info: Res<GameInfo>,
 ) {
     for index in 0..game_info.lives {
         let position = Vec2::new(
@@ -49,4 +52,22 @@ pub fn spawn_hearts(
             Heart { index },
         ));
     }
+}
+
+pub fn spawn_new_heart(
+    _: On<HeartUpgradeDestroyed>,
+    mut commands: Commands,
+    game_texture: Res<GameTexture>,
+    game_info: Res<GameInfo>,
+) {
+    commands.spawn((
+        Sprite {
+            image: game_texture.get_upgrade_texture(UpgradeType::Heart),
+            ..Default::default()
+        },
+        Transform::from_xyz(0., 0., 1.).with_scale(Vec3::new(0.7, 0.7, 1.)),
+        Heart {
+            index: game_info.lives,
+        },
+    ));
 }

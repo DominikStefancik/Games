@@ -19,8 +19,10 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(LevelInfo::init())
+        app.insert_resource(GameInfo::init())
             .insert_resource(MovingArea::new())
-            .add_systems(Startup, (spawn_background, spawn_hearts).chain());
+            .add_systems(Startup, (spawn_background, spawn_hearts).chain())
+            // Global observers
+            .add_observer(spawn_new_heart);
     }
 }

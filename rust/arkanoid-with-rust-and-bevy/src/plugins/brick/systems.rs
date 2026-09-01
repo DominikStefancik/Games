@@ -5,16 +5,16 @@ use bevy::{
 };
 
 use crate::plugins::{
-    Brick, BrickType, Collider, GameTexture, LevelInfo, calculate_brick_position,
+    Brick, BrickType, Collider, GameInfo, GameTexture, calculate_brick_position,
     calculate_brick_size, spawn_box_texture_parts,
 };
 
 pub fn spawn_bricks(
     mut commands: Commands,
     game_texture: Res<GameTexture>,
-    level_info: Res<LevelInfo>,
+    game_info: Res<GameInfo>,
 ) {
-    for (row_index, row) in level_info.level_map.iter().enumerate() {
+    for (row_index, row) in game_info.level_map.iter().enumerate() {
         let bricks_in_row_count = row.len() as f32;
         let brick_size = calculate_brick_size(bricks_in_row_count);
 
@@ -44,7 +44,7 @@ pub fn spawn_bricks(
                             parent_sprite,
                             &game_texture.get_brick_texture(brick_type),
                             brick_size,
-                        )
+                        );
                     });
             }
         }

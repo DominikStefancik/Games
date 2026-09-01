@@ -4,3 +4,6 @@ use bevy::ecs::component::Component;
 pub struct Heart {
     pub index: u16,
 }
+
+#[derive(Component)]
+pub struct Laser;

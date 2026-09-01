@@ -12,8 +12,9 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BrickDestroyed, Collider, GameTexture, LevelInfo, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED,
-    UPGRADE_TEXTURE_SIZE, Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_upgrade_collision,
+    BrickDestroyed, Collider, GameInfo, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
+    Paddle, Randomizer, SizeUpgradeDestroyed, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
+    Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_upgrade_collision,
 };
 
 pub fn spawn_upgrade(
@@ -48,7 +49,7 @@ pub fn move_upgrade(mut commands: Commands, query: Query<(Entity, &mut Transform
 
 pub fn check_upgrade_collision(
     mut commands: Commands,
-    mut level_info: ResMut<LevelInfo>,
+    mut game_info: ResMut<GameInfo>,
     paddle_query: Single<(&Transform, &mut Collider, &mut Paddle)>,
     upgrade_query: Query<(Entity, &Transform, &Upgrade)>,
 ) {
@@ -65,11 +66,18 @@ pub fn check_upgrade_collision(
 
         if is_colliding {
             match upgrade.upgrade_type {
-                UpgradeType::Heart => level_info.lives += 1,
-                UpgradeType::Laser => paddle.laser_count += 1,
+                UpgradeType::Heart => {
+                    game_info.lives += 1;
+                    commands.trigger(HeartUpgradeDestroyed);
+                }
+                UpgradeType::Laser => {
+                    paddle.laser_count += 1;
+                    commands.trigger(LaserUpgradeDestroyed);
+                }
                 UpgradeType::Size => {
                     paddle.size.x *= 1.1;
-                    paddle_collider.size.x *= 1.1
+                    paddle_collider.size = paddle.size;
+                    commands.trigger(SizeUpgradeDestroyed);
                 }
                 UpgradeType::Speed => paddle.speed *= 1.1,
             }
