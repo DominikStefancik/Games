@@ -1,13 +1,10 @@
 use bevy::{
     asset::AssetServer,
     ecs::{hierarchy::ChildOf, relationship::RelatedSpawnerCommands},
-    math::Vec2,
     sprite::Sprite,
-    transform::components::Transform,
-    utils::default,
 };
 
-use crate::plugins::{BoxTexture, BoxTextureParts, CORNER_BOX_TEXTURE_SIZE};
+use crate::plugins::{BoxTexture, BoxTextureParts};
 
 pub fn load_box_graphics(asset_server: &AssetServer, folder: &str) -> BoxTexture {
     let bottom = asset_server.load(format!("{}/bottom.png", folder));
@@ -40,109 +37,43 @@ pub fn load_box_graphics(asset_server: &AssetServer, folder: &str) -> BoxTexture
 pub fn spawn_box_texture_parts(
     parent: &mut RelatedSpawnerCommands<'_, ChildOf>,
     box_texture: &BoxTexture,
-    box_size: Vec2,
 ) -> Option<BoxTextureParts> {
-    let box_half_size = box_size / 2.;
-    let corner_half_size = CORNER_BOX_TEXTURE_SIZE / 2.;
-    let inner_line_size = Vec2::new(
-        box_size.x - CORNER_BOX_TEXTURE_SIZE.x * 2.,
-        box_size.y - CORNER_BOX_TEXTURE_SIZE.y * 2.,
-    );
+    /*
+     * Storing the child Entity IDs directly (rather than re-discovering them via Children + queries every time)
+     * means the resize system doesn't need to guess which child is which — it just writes straight to each one.
+     */
 
     // Spawn corners
     let top_left = parent
-        .spawn((
-            Sprite::from_image(box_texture.top_left.clone()),
-            Transform::from_xyz(
-                -box_half_size.x + corner_half_size.x,
-                box_half_size.y - corner_half_size.y,
-                0.0,
-            ),
-        ))
+        .spawn(Sprite::from_image(box_texture.top_left.clone()))
         .id();
     let top_right = parent
-        .spawn((
-            Sprite::from_image(box_texture.top_right.clone()),
-            Transform::from_xyz(
-                inner_line_size.x / 2. + corner_half_size.x,
-                box_half_size.y - corner_half_size.y,
-                0.0,
-            ),
-        ))
+        .spawn(Sprite::from_image(box_texture.top_right.clone()))
         .id();
     let bottom_left = parent
-        .spawn((
-            Sprite::from_image(box_texture.bottom_left.clone()),
-            Transform::from_xyz(
-                -box_half_size.x + corner_half_size.x,
-                -box_half_size.y + corner_half_size.y,
-                0.0,
-            ),
-        ))
+        .spawn(Sprite::from_image(box_texture.bottom_left.clone()))
         .id();
     let bottom_right = parent
-        .spawn((
-            Sprite::from_image(box_texture.bottom_right.clone()),
-            Transform::from_xyz(
-                inner_line_size.x / 2. + corner_half_size.x,
-                -box_half_size.y + corner_half_size.y,
-                0.0,
-            ),
-        ))
+        .spawn(Sprite::from_image(box_texture.bottom_right.clone()))
         .id();
 
-    // Spawn edges (stretched with custom_size)
+    // Spawn edges
     let top = parent
-        .spawn((
-            Sprite {
-                image: box_texture.top.clone(),
-                custom_size: Some(Vec2::new(inner_line_size.x, CORNER_BOX_TEXTURE_SIZE.y)),
-                ..default()
-            },
-            Transform::from_xyz(0.0, box_half_size.y - corner_half_size.y, 0.0),
-        ))
+        .spawn(Sprite::from_image(box_texture.top.clone()))
         .id();
     let bottom = parent
-        .spawn((
-            Sprite {
-                image: box_texture.bottom.clone(),
-                custom_size: Some(Vec2::new(inner_line_size.x, CORNER_BOX_TEXTURE_SIZE.y)),
-                ..default()
-            },
-            Transform::from_xyz(0.0, -box_half_size.y + corner_half_size.y, 0.0),
-        ))
+        .spawn(Sprite::from_image(box_texture.bottom.clone()))
         .id();
     let left = parent
-        .spawn((
-            Sprite {
-                image: box_texture.left.clone(),
-                custom_size: Some(Vec2::new(CORNER_BOX_TEXTURE_SIZE.x, inner_line_size.y)),
-                ..default()
-            },
-            Transform::from_xyz(-box_half_size.x + corner_half_size.x, 0.0, 0.0),
-        ))
+        .spawn(Sprite::from_image(box_texture.left.clone()))
         .id();
     let right = parent
-        .spawn((
-            Sprite {
-                image: box_texture.right.clone(),
-                custom_size: Some(Vec2::new(CORNER_BOX_TEXTURE_SIZE.x, inner_line_size.y)),
-                ..default()
-            },
-            Transform::from_xyz(box_half_size.x - corner_half_size.x, 0.0, 0.0),
-        ))
+        .spawn(Sprite::from_image(box_texture.right.clone()))
         .id();
 
-    // Spawn center (stretched with custom_size)
+    // Spawn center
     let center = parent
-        .spawn((
-            Sprite {
-                image: box_texture.center.clone(),
-                custom_size: Some(Vec2::new(inner_line_size.x, inner_line_size.y)),
-                ..default()
-            },
-            Transform::from_xyz(0.0, 0.0, 0.0),
-        ))
+        .spawn(Sprite::from_image(box_texture.center.clone()))
         .id();
 
     Some(BoxTextureParts {

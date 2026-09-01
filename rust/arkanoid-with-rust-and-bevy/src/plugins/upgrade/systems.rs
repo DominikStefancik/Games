@@ -13,7 +13,7 @@ use rand::seq::IndexedRandom;
 
 use crate::plugins::{
     BrickDestroyed, Collider, GameInfo, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
-    Paddle, Randomizer, SizeUpgradeDestroyed, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
+    PADDLE_LENGTH_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
     Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_upgrade_collision,
 };
 
@@ -75,9 +75,8 @@ pub fn check_upgrade_collision(
                     commands.trigger(LaserUpgradeDestroyed);
                 }
                 UpgradeType::Size => {
-                    paddle.size.x *= 1.1;
+                    paddle.size.x += PADDLE_LENGTH_INCREASE;
                     paddle_collider.size = paddle.size;
-                    commands.trigger(SizeUpgradeDestroyed);
                 }
                 UpgradeType::Speed => paddle.speed *= 1.1,
             }

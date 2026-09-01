@@ -1,6 +1,6 @@
 use bevy::ecs::resource::Resource;
 
-use crate::plugins::{BOTTOM_OFFSET, LEVEL_1_MAP, PADDLE_SIZE, WINDOW_RESOLUTION_HALF};
+use crate::plugins::{BOTTOM_OFFSET, INITIAL_PADDLE_SIZE, LEVEL_1_MAP, WINDOW_RESOLUTION_HALF};
 
 #[derive(Resource)]
 pub struct GameInfo {
@@ -33,7 +33,7 @@ impl MovingArea {
             left_border: -WINDOW_RESOLUTION_HALF.x,
             right_border: WINDOW_RESOLUTION_HALF.x,
             upper_border: WINDOW_RESOLUTION_HALF.y,
-            lower_border: -(WINDOW_RESOLUTION_HALF.y - BOTTOM_OFFSET) + PADDLE_SIZE.y / 2.,
+            lower_border: -(WINDOW_RESOLUTION_HALF.y - BOTTOM_OFFSET) + INITIAL_PADDLE_SIZE.y / 2.,
         }
     }
 }

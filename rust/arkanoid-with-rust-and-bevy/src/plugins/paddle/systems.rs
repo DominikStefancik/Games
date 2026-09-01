@@ -4,14 +4,12 @@ use bevy::{
         observer::On,
         system::{Commands, Res, Single},
     },
-    sprite::Sprite,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BOTTOM_OFFSET, Collider, GameTexture, HALF_PADDLE, LaserUpgradeDestroyed,
-    PADDLE_MOVEMENT_SPEED, PADDLE_SIZE, Paddle, SizeUpgradeDestroyed, WINDOW_RESOLUTION_HALF,
-    spawn_box_texture_parts,
+    BOTTOM_OFFSET, Collider, GameTexture, INITIAL_PADDLE_SIZE, LaserUpgradeDestroyed,
+    PADDLE_MOVEMENT_SPEED, Paddle, WINDOW_RESOLUTION_HALF, spawn_box_texture_parts,
 };
 
 pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
@@ -22,15 +20,17 @@ pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
             Transform::from_xyz(0., -WINDOW_RESOLUTION_HALF.y + BOTTOM_OFFSET, 1.),
             Visibility::default(), // required so InheritedVisibility propagates correctly
             Paddle {
-                size: PADDLE_SIZE,
+                size: INITIAL_PADDLE_SIZE,
                 direction: 0.,
                 speed: PADDLE_MOVEMENT_SPEED,
                 laser_count: 0,
             },
-            Collider { size: PADDLE_SIZE },
+            Collider {
+                size: INITIAL_PADDLE_SIZE,
+            },
         ))
         .with_children(|parent_sprite| {
-            parts = spawn_box_texture_parts(parent_sprite, &game_texture.paddle, PADDLE_SIZE);
+            parts = spawn_box_texture_parts(parent_sprite, &game_texture.paddle);
         })
         .id();
 
@@ -43,26 +43,25 @@ pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
 
 pub fn move_paddle(paddle_query: Single<(&mut Transform, &Paddle)>) {
     let (mut transform, paddle) = paddle_query.into_inner();
+    let paddle_half_size = paddle.size / 2.;
 
     transform.translation.x += paddle.direction * paddle.speed;
 
     let left_border = -WINDOW_RESOLUTION_HALF.x;
     let right_border = WINDOW_RESOLUTION_HALF.x;
 
-    if transform.translation.x - HALF_PADDLE <= left_border {
-        transform.translation.x = left_border + HALF_PADDLE;
+    if transform.translation.x - paddle_half_size.x <= left_border {
+        transform.translation.x = left_border + paddle_half_size.x;
     }
 
-    if transform.translation.x + HALF_PADDLE >= right_border {
-        transform.translation.x = right_border - HALF_PADDLE
+    if transform.translation.x + paddle_half_size.x >= right_border {
+        transform.translation.x = right_border - paddle_half_size.x
     }
 }
 
-pub fn spawn_new_laser(
+pub fn spawn_laser(
     _: On<LaserUpgradeDestroyed>,
     mut commands: Commands,
     game_texture: Res<GameTexture>,
 ) {
 }
-
-pub fn resize_paddle(_: On<SizeUpgradeDestroyed>, paddle_query: Single<(&mut Sprite, &Paddle)>) {}

@@ -13,6 +13,3 @@ pub struct HeartUpgradeDestroyed;
 
 #[derive(Event)]
 pub struct LaserUpgradeDestroyed;
-
-#[derive(Event)]
-pub struct SizeUpgradeDestroyed;

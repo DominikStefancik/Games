@@ -3,27 +3,29 @@ use bevy::{
     transform::components::Transform,
 };
 
-use crate::plugins::{BALL_RADIUS, Ball, CollisionSide, HALF_PADDLE, MovingArea};
+use crate::plugins::{BALL_RADIUS, Ball, CollisionSide, MovingArea, Paddle};
 
 pub fn check_borders_when_moving_with_paddle(
     moving_area: &MovingArea,
     transform: &mut Transform,
     ball: &mut Ball,
+    paddle: &Paddle,
 ) {
     let MovingArea {
         left_border,
         right_border,
         ..
     } = moving_area;
+    let paddle_half_size = paddle.size / 2.;
 
-    if transform.translation.x - HALF_PADDLE <= *left_border {
+    if transform.translation.x - paddle_half_size.x <= *left_border {
         ball.direction.x = 0.;
-        transform.translation.x = left_border + HALF_PADDLE;
+        transform.translation.x = left_border + paddle_half_size.x;
     }
 
-    if transform.translation.x + HALF_PADDLE >= *right_border {
+    if transform.translation.x + paddle_half_size.x >= *right_border {
         ball.direction.x = 0.;
-        transform.translation.x = right_border - HALF_PADDLE;
+        transform.translation.x = right_border - paddle_half_size.x;
     }
 }
 

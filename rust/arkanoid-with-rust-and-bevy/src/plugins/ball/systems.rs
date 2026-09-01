@@ -10,7 +10,8 @@ use bevy::{
 
 use crate::plugins::{
     BALL_RADIUS, Ball, Brick, BrickDestroyed, Collider, CollisionSide, GameTexture, MovingArea,
-    check_borders_when_moving, check_borders_when_moving_with_paddle, detect_ball_collision,
+    Paddle, check_borders_when_moving, check_borders_when_moving_with_paddle,
+    detect_ball_collision,
 };
 
 pub fn spawn_ball(
@@ -30,14 +31,18 @@ pub fn spawn_ball(
     ));
 }
 
-pub fn move_ball(moving_area: Res<MovingArea>, ball_query: Single<(&mut Transform, &mut Ball)>) {
+pub fn move_ball(
+    moving_area: Res<MovingArea>,
+    ball_query: Single<(&mut Transform, &mut Ball)>,
+    paddle: Single<&Paddle>,
+) {
     let (mut transform, mut ball) = ball_query.into_inner();
 
     transform.translation.x += ball.direction.x * ball.speed;
     transform.translation.y += ball.direction.y * ball.speed;
 
     if ball.is_stuck_to_paddle {
-        check_borders_when_moving_with_paddle(&moving_area, &mut transform, &mut ball);
+        check_borders_when_moving_with_paddle(&moving_area, &mut transform, &mut ball, &paddle);
     } else {
         check_borders_when_moving(&moving_area, &mut transform, &mut ball);
     }

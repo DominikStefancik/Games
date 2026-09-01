@@ -21,8 +21,9 @@ pub fn spawn_bricks(
         for (character_index, character) in row.chars().enumerate() {
             if character.is_ascii_digit() {
                 let brick_type = BrickType::from(character.to_string().as_str());
+                let mut parts = None;
 
-                commands
+                let parent_entity = commands
                     .spawn((
                         /*
                          * Sprite requires (and auto-inserts) GlobalTransform, InheritedVisibility, and ViewVisibility
@@ -40,12 +41,18 @@ pub fn spawn_bricks(
                         Collider { size: brick_size },
                     ))
                     .with_children(|parent_sprite| {
-                        spawn_box_texture_parts(
+                        parts = spawn_box_texture_parts(
                             parent_sprite,
                             &game_texture.get_brick_texture(brick_type),
-                            brick_size,
                         );
-                    });
+                    })
+                    .id();
+
+                /* Note: parts is populated by the time `with_children` returns,
+                 * since the closure runs synchronously — but the entities are only
+                 * created when commands are flushed. Insert it as a separate component
+                 * */
+                commands.entity(parent_entity).insert(parts.unwrap());
             }
         }
     }
