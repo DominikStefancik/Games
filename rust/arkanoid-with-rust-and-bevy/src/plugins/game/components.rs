@@ -7,3 +7,6 @@ pub struct Heart {
 
 #[derive(Component)]
 pub struct Laser;
+
+#[derive(Component)]
+pub struct ScoreTextUi;

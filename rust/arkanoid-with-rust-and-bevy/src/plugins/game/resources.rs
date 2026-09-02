@@ -7,6 +7,7 @@ pub struct GameInfo {
     pub current_level: u16,
     pub level_map: Vec<&'static str>,
     pub lives: u16,
+    pub score: u32,
 }
 
 impl GameInfo {
@@ -15,6 +16,7 @@ impl GameInfo {
             current_level: 1,
             level_map: LEVEL_1_MAP.to_vec(),
             lives: 3,
+            score: 0,
         }
     }
 }
