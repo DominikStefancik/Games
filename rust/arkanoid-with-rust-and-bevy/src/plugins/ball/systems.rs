@@ -12,7 +12,7 @@ use bevy::{
 use crate::plugins::{
     BALL_RADIUS, Ball, Brick, BrickDestroyed, Collider, CollisionSide, GameState, GameTexture,
     MovingArea, Paddle, check_borders_when_moving, check_borders_when_moving_with_paddle,
-    detect_ball_collision, is_game_starting_or_running,
+    detect_ball_collision, get_ball_initial_position, is_game_starting_or_running,
 };
 
 pub fn spawn_ball(
@@ -20,19 +20,18 @@ pub fn spawn_ball(
     game_texture: Res<GameTexture>,
     moving_area: Res<MovingArea>,
 ) {
-    let ball_y = moving_area.lower_border + BALL_RADIUS;
-
     commands.spawn((
         Sprite {
             image: game_texture.ball.clone(),
             ..Default::default()
         },
-        Transform::from_xyz(0., ball_y, 1.),
+        Transform::from_translation(get_ball_initial_position(moving_area.into_inner())),
         Ball::new(),
     ));
 }
 
 pub fn move_ball(
+    mut commands: Commands,
     app_state: Res<State<GameState>>,
     moving_area: Res<MovingArea>,
     ball_query: Single<(&mut Transform, &mut Ball)>,
@@ -50,7 +49,7 @@ pub fn move_ball(
     if *app_state.get() == GameState::GameStarting {
         check_borders_when_moving_with_paddle(&moving_area, &mut transform, &mut ball, &paddle);
     } else if *app_state.get() == GameState::Running {
-        check_borders_when_moving(&moving_area, &mut transform, &mut ball);
+        check_borders_when_moving(&mut commands, &moving_area, &mut transform, &mut ball);
     }
 }
 

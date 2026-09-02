@@ -1,9 +1,13 @@
 use bevy::{
-    math::bounding::{Aabb2d, BoundingCircle, IntersectsVolume},
+    ecs::system::Commands,
+    math::{
+        Vec3,
+        bounding::{Aabb2d, BoundingCircle, IntersectsVolume},
+    },
     transform::components::Transform,
 };
 
-use crate::plugins::{BALL_RADIUS, Ball, CollisionSide, MovingArea, Paddle};
+use crate::plugins::{BALL_RADIUS, Ball, BallFallenDown, CollisionSide, MovingArea, Paddle};
 
 pub fn check_borders_when_moving_with_paddle(
     moving_area: &MovingArea,
@@ -30,6 +34,7 @@ pub fn check_borders_when_moving_with_paddle(
 }
 
 pub fn check_borders_when_moving(
+    commands: &mut Commands,
     moving_area: &MovingArea,
     transform: &mut Transform,
     ball: &mut Ball,
@@ -54,7 +59,7 @@ pub fn check_borders_when_moving(
     }
 
     if transform.translation.y <= *lower_border {
-        // TODO
+        commands.trigger(BallFallenDown);
     }
 }
 
@@ -85,4 +90,10 @@ pub fn detect_ball_collision(
     };
 
     Some(side)
+}
+
+pub fn get_ball_initial_position(moving_area: &MovingArea) -> Vec3 {
+    let ball_y = moving_area.lower_border + BALL_RADIUS;
+
+    Vec3::new(0., ball_y, 1.)
 }

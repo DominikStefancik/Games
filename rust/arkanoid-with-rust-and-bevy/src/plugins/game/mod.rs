@@ -33,6 +33,7 @@ impl Plugin for GamePlugin {
             )
             // Global observers
             .add_observer(spawn_new_heart)
-            .add_observer(update_score);
+            .add_observer(update_score)
+            .add_observer(restart_gaming_state);
     }
 }

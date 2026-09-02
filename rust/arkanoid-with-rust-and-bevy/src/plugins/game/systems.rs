@@ -2,21 +2,24 @@ use bevy::{
     color::Color,
     ecs::{
         children,
+        entity::Entity,
         observer::On,
-        query::With,
-        system::{Commands, Res, ResMut, Single},
+        query::{With, Without},
+        system::{Commands, Query, Res, ResMut, Single},
     },
     math::{Vec2, Vec3},
     sprite::Sprite,
+    state::state::NextState,
     text::{FontSize, Justify, TextColor, TextFont, TextLayout},
     transform::components::Transform,
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
 use crate::plugins::{
-    BRICK_SCORE, BrickDestroyed, GameInfo, GameTexture, HEART_SCALE, HEART_TEXTURE_SIZE,
-    HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, SCORE_TEXT_FONT_SIZE, ScoreTextUi,
-    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
+    BRICK_SCORE, Ball, BallFallenDown, BrickDestroyed, GameInfo, GameState, GameTexture,
+    HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, MovingArea,
+    Paddle, SCORE_TEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
+    calculate_heart_horizontal_position, get_ball_initial_position, get_paddle_initial_position,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -123,4 +126,35 @@ pub fn update_score(
 ) {
     game_info.score += BRICK_SCORE;
     score_text_ui.0 = format!("SCORE: {}", game_info.score);
+}
+
+pub fn restart_gaming_state(
+    _: On<BallFallenDown>,
+    mut commands: Commands,
+    mut next_state: ResMut<NextState<GameState>>,
+    mut game_info: ResMut<GameInfo>,
+    moving_area: Res<MovingArea>,
+    ball_query: Single<&mut Transform, (With<Ball>, Without<Paddle>)>,
+    paddle_query: Single<&mut Transform, (With<Paddle>, Without<Ball>)>,
+    upgrade_query: Query<Entity, With<Upgrade>>,
+    heart_query: Query<(Entity, &Heart)>,
+) {
+    let mut ball_transform = ball_query.into_inner();
+    let mut paddle_transform = paddle_query.into_inner();
+
+    ball_transform.translation = get_ball_initial_position(moving_area.into_inner());
+    paddle_transform.translation = get_paddle_initial_position();
+
+    for upgrade_entity in upgrade_query {
+        commands.entity(upgrade_entity).despawn();
+    }
+
+    for (heart_entity, heart) in heart_query {
+        if heart.index == game_info.lives - 1 {
+            commands.entity(heart_entity).despawn();
+        }
+    }
+
+    game_info.lives -= 1;
+    // next_state.set(GameState::GameStarting);
 }

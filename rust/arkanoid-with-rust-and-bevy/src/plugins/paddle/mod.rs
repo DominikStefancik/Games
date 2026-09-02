@@ -1,11 +1,13 @@
+use bevy::app::{App, Plugin, Startup, Update};
+
 mod components;
 mod constants;
+mod helpers;
 mod systems;
-
-use bevy::app::{App, Plugin, Startup, Update};
 
 pub use components::*;
 pub use constants::*;
+pub use helpers::*;
 pub use systems::*;
 
 pub struct PaddlePlugin;

@@ -1,10 +1,10 @@
+use bevy::app::{App, Plugin, Startup};
+
 mod components;
 mod constants;
 mod events;
 mod helpers;
 mod systems;
-
-use bevy::app::{App, Plugin, Startup};
 
 pub use components::*;
 pub use constants::*;

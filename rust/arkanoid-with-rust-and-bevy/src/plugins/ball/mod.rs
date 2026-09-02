@@ -1,16 +1,18 @@
-mod components;
-mod constants;
-mod helpers;
-mod systems;
-
 use bevy::{
     app::{App, Plugin, Startup, Update},
     ecs::schedule::IntoScheduleConfigs,
     state::condition::in_state,
 };
 
+mod components;
+mod constants;
+mod events;
+mod helpers;
+mod systems;
+
 pub use components::*;
 pub use constants::*;
+pub use events::*;
 pub use helpers::*;
 pub use systems::*;
 

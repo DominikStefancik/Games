@@ -9,9 +9,9 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BOTTOM_OFFSET, Collider, GameState, GameTexture, INITIAL_PADDLE_SIZE, LaserUpgradeDestroyed,
-    PADDLE_MOVEMENT_SPEED, Paddle, WINDOW_RESOLUTION_HALF, is_game_starting_or_running,
-    spawn_box_texture_parts,
+    Collider, GameState, GameTexture, INITIAL_PADDLE_SIZE, LaserUpgradeDestroyed,
+    PADDLE_MOVEMENT_SPEED, Paddle, WINDOW_RESOLUTION_HALF, get_paddle_initial_position,
+    is_game_starting_or_running, spawn_box_texture_parts,
 };
 
 pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
@@ -19,7 +19,7 @@ pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
 
     let parent_entity = commands
         .spawn((
-            Transform::from_xyz(0., -WINDOW_RESOLUTION_HALF.y + BOTTOM_OFFSET, 1.),
+            Transform::from_translation(get_paddle_initial_position()),
             Visibility::default(), // required so InheritedVisibility propagates correctly
             Paddle {
                 size: INITIAL_PADDLE_SIZE,
