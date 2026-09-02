@@ -1,6 +1,7 @@
 use bevy::{
     app::{App, Plugin, Startup},
     ecs::schedule::IntoScheduleConfigs,
+    state::app::AppExtStates,
 };
 
 mod components;
@@ -8,6 +9,7 @@ mod constants;
 mod helpers;
 mod levels;
 mod resources;
+mod states;
 mod systems;
 
 pub use components::*;
@@ -15,13 +17,15 @@ pub use constants::*;
 pub use helpers::*;
 pub use levels::*;
 pub use resources::*;
+pub use states::*;
 pub use systems::*;
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(GameInfo::init())
+        app.init_state::<GameState>()
+            .insert_resource(GameInfo::init())
             .insert_resource(MovingArea::new())
             .add_systems(
                 Startup,

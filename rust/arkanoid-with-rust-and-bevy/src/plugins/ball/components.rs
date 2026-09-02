@@ -6,7 +6,6 @@ use crate::plugins::BALL_STATIC_SPEED;
 pub struct Ball {
     pub direction: Vec2,
     pub speed: f32,
-    pub is_stuck_to_paddle: bool,
 }
 
 impl Ball {
@@ -14,7 +13,6 @@ impl Ball {
         Ball {
             direction: Vec2::ZERO,
             speed: BALL_STATIC_SPEED,
-            is_stuck_to_paddle: true,
         }
     }
 }

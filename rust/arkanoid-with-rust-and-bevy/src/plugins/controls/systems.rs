@@ -1,10 +1,11 @@
 use bevy::{
     ecs::system::{Res, ResMut, Single},
     input::{ButtonInput, keyboard::KeyCode},
+    state::state::{NextState, State},
 };
 use rand::seq::IndexedRandom;
 
-use crate::plugins::{BALL_MOVEMENT_SPEED, Ball, Paddle, Randomizer};
+use crate::plugins::{BALL_MOVEMENT_SPEED, Ball, GameState, Paddle, Randomizer};
 
 pub fn update_paddle_direction_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
@@ -25,9 +26,10 @@ pub fn update_paddle_direction_on_keypress(
 
 pub fn update_ball_direction_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
+    app_state: Res<State<GameState>>,
     mut ball: Single<&mut Ball>,
 ) {
-    if !ball.is_stuck_to_paddle {
+    if *app_state.get() != GameState::GameStarting {
         return;
     }
 
@@ -44,17 +46,37 @@ pub fn update_ball_direction_on_keypress(
     }
 }
 
-pub fn activate_ball_movement_on_keypress(
+pub fn start_game_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
+    app_state: Res<State<GameState>>,
+    mut next_state: ResMut<NextState<GameState>>,
     mut randomizer: ResMut<Randomizer>,
     mut ball: Single<&mut Ball>,
 ) {
+    if *app_state.get() != GameState::GameStarting {
+        return;
+    }
+
     let choices: [f32; 2] = [-1., 1.];
 
-    if ball.is_stuck_to_paddle && keyboard_input.just_pressed(KeyCode::Space) {
-        ball.is_stuck_to_paddle = false;
+    if keyboard_input.just_pressed(KeyCode::Space) {
         ball.direction.x = *choices.choose(&mut randomizer.rng).unwrap();
         ball.direction.y = 1.;
         ball.speed = BALL_MOVEMENT_SPEED;
+        next_state.set(GameState::Running);
+    }
+}
+
+pub fn toggle_pausing_game_on_keypress(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    app_state: Res<State<GameState>>,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::KeyP) {
+        if *app_state.get() == GameState::Running {
+            next_state.set(GameState::Paused);
+        } else if *app_state.get() == GameState::Paused {
+            next_state.set(GameState::Running);
+        }
     }
 }

@@ -13,7 +13,8 @@ impl Plugin for ControlsPlugin {
             (
                 update_paddle_direction_on_keypress,
                 update_ball_direction_on_keypress,
-                activate_ball_movement_on_keypress,
+                start_game_on_keypress,
+                toggle_pausing_game_on_keypress,
             ),
         );
     }

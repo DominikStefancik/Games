@@ -5,13 +5,14 @@ use bevy::{
     },
     math::bounding::{Aabb2d, BoundingCircle},
     sprite::Sprite,
+    state::state::State,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BALL_RADIUS, Ball, Brick, BrickDestroyed, Collider, CollisionSide, GameTexture, MovingArea,
-    Paddle, check_borders_when_moving, check_borders_when_moving_with_paddle,
-    detect_ball_collision,
+    BALL_RADIUS, Ball, Brick, BrickDestroyed, Collider, CollisionSide, GameState, GameTexture,
+    MovingArea, Paddle, check_borders_when_moving, check_borders_when_moving_with_paddle,
+    detect_ball_collision, is_game_starting_or_running,
 };
 
 pub fn spawn_ball(
@@ -32,18 +33,23 @@ pub fn spawn_ball(
 }
 
 pub fn move_ball(
+    app_state: Res<State<GameState>>,
     moving_area: Res<MovingArea>,
     ball_query: Single<(&mut Transform, &mut Ball)>,
     paddle: Single<&Paddle>,
 ) {
+    if !is_game_starting_or_running(app_state.get()) {
+        return;
+    }
+
     let (mut transform, mut ball) = ball_query.into_inner();
 
     transform.translation.x += ball.direction.x * ball.speed;
     transform.translation.y += ball.direction.y * ball.speed;
 
-    if ball.is_stuck_to_paddle {
+    if *app_state.get() == GameState::GameStarting {
         check_borders_when_moving_with_paddle(&moving_area, &mut transform, &mut ball, &paddle);
-    } else {
+    } else if *app_state.get() == GameState::Running {
         check_borders_when_moving(&moving_area, &mut transform, &mut ball);
     }
 }
@@ -56,10 +62,6 @@ pub fn check_ball_collision(
     collider_query: Query<(Entity, &Transform, &Collider, Option<&Brick>)>,
 ) {
     let (ball_transform, mut ball) = ball_query.into_inner();
-
-    if ball.is_stuck_to_paddle {
-        return;
-    }
 
     for (collider_entity, collider_transform, collider, optional_brick) in collider_query {
         let collision_side = detect_ball_collision(
