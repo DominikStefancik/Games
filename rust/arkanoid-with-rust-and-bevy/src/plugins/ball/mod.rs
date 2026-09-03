@@ -22,13 +22,20 @@ pub struct BallPlugin;
 
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_ball).add_systems(
-            Update,
-            (
-                move_ball,
-                check_ball_collision.run_if(in_state(GameState::Running)),
+        app.add_systems(Startup, spawn_ball)
+            .add_systems(
+                Update,
+                move_ball_when_game_starts.run_if(in_state(GameState::GameStarting)),
             )
-                .chain(),
-        );
+            .add_systems(
+                Update,
+                (
+                    move_ball_when_game_runs,
+                    check_ball_collision,
+                    check_ball_out_of_bounds,
+                )
+                    .chain()
+                    .run_if(in_state(GameState::Running)),
+            );
     }
 }

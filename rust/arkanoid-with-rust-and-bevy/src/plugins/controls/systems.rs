@@ -26,13 +26,8 @@ pub fn update_paddle_direction_on_keypress(
 
 pub fn update_ball_direction_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    app_state: Res<State<GameState>>,
     mut ball: Single<&mut Ball>,
 ) {
-    if *app_state.get() != GameState::GameStarting {
-        return;
-    }
-
     if keyboard_input.just_pressed(KeyCode::ArrowLeft) {
         ball.direction.x = -1.;
     }
@@ -48,15 +43,10 @@ pub fn update_ball_direction_on_keypress(
 
 pub fn start_game_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    app_state: Res<State<GameState>>,
     mut next_state: ResMut<NextState<GameState>>,
     mut randomizer: ResMut<Randomizer>,
     mut ball: Single<&mut Ball>,
 ) {
-    if *app_state.get() != GameState::GameStarting {
-        return;
-    }
-
     let choices: [f32; 2] = [-1., 1.];
 
     if keyboard_input.just_pressed(KeyCode::Space) {

@@ -15,4 +15,9 @@ impl Ball {
             speed: BALL_STATIC_SPEED,
         }
     }
+
+    pub fn reset(&mut self) {
+        self.direction = Vec2::ZERO;
+        self.speed = BALL_STATIC_SPEED;
+    }
 }

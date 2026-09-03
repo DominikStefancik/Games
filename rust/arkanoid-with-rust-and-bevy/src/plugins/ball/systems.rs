@@ -1,18 +1,18 @@
 use bevy::{
     ecs::{
         entity::Entity,
+        query::With,
         system::{Commands, Query, Res, Single},
     },
     math::bounding::{Aabb2d, BoundingCircle},
     sprite::Sprite,
-    state::state::State,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BALL_RADIUS, Ball, Brick, BrickDestroyed, Collider, CollisionSide, GameState, GameTexture,
-    MovingArea, Paddle, check_borders_when_moving, check_borders_when_moving_with_paddle,
-    detect_ball_collision, get_ball_initial_position, is_game_starting_or_running,
+    BALL_RADIUS, Ball, BallFallenDown, Brick, BrickDestroyed, Collider, CollisionSide, GameTexture,
+    MovingArea, Paddle, WINDOW_RESOLUTION_HALF, check_borders_when_moving,
+    check_borders_when_moving_with_paddle, detect_ball_collision, get_ball_initial_position,
 };
 
 pub fn spawn_ball(
@@ -30,27 +30,28 @@ pub fn spawn_ball(
     ));
 }
 
-pub fn move_ball(
-    mut commands: Commands,
-    app_state: Res<State<GameState>>,
+pub fn move_ball_when_game_starts(
     moving_area: Res<MovingArea>,
     ball_query: Single<(&mut Transform, &mut Ball)>,
     paddle: Single<&Paddle>,
 ) {
-    if !is_game_starting_or_running(app_state.get()) {
-        return;
-    }
+    let (mut transform, mut ball) = ball_query.into_inner();
 
+    transform.translation.x += ball.direction.x * ball.speed;
+
+    check_borders_when_moving_with_paddle(&moving_area, &mut transform, &mut ball, &paddle);
+}
+
+pub fn move_ball_when_game_runs(
+    moving_area: Res<MovingArea>,
+    ball_query: Single<(&mut Transform, &mut Ball)>,
+) {
     let (mut transform, mut ball) = ball_query.into_inner();
 
     transform.translation.x += ball.direction.x * ball.speed;
     transform.translation.y += ball.direction.y * ball.speed;
 
-    if *app_state.get() == GameState::GameStarting {
-        check_borders_when_moving_with_paddle(&moving_area, &mut transform, &mut ball, &paddle);
-    } else if *app_state.get() == GameState::Running {
-        check_borders_when_moving(&mut commands, &moving_area, &mut transform, &mut ball);
-    }
+    check_borders_when_moving(&moving_area, &mut transform, &mut ball);
 }
 
 pub fn check_ball_collision(
@@ -86,5 +87,16 @@ pub fn check_ball_collision(
                 });
             }
         }
+    }
+}
+
+pub fn check_ball_out_of_bounds(
+    mut commands: Commands,
+    ball_query: Single<&mut Transform, With<Ball>>,
+) {
+    let ball_transform = ball_query.into_inner();
+
+    if ball_transform.translation.y <= -WINDOW_RESOLUTION_HALF.y {
+        commands.trigger(BallFallenDown);
     }
 }

@@ -1,5 +1,4 @@
 use bevy::{
-    ecs::system::Commands,
     math::{
         Vec3,
         bounding::{Aabb2d, BoundingCircle, IntersectsVolume},
@@ -7,7 +6,7 @@ use bevy::{
     transform::components::Transform,
 };
 
-use crate::plugins::{BALL_RADIUS, Ball, BallFallenDown, CollisionSide, MovingArea, Paddle};
+use crate::plugins::{BALL_RADIUS, Ball, CollisionSide, MovingArea, Paddle};
 
 pub fn check_borders_when_moving_with_paddle(
     moving_area: &MovingArea,
@@ -34,7 +33,6 @@ pub fn check_borders_when_moving_with_paddle(
 }
 
 pub fn check_borders_when_moving(
-    commands: &mut Commands,
     moving_area: &MovingArea,
     transform: &mut Transform,
     ball: &mut Ball,
@@ -43,7 +41,7 @@ pub fn check_borders_when_moving(
         left_border,
         right_border,
         upper_border,
-        lower_border,
+        ..
     } = moving_area;
 
     if transform.translation.x - BALL_RADIUS <= *left_border {
@@ -56,10 +54,6 @@ pub fn check_borders_when_moving(
 
     if transform.translation.y + BALL_RADIUS >= *upper_border {
         ball.direction.y = -1.;
-    }
-
-    if transform.translation.y <= *lower_border {
-        commands.trigger(BallFallenDown);
     }
 }
 

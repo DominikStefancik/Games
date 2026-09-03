@@ -10,7 +10,3 @@ pub enum GameState {
     GameWin,
     GameOver,
 }
-
-pub fn is_game_starting_or_running(game_state: &GameState) -> bool {
-    [GameState::GameStarting, GameState::Running].contains(game_state)
-}

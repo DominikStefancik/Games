@@ -16,10 +16,11 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BRICK_SCORE, Ball, BallFallenDown, BrickDestroyed, GameInfo, GameState, GameTexture,
-    HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, MovingArea,
-    Paddle, SCORE_TEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
-    calculate_heart_horizontal_position, get_ball_initial_position, get_paddle_initial_position,
+    BRICK_SCORE, Ball, BallFallenDown, BrickDestroyed, Collider, GameInfo, GameState, GameTexture,
+    HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed,
+    INITIAL_PADDLE_SIZE, MovingArea, Paddle, SCORE_TEXT_FONT_SIZE, ScoreTextUi, Upgrade,
+    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
+    get_ball_initial_position, get_paddle_initial_position,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -134,15 +135,22 @@ pub fn restart_gaming_state(
     mut next_state: ResMut<NextState<GameState>>,
     mut game_info: ResMut<GameInfo>,
     moving_area: Res<MovingArea>,
-    ball_query: Single<&mut Transform, (With<Ball>, Without<Paddle>)>,
-    paddle_query: Single<&mut Transform, (With<Paddle>, Without<Ball>)>,
+    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
+    paddle_query: Single<
+        (&mut Transform, &mut Collider, &mut Paddle),
+        (With<Paddle>, Without<Ball>),
+    >,
     upgrade_query: Query<Entity, With<Upgrade>>,
     heart_query: Query<(Entity, &Heart)>,
 ) {
-    let mut ball_transform = ball_query.into_inner();
-    let mut paddle_transform = paddle_query.into_inner();
+    let (mut ball_transform, mut ball) = ball_query.into_inner();
+    let (mut paddle_transform, mut paddle_collider, mut paddle) = paddle_query.into_inner();
 
+    ball.reset();
     ball_transform.translation = get_ball_initial_position(moving_area.into_inner());
+
+    paddle.reset();
+    paddle_collider.size = INITIAL_PADDLE_SIZE;
     paddle_transform.translation = get_paddle_initial_position();
 
     for upgrade_entity in upgrade_query {
@@ -156,5 +164,5 @@ pub fn restart_gaming_state(
     }
 
     game_info.lives -= 1;
-    // next_state.set(GameState::GameStarting);
+    next_state.set(GameState::GameStarting);
 }

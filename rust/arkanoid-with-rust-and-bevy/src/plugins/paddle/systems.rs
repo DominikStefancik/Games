@@ -4,14 +4,12 @@ use bevy::{
         observer::On,
         system::{Commands, Res, Single},
     },
-    state::state::State,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    Collider, GameState, GameTexture, INITIAL_PADDLE_SIZE, LaserUpgradeDestroyed,
-    PADDLE_MOVEMENT_SPEED, Paddle, WINDOW_RESOLUTION_HALF, get_paddle_initial_position,
-    is_game_starting_or_running, spawn_box_texture_parts,
+    Collider, GameTexture, INITIAL_PADDLE_SIZE, LaserUpgradeDestroyed, PADDLE_MOVEMENT_SPEED,
+    Paddle, WINDOW_RESOLUTION_HALF, get_paddle_initial_position, spawn_box_texture_parts,
 };
 
 pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
@@ -43,14 +41,7 @@ pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
     commands.entity(parent_entity).insert(parts.unwrap());
 }
 
-pub fn move_paddle(
-    app_state: Res<State<GameState>>,
-    paddle_query: Single<(&mut Transform, &Paddle)>,
-) {
-    if !is_game_starting_or_running(app_state.get()) {
-        return;
-    }
-
+pub fn move_paddle(paddle_query: Single<(&mut Transform, &Paddle)>) {
     let (mut transform, paddle) = paddle_query.into_inner();
     let paddle_half_size = paddle.size / 2.;
 
