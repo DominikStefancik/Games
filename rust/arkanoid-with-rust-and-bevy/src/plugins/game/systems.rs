@@ -18,8 +18,8 @@ use bevy::{
 use crate::plugins::{
     BRICK_SCORE, Ball, BallFallenDown, BrickDestroyed, Collider, GameInfo, GameState, GameTexture,
     HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed,
-    INITIAL_PADDLE_SIZE, Laser, MovingArea, Paddle, SCORE_TEXT_FONT_SIZE, ScoreTextUi, Upgrade,
-    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
+    INITIAL_PADDLE_SIZE, Laser, MovingArea, Paddle, Projectile, SCORE_TEXT_FONT_SIZE, ScoreTextUi,
+    Upgrade, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
     get_ball_initial_position, get_paddle_initial_position,
 };
 
@@ -141,6 +141,7 @@ pub fn restart_gaming_state(
         (With<Paddle>, Without<Ball>),
     >,
     laser_query: Query<Entity, With<Laser>>,
+    projectile_query: Query<Entity, With<Projectile>>,
     upgrade_query: Query<Entity, With<Upgrade>>,
     heart_query: Query<(Entity, &Heart)>,
 ) {
@@ -156,6 +157,10 @@ pub fn restart_gaming_state(
 
     for laser_entity in laser_query {
         commands.entity(laser_entity).despawn();
+    }
+
+    for projectile_entity in projectile_query {
+        commands.entity(projectile_entity).despawn();
     }
 
     for upgrade_entity in upgrade_query {

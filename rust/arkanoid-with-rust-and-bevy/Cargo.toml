@@ -5,5 +5,5 @@ edition = "2024"
 authors = ["Dominik Stefancik <dstefancik@gmail.com>"]
 
 [dependencies]
-bevy = { version = "0.19.1", features = ["wav"] }
+bevy = { version = "0.19.1", features = ["debug","wav"] }
 rand = "0.10.2"

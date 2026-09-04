@@ -14,7 +14,7 @@ use rand::seq::IndexedRandom;
 use crate::plugins::{
     BrickDestroyed, Collider, GameInfo, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
     PADDLE_LENGTH_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
-    Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_upgrade_collision,
+    Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision,
 };
 
 pub fn spawn_upgrade(
@@ -56,7 +56,7 @@ pub fn check_upgrade_collision(
     let (paddle_transform, mut paddle_collider, mut paddle) = paddle_query.into_inner();
 
     for (upgrade_entity, upgrade_transform, upgrade) in upgrade_query {
-        let is_colliding = detect_upgrade_collision(
+        let is_colliding = detect_rectangle_collision(
             Aabb2d::new(
                 upgrade_transform.translation.truncate(),
                 UPGRADE_TEXTURE_SIZE / 2.,

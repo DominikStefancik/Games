@@ -21,3 +21,6 @@ impl Paddle {
 
 #[derive(Component)]
 pub struct Laser;
+
+#[derive(Component)]
+pub struct Projectile;

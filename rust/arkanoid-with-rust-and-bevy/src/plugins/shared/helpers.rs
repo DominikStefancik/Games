@@ -1,6 +1,7 @@
 use bevy::{
     asset::AssetServer,
     ecs::{hierarchy::ChildOf, relationship::RelatedSpawnerCommands},
+    math::bounding::{Aabb2d, IntersectsVolume},
     sprite::Sprite,
 };
 
@@ -87,4 +88,11 @@ pub fn spawn_box_texture_parts(
         bottom,
         center,
     })
+}
+
+pub fn detect_rectangle_collision(
+    upgrade_bounding_rectangle: Aabb2d,
+    paddle_bounding_rectangle: Aabb2d,
+) -> bool {
+    upgrade_bounding_rectangle.intersects(&paddle_bounding_rectangle)
 }

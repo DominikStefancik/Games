@@ -38,6 +38,7 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
     let heart = asset_server.load("graphics/other/heart.png");
     let laser = asset_server.load("graphics/other/laser.png");
+    let projectile = asset_server.load("graphics/other/projectile.png");
 
     let game_texture = GameTexture {
         background,
@@ -53,6 +54,7 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
         upgrade,
         heart,
         laser,
+        projectile,
     };
 
     commands.insert_resource(game_texture);

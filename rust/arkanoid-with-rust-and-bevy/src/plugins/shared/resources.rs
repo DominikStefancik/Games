@@ -39,6 +39,7 @@ pub struct GameTexture {
     pub upgrade: UpgradeTexture,
     pub heart: Handle<Image>,
     pub laser: Handle<Image>,
+    pub projectile: Handle<Image>,
 }
 
 impl GameTexture {
