@@ -30,13 +30,14 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     let orange_brick = load_box_graphics(&asset_server, "graphics/bricks/orange");
     let purple_brick = load_box_graphics(&asset_server, "graphics/bricks/purple");
     let red_brick = load_box_graphics(&asset_server, "graphics/bricks/red");
-    let heart = asset_server.load("graphics/other/heart.png");
     let upgrade = UpgradeTexture {
         heart: asset_server.load("graphics/upgrades/heart.png"),
         laser: asset_server.load("graphics/upgrades/laser.png"),
         size: asset_server.load("graphics/upgrades/size.png"),
         speed: asset_server.load("graphics/upgrades/speed.png"),
     };
+    let heart = asset_server.load("graphics/other/heart.png");
+    let laser = asset_server.load("graphics/other/laser.png");
 
     let game_texture = GameTexture {
         background,
@@ -49,8 +50,9 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
         orange_brick,
         purple_brick,
         red_brick,
-        heart,
         upgrade,
+        heart,
+        laser,
     };
 
     commands.insert_resource(game_texture);

@@ -18,3 +18,6 @@ impl Paddle {
         self.laser_count = 0;
     }
 }
+
+#[derive(Component)]
+pub struct Laser;

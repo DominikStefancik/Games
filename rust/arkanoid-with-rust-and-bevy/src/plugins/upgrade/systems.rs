@@ -71,7 +71,6 @@ pub fn check_upgrade_collision(
                     commands.trigger(HeartUpgradeDestroyed);
                 }
                 UpgradeType::Laser => {
-                    paddle.laser_count += 1;
                     commands.trigger(LaserUpgradeDestroyed);
                 }
                 UpgradeType::Size => {

@@ -36,8 +36,9 @@ pub struct GameTexture {
     pub orange_brick: BoxTexture,
     pub purple_brick: BoxTexture,
     pub red_brick: BoxTexture,
-    pub heart: Handle<Image>,
     pub upgrade: UpgradeTexture,
+    pub heart: Handle<Image>,
+    pub laser: Handle<Image>,
 }
 
 impl GameTexture {
