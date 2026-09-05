@@ -1,7 +1,7 @@
 use bevy::{
-    app::{App, Plugin, Startup},
+    app::{App, Plugin, Startup, Update},
     ecs::schedule::IntoScheduleConfigs,
-    state::app::AppExtStates,
+    state::{app::AppExtStates, condition::in_state},
 };
 
 mod components;
@@ -30,6 +30,13 @@ impl Plugin for GamePlugin {
             .add_systems(
                 Startup,
                 (spawn_background, spawn_score_text, spawn_hearts).chain(),
+            )
+            .add_systems(
+                Update,
+                (
+                    finish_level_start.run_if(in_state(GameState::NewLevelStarting)),
+                    is_level_finished.run_if(in_state(GameState::Running)),
+                ),
             )
             // Global observers
             .add_observer(spawn_new_heart)

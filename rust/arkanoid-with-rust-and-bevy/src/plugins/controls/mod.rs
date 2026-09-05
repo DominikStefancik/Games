@@ -18,9 +18,9 @@ impl Plugin for ControlsPlugin {
             Update,
             (
                 update_paddle_direction_on_keypress,
-                update_ball_direction_on_keypress.run_if(in_state(GameState::GameStarting)),
+                update_ball_direction_on_keypress.run_if(in_state(GameState::BallReady)),
                 shoot_projectile_on_keypress.run_if(in_state(GameState::Running)),
-                start_game_on_keypress.run_if(in_state(GameState::GameStarting)),
+                start_game_on_keypress.run_if(in_state(GameState::BallReady)),
                 toggle_pausing_game_on_keypress,
             ),
         );

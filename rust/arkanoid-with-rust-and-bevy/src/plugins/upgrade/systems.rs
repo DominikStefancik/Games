@@ -12,7 +12,7 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BrickCollided, Collider, GameInfo, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
+    BrickCollided, Collider, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
     PADDLE_LENGTH_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
     Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision,
 };
@@ -55,7 +55,6 @@ pub fn move_upgrade(mut commands: Commands, query: Query<(Entity, &mut Transform
 
 pub fn check_upgrade_collision(
     mut commands: Commands,
-    mut game_info: ResMut<GameInfo>,
     paddle_query: Single<(&Transform, &mut Collider, &mut Paddle)>,
     upgrade_query: Query<(Entity, &Transform, &Upgrade)>,
 ) {
@@ -73,7 +72,6 @@ pub fn check_upgrade_collision(
         if is_colliding {
             match upgrade.upgrade_type {
                 UpgradeType::Heart => {
-                    game_info.lives += 1;
                     commands.trigger(HeartUpgradeDestroyed);
                 }
                 UpgradeType::Laser => {

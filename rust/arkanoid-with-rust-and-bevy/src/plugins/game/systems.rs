@@ -16,11 +16,11 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BRICK_SCORE, Ball, BallFallenDown, BrickCollided, Collider, GameInfo, GameState, GameTexture,
-    HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed,
-    INITIAL_PADDLE_SIZE, Laser, MovingArea, Paddle, Projectile, SCORE_TEXT_FONT_SIZE, ScoreTextUi,
-    Upgrade, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
-    get_ball_initial_position, get_paddle_initial_position,
+    BRICK_SCORE, Ball, BallFallenDown, Brick, BrickCollided, Collider, GameInfo, GameState,
+    GameTexture, HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed,
+    Laser, MovingArea, Paddle, Projectile, SCORE_TEXT_FONT_SIZE, ScoreTextUi, Upgrade,
+    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
+    reset_moving_elements,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -101,23 +101,27 @@ pub fn spawn_new_heart(
     _: On<HeartUpgradeDestroyed>,
     mut commands: Commands,
     game_texture: Res<GameTexture>,
-    game_info: Res<GameInfo>,
+    mut game_info: ResMut<GameInfo>,
 ) {
-    let position = Vec2::new(
-        calculate_heart_horizontal_position(game_info.lives - 1),
-        WINDOW_RESOLUTION_HALF.y - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
-    );
+    if game_info.lives < game_info.max_lives {
+        let position = Vec2::new(
+            calculate_heart_horizontal_position(game_info.lives),
+            WINDOW_RESOLUTION_HALF.y - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
+        );
 
-    commands.spawn((
-        Sprite {
-            image: game_texture.heart.clone(),
-            ..Default::default()
-        },
-        Transform::from_translation(position.extend(1.)).with_scale(Vec3::splat(HEART_SCALE)),
-        Heart {
-            index: game_info.lives,
-        },
-    ));
+        commands.spawn((
+            Sprite {
+                image: game_texture.heart.clone(),
+                ..Default::default()
+            },
+            Transform::from_translation(position.extend(1.)).with_scale(Vec3::splat(HEART_SCALE)),
+            Heart {
+                index: game_info.lives,
+            },
+        ));
+
+        game_info.lives += 1;
+    }
 }
 
 pub fn update_score(
@@ -145,27 +149,15 @@ pub fn restart_gaming_state(
     upgrade_query: Query<Entity, With<Upgrade>>,
     heart_query: Query<(Entity, &Heart)>,
 ) {
-    let (mut ball_transform, mut ball) = ball_query.into_inner();
-    let (mut paddle_transform, mut paddle_collider, mut paddle) = paddle_query.into_inner();
-
-    ball.reset();
-    ball_transform.translation = get_ball_initial_position(moving_area.into_inner());
-
-    paddle.reset();
-    paddle_collider.size = INITIAL_PADDLE_SIZE;
-    paddle_transform.translation = get_paddle_initial_position();
-
-    for laser_entity in laser_query {
-        commands.entity(laser_entity).despawn();
-    }
-
-    for projectile_entity in projectile_query {
-        commands.entity(projectile_entity).despawn();
-    }
-
-    for upgrade_entity in upgrade_query {
-        commands.entity(upgrade_entity).despawn();
-    }
+    reset_moving_elements(
+        &mut commands,
+        moving_area.into_inner(),
+        ball_query,
+        paddle_query,
+        laser_query,
+        projectile_query,
+        upgrade_query,
+    );
 
     for (heart_entity, heart) in heart_query {
         if heart.index == game_info.lives - 1 {
@@ -174,5 +166,48 @@ pub fn restart_gaming_state(
     }
 
     game_info.lives -= 1;
-    next_state.set(GameState::GameStarting);
+    next_state.set(GameState::BallReady);
+}
+
+pub fn is_level_finished(
+    mut commands: Commands,
+    mut next_state: ResMut<NextState<GameState>>,
+    mut game_info: ResMut<GameInfo>,
+    moving_area: Res<MovingArea>,
+    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
+    brick_query: Query<&Brick>,
+    paddle_query: Single<
+        (&mut Transform, &mut Collider, &mut Paddle),
+        (With<Paddle>, Without<Ball>),
+    >,
+    laser_query: Query<Entity, With<Laser>>,
+    projectile_query: Query<Entity, With<Projectile>>,
+    upgrade_query: Query<Entity, With<Upgrade>>,
+) {
+    if brick_query.is_empty() {
+        if game_info.current_level == game_info.level_count {
+            next_state.set(GameState::GameWin);
+        } else {
+            if game_info.lives == 0 {
+                next_state.set(GameState::GameOver);
+            }
+
+            reset_moving_elements(
+                &mut commands,
+                moving_area.into_inner(),
+                ball_query,
+                paddle_query,
+                laser_query,
+                projectile_query,
+                upgrade_query,
+            );
+
+            game_info.move_to_next_level();
+            next_state.set(GameState::NewLevelStarting);
+        }
+    }
+}
+
+pub fn finish_level_start(mut next_state: ResMut<NextState<GameState>>) {
+    next_state.set(GameState::BallReady);
 }

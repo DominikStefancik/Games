@@ -25,7 +25,7 @@ impl Plugin for BallPlugin {
         app.add_systems(Startup, spawn_ball)
             .add_systems(
                 Update,
-                move_ball_when_game_starts.run_if(in_state(GameState::GameStarting)),
+                move_ball_when_ready.run_if(in_state(GameState::BallReady)),
             )
             .add_systems(
                 Update,

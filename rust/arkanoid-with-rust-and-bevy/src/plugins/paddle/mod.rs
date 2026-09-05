@@ -23,7 +23,7 @@ impl Plugin for PaddlePlugin {
         app.add_systems(Startup, spawn_paddle).add_systems(
             Update,
             move_paddle
-                .run_if(in_state(GameState::GameStarting).or_else(in_state(GameState::Running))),
+                .run_if(in_state(GameState::BallReady).or_else(in_state(GameState::Running))),
         );
     }
 }

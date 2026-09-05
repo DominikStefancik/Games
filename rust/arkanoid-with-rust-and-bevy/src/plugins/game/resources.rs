@@ -1,12 +1,14 @@
 use bevy::ecs::resource::Resource;
 
-use crate::plugins::{BOTTOM_OFFSET, INITIAL_PADDLE_SIZE, LEVEL_1_MAP, WINDOW_RESOLUTION_HALF};
+use crate::plugins::{BOTTOM_OFFSET, INITIAL_PADDLE_SIZE, WINDOW_RESOLUTION_HALF, get_level_map};
 
 #[derive(Resource)]
 pub struct GameInfo {
-    pub current_level: u16,
+    pub current_level: u8,
+    pub level_count: u8,
     pub level_map: Vec<&'static str>,
     pub lives: u16,
+    pub max_lives: u16,
     pub score: u32,
 }
 
@@ -14,10 +16,18 @@ impl GameInfo {
     pub fn init() -> Self {
         GameInfo {
             current_level: 1,
-            level_map: LEVEL_1_MAP.to_vec(),
+            level_count: 2,
+            level_map: get_level_map(1).unwrap(),
             lives: 3,
+            max_lives: 4,
             score: 0,
         }
+    }
+
+    pub fn move_to_next_level(&mut self) {
+        self.current_level += 1;
+        self.level_map = get_level_map(self.current_level).unwrap();
+        self.max_lives += 1;
     }
 }
 

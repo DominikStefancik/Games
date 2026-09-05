@@ -3,16 +3,17 @@ use bevy::{
     camera::Camera2d,
     ecs::{
         query::Changed,
-        system::{Commands, Query, Res},
+        system::{Commands, Query, Res, ResMut},
     },
     math::{Vec2, Vec3},
     sprite::Sprite,
+    state::state::NextState,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, UpgradeTexture, load_box_graphics,
-    shared::GameTexture,
+    BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, GameState, UpgradeTexture,
+    load_box_graphics, shared::GameTexture,
 };
 
 pub fn spawn_camera(mut commands: Commands) {
@@ -58,6 +59,10 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     commands.insert_resource(game_texture);
+}
+
+pub fn finish_loading(mut next_state: ResMut<NextState<GameState>>) {
+    next_state.set(GameState::NewLevelStarting);
 }
 
 /*

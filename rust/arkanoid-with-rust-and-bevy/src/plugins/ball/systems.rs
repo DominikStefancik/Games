@@ -30,7 +30,7 @@ pub fn spawn_ball(
     ));
 }
 
-pub fn move_ball_when_game_starts(
+pub fn move_ball_when_ready(
     moving_area: Res<MovingArea>,
     ball_query: Single<(&mut Transform, &mut Ball)>,
     paddle: Single<&Paddle>,
