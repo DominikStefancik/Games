@@ -16,6 +16,8 @@ pub struct BrickPlugin;
 
 impl Plugin for BrickPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_bricks);
+        app.add_systems(Startup, spawn_bricks)
+            // Global observers
+            .add_observer(update_or_destroy_brick);
     }
 }

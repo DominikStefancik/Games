@@ -16,7 +16,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BRICK_SCORE, Ball, BallFallenDown, BrickDestroyed, Collider, GameInfo, GameState, GameTexture,
+    BRICK_SCORE, Ball, BallFallenDown, BrickCollided, Collider, GameInfo, GameState, GameTexture,
     HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed,
     INITIAL_PADDLE_SIZE, Laser, MovingArea, Paddle, Projectile, SCORE_TEXT_FONT_SIZE, ScoreTextUi,
     Upgrade, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
@@ -121,7 +121,7 @@ pub fn spawn_new_heart(
 }
 
 pub fn update_score(
-    _: On<BrickDestroyed>,
+    _: On<BrickCollided>,
     mut game_info: ResMut<GameInfo>,
     mut score_text_ui: Single<&mut Text, With<ScoreTextUi>>,
 ) {

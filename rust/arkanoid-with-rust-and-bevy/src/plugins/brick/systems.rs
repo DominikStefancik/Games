@@ -1,12 +1,16 @@
 use bevy::{
     camera::visibility::Visibility,
-    ecs::system::{Commands, Res},
+    ecs::{
+        observer::On,
+        system::{Commands, Query, Res},
+    },
+    sprite::Sprite,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    Brick, BrickType, Collider, GameInfo, GameTexture, calculate_brick_position,
-    calculate_brick_size, spawn_box_texture_parts,
+    BoxTextureParts, Brick, BrickCollided, BrickType, Collider, GameInfo, GameTexture,
+    calculate_brick_position, calculate_brick_size, spawn_box_texture_parts,
 };
 
 pub fn spawn_bricks(
@@ -55,5 +59,42 @@ pub fn spawn_bricks(
                 commands.entity(parent_entity).insert(parts.unwrap());
             }
         }
+    }
+}
+
+pub fn update_or_destroy_brick(
+    trigger: On<BrickCollided>,
+    mut commands: Commands,
+    game_texture: Res<GameTexture>,
+    mut brick_query: Query<&mut Brick>,
+    box_texture_parts_query: Query<&BoxTextureParts>,
+    mut sprite_query: Query<&mut Sprite>,
+) {
+    let BrickCollided { brick_entity, .. } = trigger.event();
+
+    // Get the Brick component out of given entity
+    let Ok(mut brick) = brick_query.get_mut(*brick_entity) else {
+        return;
+    };
+    // Get children representing image parts out of given entity
+    let Ok(parts) = box_texture_parts_query.get(*brick_entity) else {
+        return;
+    };
+
+    if brick.brick_type == BrickType::Blue {
+        commands.entity(*brick_entity).despawn();
+    } else {
+        brick.update_type();
+        let box_textures = game_texture.get_brick_texture(brick.brick_type);
+
+        sprite_query.get_mut(parts.top_left).unwrap().image = box_textures.top_left;
+        sprite_query.get_mut(parts.top).unwrap().image = box_textures.top;
+        sprite_query.get_mut(parts.top_right).unwrap().image = box_textures.top_right;
+        sprite_query.get_mut(parts.left).unwrap().image = box_textures.left;
+        sprite_query.get_mut(parts.right).unwrap().image = box_textures.right;
+        sprite_query.get_mut(parts.bottom_left).unwrap().image = box_textures.bottom_left;
+        sprite_query.get_mut(parts.bottom).unwrap().image = box_textures.bottom;
+        sprite_query.get_mut(parts.bottom_right).unwrap().image = box_textures.bottom_right;
+        sprite_query.get_mut(parts.center).unwrap().image = box_textures.center;
     }
 }

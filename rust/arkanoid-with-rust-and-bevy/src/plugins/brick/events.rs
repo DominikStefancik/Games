@@ -1,4 +1,7 @@
-use bevy::{ecs::event::Event, math::Vec3};
+use bevy::{
+    ecs::{entity::Entity, event::Event},
+    math::Vec3,
+};
 
 /*
  * An Event is something that “happens” at a given moment.
@@ -9,6 +12,7 @@ use bevy::{ecs::event::Event, math::Vec3};
  * Note: If you need an Event to "carry" certain data, use EntityEvent
  */
 #[derive(Event)]
-pub struct BrickDestroyed {
+pub struct BrickCollided {
+    pub brick_entity: Entity,
     pub brick_position: Vec3,
 }

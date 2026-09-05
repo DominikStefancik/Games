@@ -13,7 +13,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    Brick, BrickDestroyed, Collider, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
+    BrickCollided, Collider, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
     LASER_VERTICAL_OFFSET, Laser, LaserUpgradeDestroyed, PROJECTILE_MOVEMENT_SPEED,
     PROJECTILE_TEXTURE_SIZE, Paddle, Projectile, ProjectileShot, WINDOW_RESOLUTION_HALF,
     detect_rectangle_collision, get_laser_horizontal_position,
@@ -95,25 +95,19 @@ pub fn move_projectile(
 pub fn check_projectile_collision(
     mut commands: Commands,
     projectile_query: Query<(Entity, &Transform), With<Projectile>>,
-    collider_query: Query<(Entity, &Transform, &Collider, Option<&Brick>)>,
+    brick_query: Query<(Entity, &Transform, &Collider)>,
 ) {
     let mut despawned_projectiles: HashSet<Entity> = HashSet::new();
-    let mut despawned_bricks: HashSet<Entity> = HashSet::new();
 
     /*
      * Our loop structure is nested: for every brick collider, we check every projectile. If a single projectile
      * happens to overlap two bricks in the same frame (e.g. two adjacent bricks), we'll queue
      * "commands.entity(projectile_entity).despawn()" twice — once per collider it matched against.
-     * Same risk in reverse: if two projectiles hit the same brick in the same frame, we queue
-     * "commands.entity(collider_entity).despawn()" twice for that brick. The second despawn in either case
-     * is the one throwing the warning, unless we keep track what was already despawned.
+     * The projectile despawn in either case is the one throwing the warning, unless we keep track what was already
+     * despawned.
      * To fix this we need to track what's already been despawned this frame, and stop checking it again.
      */
-    for (collider_entity, collider_transform, collider, optional_brick) in collider_query {
-        if despawned_bricks.contains(&collider_entity) {
-            continue; // this brick is already destroyed this frame, skip it
-        }
-
+    for (brick_entity, brick_transform, brick_collider) in brick_query {
         for (projectile_entity, projectile_transform) in projectile_query {
             if despawned_projectiles.contains(&projectile_entity) {
                 continue; // this projectile already hit something else this frame
@@ -125,19 +119,18 @@ pub fn check_projectile_collision(
                     PROJECTILE_TEXTURE_SIZE / 2.,
                 ),
                 Aabb2d::new(
-                    collider_transform.translation.truncate(),
-                    collider.size / 2.,
+                    brick_transform.translation.truncate(),
+                    brick_collider.size / 2.,
                 ),
             );
 
-            if is_colliding && optional_brick.is_some() {
-                commands.trigger(BrickDestroyed {
-                    brick_position: collider_transform.translation,
+            if is_colliding {
+                commands.trigger(BrickCollided {
+                    brick_entity,
+                    brick_position: brick_transform.translation,
                 });
-                commands.entity(collider_entity).despawn();
-                commands.entity(projectile_entity).despawn();
 
-                despawned_bricks.insert(collider_entity);
+                commands.entity(projectile_entity).despawn();
                 despawned_projectiles.insert(projectile_entity);
 
                 break; // this projectile is spent — no point checking it against more bricks

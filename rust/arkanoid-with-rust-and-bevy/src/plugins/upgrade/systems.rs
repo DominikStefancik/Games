@@ -12,13 +12,13 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BrickDestroyed, Collider, GameInfo, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
+    BrickCollided, Collider, GameInfo, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
     PADDLE_LENGTH_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
     Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision,
 };
 
 pub fn spawn_upgrade(
-    event: On<BrickDestroyed>,
+    event: On<BrickCollided>,
     mut commands: Commands,
     mut randomizer: ResMut<Randomizer>,
     game_texture: Res<GameTexture>,
