@@ -125,10 +125,7 @@ pub fn check_projectile_collision(
             );
 
             if is_colliding {
-                commands.trigger(BrickCollided {
-                    brick_entity,
-                    brick_position: brick_transform.translation,
-                });
+                commands.trigger(BrickCollided { brick_entity });
 
                 commands.entity(projectile_entity).despawn();
                 despawned_projectiles.insert(projectile_entity);

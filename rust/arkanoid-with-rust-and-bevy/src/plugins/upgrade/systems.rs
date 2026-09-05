@@ -22,7 +22,13 @@ pub fn spawn_upgrade(
     mut commands: Commands,
     mut randomizer: ResMut<Randomizer>,
     game_texture: Res<GameTexture>,
+    transform_query: Query<&Transform>,
 ) {
+    // Get the Transform component out of given brick entity
+    let Ok(brick_position) = transform_query.get(event.brick_entity) else {
+        return;
+    };
+
     let upgrade_type = *UpgradeType::all_variants_array()
         .choose(&mut randomizer.rng)
         .unwrap();
@@ -32,7 +38,7 @@ pub fn spawn_upgrade(
             image: game_texture.get_upgrade_texture(upgrade_type),
             ..Default::default()
         },
-        Transform::from_translation(event.brick_position).with_scale(Vec3::new(0.7, 0.7, 1.)),
+        Transform::from_translation(brick_position.translation).with_scale(Vec3::new(0.7, 0.7, 1.)),
         Upgrade { upgrade_type },
     ));
 }

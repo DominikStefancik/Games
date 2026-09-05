@@ -83,7 +83,6 @@ pub fn check_ball_collision(
             if optional_brick.is_some() {
                 commands.trigger(BrickCollided {
                     brick_entity: collider_entity,
-                    brick_position: collider_transform.translation,
                 });
             }
         }

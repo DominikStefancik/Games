@@ -1,7 +1,4 @@
-use bevy::{
-    ecs::{entity::Entity, event::Event},
-    math::Vec3,
-};
+use bevy::ecs::{entity::Entity, event::Event};
 
 /*
  * An Event is something that “happens” at a given moment.
@@ -14,5 +11,4 @@ use bevy::{
 #[derive(Event)]
 pub struct BrickCollided {
     pub brick_entity: Entity,
-    pub brick_position: Vec3,
 }

@@ -70,13 +70,13 @@ pub fn update_or_destroy_brick(
     box_texture_parts_query: Query<&BoxTextureParts>,
     mut sprite_query: Query<&mut Sprite>,
 ) {
-    let BrickCollided { brick_entity, .. } = trigger.event();
+    let BrickCollided { brick_entity } = trigger.event();
 
-    // Get the Brick component out of given entity
+    // Get the Brick component out of given brick entity
     let Ok(mut brick) = brick_query.get_mut(*brick_entity) else {
         return;
     };
-    // Get children representing image parts out of given entity
+    // Get children representing image parts out of given brick entity
     let Ok(parts) = box_texture_parts_query.get(*brick_entity) else {
         return;
     };
