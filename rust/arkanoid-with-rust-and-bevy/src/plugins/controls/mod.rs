@@ -1,6 +1,6 @@
 use bevy::{
     app::{App, Plugin, Update},
-    ecs::schedule::IntoScheduleConfigs,
+    ecs::schedule::{IntoScheduleConfigs, SystemCondition},
     state::condition::in_state,
 };
 
@@ -22,6 +22,8 @@ impl Plugin for ControlsPlugin {
                 shoot_projectile_on_keypress.run_if(in_state(GameState::Running)),
                 start_game_on_keypress.run_if(in_state(GameState::BallReady)),
                 toggle_pausing_game_on_keypress,
+                restart_game_on_keypress
+                    .run_if(in_state(GameState::GameWin).or_else(in_state(GameState::GameOver))),
             ),
         );
     }

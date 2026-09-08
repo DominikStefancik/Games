@@ -11,3 +11,5 @@ pub const HEART_SIDE_OFFSET: f32 = 12.;
 pub const HEART_SCALE: f32 = 1.4;
 pub const HEARTS_GAP: f32 = 14.;
 pub const SCORE_TEXT_FONT_SIZE: f32 = 25.;
+pub const GAME_FINISHED_FONT_SIZE: f32 = 80.;
+pub const SUBTEXT_FONT_SIZE: f32 = 35.;

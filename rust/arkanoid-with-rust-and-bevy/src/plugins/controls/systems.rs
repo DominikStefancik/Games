@@ -87,3 +87,9 @@ pub fn toggle_pausing_game_on_keypress(
         }
     }
 }
+
+pub fn restart_game_on_keypress(mut commands: Commands, keyboard_input: Res<ButtonInput<KeyCode>>) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        // TODO
+    }
+}

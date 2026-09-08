@@ -1,4 +1,7 @@
-use bevy::state::state::States;
+use bevy::{
+    ecs::system::ResMut,
+    state::state::{NextState, States},
+};
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum GameState {
@@ -11,4 +14,12 @@ pub enum GameState {
     Paused,
     GameWin,
     GameOver,
+}
+
+pub fn finish_loading(mut next_state: ResMut<NextState<GameState>>) {
+    next_state.set(GameState::NewLevelStarting);
+}
+
+pub fn finish_level_start(mut next_state: ResMut<NextState<GameState>>) {
+    next_state.set(GameState::BallReady);
 }

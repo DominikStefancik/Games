@@ -15,6 +15,8 @@ pub use helpers::*;
 pub use resources::*;
 pub use systems::*;
 
+use crate::plugins::finish_loading;
+
 pub struct SharedPlugin;
 
 impl Plugin for SharedPlugin {

@@ -1,7 +1,7 @@
 use bevy::{
     app::{App, Plugin, Startup, Update},
     ecs::schedule::IntoScheduleConfigs,
-    state::{app::AppExtStates, condition::in_state},
+    state::{app::AppExtStates, condition::in_state, state::OnEnter},
 };
 
 mod components;
@@ -27,6 +27,8 @@ impl Plugin for GamePlugin {
         app.init_state::<GameState>()
             .insert_resource(GameInfo::init())
             .insert_resource(MovingArea::new())
+            .add_systems(OnEnter(GameState::GameWin), spawn_game_finished_text)
+            .add_systems(OnEnter(GameState::GameOver), spawn_game_finished_text)
             .add_systems(
                 Startup,
                 (spawn_background, spawn_score_text, spawn_hearts).chain(),

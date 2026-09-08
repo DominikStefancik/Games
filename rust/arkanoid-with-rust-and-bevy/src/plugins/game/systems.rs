@@ -9,18 +9,18 @@ use bevy::{
     },
     math::{Vec2, Vec3},
     sprite::Sprite,
-    state::state::NextState,
+    state::state::{NextState, State},
     text::{FontSize, Justify, TextColor, TextFont, TextLayout},
     transform::components::Transform,
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
 use crate::plugins::{
-    BRICK_SCORE, Ball, BallFallenDown, Brick, BrickCollided, Collider, GameInfo, GameState,
-    GameTexture, HEART_SCALE, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed,
-    Laser, MovingArea, Paddle, Projectile, SCORE_TEXT_FONT_SIZE, ScoreTextUi, Upgrade,
-    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
-    reset_moving_elements,
+    BRICK_SCORE, Ball, BallFallenDown, Brick, BrickCollided, Collider, GAME_FINISHED_FONT_SIZE,
+    GameFinishedTextUi, GameInfo, GameState, GameTexture, HEART_SCALE, HEART_TEXTURE_SIZE,
+    HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea, Paddle, Projectile,
+    SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION,
+    WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position, reset_moving_elements,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -166,7 +166,12 @@ pub fn restart_gaming_state(
     }
 
     game_info.lives -= 1;
-    next_state.set(GameState::BallReady);
+
+    if game_info.lives == 0 {
+        next_state.set(GameState::GameOver);
+    } else {
+        next_state.set(GameState::BallReady);
+    }
 }
 
 pub fn is_level_finished(
@@ -188,10 +193,6 @@ pub fn is_level_finished(
         if game_info.current_level == game_info.level_count {
             next_state.set(GameState::GameWin);
         } else {
-            if game_info.lives == 0 {
-                next_state.set(GameState::GameOver);
-            }
-
             reset_moving_elements(
                 &mut commands,
                 moving_area.into_inner(),
@@ -208,6 +209,68 @@ pub fn is_level_finished(
     }
 }
 
-pub fn finish_level_start(mut next_state: ResMut<NextState<GameState>>) {
-    next_state.set(GameState::BallReady);
+pub fn spawn_game_finished_text(mut commands: Commands, app_state: Res<State<GameState>>) {
+    // Create a container that will center everything
+    let container = Node {
+        width: percent(100.),
+        height: percent(100.),
+        justify_content: JustifyContent::Center,
+        ..Default::default()
+    };
+
+    // Then add a container for the text
+    let text_container = Node {
+        width: px(WINDOW_RESOLUTION.0),
+        height: px(WINDOW_RESOLUTION.1),
+        ..Default::default()
+    };
+
+    let mut text = "";
+    let mut horizontal_offset = 0.;
+
+    if *app_state == GameState::GameWin {
+        text = "YOU WON!";
+        horizontal_offset = 150.;
+    } else if *app_state == GameState::GameOver {
+        text = "GAME OVER";
+        horizontal_offset = 190.;
+    }
+
+    let game_over = (
+        Text::new(text),
+        TextFont {
+            font_size: FontSize::Px(GAME_FINISHED_FONT_SIZE),
+            ..Default::default()
+        },
+        TextColor(Color::WHITE),
+        TextLayout::justify(Justify::Center),
+        Node {
+            position_type: PositionType::Absolute,
+            top: px(180.),
+            left: px(WINDOW_RESOLUTION_HALF.x - horizontal_offset),
+            ..Default::default()
+        },
+    );
+
+    let play_instructions = (
+        Text::new("Press Space to play again"),
+        TextFont {
+            font_size: FontSize::Px(SUBTEXT_FONT_SIZE),
+            ..Default::default()
+        },
+        TextColor(Color::WHITE),
+        TextLayout::justify(Justify::Center),
+        Node {
+            position_type: PositionType::Absolute,
+            top: px(300.),
+            left: px(WINDOW_RESOLUTION_HALF.x - 230.),
+            ..Default::default()
+        },
+    );
+
+    commands.spawn((
+        GameFinishedTextUi,
+        container,
+        children![(text_container, children![game_over, play_instructions])],
+    ));
 }
