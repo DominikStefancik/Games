@@ -1,6 +1,7 @@
 use bevy::{
-    asset::AssetServer,
-    ecs::{hierarchy::ChildOf, relationship::RelatedSpawnerCommands},
+    asset::{AssetServer, Handle},
+    audio::{AudioPlayer, AudioSource, PlaybackSettings, Volume},
+    ecs::{hierarchy::ChildOf, relationship::RelatedSpawnerCommands, system::Commands},
     math::bounding::{Aabb2d, IntersectsVolume},
     sprite::Sprite,
 };
@@ -88,6 +89,13 @@ pub fn spawn_box_texture_parts(
         bottom,
         center,
     })
+}
+
+pub fn spawn_sound(commands: &mut Commands, sound: &Handle<AudioSource>) {
+    commands.spawn((
+        AudioPlayer::new(sound.clone()),
+        PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.5)),
+    ));
 }
 
 pub fn detect_rectangle_collision(

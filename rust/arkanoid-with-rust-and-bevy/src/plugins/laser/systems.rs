@@ -13,10 +13,10 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BrickCollided, Collider, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
+    BrickCollided, Collider, GameSound, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
     LASER_VERTICAL_OFFSET, Laser, LaserUpgradeDestroyed, PROJECTILE_MOVEMENT_SPEED,
     PROJECTILE_TEXTURE_SIZE, Paddle, Projectile, ProjectileShot, WINDOW_RESOLUTION_HALF,
-    detect_rectangle_collision, get_laser_horizontal_position,
+    detect_rectangle_collision, get_laser_horizontal_position, spawn_sound,
 };
 
 pub fn spawn_laser(
@@ -59,10 +59,15 @@ pub fn spawn_projectiles(
     _: On<ProjectileShot>,
     mut commands: Commands,
     game_texture: Res<GameTexture>,
+    game_sound: Res<GameSound>,
     paddle_query: Single<&Transform, With<Paddle>>,
     laser_query: Query<&Transform, With<Laser>>,
 ) {
     let paddle_transform = paddle_query.into_inner();
+
+    if !laser_query.is_empty() {
+        spawn_sound(&mut commands, &game_sound.laser_shot);
+    }
 
     for laser_transform in laser_query {
         let mut projectile_position = paddle_transform.translation + laser_transform.translation;
@@ -94,6 +99,7 @@ pub fn move_projectile(
 
 pub fn check_projectile_collision(
     mut commands: Commands,
+    game_sound: Res<GameSound>,
     projectile_query: Query<(Entity, &Transform), With<Projectile>>,
     brick_query: Query<(Entity, &Transform, &Collider)>,
 ) {
@@ -126,6 +132,7 @@ pub fn check_projectile_collision(
 
             if is_colliding {
                 commands.trigger(BrickCollided { brick_entity });
+                spawn_sound(&mut commands, &game_sound.laser_hit);
 
                 commands.entity(projectile_entity).despawn();
                 despawned_projectiles.insert(projectile_entity);

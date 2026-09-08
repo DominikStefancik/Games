@@ -12,9 +12,9 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BrickCollided, Collider, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
+    BrickCollided, Collider, GameSound, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
     PADDLE_LENGTH_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
-    Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision,
+    Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision, spawn_sound,
 };
 
 pub fn spawn_upgrade(
@@ -55,6 +55,7 @@ pub fn move_upgrade(mut commands: Commands, query: Query<(Entity, &mut Transform
 
 pub fn check_upgrade_collision(
     mut commands: Commands,
+    game_sound: Res<GameSound>,
     paddle_query: Single<(&Transform, &mut Collider, &mut Paddle)>,
     upgrade_query: Query<(Entity, &Transform, &Upgrade)>,
 ) {
@@ -83,6 +84,7 @@ pub fn check_upgrade_collision(
                 }
                 UpgradeType::Speed => paddle.speed *= 1.1,
             }
+            spawn_sound(&mut commands, &game_sound.upgrade);
             commands.entity(upgrade_entity).despawn();
         }
     }

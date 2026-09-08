@@ -1,4 +1,4 @@
-use bevy::{asset::Handle, ecs::resource::Resource, image::Image};
+use bevy::{asset::Handle, audio::AudioSource, ecs::resource::Resource, image::Image};
 use rand::rngs::StdRng;
 
 use crate::plugins::{BrickType, UpgradeType};
@@ -63,6 +63,16 @@ impl GameTexture {
             UpgradeType::Speed => self.upgrade.speed.clone(),
         }
     }
+}
+
+#[derive(Resource)]
+pub struct GameSound {
+    pub background_music: Handle<AudioSource>,
+    pub ball_impact: Handle<AudioSource>,
+    pub ball_fall: Handle<AudioSource>,
+    pub laser_shot: Handle<AudioSource>,
+    pub laser_hit: Handle<AudioSource>,
+    pub upgrade: Handle<AudioSource>,
 }
 
 #[derive(Resource)]

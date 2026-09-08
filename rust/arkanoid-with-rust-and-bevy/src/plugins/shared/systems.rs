@@ -11,8 +11,8 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, UpgradeTexture, load_box_graphics,
-    shared::GameTexture,
+    BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, GameSound, UpgradeTexture,
+    load_box_graphics, shared::GameTexture,
 };
 
 pub fn spawn_camera(mut commands: Commands) {
@@ -58,6 +58,26 @@ pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     commands.insert_resource(game_texture);
+}
+
+pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let background_music = asset_server.load("sounds/background_music.wav");
+    let ball_impact = asset_server.load("sounds/ball_impact.wav");
+    let ball_fall = asset_server.load("sounds/ball_fall.wav");
+    let laser_shot = asset_server.load("sounds/laser_shot.wav");
+    let laser_hit = asset_server.load("sounds/laser_hit.wav");
+    let upgrade = asset_server.load("sounds/upgrade.wav");
+
+    let game_sounds = GameSound {
+        background_music,
+        ball_impact,
+        ball_fall,
+        laser_shot,
+        laser_hit,
+        upgrade,
+    };
+
+    commands.insert_resource(game_sounds);
 }
 
 /*

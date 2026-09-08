@@ -10,9 +10,10 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BALL_RADIUS, Ball, BallFallenDown, Brick, BrickCollided, Collider, CollisionSide, GameTexture,
-    MovingArea, Paddle, WINDOW_RESOLUTION_HALF, check_borders_when_moving,
+    BALL_RADIUS, Ball, BallFallenDown, Brick, BrickCollided, Collider, CollisionSide, GameSound,
+    GameTexture, MovingArea, Paddle, WINDOW_RESOLUTION_HALF, check_borders_when_moving,
     check_borders_when_moving_with_paddle, detect_ball_collision, get_ball_initial_position,
+    spawn_sound,
 };
 
 pub fn spawn_ball(
@@ -56,6 +57,7 @@ pub fn move_ball_when_game_runs(
 
 pub fn check_ball_collision(
     mut commands: Commands,
+    game_sound: Res<GameSound>,
     ball_query: Single<(&Transform, &mut Ball)>,
     // this query will return any entity that matches Transform and Collider components,
     // and optionally it could or couldn't have a Brick component
@@ -81,6 +83,7 @@ pub fn check_ball_collision(
             }
 
             if optional_brick.is_some() {
+                spawn_sound(&mut commands, &game_sound.ball_impact);
                 commands.trigger(BrickCollided {
                     brick_entity: collider_entity,
                 });
@@ -91,11 +94,13 @@ pub fn check_ball_collision(
 
 pub fn check_ball_out_of_bounds(
     mut commands: Commands,
+    game_sound: Res<GameSound>,
     ball_query: Single<&mut Transform, With<Ball>>,
 ) {
     let ball_transform = ball_query.into_inner();
 
     if ball_transform.translation.y <= -WINDOW_RESOLUTION_HALF.y {
+        spawn_sound(&mut commands, &game_sound.ball_fall);
         commands.trigger(BallFallenDown);
     }
 }
