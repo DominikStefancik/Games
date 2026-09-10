@@ -1,5 +1,9 @@
 use bevy::{
-    ecs::system::{Commands, Res, ResMut, Single},
+    audio::{AudioSink, AudioSinkPlayback},
+    ecs::{
+        query::With,
+        system::{Commands, Res, ResMut, Single},
+    },
     input::{ButtonInput, keyboard::KeyCode},
     state::state::{NextState, State},
     time::Time,
@@ -7,7 +11,8 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BALL_MOVEMENT_SPEED, Ball, GameState, LaserCooldownTimer, Paddle, ProjectileShot, Randomizer,
+    BALL_MOVEMENT_SPEED, BackgroundMusic, Ball, GameState, LaserCooldownTimer, Paddle,
+    ProjectileShot, Randomizer,
 };
 
 pub fn update_paddle_direction_on_keypress(
@@ -78,6 +83,7 @@ pub fn toggle_pausing_game_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     app_state: Res<State<GameState>>,
     mut next_state: ResMut<NextState<GameState>>,
+    music_query: Single<&AudioSink, With<BackgroundMusic>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::KeyP) {
         if *app_state.get() == GameState::Running {
@@ -85,6 +91,9 @@ pub fn toggle_pausing_game_on_keypress(
         } else if *app_state.get() == GameState::Paused {
             next_state.set(GameState::Running);
         }
+
+        let sink = music_query.into_inner();
+        sink.toggle_playback();
     }
 }
 

@@ -20,3 +20,7 @@ pub struct BoxTextureParts {
     pub bottom_right: Entity,
     pub center: Entity,
 }
+
+// Marker component for our BackgroundMusic entity
+#[derive(Component)]
+pub struct BackgroundMusic;

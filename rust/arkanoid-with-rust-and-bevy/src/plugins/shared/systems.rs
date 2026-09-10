@@ -1,8 +1,9 @@
 use bevy::{
     asset::AssetServer,
+    audio::{AudioPlayer, AudioSink, AudioSinkPlayback, PlaybackSettings, Volume},
     camera::Camera2d,
     ecs::{
-        query::Changed,
+        query::{Changed, With},
         system::{Commands, Query, Res},
     },
     math::{Vec2, Vec3},
@@ -11,12 +12,22 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, GameSound, UpgradeTexture,
+    BackgroundMusic, BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, GameSound, UpgradeTexture,
     load_box_graphics, shared::GameTexture,
 };
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2d);
+}
+
+pub fn spawn_background_music(mut commands: Commands, game_sound: Res<GameSound>) {
+    commands.spawn((
+        AudioPlayer::new(game_sound.background_music.clone()),
+        PlaybackSettings::LOOP
+            .with_volume(Volume::Linear(0.25))
+            .paused(), // starts silent, but the sink is still created
+        BackgroundMusic,
+    ));
 }
 
 pub fn load_textures(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -78,6 +89,30 @@ pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     commands.insert_resource(game_sounds);
+}
+
+/*
+ * The query is intentionally a plain Query<&AudioSink, ...> with .single() returning a Result,
+ * rather than the Single<&AudioSink, ...> system-param style.
+ * The reason is: AudioSink only appears on the entity once the audio backend actually finishes preparing the source.
+ * If for any reason that hasn't happened yet the very first time OnEnter(GameState::Running) fires
+ * (e.g. asset still loading), a Single-typed parameter would cause the whole system to be silently skipped for that call -
+ * and since OnEnter only runs once per transition (not every frame like Update), we'd miss your only chance to start
+ * the music that run. The Query + if let Ok(...) version just does nothing gracefully if the sink isn't ready yet,
+ * without that risk.
+ * In practice the sink is almost certainly ready by the time a player reaches Running, but it costs nothing to make
+ * this path forgiving rather than order-dependent.
+ */
+pub fn play_backround_music(music_query: Query<&AudioSink, With<BackgroundMusic>>) {
+    if let Ok(sink) = music_query.single() {
+        sink.play();
+    }
+}
+
+pub fn stop_backround_music(music_query: Query<&AudioSink, With<BackgroundMusic>>) {
+    if let Ok(sink) = music_query.single() {
+        sink.stop();
+    }
 }
 
 /*
