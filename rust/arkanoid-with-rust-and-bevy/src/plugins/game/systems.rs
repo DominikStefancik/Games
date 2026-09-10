@@ -2,7 +2,7 @@ use bevy::{
     color::Color,
     ecs::{
         children,
-        entity::Entity,
+        entity::{ContainsEntity, Entity},
         observer::On,
         query::{With, Without},
         system::{Commands, Query, Res, ResMut, Single},
@@ -17,9 +17,9 @@ use bevy::{
 
 use crate::plugins::{
     BRICK_SCORE, Ball, BallFallenDown, Brick, BrickCollided, Collider, GAME_FINISHED_FONT_SIZE,
-    GameFinishedTextUi, GameInfo, GameState, GameTexture, HEART_SCALE, HEART_TEXTURE_SIZE,
-    HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea, Paddle, Projectile,
-    SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION,
+    GameFinishedTextUi, GameInfo, GameRestarted, GameState, GameTexture, HEART_SCALE,
+    HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea, Paddle,
+    Projectile, SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION,
     WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position, reset_moving_elements,
 };
 
@@ -133,7 +133,49 @@ pub fn update_score(
     score_text_ui.0 = format!("SCORE: {}", game_info.score);
 }
 
-pub fn restart_gaming_state(
+pub fn restart_game(
+    _: On<GameRestarted>,
+    mut commands: Commands,
+    mut next_state: ResMut<NextState<GameState>>,
+    mut game_info: ResMut<GameInfo>,
+    moving_area: Res<MovingArea>,
+    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
+    paddle_query: Single<
+        (&mut Transform, &mut Collider, &mut Paddle),
+        (With<Paddle>, Without<Ball>),
+    >,
+    brick_query: Query<Entity, With<Brick>>,
+    laser_query: Query<Entity, With<Laser>>,
+    projectile_query: Query<Entity, With<Projectile>>,
+    upgrade_query: Query<Entity, With<Upgrade>>,
+    heart_query: Query<Entity, With<Heart>>,
+    mut score_text_ui: Single<&mut Text, With<ScoreTextUi>>,
+) {
+    reset_moving_elements(
+        &mut commands,
+        moving_area.into_inner(),
+        ball_query,
+        paddle_query,
+        laser_query,
+        projectile_query,
+        upgrade_query,
+    );
+
+    for brick_entity in brick_query {
+        commands.entity(brick_entity).despawn();
+    }
+
+    for heart_entity in heart_query {
+        commands.entity(heart_entity).despawn();
+    }
+
+    game_info.reset();
+    score_text_ui.0 = format!("SCORE: {}", game_info.score);
+
+    next_state.set(GameState::NewLevelStarting);
+}
+
+pub fn restart_running_state(
     _: On<BallFallenDown>,
     mut commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
@@ -273,4 +315,11 @@ pub fn spawn_game_finished_text(mut commands: Commands, app_state: Res<State<Gam
         container,
         children![(text_container, children![game_over, play_instructions])],
     ));
+}
+
+pub fn despawn_game_finished_text(
+    mut commands: Commands,
+    text_container: Single<Entity, With<GameFinishedTextUi>>,
+) {
+    commands.entity(text_container.entity()).despawn();
 }

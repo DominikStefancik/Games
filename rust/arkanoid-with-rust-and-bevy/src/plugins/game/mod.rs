@@ -1,11 +1,16 @@
 use bevy::{
     app::{App, Plugin, Startup, Update},
     ecs::schedule::IntoScheduleConfigs,
-    state::{app::AppExtStates, condition::in_state, state::OnEnter},
+    state::{
+        app::AppExtStates,
+        condition::in_state,
+        state::{OnEnter, OnExit},
+    },
 };
 
 mod components;
 mod constants;
+mod events;
 mod helpers;
 mod levels;
 mod resources;
@@ -14,6 +19,7 @@ mod systems;
 
 pub use components::*;
 pub use constants::*;
+pub use events::*;
 pub use helpers::*;
 pub use levels::*;
 pub use resources::*;
@@ -29,6 +35,8 @@ impl Plugin for GamePlugin {
             .insert_resource(MovingArea::new())
             .add_systems(OnEnter(GameState::GameWin), spawn_game_finished_text)
             .add_systems(OnEnter(GameState::GameOver), spawn_game_finished_text)
+            .add_systems(OnExit(GameState::GameWin), despawn_game_finished_text)
+            .add_systems(OnExit(GameState::GameOver), despawn_game_finished_text)
             .add_systems(
                 Startup,
                 (spawn_background, spawn_score_text, spawn_hearts).chain(),
@@ -43,6 +51,7 @@ impl Plugin for GamePlugin {
             // Global observers
             .add_observer(spawn_new_heart)
             .add_observer(update_score)
-            .add_observer(restart_gaming_state);
+            .add_observer(restart_running_state)
+            .add_observer(restart_game);
     }
 }

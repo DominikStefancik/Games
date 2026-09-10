@@ -1,6 +1,9 @@
 use bevy::ecs::resource::Resource;
 
-use crate::plugins::{BOTTOM_OFFSET, INITIAL_PADDLE_SIZE, WINDOW_RESOLUTION_HALF, get_level_map};
+use crate::plugins::{
+    BOTTOM_OFFSET, INITIAL_LIVES_COUNT, INITIAL_MAX_LIVES_COUNT, INITIAL_PADDLE_SIZE,
+    WINDOW_RESOLUTION_HALF, get_level_map,
+};
 
 #[derive(Resource)]
 pub struct GameInfo {
@@ -18,10 +21,18 @@ impl GameInfo {
             current_level: 1,
             level_count: 2,
             level_map: get_level_map(1).unwrap(),
-            lives: 3,
-            max_lives: 4,
+            lives: INITIAL_LIVES_COUNT,
+            max_lives: INITIAL_MAX_LIVES_COUNT,
             score: 0,
         }
+    }
+
+    pub fn reset(&mut self) {
+        self.current_level = 1;
+        self.level_map = get_level_map(1).unwrap();
+        self.lives = INITIAL_LIVES_COUNT;
+        self.max_lives = INITIAL_MAX_LIVES_COUNT;
+        self.score = 0;
     }
 
     pub fn move_to_next_level(&mut self) {

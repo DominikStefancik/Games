@@ -11,8 +11,8 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BALL_MOVEMENT_SPEED, BackgroundMusic, Ball, GameState, LaserCooldownTimer, Paddle,
-    ProjectileShot, Randomizer,
+    BALL_MOVEMENT_SPEED, BackgroundMusic, Ball, GameRestarted, GameState, LaserCooldownTimer,
+    Paddle, ProjectileShot, Randomizer,
 };
 
 pub fn update_paddle_direction_on_keypress(
@@ -63,7 +63,7 @@ pub fn shoot_projectile_on_keypress(
     }
 }
 
-pub fn start_game_on_keypress(
+pub fn move_ball_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut next_state: ResMut<NextState<GameState>>,
     mut randomizer: ResMut<Randomizer>,
@@ -99,6 +99,6 @@ pub fn toggle_pausing_game_on_keypress(
 
 pub fn restart_game_on_keypress(mut commands: Commands, keyboard_input: Res<ButtonInput<KeyCode>>) {
     if keyboard_input.just_pressed(KeyCode::Space) {
-        // TODO
+        commands.trigger(GameRestarted);
     }
 }
