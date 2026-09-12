@@ -29,8 +29,8 @@ impl Plugin for SharedPlugin {
                 (finish_loading, spawn_camera, spawn_background_music).chain(),
             )
             .add_systems(Update, apply_box_texture_resize)
-            .add_systems(OnEnter(GameState::Running), play_backround_music)
-            .add_systems(OnEnter(GameState::GameWin), stop_backround_music)
-            .add_systems(OnEnter(GameState::GameOver), stop_backround_music);
+            .add_systems(OnEnter(GameState::Running), play_background_music)
+            .add_systems(OnEnter(GameState::GameWin), reset_background_music)
+            .add_systems(OnEnter(GameState::GameOver), reset_background_music);
     }
 }

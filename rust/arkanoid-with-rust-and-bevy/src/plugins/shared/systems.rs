@@ -3,6 +3,7 @@ use bevy::{
     audio::{AudioPlayer, AudioSink, AudioSinkPlayback, PlaybackSettings, Volume},
     camera::Camera2d,
     ecs::{
+        entity::Entity,
         query::{Changed, With},
         system::{Commands, Query, Res},
     },
@@ -103,15 +104,36 @@ pub fn load_sounds(mut commands: Commands, asset_server: Res<AssetServer>) {
  * In practice the sink is almost certainly ready by the time a player reaches Running, but it costs nothing to make
  * this path forgiving rather than order-dependent.
  */
-pub fn play_backround_music(music_query: Query<&AudioSink, With<BackgroundMusic>>) {
+pub fn play_background_music(music_query: Query<&AudioSink, With<BackgroundMusic>>) {
     if let Ok(sink) = music_query.single() {
         sink.play();
     }
 }
 
-pub fn stop_backround_music(music_query: Query<&AudioSink, With<BackgroundMusic>>) {
-    if let Ok(sink) = music_query.single() {
-        sink.stop();
+pub fn reset_background_music(
+    mut commands: Commands,
+    music_query: Query<Entity, With<BackgroundMusic>>,
+) {
+    if let Ok(entity) = music_query.single() {
+        /*
+         * Using the "pause()" method simply suspends the sink at its current playback position, so resuming naturally
+         * continues from there rather than restarting the track.
+         *
+         * Instead of pausing, we need to remove the AudioSink component. This both silences the sound immediately
+         * (dropping the sink stops playback) and tells Bevy's audio system "this entity hasn't started playing yet"
+         * — so the next time it processes that entity (still holding AudioPlayer + PlaybackSettings), it creates
+         * a brand-new sink from scratch, i.e. from the very beginning of the track.
+         *
+         * Note:
+         * Removing a component and Bevy's audio system noticing "no sink yet, please create one" isn't instantaneous
+         * within the same frame — but that's a total non-issue in our specific flow, because a restart always passes
+         * through NewLevelStarting → BallReady (which waits for the player to press Space) before ever reaching
+         * Running again. That's several frames of headroom for Bevy to recreate the AudioSink from our original
+         * PlaybackSettings (which is still .paused(), since that component was never touched) — by the time
+         * OnEnter(GameState::Running) actually fires and calls .play(), the fresh sink is already sitting there ready,
+         * at position zero.
+         */
+        commands.entity(entity).remove::<AudioSink>();
     }
 }
 
