@@ -99,7 +99,7 @@ pub fn check_ball_out_of_bounds(
 ) {
     let ball_transform = ball_query.into_inner();
 
-    if ball_transform.translation.y <= -WINDOW_RESOLUTION_HALF.y {
+    if ball_transform.translation.y <= -WINDOW_RESOLUTION_HALF.y - BALL_RADIUS {
         spawn_sound(&mut commands, &game_sound.ball_fall);
         commands.trigger(BallFallenDown);
     }

@@ -4,13 +4,16 @@ use bevy::{
         query::{With, Without},
         system::{Commands, Query, Single},
     },
+    math::{Vec2, Vec3},
+    sprite::Sprite,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    Ball, Collider, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEARTS_GAP, INITIAL_PADDLE_SIZE,
-    LEVEL_1_MAP, LEVEL_2_MAP, Laser, MovingArea, Paddle, Projectile, Upgrade,
-    WINDOW_RESOLUTION_HALF, get_ball_initial_position, get_paddle_initial_position,
+    Ball, Collider, GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE,
+    HEART_TOP_OFFSET, HEARTS_GAP, Heart, INITIAL_PADDLE_SIZE, LEVEL_1_MAP, LEVEL_2_MAP, Laser,
+    MovingArea, Paddle, Projectile, Upgrade, WINDOW_RESOLUTION_HALF, get_ball_initial_position,
+    get_paddle_initial_position,
 };
 
 pub fn calculate_heart_horizontal_position(index: u16) -> f32 {
@@ -25,6 +28,24 @@ pub fn get_level_map(level: u8) -> Option<Vec<&'static str>> {
         1 => Some(LEVEL_1_MAP.to_vec()),
         2 => Some(LEVEL_2_MAP.to_vec()),
         _ => None,
+    }
+}
+
+pub fn spawn_all_hearts(commands: &mut Commands, game_texture: &GameTexture, lives: u16) {
+    for index in 0..lives {
+        let position = Vec2::new(
+            calculate_heart_horizontal_position(index),
+            WINDOW_RESOLUTION_HALF.y - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
+        );
+
+        commands.spawn((
+            Sprite {
+                image: game_texture.heart.clone(),
+                ..Default::default()
+            },
+            Transform::from_translation(position.extend(1.)).with_scale(Vec3::splat(HEART_SCALE)),
+            Heart { index },
+        ));
     }
 }
 

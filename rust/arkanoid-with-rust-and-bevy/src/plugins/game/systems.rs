@@ -21,6 +21,7 @@ use crate::plugins::{
     HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea, Paddle,
     Projectile, SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION,
     WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position, reset_moving_elements,
+    spawn_all_hearts,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -44,21 +45,7 @@ pub fn spawn_hearts(
     game_texture: Res<GameTexture>,
     game_info: Res<GameInfo>,
 ) {
-    for index in 0..game_info.lives {
-        let position = Vec2::new(
-            calculate_heart_horizontal_position(index),
-            WINDOW_RESOLUTION_HALF.y - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
-        );
-
-        commands.spawn((
-            Sprite {
-                image: game_texture.heart.clone(),
-                ..Default::default()
-            },
-            Transform::from_translation(position.extend(1.)).with_scale(Vec3::splat(HEART_SCALE)),
-            Heart { index },
-        ));
-    }
+    spawn_all_hearts(&mut commands, &game_texture, game_info.lives);
 }
 
 pub fn spawn_score_text(mut commands: Commands, game_info: Res<GameInfo>) {
@@ -137,6 +124,7 @@ pub fn restart_game(
     _: On<GameRestarted>,
     mut commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
+    game_texture: Res<GameTexture>,
     mut game_info: ResMut<GameInfo>,
     moving_area: Res<MovingArea>,
     ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
@@ -148,7 +136,6 @@ pub fn restart_game(
     laser_query: Query<Entity, With<Laser>>,
     projectile_query: Query<Entity, With<Projectile>>,
     upgrade_query: Query<Entity, With<Upgrade>>,
-    heart_query: Query<Entity, With<Heart>>,
     mut score_text_ui: Single<&mut Text, With<ScoreTextUi>>,
 ) {
     reset_moving_elements(
@@ -165,12 +152,9 @@ pub fn restart_game(
         commands.entity(brick_entity).despawn();
     }
 
-    for heart_entity in heart_query {
-        commands.entity(heart_entity).despawn();
-    }
-
     game_info.reset();
     score_text_ui.0 = format!("SCORE: {}", game_info.score);
+    spawn_all_hearts(&mut commands, &game_texture, game_info.lives);
 
     next_state.set(GameState::NewLevelStarting);
 }
@@ -191,27 +175,26 @@ pub fn restart_running_state(
     upgrade_query: Query<Entity, With<Upgrade>>,
     heart_query: Query<(Entity, &Heart)>,
 ) {
-    reset_moving_elements(
-        &mut commands,
-        moving_area.into_inner(),
-        ball_query,
-        paddle_query,
-        laser_query,
-        projectile_query,
-        upgrade_query,
-    );
+    game_info.lives -= 1;
 
     for (heart_entity, heart) in heart_query {
-        if heart.index == game_info.lives - 1 {
+        if heart.index == game_info.lives {
             commands.entity(heart_entity).despawn();
         }
     }
 
-    game_info.lives -= 1;
-
     if game_info.lives == 0 {
         next_state.set(GameState::GameOver);
     } else {
+        reset_moving_elements(
+            &mut commands,
+            moving_area.into_inner(),
+            ball_query,
+            paddle_query,
+            laser_query,
+            projectile_query,
+            upgrade_query,
+        );
         next_state.set(GameState::BallReady);
     }
 }
