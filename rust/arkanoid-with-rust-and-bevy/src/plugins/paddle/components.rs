@@ -1,6 +1,6 @@
 use bevy::{ecs::component::Component, math::Vec2};
 
-use crate::plugins::{INITIAL_PADDLE_SIZE, PADDLE_MOVEMENT_SPEED};
+use crate::plugins::{PADDLE_INITIAL_MOVEMENT_SPEED, PADDLE_INITIAL_SIZE};
 
 #[derive(Component)]
 pub struct Paddle {
@@ -12,9 +12,9 @@ pub struct Paddle {
 
 impl Paddle {
     pub fn reset(&mut self) {
-        self.size = INITIAL_PADDLE_SIZE;
+        self.size = PADDLE_INITIAL_SIZE;
         self.direction = 0.;
-        self.speed = PADDLE_MOVEMENT_SPEED;
+        self.speed = PADDLE_INITIAL_MOVEMENT_SPEED;
         self.laser_count = 0;
     }
 }

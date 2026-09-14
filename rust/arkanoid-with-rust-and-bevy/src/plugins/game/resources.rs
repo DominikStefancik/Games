@@ -1,8 +1,8 @@
 use bevy::ecs::resource::Resource;
 
 use crate::plugins::{
-    BOTTOM_OFFSET, INITIAL_LIVES_COUNT, INITIAL_MAX_LIVES_COUNT, INITIAL_PADDLE_SIZE,
-    WINDOW_RESOLUTION_HALF, get_level_map,
+    BOTTOM_OFFSET, INITIAL_LIVES_COUNT, INITIAL_MAX_LIVES_COUNT, MAX_LIVES_COUNT,
+    PADDLE_INITIAL_SIZE, WINDOW_RESOLUTION_HALF, get_level_map,
 };
 
 #[derive(Resource)]
@@ -38,7 +38,10 @@ impl GameInfo {
     pub fn move_to_next_level(&mut self) {
         self.current_level += 1;
         self.level_map = get_level_map(self.current_level).unwrap();
-        self.max_lives += 1;
+
+        if self.max_lives < MAX_LIVES_COUNT {
+            self.max_lives += 1;
+        }
     }
 }
 
@@ -56,7 +59,7 @@ impl MovingArea {
             left_border: -WINDOW_RESOLUTION_HALF.x,
             right_border: WINDOW_RESOLUTION_HALF.x,
             upper_border: WINDOW_RESOLUTION_HALF.y,
-            lower_border: -(WINDOW_RESOLUTION_HALF.y - BOTTOM_OFFSET) + INITIAL_PADDLE_SIZE.y / 2.,
+            lower_border: -(WINDOW_RESOLUTION_HALF.y - BOTTOM_OFFSET) + PADDLE_INITIAL_SIZE.y / 2.,
         }
     }
 }

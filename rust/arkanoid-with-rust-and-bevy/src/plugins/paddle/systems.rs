@@ -5,7 +5,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    Collider, GameTexture, INITIAL_PADDLE_SIZE, PADDLE_MOVEMENT_SPEED, Paddle,
+    Collider, GameTexture, PADDLE_INITIAL_MOVEMENT_SPEED, PADDLE_INITIAL_SIZE, Paddle,
     WINDOW_RESOLUTION_HALF, get_paddle_initial_position, spawn_box_texture_parts,
 };
 
@@ -17,13 +17,13 @@ pub fn spawn_paddle(mut commands: Commands, game_texture: Res<GameTexture>) {
             Transform::from_translation(get_paddle_initial_position()),
             Visibility::default(), // required so InheritedVisibility propagates correctly
             Paddle {
-                size: INITIAL_PADDLE_SIZE,
+                size: PADDLE_INITIAL_SIZE,
                 direction: 0.,
-                speed: PADDLE_MOVEMENT_SPEED,
+                speed: PADDLE_INITIAL_MOVEMENT_SPEED,
                 laser_count: 0,
             },
             Collider {
-                size: INITIAL_PADDLE_SIZE,
+                size: PADDLE_INITIAL_SIZE,
             },
         ))
         .with_children(|parent_sprite| {

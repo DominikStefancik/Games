@@ -15,3 +15,4 @@ pub const GAME_FINISHED_FONT_SIZE: f32 = 80.;
 pub const SUBTEXT_FONT_SIZE: f32 = 35.;
 pub const INITIAL_LIVES_COUNT: u16 = 3;
 pub const INITIAL_MAX_LIVES_COUNT: u16 = 4;
+pub const MAX_LIVES_COUNT: u16 = 7;

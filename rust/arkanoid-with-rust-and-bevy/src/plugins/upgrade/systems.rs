@@ -12,9 +12,11 @@ use bevy::{
 use rand::seq::IndexedRandom;
 
 use crate::plugins::{
-    BrickCollided, Collider, GameSound, GameTexture, HeartUpgradeDestroyed, LaserUpgradeDestroyed,
-    PADDLE_LENGTH_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE,
-    Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision, spawn_sound,
+    Brick, BrickCollided, Collider, GameSound, GameTexture, HeartUpgradeDestroyed,
+    LaserUpgradeDestroyed, PADDLE_LENGTH_INCREASE, PADDLE_MAX_LENGTH, PADDLE_MAX_MOVEMENT_SPEED,
+    PADDLE_MOVEMENT_SPEED_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED,
+    UPGRADE_TEXTURE_SIZE, Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision,
+    should_spawn_upgrade, spawn_sound,
 };
 
 pub fn spawn_upgrade(
@@ -22,12 +24,16 @@ pub fn spawn_upgrade(
     mut commands: Commands,
     mut randomizer: ResMut<Randomizer>,
     game_texture: Res<GameTexture>,
-    transform_query: Query<&Transform>,
+    brick_query: Query<(&Brick, &Transform)>,
 ) {
     // Get the Transform component out of given brick entity
-    let Ok(brick_position) = transform_query.get(event.brick_entity) else {
+    let Ok((brick, brick_position)) = brick_query.get(event.brick_entity) else {
         return;
     };
+
+    if !should_spawn_upgrade(brick.brick_type, &mut randomizer) {
+        return;
+    }
 
     let upgrade_type = *UpgradeType::all_variants_array()
         .choose(&mut randomizer.rng)
@@ -79,10 +85,16 @@ pub fn check_upgrade_collision(
                     commands.trigger(LaserUpgradeDestroyed);
                 }
                 UpgradeType::Size => {
-                    paddle.size.x += PADDLE_LENGTH_INCREASE;
-                    paddle_collider.size = paddle.size;
+                    if paddle.size.x < PADDLE_MAX_LENGTH {
+                        paddle.size.x += PADDLE_LENGTH_INCREASE;
+                        paddle_collider.size = paddle.size;
+                    }
                 }
-                UpgradeType::Speed => paddle.speed *= 1.1,
+                UpgradeType::Speed => {
+                    if paddle.speed < PADDLE_MAX_MOVEMENT_SPEED {
+                        paddle.speed *= PADDLE_MOVEMENT_SPEED_INCREASE;
+                    }
+                }
             }
             spawn_sound(&mut commands, &game_sound.upgrade);
             commands.entity(upgrade_entity).despawn();

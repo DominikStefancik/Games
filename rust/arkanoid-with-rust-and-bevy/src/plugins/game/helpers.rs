@@ -11,9 +11,9 @@ use bevy::{
 
 use crate::plugins::{
     Ball, Collider, GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE,
-    HEART_TOP_OFFSET, HEARTS_GAP, Heart, INITIAL_PADDLE_SIZE, LEVEL_1_MAP, LEVEL_2_MAP, Laser,
-    MovingArea, Paddle, Projectile, Upgrade, WINDOW_RESOLUTION_HALF, get_ball_initial_position,
-    get_paddle_initial_position,
+    HEART_TOP_OFFSET, HEARTS_GAP, Heart, LEVEL_1_MAP, LEVEL_2_MAP, Laser, MovingArea,
+    PADDLE_INITIAL_SIZE, Paddle, Projectile, Upgrade, WINDOW_RESOLUTION_HALF,
+    get_ball_initial_position, get_paddle_initial_position,
 };
 
 pub fn calculate_heart_horizontal_position(index: u16) -> f32 {
@@ -68,7 +68,7 @@ pub fn reset_moving_elements(
     ball_transform.translation = get_ball_initial_position(moving_area);
 
     paddle.reset();
-    paddle_collider.size = INITIAL_PADDLE_SIZE;
+    paddle_collider.size = PADDLE_INITIAL_SIZE;
     paddle_transform.translation = get_paddle_initial_position();
 
     for laser_entity in laser_query {
