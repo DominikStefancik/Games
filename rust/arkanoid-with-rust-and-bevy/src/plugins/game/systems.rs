@@ -215,7 +215,7 @@ pub fn is_level_finished(
     upgrade_query: Query<Entity, With<Upgrade>>,
 ) {
     if brick_query.is_empty() {
-        if game_info.current_level == game_info.level_count {
+        if game_info.is_last_level() {
             next_state.set(GameState::GameWin);
         } else {
             reset_moving_elements(

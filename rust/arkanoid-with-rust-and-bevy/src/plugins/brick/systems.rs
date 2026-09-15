@@ -18,7 +18,7 @@ pub fn spawn_bricks(
     game_texture: Res<GameTexture>,
     game_info: Res<GameInfo>,
 ) {
-    for (row_index, row) in game_info.level_map.iter().enumerate() {
+    for (row_index, row) in game_info.level.map.iter().enumerate() {
         let bricks_in_row_count = row.len() as f32;
         let brick_size = calculate_brick_size(bricks_in_row_count);
 
