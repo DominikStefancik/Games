@@ -11,9 +11,10 @@ use bevy::{
 
 use crate::plugins::{
     Ball, Collider, GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE,
-    HEART_TOP_OFFSET, HEARTS_GAP, Heart, LEVEL_1_MAP, LEVEL_2_MAP, Laser, MovingArea,
-    PADDLE_INITIAL_SIZE, Paddle, Projectile, Upgrade, WINDOW_RESOLUTION_HALF,
-    get_ball_initial_position, get_paddle_initial_position,
+    HEART_TOP_OFFSET, HEARTS_GAP, Heart, LEVEL_1_MAP, LEVEL_2_MAP, LEVEL_3_MAP, LEVEL_4_MAP,
+    LEVEL_5_MAP, LEVEL_6_MAP, LEVEL_7_MAP, LEVEL_8_MAP, Laser, MovingArea, PADDLE_INITIAL_SIZE,
+    Paddle, Projectile, Upgrade, WINDOW_RESOLUTION_HALF, get_ball_initial_position,
+    get_paddle_initial_position,
 };
 
 pub fn calculate_heart_horizontal_position(index: u16) -> f32 {
@@ -27,6 +28,12 @@ pub fn get_level_map(level: u8) -> Option<Vec<&'static str>> {
     match level {
         1 => Some(LEVEL_1_MAP.to_vec()),
         2 => Some(LEVEL_2_MAP.to_vec()),
+        3 => Some(LEVEL_3_MAP.to_vec()),
+        4 => Some(LEVEL_4_MAP.to_vec()),
+        5 => Some(LEVEL_5_MAP.to_vec()),
+        6 => Some(LEVEL_6_MAP.to_vec()),
+        7 => Some(LEVEL_7_MAP.to_vec()),
+        8 => Some(LEVEL_8_MAP.to_vec()),
         _ => None,
     }
 }
