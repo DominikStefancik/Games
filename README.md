@@ -24,6 +24,7 @@
 * [Tic Tac Toe](javascript-typescript/tic-tac-toe-with-react) - classical game Tic Tac Toe implemented with React
 
 ### Rust
+* [Arkanoid](rust/arkanoid-with-rust-and-bevy) - classical game Arkanoid implemented with Bevy
 * [Breakout](rust/breakout-with-rust-and-bevy) - classical game Breakout implemented with Bevy
 * [Cat volleyball](rust/cat-volleyball-with-rust-and-bevy) - game based on the classical Pikachu Volleyball implemented with Bevy. Instead of Pikachu characters, two cats are playing a volleyball.
 * [Connect4](rust/connect-4-simple-with-rust) - Connect4 game played in a terminal
