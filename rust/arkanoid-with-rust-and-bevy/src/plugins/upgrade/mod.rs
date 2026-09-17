@@ -5,7 +5,7 @@ mod helpers;
 mod systems;
 
 use bevy::{
-    app::{App, Plugin, Update},
+    app::{App, FixedUpdate, Plugin},
     ecs::schedule::IntoScheduleConfigs,
     state::condition::in_state,
 };
@@ -23,7 +23,7 @@ pub struct UpgradePlugin;
 impl Plugin for UpgradePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            Update,
+            FixedUpdate,
             (move_upgrade, check_upgrade_collision)
                 .chain()
                 .run_if(in_state(GameState::Running)),

@@ -63,7 +63,7 @@ pub fn shoot_projectile_on_keypress(
     }
 }
 
-pub fn move_ball_on_keypress(
+pub fn start_ball_movement_on_keypress(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut next_state: ResMut<NextState<GameState>>,
     mut randomizer: ResMut<Randomizer>,

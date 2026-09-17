@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, Plugin, Startup, Update},
+    app::{App, FixedUpdate, Plugin, Startup},
     ecs::schedule::IntoScheduleConfigs,
     state::condition::in_state,
 };
@@ -24,11 +24,11 @@ impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_ball)
             .add_systems(
-                Update,
+                FixedUpdate,
                 move_ball_when_ready.run_if(in_state(GameState::BallReady)),
             )
             .add_systems(
-                Update,
+                FixedUpdate,
                 (
                     move_ball_when_game_runs,
                     check_ball_collision,

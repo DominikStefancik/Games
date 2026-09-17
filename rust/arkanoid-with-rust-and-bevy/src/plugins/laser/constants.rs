@@ -5,4 +5,4 @@ pub const LASER_VERTICAL_OFFSET: f32 = 5.;
 pub const LASER_GAP: f32 = 6.;
 pub const LASER_MAX_COUNT: u8 = 5;
 pub const PROJECTILE_TEXTURE_SIZE: Vec2 = Vec2::new(12., 40.);
-pub const PROJECTILE_MOVEMENT_SPEED: f32 = 10.;
+pub const PROJECTILE_MOVEMENT_SPEED: f32 = 4.;

@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, Plugin, Startup, Update},
+    app::{App, FixedUpdate, Plugin, Startup},
     ecs::schedule::{IntoScheduleConfigs, SystemCondition},
     state::condition::in_state,
 };
@@ -21,7 +21,7 @@ pub struct PaddlePlugin;
 impl Plugin for PaddlePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_paddle).add_systems(
-            Update,
+            FixedUpdate,
             move_paddle
                 .run_if(in_state(GameState::BallReady).or_else(in_state(GameState::Running))),
         );
