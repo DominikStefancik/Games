@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, FixedUpdate, Plugin, Update},
+    app::{App, FixedUpdate, Plugin},
     ecs::schedule::IntoScheduleConfigs,
     state::condition::in_state,
     time::{Timer, TimerMode},
@@ -30,10 +30,6 @@ impl Plugin for LaserPlugin {
             TimerMode::Once,
         )))
         .add_systems(
-            Update,
-            adjust_lasers_position.run_if(in_state(GameState::Running)),
-        )
-        .add_systems(
             FixedUpdate,
             (
                 move_projectile,
@@ -43,6 +39,7 @@ impl Plugin for LaserPlugin {
         )
         // Global observers
         .add_observer(spawn_laser)
+        .add_observer(adjust_lasers_position)
         .add_observer(spawn_projectiles);
     }
 }

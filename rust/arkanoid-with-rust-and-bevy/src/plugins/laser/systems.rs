@@ -14,7 +14,7 @@ use bevy::{
 
 use crate::plugins::{
     Brick, BrickCollided, Collider, GameSound, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
-    LASER_VERTICAL_OFFSET, Laser, LaserUpgradeDestroyed, PROJECTILE_MOVEMENT_SPEED,
+    LASER_VERTICAL_OFFSET, Laser, LaserAdded, LaserUpgradeDestroyed, PROJECTILE_MOVEMENT_SPEED,
     PROJECTILE_TEXTURE_SIZE, Paddle, Projectile, ProjectileShot, WINDOW_RESOLUTION_HALF,
     detect_rectangle_collision, get_laser_horizontal_position, spawn_sound,
 };
@@ -42,10 +42,13 @@ pub fn spawn_laser(
         commands.entity(entity).add_child(laser);
 
         paddle.laser_count += 1;
+
+        commands.trigger(LaserAdded);
     }
 }
 
 pub fn adjust_lasers_position(
+    _: On<LaserAdded>,
     paddle: Single<&Paddle>,
     mut laser_query: Query<&mut Transform, With<Laser>>,
 ) {

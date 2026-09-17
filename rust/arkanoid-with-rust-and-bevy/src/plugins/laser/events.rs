@@ -10,3 +10,6 @@ use bevy::ecs::event::Event;
  */
 #[derive(Event)]
 pub struct ProjectileShot;
+
+#[derive(Event)]
+pub struct LaserAdded;
