@@ -99,8 +99,8 @@ pub fn spawn_sound(commands: &mut Commands, sound: &Handle<AudioSource>) {
 }
 
 pub fn detect_rectangle_collision(
-    upgrade_bounding_rectangle: Aabb2d,
-    paddle_bounding_rectangle: Aabb2d,
+    bounding_rectangle_a: Aabb2d,
+    bounding_rectangle_b: Aabb2d,
 ) -> bool {
-    upgrade_bounding_rectangle.intersects(&paddle_bounding_rectangle)
+    bounding_rectangle_a.intersects(&bounding_rectangle_b)
 }
