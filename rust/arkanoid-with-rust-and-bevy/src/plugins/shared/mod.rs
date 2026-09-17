@@ -9,12 +9,14 @@ mod constants;
 mod helpers;
 mod resources;
 mod systems;
+mod types;
 
 pub use components::*;
 pub use constants::*;
 pub use helpers::*;
 pub use resources::*;
 pub use systems::*;
+pub use types::*;
 
 use crate::plugins::{GameState, finish_loading};
 

@@ -3,6 +3,7 @@ mod constants;
 mod events;
 mod helpers;
 mod systems;
+mod types;
 
 use bevy::{
     app::{App, FixedUpdate, Plugin},
@@ -15,6 +16,7 @@ pub use constants::*;
 pub use events::*;
 pub use helpers::*;
 pub use systems::*;
+pub use types::*;
 
 use crate::plugins::GameState;
 
