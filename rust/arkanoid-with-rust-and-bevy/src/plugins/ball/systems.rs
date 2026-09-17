@@ -87,6 +87,7 @@ pub fn check_ball_collision(
                 commands.trigger(BrickCollided {
                     brick_entity: collider_entity,
                 });
+                break;
             }
         }
     }

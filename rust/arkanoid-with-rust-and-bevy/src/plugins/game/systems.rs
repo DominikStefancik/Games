@@ -133,6 +133,7 @@ pub fn restart_game(
         (With<Paddle>, Without<Ball>),
     >,
     brick_query: Query<Entity, With<Brick>>,
+    heart_query: Query<Entity, With<Heart>>,
     laser_query: Query<Entity, With<Laser>>,
     projectile_query: Query<Entity, With<Projectile>>,
     upgrade_query: Query<Entity, With<Upgrade>>,
@@ -150,6 +151,11 @@ pub fn restart_game(
 
     for brick_entity in brick_query {
         commands.entity(brick_entity).despawn();
+    }
+
+    // In the case the game is restarted after a player won, there are hearts left which we have to despawn
+    for heart_entity in heart_query {
+        commands.entity(heart_entity).despawn();
     }
 
     game_info.reset();

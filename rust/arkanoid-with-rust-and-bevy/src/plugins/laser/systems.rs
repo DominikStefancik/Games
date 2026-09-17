@@ -13,7 +13,7 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BrickCollided, Collider, GameSound, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
+    Brick, BrickCollided, Collider, GameSound, GameTexture, LASER_MAX_COUNT, LASER_TEXTURE_SIZE,
     LASER_VERTICAL_OFFSET, Laser, LaserUpgradeDestroyed, PROJECTILE_MOVEMENT_SPEED,
     PROJECTILE_TEXTURE_SIZE, Paddle, Projectile, ProjectileShot, WINDOW_RESOLUTION_HALF,
     detect_rectangle_collision, get_laser_horizontal_position, spawn_sound,
@@ -101,7 +101,7 @@ pub fn check_projectile_collision(
     mut commands: Commands,
     game_sound: Res<GameSound>,
     projectile_query: Query<(Entity, &Transform), With<Projectile>>,
-    brick_query: Query<(Entity, &Transform, &Collider)>,
+    brick_query: Query<(Entity, &Transform, &Collider), With<Brick>>,
 ) {
     let mut despawned_projectiles: HashSet<Entity> = HashSet::new();
 
