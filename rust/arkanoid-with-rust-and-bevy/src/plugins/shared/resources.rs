@@ -43,15 +43,20 @@ pub struct GameTexture {
 }
 
 impl GameTexture {
-    pub fn get_brick_texture(&self, brick_type: BrickType) -> BoxTexture {
+    /*
+     * We return reference instead of value.
+     * The reason is 9 Arc clone/drop pairs per call. The system spawn_bricks calls it once per brick ->
+     * ~650 atomic refcount ops per level load, plus once per brick hit.
+     */
+    pub fn get_brick_texture(&self, brick_type: BrickType) -> &BoxTexture {
         match brick_type {
-            BrickType::Blue => self.blue_brick.clone(),
-            BrickType::Bronze => self.bronze_brick.clone(),
-            BrickType::Green => self.green_brick.clone(),
-            BrickType::Grey => self.grey_brick.clone(),
-            BrickType::Orange => self.orange_brick.clone(),
-            BrickType::Purple => self.purple_brick.clone(),
-            BrickType::Red => self.red_brick.clone(),
+            BrickType::Blue => &self.blue_brick,
+            BrickType::Bronze => &self.bronze_brick,
+            BrickType::Green => &self.green_brick,
+            BrickType::Grey => &self.grey_brick,
+            BrickType::Orange => &self.orange_brick,
+            BrickType::Purple => &self.purple_brick,
+            BrickType::Red => &self.red_brick,
         }
     }
 

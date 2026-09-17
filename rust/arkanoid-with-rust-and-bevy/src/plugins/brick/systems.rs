@@ -24,7 +24,7 @@ pub fn spawn_bricks(
 
         for (character_index, character) in row.chars().enumerate() {
             if character.is_ascii_digit() {
-                let brick_type = BrickType::from(character.to_string().as_str());
+                let brick_type = BrickType::from(character);
                 let mut parts = None;
 
                 let parent_entity = commands
@@ -47,7 +47,7 @@ pub fn spawn_bricks(
                     .with_children(|parent_sprite| {
                         parts = spawn_box_texture_parts(
                             parent_sprite,
-                            &game_texture.get_brick_texture(brick_type),
+                            game_texture.get_brick_texture(brick_type),
                         );
                     })
                     .id();
@@ -87,14 +87,14 @@ pub fn update_or_destroy_brick(
         brick.update_type();
         let box_textures = game_texture.get_brick_texture(brick.brick_type);
 
-        sprite_query.get_mut(parts.top_left).unwrap().image = box_textures.top_left;
-        sprite_query.get_mut(parts.top).unwrap().image = box_textures.top;
-        sprite_query.get_mut(parts.top_right).unwrap().image = box_textures.top_right;
-        sprite_query.get_mut(parts.left).unwrap().image = box_textures.left;
-        sprite_query.get_mut(parts.right).unwrap().image = box_textures.right;
-        sprite_query.get_mut(parts.bottom_left).unwrap().image = box_textures.bottom_left;
-        sprite_query.get_mut(parts.bottom).unwrap().image = box_textures.bottom;
-        sprite_query.get_mut(parts.bottom_right).unwrap().image = box_textures.bottom_right;
-        sprite_query.get_mut(parts.center).unwrap().image = box_textures.center;
+        sprite_query.get_mut(parts.top_left).unwrap().image = box_textures.top_left.clone();
+        sprite_query.get_mut(parts.top).unwrap().image = box_textures.top.clone();
+        sprite_query.get_mut(parts.top_right).unwrap().image = box_textures.top_right.clone();
+        sprite_query.get_mut(parts.left).unwrap().image = box_textures.left.clone();
+        sprite_query.get_mut(parts.right).unwrap().image = box_textures.right.clone();
+        sprite_query.get_mut(parts.bottom_left).unwrap().image = box_textures.bottom_left.clone();
+        sprite_query.get_mut(parts.bottom).unwrap().image = box_textures.bottom.clone();
+        sprite_query.get_mut(parts.bottom_right).unwrap().image = box_textures.bottom_right.clone();
+        sprite_query.get_mut(parts.center).unwrap().image = box_textures.center.clone();
     }
 }
