@@ -7,11 +7,13 @@ mod level6;
 mod level7;
 mod level8;
 
-pub use level1::*;
-pub use level2::*;
-pub use level3::*;
-pub use level4::*;
-pub use level5::*;
-pub use level6::*;
-pub use level7::*;
-pub use level8::*;
+pub const LEVELS: [&[&str]; 8] = [
+    &level1::LEVEL_MAP,
+    &level2::LEVEL_MAP,
+    &level3::LEVEL_MAP,
+    &level4::LEVEL_MAP,
+    &level5::LEVEL_MAP,
+    &level6::LEVEL_MAP,
+    &level7::LEVEL_MAP,
+    &level8::LEVEL_MAP,
+];

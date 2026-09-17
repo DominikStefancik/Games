@@ -1,4 +1,4 @@
-pub const LEVEL_8_MAP: [&str; 10] = [
+pub const LEVEL_MAP: [&str; 10] = [
     "  4   7   3  ",
     " 444  7  333 ",
     "  4   7   3  ",

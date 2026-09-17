@@ -1,8 +1,7 @@
 use bevy::ecs::resource::Resource;
 
 use crate::plugins::{
-    BOTTOM_OFFSET, INITIAL_LIVES_COUNT, INITIAL_MAX_LIVES_COUNT, LEVEL_1_MAP, LEVEL_2_MAP,
-    LEVEL_3_MAP, LEVEL_4_MAP, LEVEL_5_MAP, LEVEL_6_MAP, LEVEL_7_MAP, LEVEL_8_MAP, MAX_LIVES_COUNT,
+    BOTTOM_OFFSET, INITIAL_LIVES_COUNT, INITIAL_MAX_LIVES_COUNT, LEVELS, MAX_LIVES_COUNT,
     PADDLE_INITIAL_SIZE, WINDOW_RESOLUTION_HALF,
 };
 
@@ -45,17 +44,17 @@ impl GameInfo {
 }
 
 pub struct Level {
-    current: u8,
-    last: u8,
-    pub map: Vec<&'static str>,
+    current: usize,
+    last: usize,
+    pub map: &'static [&'static str],
 }
 
 impl Level {
     fn init() -> Self {
         Level {
             current: 1,
-            last: 8,
-            map: LEVEL_1_MAP.to_vec(),
+            last: LEVELS.len(),
+            map: LEVELS[0],
         }
     }
 
@@ -70,17 +69,7 @@ impl Level {
     }
 
     fn set_level_map(&mut self) {
-        self.map = match self.current {
-            1 => LEVEL_1_MAP.to_vec(),
-            2 => LEVEL_2_MAP.to_vec(),
-            3 => LEVEL_3_MAP.to_vec(),
-            4 => LEVEL_4_MAP.to_vec(),
-            5 => LEVEL_5_MAP.to_vec(),
-            6 => LEVEL_6_MAP.to_vec(),
-            7 => LEVEL_7_MAP.to_vec(),
-            8 => LEVEL_8_MAP.to_vec(),
-            _ => LEVEL_1_MAP.to_vec(),
-        };
+        self.map = LEVELS[self.current - 1];
     }
 }
 
