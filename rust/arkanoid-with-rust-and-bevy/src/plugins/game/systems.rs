@@ -5,7 +5,7 @@ use bevy::{
         entity::{ContainsEntity, Entity},
         observer::On,
         query::With,
-        system::{Commands, Query, Res, ResMut, Single},
+        system::{Commands, Res, ResMut, Single},
     },
     math::{Vec2, Vec3},
     sprite::Sprite,
@@ -16,12 +16,11 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BRICK_SCORE, BallFallenDown, BallQuery, Brick, BrickCollided, GAME_FINISHED_FONT_SIZE,
+    BRICK_SCORE, BallFallenDown, BrickCollided, GAME_FINISHED_FONT_SIZE, GameEntities,
     GameFinishedTextUi, GameInfo, GameRestarted, GameState, GameTexture, HEART_SCALE,
-    HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea,
-    PaddleQuery, Projectile, SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade,
-    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
-    reset_moving_elements, spawn_all_hearts,
+    HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, SCORE_TEXT_FONT_SIZE,
+    SUBTEXT_FONT_SIZE, ScoreTextUi, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
+    calculate_heart_horizontal_position, spawn_all_hearts,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -122,108 +121,52 @@ pub fn update_score(
 
 pub fn restart_game(
     _: On<GameRestarted>,
-    mut commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
     game_texture: Res<GameTexture>,
     mut game_info: ResMut<GameInfo>,
-    moving_area: Res<MovingArea>,
-    ball_query: BallQuery,
-    paddle_query: PaddleQuery,
-    brick_query: Query<Entity, With<Brick>>,
-    heart_query: Query<Entity, With<Heart>>,
-    laser_query: Query<Entity, With<Laser>>,
-    projectile_query: Query<Entity, With<Projectile>>,
-    upgrade_query: Query<Entity, With<Upgrade>>,
+    mut game_entities: GameEntities,
     mut score_text_ui: Single<&mut Text, With<ScoreTextUi>>,
 ) {
-    reset_moving_elements(
-        &mut commands,
-        moving_area.into_inner(),
-        ball_query,
-        paddle_query,
-        laser_query,
-        projectile_query,
-        upgrade_query,
-    );
-
-    for brick_entity in brick_query {
-        commands.entity(brick_entity).despawn();
-    }
-
+    game_entities.reset_moving_elements();
+    game_entities.despawn_bricks();
     // In the case the game is restarted after a player won, there are hearts left which we have to despawn
-    for heart_entity in heart_query {
-        commands.entity(heart_entity).despawn();
-    }
+    game_entities.despawn_all_hearts();
 
     game_info.reset();
     score_text_ui.0 = format!("SCORE: {}", game_info.score);
-    spawn_all_hearts(&mut commands, &game_texture, game_info.lives);
+    spawn_all_hearts(&mut game_entities.commands, &game_texture, game_info.lives);
 
     next_state.set(GameState::NewLevelStarting);
 }
 
 pub fn restart_running_state(
     _: On<BallFallenDown>,
-    mut commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
     mut game_info: ResMut<GameInfo>,
-    moving_area: Res<MovingArea>,
-    ball_query: BallQuery,
-    paddle_query: PaddleQuery,
-    laser_query: Query<Entity, With<Laser>>,
-    projectile_query: Query<Entity, With<Projectile>>,
-    upgrade_query: Query<Entity, With<Upgrade>>,
-    heart_query: Query<(Entity, &Heart)>,
+    mut game_entities: GameEntities,
 ) {
     game_info.lives -= 1;
 
-    for (heart_entity, heart) in heart_query {
-        if heart.index == game_info.lives {
-            commands.entity(heart_entity).despawn();
-        }
-    }
+    game_entities.despawn_heart(game_info.lives);
 
     if game_info.lives == 0 {
         next_state.set(GameState::GameOver);
     } else {
-        reset_moving_elements(
-            &mut commands,
-            moving_area.into_inner(),
-            ball_query,
-            paddle_query,
-            laser_query,
-            projectile_query,
-            upgrade_query,
-        );
+        game_entities.reset_moving_elements();
         next_state.set(GameState::BallReady);
     }
 }
 
 pub fn is_level_finished(
-    mut commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
     mut game_info: ResMut<GameInfo>,
-    moving_area: Res<MovingArea>,
-    ball_query: BallQuery,
-    brick_query: Query<&Brick>,
-    paddle_query: PaddleQuery,
-    laser_query: Query<Entity, With<Laser>>,
-    projectile_query: Query<Entity, With<Projectile>>,
-    upgrade_query: Query<Entity, With<Upgrade>>,
+    mut game_entities: GameEntities,
 ) {
-    if brick_query.is_empty() {
+    if game_entities.brick_query.is_empty() {
         if game_info.is_last_level() {
             next_state.set(GameState::GameWin);
         } else {
-            reset_moving_elements(
-                &mut commands,
-                moving_area.into_inner(),
-                ball_query,
-                paddle_query,
-                laser_query,
-                projectile_query,
-                upgrade_query,
-            );
+            game_entities.reset_moving_elements();
 
             game_info.move_to_next_level();
             next_state.set(GameState::NewLevelStarting);

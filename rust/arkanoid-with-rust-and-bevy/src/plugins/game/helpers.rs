@@ -1,18 +1,13 @@
 use bevy::{
-    ecs::{
-        entity::Entity,
-        query::With,
-        system::{Commands, Query},
-    },
+    ecs::system::Commands,
     math::{Vec2, Vec3},
     sprite::Sprite,
     transform::components::Transform,
 };
 
 use crate::plugins::{
-    BallQuery, GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET,
-    HEARTS_GAP, Heart, Laser, MovingArea, PADDLE_INITIAL_SIZE, PaddleQuery, Projectile, Upgrade,
-    WINDOW_RESOLUTION_HALF, get_ball_initial_position, get_paddle_initial_position,
+    GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, HEARTS_GAP,
+    Heart, WINDOW_RESOLUTION_HALF,
 };
 
 pub fn calculate_heart_horizontal_position(index: u16) -> f32 {
@@ -37,37 +32,5 @@ pub fn spawn_all_hearts(commands: &mut Commands, game_texture: &GameTexture, liv
             Transform::from_translation(position.extend(1.)).with_scale(Vec3::splat(HEART_SCALE)),
             Heart { index },
         ));
-    }
-}
-
-pub fn reset_moving_elements(
-    commands: &mut Commands,
-    moving_area: &MovingArea,
-    ball_query: BallQuery,
-    paddle_query: PaddleQuery,
-    laser_query: Query<Entity, With<Laser>>,
-    projectile_query: Query<Entity, With<Projectile>>,
-    upgrade_query: Query<Entity, With<Upgrade>>,
-) {
-    let (mut ball_transform, mut ball) = ball_query.into_inner();
-    let (mut paddle_transform, mut paddle_collider, mut paddle) = paddle_query.into_inner();
-
-    ball.reset();
-    ball_transform.translation = get_ball_initial_position(moving_area);
-
-    paddle.reset();
-    paddle_collider.size = PADDLE_INITIAL_SIZE;
-    paddle_transform.translation = get_paddle_initial_position();
-
-    for laser_entity in laser_query {
-        commands.entity(laser_entity).despawn();
-    }
-
-    for projectile_entity in projectile_query {
-        commands.entity(projectile_entity).despawn();
-    }
-
-    for upgrade_entity in upgrade_query {
-        commands.entity(upgrade_entity).despawn();
     }
 }
