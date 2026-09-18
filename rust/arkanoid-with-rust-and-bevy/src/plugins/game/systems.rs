@@ -4,7 +4,7 @@ use bevy::{
         children,
         entity::{ContainsEntity, Entity},
         observer::On,
-        query::{With, Without},
+        query::With,
         system::{Commands, Query, Res, ResMut, Single},
     },
     math::{Vec2, Vec3},
@@ -16,12 +16,12 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BRICK_SCORE, Ball, BallFallenDown, Brick, BrickCollided, Collider, GAME_FINISHED_FONT_SIZE,
+    BRICK_SCORE, BallFallenDown, BallQuery, Brick, BrickCollided, GAME_FINISHED_FONT_SIZE,
     GameFinishedTextUi, GameInfo, GameRestarted, GameState, GameTexture, HEART_SCALE,
-    HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea, Paddle,
-    Projectile, SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade, WINDOW_RESOLUTION,
-    WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position, reset_moving_elements,
-    spawn_all_hearts,
+    HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, Laser, MovingArea,
+    PaddleQuery, Projectile, SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, Upgrade,
+    WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF, calculate_heart_horizontal_position,
+    reset_moving_elements, spawn_all_hearts,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -127,11 +127,8 @@ pub fn restart_game(
     game_texture: Res<GameTexture>,
     mut game_info: ResMut<GameInfo>,
     moving_area: Res<MovingArea>,
-    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
-    paddle_query: Single<
-        (&mut Transform, &mut Collider, &mut Paddle),
-        (With<Paddle>, Without<Ball>),
-    >,
+    ball_query: BallQuery,
+    paddle_query: PaddleQuery,
     brick_query: Query<Entity, With<Brick>>,
     heart_query: Query<Entity, With<Heart>>,
     laser_query: Query<Entity, With<Laser>>,
@@ -171,11 +168,8 @@ pub fn restart_running_state(
     mut next_state: ResMut<NextState<GameState>>,
     mut game_info: ResMut<GameInfo>,
     moving_area: Res<MovingArea>,
-    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
-    paddle_query: Single<
-        (&mut Transform, &mut Collider, &mut Paddle),
-        (With<Paddle>, Without<Ball>),
-    >,
+    ball_query: BallQuery,
+    paddle_query: PaddleQuery,
     laser_query: Query<Entity, With<Laser>>,
     projectile_query: Query<Entity, With<Projectile>>,
     upgrade_query: Query<Entity, With<Upgrade>>,
@@ -210,12 +204,9 @@ pub fn is_level_finished(
     mut next_state: ResMut<NextState<GameState>>,
     mut game_info: ResMut<GameInfo>,
     moving_area: Res<MovingArea>,
-    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
+    ball_query: BallQuery,
     brick_query: Query<&Brick>,
-    paddle_query: Single<
-        (&mut Transform, &mut Collider, &mut Paddle),
-        (With<Paddle>, Without<Ball>),
-    >,
+    paddle_query: PaddleQuery,
     laser_query: Query<Entity, With<Laser>>,
     projectile_query: Query<Entity, With<Projectile>>,
     upgrade_query: Query<Entity, With<Upgrade>>,

@@ -1,8 +1,8 @@
 use bevy::{
     ecs::{
         entity::Entity,
-        query::{With, Without},
-        system::{Commands, Query, Single},
+        query::With,
+        system::{Commands, Query},
     },
     math::{Vec2, Vec3},
     sprite::Sprite,
@@ -10,10 +10,9 @@ use bevy::{
 };
 
 use crate::plugins::{
-    Ball, Collider, GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE,
-    HEART_TOP_OFFSET, HEARTS_GAP, Heart, Laser, MovingArea, PADDLE_INITIAL_SIZE, Paddle,
-    Projectile, Upgrade, WINDOW_RESOLUTION_HALF, get_ball_initial_position,
-    get_paddle_initial_position,
+    BallQuery, GameTexture, HEART_SCALE, HEART_SIDE_OFFSET, HEART_TEXTURE_SIZE, HEART_TOP_OFFSET,
+    HEARTS_GAP, Heart, Laser, MovingArea, PADDLE_INITIAL_SIZE, PaddleQuery, Projectile, Upgrade,
+    WINDOW_RESOLUTION_HALF, get_ball_initial_position, get_paddle_initial_position,
 };
 
 pub fn calculate_heart_horizontal_position(index: u16) -> f32 {
@@ -44,11 +43,8 @@ pub fn spawn_all_hearts(commands: &mut Commands, game_texture: &GameTexture, liv
 pub fn reset_moving_elements(
     commands: &mut Commands,
     moving_area: &MovingArea,
-    ball_query: Single<(&mut Transform, &mut Ball), (With<Ball>, Without<Paddle>)>,
-    paddle_query: Single<
-        (&mut Transform, &mut Collider, &mut Paddle),
-        (With<Paddle>, Without<Ball>),
-    >,
+    ball_query: BallQuery,
+    paddle_query: PaddleQuery,
     laser_query: Query<Entity, With<Laser>>,
     projectile_query: Query<Entity, With<Projectile>>,
     upgrade_query: Query<Entity, With<Upgrade>>,

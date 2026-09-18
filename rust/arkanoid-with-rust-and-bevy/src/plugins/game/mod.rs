@@ -16,6 +16,7 @@ mod levels;
 mod resources;
 mod states;
 mod systems;
+mod types;
 
 pub use components::*;
 pub use constants::*;
@@ -25,6 +26,7 @@ pub use levels::*;
 pub use resources::*;
 pub use states::*;
 pub use systems::*;
+pub use types::*;
 
 pub struct GamePlugin;
 
