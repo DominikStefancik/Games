@@ -13,10 +13,10 @@ use rand::seq::IndexedRandom;
 
 use crate::plugins::{
     Brick, BrickCollided, Collider, GameSound, GameTexture, HeartUpgradeDestroyed,
-    LaserUpgradeDestroyed, PADDLE_LENGTH_INCREASE, PADDLE_MAX_LENGTH, PADDLE_MAX_MOVEMENT_SPEED,
-    PADDLE_MOVEMENT_SPEED_INCREASE, Paddle, Randomizer, UPGRADE_MOVEMENT_SPEED,
-    UPGRADE_TEXTURE_SIZE, Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF, detect_rectangle_collision,
-    should_spawn_upgrade, spawn_sound,
+    LaserUpgradeDestroyed, LasersNeedRepositioning, PADDLE_LENGTH_INCREASE, PADDLE_MAX_LENGTH,
+    PADDLE_MAX_MOVEMENT_SPEED, PADDLE_MOVEMENT_SPEED_INCREASE, Paddle, Randomizer,
+    UPGRADE_MOVEMENT_SPEED, UPGRADE_TEXTURE_SIZE, Upgrade, UpgradeType, WINDOW_RESOLUTION_HALF,
+    detect_rectangle_collision, should_spawn_upgrade, spawn_sound,
 };
 
 pub fn spawn_upgrade(
@@ -88,6 +88,7 @@ pub fn check_upgrade_collision(
                     if paddle.size.x < PADDLE_MAX_LENGTH {
                         paddle.size.x += PADDLE_LENGTH_INCREASE;
                         paddle_collider.size = paddle.size;
+                        commands.trigger(LasersNeedRepositioning);
                     }
                 }
                 UpgradeType::Speed => {
