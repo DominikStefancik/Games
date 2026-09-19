@@ -63,6 +63,16 @@ impl GameEntities<'_, '_> {
         }
     }
 
+    pub fn reset_ball(&mut self) {
+        /*
+         * Using "&mut *self.ball_query" replaces ball_query.into_inner().
+         * into_inner() consumes the Single, which we can't do from "&mut self".
+         * DerefMut gives us the item tuple to destructure in place.
+         */
+        let (_, ball) = &mut *self.ball_query;
+        ball.reset();
+    }
+
     pub fn despawn_bricks(&mut self) {
         for brick_entity in &self.brick_query {
             self.commands.entity(brick_entity).despawn();

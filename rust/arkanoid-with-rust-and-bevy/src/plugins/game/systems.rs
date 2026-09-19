@@ -130,11 +130,36 @@ pub fn restart_running_state(
     mut game_info: ResMut<GameInfo>,
     mut game_entities: GameEntities,
 ) {
-    game_info.lives -= 1;
+    /*
+     * StateTransition runs once per frame, after PreUpdate, i.e. before RunFixedMainLoop.
+     * FixedUpdate therefore never sees a state change mid-frame. With the default 64 Hz timestep
+     * (Duration::from_micros(15625)) and a 60 Hz monitor, the accumulator produces two fixed ticks in roughly every
+     * fourth frame.
+     *
+     * If we trace the last life:
+     *      Tick 1: check_ball_out_of_bounds → BallFallenDown → observer runs at that tick’s command flush →
+     *              lives: 1 → 0 → GameOver queued. The ball is not reset — that only happens in the else branch,
+     *              so it’s still below the screen and still has a downward direction.
+     *      Tick 2, same frame: in_state(Running) is still true. move_ball_when_game_runs pushes it further down,
+     *              check_ball_out_of_bounds fires again → lives: 0 - 1.
+     * Debug build: panic, attempt to subtract with overflow.
+     * Release build: wraps to 65535, the == 0 check fails, so the else branch runs and calls
+     * next_state.set(GameState::BallReady) — which overwrites the pending GameOver. The player keeps playing with
+     * 65,535 invisible lives and game over never triggers again.
+     *
+     * This isn’t reachable in the Update phase, because in Update the system runs exactly once per frame and
+     * the transition always lands first.
+     * To fix this for the FixedUpdate phase we need to:
+     *      1. Reset the ball’s position in the lives == 0 branch too, so the second tick isn’t out of bounds.
+     *      2. Set "game_info.lives = game_info.lives.saturating_sub(1)" as a belt-and-braces guard.
+     *
+     */
+    game_info.lives = game_info.lives.saturating_sub(1);
 
     game_entities.despawn_heart(game_info.lives);
 
     if game_info.lives == 0 {
+        game_entities.reset_ball();
         next_state.set(GameState::GameOver);
     } else {
         game_entities.reset_moving_elements();
