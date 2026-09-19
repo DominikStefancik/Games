@@ -17,10 +17,9 @@ use bevy::{
 
 use crate::plugins::{
     BRICK_SCORE, BallFallenDown, BrickCollided, GAME_FINISHED_FONT_SIZE, GameEntities,
-    GameFinishedTextUi, GameInfo, GameRestarted, GameState, GameTexture, HEART_SCALE,
-    HEART_TEXTURE_SIZE, HEART_TOP_OFFSET, Heart, HeartUpgradeDestroyed, SCORE_TEXT_FONT_SIZE,
-    SUBTEXT_FONT_SIZE, ScoreTextUi, WINDOW_RESOLUTION, WINDOW_RESOLUTION_HALF,
-    calculate_heart_horizontal_position, spawn_all_hearts,
+    GameFinishedTextUi, GameInfo, GameRestarted, GameState, GameTexture, HeartUpgradeDestroyed,
+    SCORE_TEXT_FONT_SIZE, SUBTEXT_FONT_SIZE, ScoreTextUi, WINDOW_RESOLUTION,
+    WINDOW_RESOLUTION_HALF, spawn_all_hearts, spawn_single_heart,
 };
 
 const BACKGROUND_SPRITE_SIZE: Vec2 = Vec2::new(1204., 512.);
@@ -90,21 +89,7 @@ pub fn spawn_new_heart(
     mut game_info: ResMut<GameInfo>,
 ) {
     if game_info.lives < game_info.max_lives {
-        let position = Vec2::new(
-            calculate_heart_horizontal_position(game_info.lives),
-            WINDOW_RESOLUTION_HALF.y - HEART_TEXTURE_SIZE.y / 2. - HEART_TOP_OFFSET,
-        );
-
-        commands.spawn((
-            Sprite {
-                image: game_texture.heart.clone(),
-                ..Default::default()
-            },
-            Transform::from_translation(position.extend(1.)).with_scale(Vec3::splat(HEART_SCALE)),
-            Heart {
-                index: game_info.lives,
-            },
-        ));
+        spawn_single_heart(&mut commands, &game_texture, game_info.lives);
 
         game_info.lives += 1;
     }
