@@ -1,7 +1,6 @@
 use bevy::{
     ecs::{
         entity::Entity,
-        query::With,
         system::{Commands, Query, Res, Single},
     },
     math::bounding::{Aabb2d, BoundingCircle},
@@ -96,11 +95,13 @@ pub fn check_ball_collision(
 pub fn check_ball_out_of_bounds(
     mut commands: Commands,
     game_sound: Res<GameSound>,
-    ball_query: Single<&mut Transform, With<Ball>>,
+    ball_query: Single<(&Transform, &Ball)>,
 ) {
-    let ball_transform = ball_query.into_inner();
+    let (ball_transform, ball) = ball_query.into_inner();
 
-    if ball_transform.translation.y <= -WINDOW_RESOLUTION_HALF.y - BALL_RADIUS {
+    if ball.direction.y < 0.
+        && ball_transform.translation.y <= -WINDOW_RESOLUTION_HALF.y - BALL_RADIUS
+    {
         spawn_sound(&mut commands, &game_sound.ball_fall);
         commands.trigger(BallFallenDown);
     }
