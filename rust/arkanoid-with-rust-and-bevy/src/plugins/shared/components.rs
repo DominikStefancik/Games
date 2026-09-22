@@ -9,6 +9,9 @@ pub struct Collider {
 }
 
 #[derive(Component)]
+pub struct BoxTexturePart;
+
+#[derive(Component)]
 pub struct BoxTextureParts {
     pub top_left: Entity,
     pub top: Entity,

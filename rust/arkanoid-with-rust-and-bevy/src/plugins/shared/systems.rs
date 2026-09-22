@@ -13,8 +13,8 @@ use bevy::{
 };
 
 use crate::plugins::{
-    BackgroundMusic, BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, GameSound, UpgradeTexture,
-    load_box_graphics, shared::GameTexture,
+    BackgroundMusic, BoxTexturePart, BoxTextureParts, CORNER_BOX_TEXTURE_SIZE, Collider, GameSound,
+    UpgradeTexture, load_box_graphics, shared::GameTexture,
 };
 
 pub fn spawn_camera(mut commands: Commands) {
@@ -150,8 +150,8 @@ pub fn reset_background_music(
  */
 pub fn apply_box_texture_resize(
     box_texture_parts_query: Query<(&Collider, &BoxTextureParts), Changed<Collider>>,
-    mut transform_query: Query<&mut Transform>,
-    mut sprite_query: Query<&mut Sprite>,
+    mut transform_query: Query<&mut Transform, With<BoxTexturePart>>,
+    mut sprite_query: Query<&mut Sprite, With<BoxTexturePart>>,
 ) {
     for (collider, parts) in &box_texture_parts_query {
         let box_half_size = collider.size / 2.;

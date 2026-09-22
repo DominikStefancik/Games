@@ -6,7 +6,7 @@ use bevy::{
     sprite::Sprite,
 };
 
-use crate::plugins::{BoxTexture, BoxTextureParts};
+use crate::plugins::{BoxTexture, BoxTexturePart, BoxTextureParts};
 
 pub fn load_box_graphics(asset_server: &AssetServer, folder: &str) -> BoxTexture {
     let bottom = asset_server.load(format!("{}/bottom.png", folder));
@@ -47,35 +47,58 @@ pub fn spawn_box_texture_parts(
 
     // Spawn corners
     let top_left = parent
-        .spawn(Sprite::from_image(box_texture.top_left.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.top_left.clone()),
+            // We are adding the marker component BoxTexturePart to each part, so later queries which query box parts
+            // (see apply_box_texture_resize system) are more performant
+            BoxTexturePart,
+        ))
         .id();
     let top_right = parent
-        .spawn(Sprite::from_image(box_texture.top_right.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.top_right.clone()),
+            BoxTexturePart,
+        ))
         .id();
     let bottom_left = parent
-        .spawn(Sprite::from_image(box_texture.bottom_left.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.bottom_left.clone()),
+            BoxTexturePart,
+        ))
         .id();
     let bottom_right = parent
-        .spawn(Sprite::from_image(box_texture.bottom_right.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.bottom_right.clone()),
+            BoxTexturePart,
+        ))
         .id();
 
     // Spawn edges
     let top = parent
-        .spawn(Sprite::from_image(box_texture.top.clone()))
+        .spawn((Sprite::from_image(box_texture.top.clone()), BoxTexturePart))
         .id();
     let bottom = parent
-        .spawn(Sprite::from_image(box_texture.bottom.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.bottom.clone()),
+            BoxTexturePart,
+        ))
         .id();
     let left = parent
-        .spawn(Sprite::from_image(box_texture.left.clone()))
+        .spawn((Sprite::from_image(box_texture.left.clone()), BoxTexturePart))
         .id();
     let right = parent
-        .spawn(Sprite::from_image(box_texture.right.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.right.clone()),
+            BoxTexturePart,
+        ))
         .id();
 
     // Spawn center
     let center = parent
-        .spawn(Sprite::from_image(box_texture.center.clone()))
+        .spawn((
+            Sprite::from_image(box_texture.center.clone()),
+            BoxTexturePart,
+        ))
         .id();
 
     Some(BoxTextureParts {
