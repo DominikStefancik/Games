@@ -1,6 +1,6 @@
 use bevy::{
     color::Color,
-    text::{Justify, TextColor, TextFont, TextLayout},
+    text::{FontSize, FontSource, Justify, TextColor, TextFont, TextLayout},
     ui::{Node, PositionType, px, widget::Text},
 };
 
@@ -21,12 +21,12 @@ pub fn create_game_over_text(game_fonts: &GameFonts) -> TextNode {
     (
         Text::new("GAME OVER"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: GAME_OVER_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(GAME_OVER_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(150.),
@@ -40,12 +40,12 @@ pub fn create_best_score_text(game_fonts: &GameFonts, game_settings: &GameSettin
     (
         Text::new(format!("BEST SCORE: {}", game_settings.best_score)),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: SCORE_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(SCORE_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(300.),
@@ -59,12 +59,12 @@ pub fn create_current_score_text(game_fonts: &GameFonts, game_settings: &GameSet
     (
         Text::new(format!("CURRENT SCORE: {}", game_settings.score)),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: SCORE_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(SCORE_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(300.),
@@ -78,12 +78,12 @@ pub fn create_best_rank_text(game_fonts: &GameFonts) -> TextNode {
     (
         Text::new("BEST RANK"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: RANK_TEXT_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(RANK_TEXT_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(390.),
@@ -97,12 +97,12 @@ pub fn create_current_rank_text(game_fonts: &GameFonts) -> TextNode {
     (
         Text::new("CURRENT RANK"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: RANK_TEXT_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(RANK_TEXT_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(390.),
@@ -116,12 +116,12 @@ pub fn create_best_rank_letter(game_fonts: &GameFonts, game_settings: &GameSetti
     (
         Text::new(game_settings.best_rank),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: RANK_LETTER_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(RANK_LETTER_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(500.),
@@ -138,12 +138,12 @@ pub fn create_current_rank_letter(
     (
         Text::new(game_settings.rank),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: RANK_LETTER_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(RANK_LETTER_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(500.),
@@ -157,12 +157,12 @@ pub fn create_play_instructions_text(game_fonts: &GameFonts) -> TextNode {
     (
         Text::new("Press Space/Click/Touch to Play"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: SUBTEXT_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(SUBTEXT_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px((WINDOW_RESOLUTION.1 as f32) - 150.),

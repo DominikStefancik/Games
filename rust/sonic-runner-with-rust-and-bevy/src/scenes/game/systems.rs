@@ -12,7 +12,7 @@ use bevy::{
     },
     input::{ButtonInput, keyboard::KeyCode},
     state::state::{NextState, State},
-    text::{Justify, TextColor, TextFont, TextLayout},
+    text::{FontSize, FontSource, Justify, TextColor, TextFont, TextLayout},
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
@@ -55,12 +55,12 @@ pub fn spawn_score_text(
         GameScoreTextUi,
         Text::new(format!("SCORE: {}", game_settings.score)),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: GAME_SCORE_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(GAME_SCORE_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(10.),

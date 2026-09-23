@@ -6,7 +6,7 @@ use bevy::{
         query::With,
         system::{Commands, Res, Single},
     },
-    text::{Justify, TextColor, TextFont, TextLayout},
+    text::{FontSize, FontSource, Justify, TextColor, TextFont, TextLayout},
     ui::{JustifyContent, Node, PositionType, percent, px, widget::Text},
 };
 
@@ -34,12 +34,12 @@ pub fn spawn_main_text(mut commands: Commands, game_fonts: Res<GameFonts>) {
     let game_name = (
         Text::new("SONIC RING RUN"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: GAME_NAME_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(GAME_NAME_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(100.),
@@ -51,12 +51,12 @@ pub fn spawn_main_text(mut commands: Commands, game_fonts: Res<GameFonts>) {
     let play_instructions = (
         Text::new("Press Space/Click/Touch to Play"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: SUBTEXT_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(SUBTEXT_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(250.),
@@ -68,12 +68,12 @@ pub fn spawn_main_text(mut commands: Commands, game_fonts: Res<GameFonts>) {
     let pause_instructions = (
         Text::new("Press P to Pause or Unpause"),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: SUBTEXT_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(SUBTEXT_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(300.),

@@ -14,7 +14,7 @@ use bevy::{
         bounding::{Aabb2d, IntersectsVolume},
     },
     sprite::{Sprite, Text2d},
-    text::{TextColor, TextFont},
+    text::{FontSize, FontSource, TextColor, TextFont},
     time::{Time, Timer, TimerMode},
     transform::components::Transform,
 };
@@ -73,8 +73,8 @@ pub fn spawn_sonic(
         SonicScoreTextUi,
         Text2d::new(""),
         TextFont {
-            font: game_fonts.mania.clone(),
-            font_size: SONIC_SCORE_FONT_SIZE,
+            font: FontSource::Handle(game_fonts.mania.clone()),
+            font_size: FontSize::Px(SONIC_SCORE_FONT_SIZE),
             ..Default::default()
         },
         TextColor(Color::srgb_u8(255, 255, 0)),
