@@ -1,5 +1,5 @@
 use bevy::{
-    app::{App, FixedUpdate},
+    app::{App, FixedUpdate, Startup},
     ecs::schedule::IntoScheduleConfigs,
     prelude::Plugin,
     state::{
@@ -14,14 +14,16 @@ use crate::{
     entities::{motobug::MotobugPlugin, ring::RingPlugin},
     scenes::{
         game::systems::{
-            despawn_score_text, pause_background_music, reset_game_settings,
-            spawn_background_music, spawn_score_text, toggle_pausing_game, update_game_score_text,
+            despawn_score_text, pause_background_music, play_background_music,
+            reset_background_music, reset_game_settings, spawn_background_music, spawn_score_text,
+            toggle_pausing_game, update_game_score_text,
         },
         systems::{
             despawn_backgrounds, despawn_platforms, scroll_background, scroll_platform,
             spawn_background, spawn_platform,
         },
     },
+    systems::load_sounds,
 };
 
 pub mod components;
@@ -43,6 +45,7 @@ impl Plugin for GamePlugin {
         app.init_state::<GameState>() // Alternatively we could use .insert_state(GameState::Running)
             .add_plugins(RingPlugin)
             .add_plugins(MotobugPlugin)
+            .add_systems(Startup, spawn_background_music.after(load_sounds))
             .add_systems(
                 OnEnter(AppState::Game),
                 (
@@ -50,12 +53,17 @@ impl Plugin for GamePlugin {
                     spawn_background,
                     spawn_platform,
                     spawn_score_text.after(reset_game_settings),
-                    spawn_background_music,
+                    play_background_music,
                 ),
             )
             .add_systems(
                 OnExit(AppState::Game),
-                (despawn_backgrounds, despawn_platforms, despawn_score_text),
+                (
+                    despawn_backgrounds,
+                    despawn_platforms,
+                    despawn_score_text,
+                    reset_background_music,
+                ),
             )
             .add_systems(
                 FixedUpdate,

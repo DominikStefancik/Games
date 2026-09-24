@@ -8,7 +8,7 @@ use bevy::{
         entity::{ContainsEntity, Entity},
         observer::On,
         query::With,
-        system::{Commands, Res, ResMut, Single},
+        system::{Commands, Query, Res, ResMut, Single},
     },
     input::{ButtonInput, keyboard::KeyCode},
     state::state::{NextState, State},
@@ -99,9 +99,26 @@ pub fn toggle_pausing_game(
 pub fn spawn_background_music(mut commands: Commands, game_sounds: Res<GameSounds>) {
     commands.spawn((
         AudioPlayer::new(game_sounds.background.clone()),
-        PlaybackSettings::LOOP.with_volume(Volume::Linear(0.25)),
+        PlaybackSettings::LOOP
+            .with_volume(Volume::Linear(0.25))
+            .paused(),
         BackgroundMusic,
     ));
+}
+
+pub fn play_background_music(music_query: Query<&AudioSink, With<BackgroundMusic>>) {
+    if let Ok(sink) = music_query.single() {
+        sink.play();
+    }
+}
+
+pub fn reset_background_music(
+    mut commands: Commands,
+    music_query: Query<Entity, With<BackgroundMusic>>,
+) {
+    if let Ok(entity) = music_query.single() {
+        commands.entity(entity).remove::<AudioSink>();
+    }
 }
 
 pub fn pause_background_music(
