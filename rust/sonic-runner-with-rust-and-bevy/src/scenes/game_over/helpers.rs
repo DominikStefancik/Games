@@ -153,9 +153,9 @@ pub fn create_current_rank_letter(
     )
 }
 
-pub fn create_play_instructions_text(game_fonts: &GameFonts) -> TextNode {
+pub fn create_play_again_instructions_text(game_fonts: &GameFonts) -> TextNode {
     (
-        Text::new("Press Space/Click/Touch to Play"),
+        Text::new("Press Space/Click/Touch to Play Again"),
         TextFont {
             font: FontSource::Handle(game_fonts.mania.clone()),
             font_size: FontSize::Px(SUBTEXT_FONT_SIZE),
@@ -166,7 +166,7 @@ pub fn create_play_instructions_text(game_fonts: &GameFonts) -> TextNode {
         Node {
             position_type: PositionType::Absolute,
             top: px((WINDOW_RESOLUTION.1 as f32) - 150.),
-            left: px((WINDOW_RESOLUTION.0 as f32) / 2. - 220.),
+            left: px((WINDOW_RESOLUTION.0 as f32) / 2. - 235.),
             ..Default::default()
         },
     )

@@ -16,8 +16,9 @@ use crate::{
         helpers::{
             create_best_rank_letter, create_best_rank_text, create_best_score_text,
             create_current_rank_letter, create_current_rank_text, create_current_score_text,
-            create_game_over_text, create_play_instructions_text,
+            create_game_over_text, create_play_again_instructions_text,
         },
+        resources::PlayAgainCooldownTimer,
     },
 };
 
@@ -48,7 +49,6 @@ pub fn spawn_game_over_text(
     let current_rank_text = create_current_rank_text(&game_fonts);
     let best_rank_letter = create_best_rank_letter(&game_fonts, &game_settings);
     let current_rank_letter = create_current_rank_letter(&game_fonts, &game_settings);
-    let play_instructions = create_play_instructions_text(&game_fonts);
 
     commands.spawn((
         GameOverTextUi,
@@ -63,10 +63,27 @@ pub fn spawn_game_over_text(
                 current_rank_text,
                 best_rank_letter,
                 current_rank_letter,
-                play_instructions,
             ]
         )],
     ));
+}
+
+pub fn spawn_play_again_instructions_text(
+    mut commands: Commands,
+    timer: Res<PlayAgainCooldownTimer>,
+    game_fonts: Res<GameFonts>,
+    text_container: Single<Entity, With<GameOverTextUi>>,
+) {
+    // timer is updated in the move_to_game_state system
+    if timer.0.is_finished() {
+        let play_instructions = commands
+            .spawn(create_play_again_instructions_text(&game_fonts))
+            .id();
+
+        commands
+            .entity(text_container.entity())
+            .add_child(play_instructions);
+    }
 }
 
 pub fn despawn_game_over_text(
@@ -85,4 +102,8 @@ pub fn update_best_score(mut game_settings: ResMut<GameSettings>) {
         game_settings.best_score = game_settings.score;
         game_settings.best_rank = RankGrade::from(game_settings.best_score);
     }
+}
+
+pub fn reset_play_again_instructions_timer(mut timer: ResMut<PlayAgainCooldownTimer>) {
+    timer.0.reset();
 }
