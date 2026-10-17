@@ -1,4 +1,4 @@
-use bevy::{ecs::component::Component, math::primitives::Rectangle};
+use bevy::{ecs::component::Component, shape::Rectangle};
 
 use crate::entities::components::ColliderHitBox;
 

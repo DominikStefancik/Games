@@ -9,10 +9,8 @@ use bevy::{
     },
     image::TextureAtlas,
     input::{ButtonInput, keyboard::KeyCode},
-    math::{
-        Vec3, Vec3Swizzles,
-        bounding::{Aabb2d, IntersectsVolume},
-    },
+    math::{Vec3, Vec3Swizzles},
+    shape::{Aabb2d, IntersectsVolume},
     sprite::{Sprite, Text2d},
     text::{FontSize, FontSource, TextColor, TextFont},
     time::{Time, Timer, TimerMode},

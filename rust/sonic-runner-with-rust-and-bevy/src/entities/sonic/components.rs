@@ -1,7 +1,7 @@
 use bevy::{
     ecs::component::Component,
-    math::primitives::Rectangle,
     prelude::{Deref, DerefMut},
+    shape::Rectangle,
     time::Timer,
 };
 
