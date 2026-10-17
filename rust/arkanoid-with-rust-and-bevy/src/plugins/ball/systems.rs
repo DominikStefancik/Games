@@ -3,7 +3,7 @@ use bevy::{
         entity::Entity,
         system::{Commands, Query, Res, Single},
     },
-    math::bounding::{Aabb2d, BoundingCircle},
+    shape::{Aabb2d, BoundingCircle},
     sprite::Sprite,
     transform::components::Transform,
 };

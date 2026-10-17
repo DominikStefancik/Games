@@ -5,7 +5,8 @@ use bevy::{
         query::With,
         system::{Commands, Query, Res, ResMut, Single},
     },
-    math::{Vec3, bounding::Aabb2d},
+    math::Vec3,
+    shape::Aabb2d,
     sprite::Sprite,
     transform::components::Transform,
 };

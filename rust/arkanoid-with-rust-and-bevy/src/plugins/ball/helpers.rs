@@ -1,8 +1,6 @@
 use bevy::{
-    math::{
-        Vec3,
-        bounding::{Aabb2d, BoundingCircle, IntersectsVolume},
-    },
+    math::Vec3,
+    shape::{Aabb2d, BoundingCircle, IntersectsVolume},
     transform::components::Transform,
 };
 

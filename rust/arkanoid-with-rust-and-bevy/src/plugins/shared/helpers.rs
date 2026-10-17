@@ -2,7 +2,7 @@ use bevy::{
     asset::{AssetServer, Handle},
     audio::{AudioPlayer, AudioSource, PlaybackSettings, Volume},
     ecs::{hierarchy::ChildOf, relationship::RelatedSpawnerCommands, system::Commands},
-    math::bounding::{Aabb2d, IntersectsVolume},
+    shape::{Aabb2d, IntersectsVolume},
     sprite::Sprite,
 };
 

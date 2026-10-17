@@ -7,7 +7,7 @@ use bevy::{
         query::With,
         system::{Commands, Query, Res, Single},
     },
-    math::bounding::Aabb2d,
+    shape::Aabb2d,
     sprite::Sprite,
     transform::components::Transform,
 };
