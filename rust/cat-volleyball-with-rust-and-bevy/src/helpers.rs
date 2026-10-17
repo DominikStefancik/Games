@@ -5,6 +5,7 @@ use bevy::prelude::{
     AudioPlayer, AudioSource, Commands, Font, Handle, Image, Node, PlaybackSettings, Sprite, Text,
     TextColor, TextFont, TextureAtlas, TextureAtlasLayout, Transform, Val,
 };
+use bevy::text::{FontSize, FontSource};
 
 pub fn spawn_player(
     commands: &mut Commands,
@@ -65,8 +66,8 @@ pub fn spawn_scoreboard(
     commands.spawn((
         Text::new("0"),
         TextFont {
-            font: score_font_handle,
-            font_size: SCORE_FONT_SIZE,
+            font: FontSource::Handle(score_font_handle),
+            font_size: FontSize::Px(SCORE_FONT_SIZE),
             ..Default::default()
         },
         TextColor::WHITE,
