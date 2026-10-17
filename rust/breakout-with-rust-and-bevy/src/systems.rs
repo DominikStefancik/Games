@@ -2,11 +2,11 @@ use crate::collision::{ball_collision, Collision};
 use crate::components::{Ball, BallVelocity, Brick, Collider, Paddle, ScoreBoardText};
 use crate::constants::{LEFT_WALL, PADDLE_SPEED, PADDLE_WIDTH_HALF, RIGHT_WALL, WALL_THICKNESS};
 use crate::resources::{CollisionSound, Scoreboard};
-use bevy::math::bounding::{Aabb2d, BoundingCircle};
 use bevy::prelude::{
     AudioPlayer, ButtonInput, Commands, Entity, Fixed, KeyCode, PlaybackSettings, Query, Res,
     ResMut, TextUiWriter, Time, Transform, With,
 };
+use bevy::shape::{Aabb2d, BoundingCircle};
 
 /* Resources in Bevy are global data that can be widely accessed; they are Singletons
  * The resource ButtonInput is added by using DefaultPlugins

@@ -1,4 +1,4 @@
-use bevy::math::bounding::{Aabb2d, BoundingCircle, BoundingVolume, IntersectsVolume};
+use bevy::shape::{Aabb2d, BoundingCircle, BoundingVolume, IntersectsVolume};
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum Collision {
