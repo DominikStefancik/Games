@@ -126,7 +126,7 @@ pub fn spawn_scoreboard_system(mut commands: Commands) {
         Text::new("0"),
         TextFont::from_font_size(72.),
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(30.),
@@ -141,7 +141,7 @@ pub fn spawn_scoreboard_system(mut commands: Commands) {
         Text::new("0"),
         TextFont::from_font_size(72.),
         TextColor(Color::WHITE),
-        TextLayout::new_with_justify(Justify::Center),
+        TextLayout::justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: px(30.),

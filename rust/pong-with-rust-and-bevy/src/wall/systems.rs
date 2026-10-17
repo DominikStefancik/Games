@@ -1,8 +1,9 @@
 use bevy::{
     asset::Assets,
     ecs::system::{Commands, ResMut, Single},
-    math::{Vec2, primitives::Rectangle},
+    math::Vec2,
     mesh::{Mesh, Mesh2d},
+    shape::Rectangle,
     sprite_render::{ColorMaterial, MeshMaterial2d},
     window::Window,
 };

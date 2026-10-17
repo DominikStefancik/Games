@@ -1,10 +1,8 @@
 use bevy::{
     color::Color,
     ecs::component::Component,
-    math::{
-        Vec2,
-        primitives::{Circle, Rectangle},
-    },
+    math::Vec2,
+    shape::{Circle, Rectangle},
 };
 
 use crate::{

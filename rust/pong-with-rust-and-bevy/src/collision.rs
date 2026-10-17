@@ -4,16 +4,13 @@ use bevy::{
         query::{With, Without},
         system::{Query, Single},
     },
-    math::{
-        Vec2,
-        /*
-         * "Aabb2d" represents a bounding box for walls, paddles or ball.
-         * The other two types "BoundingVolume" and "IntersectsVolume" are traits that won't be used directly
-         * but are implemented in the first two types and will need to be in scope.
-         */
-        bounding::{Aabb2d, BoundingVolume, IntersectsVolume},
-        primitives::Rectangle,
-    },
+    math::Vec2,
+    /*
+     * "Aabb2d" represents a bounding box for walls, paddles or ball.
+     * The other two types "BoundingVolume" and "IntersectsVolume" are traits that won't be used directly
+     * but are implemented in the first two types and will need to be in scope.
+     */
+    shape::{Aabb2d, BoundingVolume, IntersectsVolume, Rectangle},
 };
 
 use crate::{

@@ -5,8 +5,9 @@ use bevy::{
         system::{Commands, Query, Res, ResMut, Single},
     },
     input::{ButtonInput, keyboard::KeyCode},
-    math::{Vec2, bounding::Aabb2d},
+    math::Vec2,
     mesh::{Mesh, Mesh2d},
+    shape::Aabb2d,
     sprite_render::{ColorMaterial, MeshMaterial2d},
     window::Window,
 };

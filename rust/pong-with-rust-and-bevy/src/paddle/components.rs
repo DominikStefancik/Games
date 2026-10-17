@@ -1,4 +1,4 @@
-use bevy::{color::Color, ecs::component::Component, math::primitives::Rectangle};
+use bevy::{color::Color, ecs::component::Component, shape::Rectangle};
 
 use crate::{
     collision::Collider,
