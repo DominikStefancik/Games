@@ -8,8 +8,8 @@ use crate::{
 };
 use bevy::{
     image::TextureAtlas,
-    math::bounding::{Aabb2d, IntersectsVolume},
     prelude::{Commands, Entity, Query, Res, ResMut, Time, Transform, With},
+    shape::{Aabb2d, IntersectsVolume},
     sprite::Sprite,
 };
 use std::collections::HashSet;
